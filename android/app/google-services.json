@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "504837693421",
+    "project_id": "u-do-note-0",
+    "storage_bucket": "u-do-note-0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504837693421:android:0c75e8cce823e09a8391e4",
+        "android_client_info": {
+          "package_name": "com.example.u_do_note"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkVzqgGRFouB2-h5VMjnbWM939GNIKqw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

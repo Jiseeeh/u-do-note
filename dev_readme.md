@@ -32,7 +32,6 @@
     ┃ ┗ 📂widgets
     ```
 
-
 ## Next Steps
 
 1. You can start adding your needed entities in the domain layer.

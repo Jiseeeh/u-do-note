@@ -16,8 +16,8 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, UserModel>> signUpWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      final userModel = await userRemoteDataSource
-          .signUpWithEmailAndPassword(email, password);
+      final userModel = await userRemoteDataSource.signUpWithEmailAndPassword(
+          email, password);
       return Right(userModel);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(code: e.code, message: e.message!));
@@ -28,26 +28,11 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, UserModel>> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      final userModel = await userRemoteDataSource
-          .signInWithEmailAndPassword(email, password);
+      final userModel = await userRemoteDataSource.signInWithEmailAndPassword(
+          email, password);
       return Right(userModel);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(code: e.code, message: e.message!));
     }
-  }
-
-  @override
-  Future<Either<Failure, UserModel>> signInWithGoogle() async {
-    try {
-      final userModel = await userRemoteDataSource.signInWithGoogle();
-      return Right(userModel);
-    } on FirebaseAuthException catch (e) {
-      return Left(AuthenticationException(code: e.code, message: e.message!));
-    }
-  }
-
-  @override
-  Future<void> signOut() async {
-    await userRemoteDataSource.signOut();
   }
 }

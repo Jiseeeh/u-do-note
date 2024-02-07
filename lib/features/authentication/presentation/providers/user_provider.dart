@@ -1,12 +1,13 @@
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:u_do_note/core/error/failures.dart';
 
 import 'package:u_do_note/features/authentication/data/datasources/user_remote_datasource.dart';
+import 'package:u_do_note/features/authentication/data/models/user_model.dart';
 import 'package:u_do_note/features/authentication/data/repositories/user_repository_impl.dart';
 import 'package:u_do_note/features/authentication/domain/repositories/user_repository.dart';
 import 'package:u_do_note/features/authentication/domain/usecases/sign_in_with_email_and_password.dart';
-import 'package:u_do_note/features/authentication/domain/usecases/sign_in_with_google.dart';
-import 'package:u_do_note/features/authentication/domain/usecases/sign_out.dart';
 import 'package:u_do_note/features/authentication/domain/usecases/sign_up_with_email_and_password.dart';
 
 part 'user_provider.g.dart';
@@ -26,6 +27,11 @@ UserRepository userRepository(UserRepositoryRef ref) {
 }
 
 @riverpod
+FirebaseAuth firebaseAuth(FirebaseAuthRef ref) {
+  return FirebaseAuth.instance;
+}
+
+@riverpod
 SignInWithEmailAndPassword signInWithEmailAndPassword(
     SignInWithEmailAndPasswordRef ref) {
   final repository = ref.read(userRepositoryProvider);
@@ -41,20 +47,6 @@ SignUpWithEmailAndPassword signUpWithEmailAndPassword(
   return SignUpWithEmailAndPassword(repository);
 }
 
-@riverpod
-SignInWithGoogle signInWithGoogle(SignInWithGoogleRef ref) {
-  final repository = ref.read(userRepositoryProvider);
-
-  return SignInWithGoogle(repository);
-}
-
-@riverpod
-SignOut signOut(SignOutRef ref) {
-  final repository = ref.read(userRepositoryProvider);
-
-  return SignOut(repository);
-}
-
 @Riverpod(keepAlive: true)
 class UserNotifier extends _$UserNotifier {
   @override
@@ -62,28 +54,19 @@ class UserNotifier extends _$UserNotifier {
     return;
   }
 
-  void signInWithEAP(String email, String password) async {
+  Future<Either<Failure, UserModel>> signInWithEAP(
+      String email, String password) {
     final signInWithEmailAndPassword =
         ref.read(signInWithEmailAndPasswordProvider);
 
-    await signInWithEmailAndPassword(email, password);
+    return signInWithEmailAndPassword(email, password);
   }
 
-  void signUpWithEAP(String email, String password) async {
+  Future<Either<Failure, UserModel>> signUpWithEAP(
+      String email, String password) {
     final signUpWithEmailAndPassword =
         ref.read(signUpWithEmailAndPasswordProvider);
 
-    await signUpWithEmailAndPassword(email, password);
-  }
-
-  void signInWithG() async {
-    final signInWithGoogle = ref.read(signInWithGoogleProvider);
-    await signInWithGoogle();
-  }
-
-  void signOut() async {
-    final signOut = ref.read(signOutProvider);
-
-    await signOut();
+    return signUpWithEmailAndPassword(email, password);
   }
 }

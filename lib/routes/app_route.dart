@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:u_do_note/features/authentication/presentation/pages/auth_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/intro_screen.dart';
+import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
+import 'package:u_do_note/features/authentication/presentation/pages/sign_up_screen.dart';
 
 part 'app_route.gr.dart';
 
@@ -13,6 +14,7 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         // add routes here
         AutoRoute(page: IntroRoute.page, path: '/intro', initial: true),
-        AutoRoute(page: AuthRoute.page, path: '/auth'),
+        AutoRoute(page: SignUpRoute.page, path: '/sign-up'),
+        AutoRoute(page: LoginRoute.page, path: '/login')
       ];
 }

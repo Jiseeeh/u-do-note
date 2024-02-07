@@ -38,6 +38,20 @@ final userRepositoryProvider = AutoDisposeProvider<UserRepository>.internal(
 );
 
 typedef UserRepositoryRef = AutoDisposeProviderRef<UserRepository>;
+String _$firebaseAuthHash() => r'7791bf70ce0f01bf991a53a76abc915478673c0b';
+
+/// See also [firebaseAuth].
+@ProviderFor(firebaseAuth)
+final firebaseAuthProvider = AutoDisposeProvider<FirebaseAuth>.internal(
+  firebaseAuth,
+  name: r'firebaseAuthProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$firebaseAuthHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FirebaseAuthRef = AutoDisposeProviderRef<FirebaseAuth>;
 String _$signInWithEmailAndPasswordHash() =>
     r'ffce0ca8bb6d15deacd5290b8c7b912a259a9688';
 
@@ -74,36 +88,7 @@ final signUpWithEmailAndPasswordProvider =
 
 typedef SignUpWithEmailAndPasswordRef
     = AutoDisposeProviderRef<SignUpWithEmailAndPassword>;
-String _$signInWithGoogleHash() => r'b5322a084a9a520005b74db1985aa285186feee2';
-
-/// See also [signInWithGoogle].
-@ProviderFor(signInWithGoogle)
-final signInWithGoogleProvider = AutoDisposeProvider<SignInWithGoogle>.internal(
-  signInWithGoogle,
-  name: r'signInWithGoogleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$signInWithGoogleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef SignInWithGoogleRef = AutoDisposeProviderRef<SignInWithGoogle>;
-String _$signOutHash() => r'23a5f0291d4ee6162efef78548610fd6af94d78f';
-
-/// See also [signOut].
-@ProviderFor(signOut)
-final signOutProvider = AutoDisposeProvider<SignOut>.internal(
-  signOut,
-  name: r'signOutProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$signOutHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef SignOutRef = AutoDisposeProviderRef<SignOut>;
-String _$userNotifierHash() => r'7d93c32e9546c2b09995d028be903ebd9b88c97f';
+String _$userNotifierHash() => r'85c972ff2fa2d4a7e8126aaab235e6649eb9cb22';
 
 /// See also [UserNotifier].
 @ProviderFor(UserNotifier)

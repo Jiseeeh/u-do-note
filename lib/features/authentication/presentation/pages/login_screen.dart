@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
 
 import '../widgets/auth_field.dart';
 
@@ -80,12 +81,20 @@ class _LoginState extends ConsumerState<LoginScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  print("WASSAP");
+                  final userProvider = ref.read(userNotifierProvider.notifier);
+
+                  final userOrFailure = await userProvider.signInWithEAP(
+                      emailController.text, passwordController.text);
+
+                  userOrFailure.fold((failure) => print("THERE IS ERROR"),
+                      (userModel) {
+                    context.router.replaceNamed('/home');
+                  });
                 }
               },
-              child: const Text('Sign Up'),
+              child: const Text('Login'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

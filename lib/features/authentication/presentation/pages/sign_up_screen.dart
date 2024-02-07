@@ -128,7 +128,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(failureSnackbar);
                   },
                       (userModel) => {
-                            // TODO: redirect to homepage
+                            context.router.replaceNamed('/login'),
                           });
                 }
               },

@@ -28,6 +28,8 @@ class UserRemoteDataSource {
       password: password,
     );
 
+    // TODO: create user document with the created user's id.
+
     logger.i(
         "Signing up with email and password: \n email: $email \n password: $password");
 

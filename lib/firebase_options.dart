@@ -66,6 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '504837693421',
     projectId: 'u-do-note-0',
     storageBucket: 'u-do-note-0.appspot.com',
+    iosClientId: '504837693421-5s2665iv83kjir2gbac4hkilrs0nl290.apps.googleusercontent.com',
     iosBundleId: 'com.example.uDoNote',
   );
 
@@ -75,6 +76,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '504837693421',
     projectId: 'u-do-note-0',
     storageBucket: 'u-do-note-0.appspot.com',
+    iosClientId: '504837693421-apl1hq1gcqfnehu8b2kbsvil6kp0ij9k.apps.googleusercontent.com',
     iosBundleId: 'com.example.uDoNote.RunnerTests',
   );
 }

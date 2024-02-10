@@ -1,42 +1,38 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
-import 'package:u_do_note/features/authentication/domain/entities/user.dart';
+import 'package:u_do_note/features/authentication/data/datasources/user_remote_datasource.dart';
+import 'package:u_do_note/features/authentication/data/models/user_model.dart';
 import 'package:u_do_note/features/authentication/domain/repositories/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
-
   // Data sources
+  final UserRemoteDataSource userRemoteDataSource;
 
-  // 32:10 youtube
+  UserRepositoryImpl(this.userRemoteDataSource);
+
   @override
-  Future<Either<Failure, User>> signInWithEmailAndPassword({required String email, required String password}) {
-    // TODO: implement signInWithEmailAndPassword
-    throw UnimplementedError();
+  Future<Either<Failure, UserModel>> signUpWithEmailAndPassword(
+      {required String email, required String password}) async {
+    try {
+      final userModel = await userRemoteDataSource.signUpWithEmailAndPassword(
+          email, password);
+      return Right(userModel);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(code: e.code, message: e.message!));
+    }
   }
 
   @override
-  Future<Either<Failure, User>> signInWithFacebook() {
-    // TODO: implement signInWithFacebook
-    throw UnimplementedError();
+  Future<Either<Failure, UserModel>> signInWithEmailAndPassword(
+      {required String email, required String password}) async {
+    try {
+      final userModel = await userRemoteDataSource.signInWithEmailAndPassword(
+          email, password);
+      return Right(userModel);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(code: e.code, message: e.message!));
+    }
   }
-
-  @override
-  Future<Either<Failure, User>> signInWithGoogle() {
-    // TODO: implement signInWithGoogle
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, User>> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, User>> signUpWithEmailAndPassword({required String email, required String password}) {
-    // TODO: implement signUpWithEmailAndPassword
-    throw UnimplementedError();
-  }
-
 }

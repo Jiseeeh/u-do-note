@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/features/authentication/data/models/user_model.dart';
@@ -28,7 +29,12 @@ class UserRemoteDataSource {
       password: password,
     );
 
-    // TODO: create user document with the created user's id.
+    final userId = userCredential.user!.uid;
+
+    FirebaseFirestore.instance.collection('users').doc(userId).set({
+      'uid': userId,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
 
     logger.i(
         "Signing up with email and password: \n email: $email \n password: $password");

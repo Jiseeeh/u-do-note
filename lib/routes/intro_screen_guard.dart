@@ -7,6 +7,7 @@ class IntroScreenGuard extends AutoRouteGuard {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       // TODO: redirect to home
+      resolver.next(true);
     } else {
       resolver.next(true);
     }

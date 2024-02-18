@@ -1,18 +1,36 @@
 import 'package:u_do_note/features/review_page/domain/entities/leitner.dart';
 
 class LeitnerSystemModel {
-  final String id;
+  /// The id of the model, nullable since the id is auto-gen on firestore
+  final String? id;
   final String userId;
   final String userNoteId;
   final List<FlashcardModel> flashcards;
+  final String name = "Leitner System";
 
   LeitnerSystemModel(
-      {required this.id,
+      {this.id,
       required this.userId,
       required this.userNoteId,
       required this.flashcards});
 
-  // entity to model
+  /// converts from model to json
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'user_id': userId,
+        'user_note_id': userNoteId,
+        'flashcards': flashcards
+            .map((flashcard) => {
+                  'id': flashcard.id,
+                  'question': flashcard.question,
+                  'answer': flashcard.answer,
+                  'last_review': flashcard.lastReview,
+                  'next_review': flashcard.nextReview
+                })
+            .toList()
+      };
+
+  /// converts from entity to model
   factory LeitnerSystemModel.fromEntity(LeitnerSystemEntity leitnerSystem) =>
       LeitnerSystemModel(
           id: leitnerSystem.id,
@@ -27,7 +45,7 @@ class LeitnerSystemModel {
                   nextReview: flashcard.nextReview))
               .toList());
 
-  // model to entity
+  /// converts from model to entity
   LeitnerSystemEntity toEntity() => LeitnerSystemEntity(
       id: id,
       userId: userId,
@@ -41,7 +59,7 @@ class LeitnerSystemModel {
               nextReview: flashcard.nextReview))
           .toList());
 
-  // from firestore to model
+  /// converts from firestore to model
   factory LeitnerSystemModel.fromFirestore(
           {required Map<String, dynamic> data, required String id}) =>
       LeitnerSystemModel(
@@ -75,6 +93,7 @@ class FlashcardModel {
       required this.lastReview,
       required this.nextReview});
 
+  /// converts from json to model
   factory FlashcardModel.fromJson(Map<String, dynamic> json) {
     final DateTime now = DateTime.now();
     final DateTime lastReview = json['last_review']?.toDate() ?? now;

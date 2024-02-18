@@ -1,11 +1,11 @@
 class LeitnerSystemEntity {
-  final String id;
+  final String? id;
   final String userId;
   final String userNoteId;
   final List<FlashcardEntity> flashcards;
 
   LeitnerSystemEntity(
-      {required this.id,
+      {this.id,
       required this.userId,
       required this.userNoteId,
       required this.flashcards});

@@ -7,9 +7,13 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 
 class LeitnerRemoteDataSource {
+  final FirebaseFirestore _firestore;
+
+  LeitnerRemoteDataSource(this._firestore);
+
   Future<List<FlashcardModel>> generateFlashcards(String userId, String userNoteId) async {
     // fetch the notes in firestore
-    List<NoteModel> notes = await _getNotes();
+    List<NoteModel> notes = await _getNotes(_firestore);
 
     // feed it to the openai api to get the flashcards
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -72,13 +76,10 @@ class LeitnerRemoteDataSource {
       flashcards.add(FlashcardModel.fromJson(flashcard));
     }
 
-    // TODO: repoimpl
-    // TODO: add flashcards to the leitner model and save it to firestore
     return flashcards;
   }
 
-  Future<List<NoteModel>> _getNotes() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Future<List<NoteModel>> _getNotes(FirebaseFirestore firestore) async {
     var user = FirebaseAuth.instance.currentUser;
     List<NoteModel> notesModel = [];
 

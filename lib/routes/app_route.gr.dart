@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    HomepageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HomepageScreen(),
+      );
+    },
     IntroRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -27,6 +33,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LoginScreen(),
       );
     },
+    ReviewRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ReviewScreen(),
+      );
+    },
     SignUpRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -34,6 +46,20 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [HomepageScreen]
+class HomepageRoute extends PageRouteInfo<void> {
+  const HomepageRoute({List<PageRouteInfo>? children})
+      : super(
+          HomepageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomepageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -60,6 +86,20 @@ class LoginRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'LoginRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ReviewScreen]
+class ReviewRoute extends PageRouteInfo<void> {
+  const ReviewRoute({List<PageRouteInfo>? children})
+      : super(
+          ReviewRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ReviewRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

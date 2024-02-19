@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/leitner_remote_datasource.dart';
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/repositories/leitner_system_repository_impl.dart';
 import 'package:u_do_note/features/review_page/domain/repositories/leitner_sytem_repository.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/generate_flashcards.dart';
@@ -35,4 +38,17 @@ GenerateFlashcards generateFlashcards(GenerateFlashcardsRef ref) {
   return GenerateFlashcards(repository);
 }
 
-// TODO: implement the provider for the leitner system
+@riverpod
+class LeitnerSystemNotifier extends _$LeitnerSystemNotifier {
+  @override
+  void build() {
+    return;
+  }
+
+  Future<Either<Failure, List<FlashcardModel>>> generateFlashcards(
+      String userId, String userNoteId) {
+    final generateFlashcards = ref.read(generateFlashcardsProvider);
+
+    return generateFlashcards(userId: userId, userNoteId: userNoteId);
+  }
+}

@@ -88,7 +88,7 @@ final signUpWithEmailAndPasswordProvider =
 
 typedef SignUpWithEmailAndPasswordRef
     = AutoDisposeProviderRef<SignUpWithEmailAndPassword>;
-String _$userNotifierHash() => r'57359c019e2e5eb0f955456970a44034c566e44b';
+String _$userNotifierHash() => r'9ee80d3e55fd1ce3fd23c8075da2bfdf0b7c93ac';
 
 /// See also [UserNotifier].
 @ProviderFor(UserNotifier)

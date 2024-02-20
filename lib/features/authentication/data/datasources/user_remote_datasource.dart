@@ -23,11 +23,13 @@ class UserRemoteDataSource {
   }
 
   Future<UserModel> signUpWithEmailAndPassword(
-      String email, String password) async {
+      String email, String displayName, String password) async {
     final userCredential = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+    await userCredential.user!.updateDisplayName(displayName);
 
     final userId = userCredential.user!.uid;
 

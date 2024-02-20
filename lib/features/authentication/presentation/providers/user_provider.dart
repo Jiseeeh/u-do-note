@@ -63,10 +63,10 @@ class UserNotifier extends _$UserNotifier {
   }
 
   Future<Either<Failure, UserModel>> signUpWithEAP(
-      String email, String password) {
+      String email, String displayName, String password) {
     final signUpWithEmailAndPassword =
         ref.read(signUpWithEmailAndPasswordProvider);
 
-    return signUpWithEmailAndPassword(email, password);
+    return signUpWithEmailAndPassword(email, displayName, password);
   }
 }

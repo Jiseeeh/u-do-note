@@ -21,6 +21,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController repeatPasswordController =
       TextEditingController();
+  final TextEditingController displayNameController = TextEditingController();
 
   String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -29,6 +30,13 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
 
     if (!EmailValidator.validate(value)) {
       return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? displayNameValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter some text';
     }
     return null;
   }
@@ -83,6 +91,13 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
               validator: emailValidator,
             ),
             AuthField(
+              label: 'Display Name',
+              controller: displayNameController,
+              isObscuredText: false,
+              keyboardType: TextInputType.text,
+              validator: displayNameValidator,
+            ),
+            AuthField(
               label: 'Password',
               controller: passwordController,
               isObscuredText: isPasswordObscured,
@@ -120,7 +135,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   final userOrFailure = await userProvider.signUpWithEAP(
-                      emailController.text, passwordController.text);
+                      emailController.text,displayNameController.text, passwordController.text);
 
                   userOrFailure.fold((failure) {
                     var failureSnackbar = createSnackbar(failure.message);

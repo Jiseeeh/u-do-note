@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
 
 @RoutePage()
 class ReviewScreen extends ConsumerWidget {
@@ -50,7 +51,7 @@ class ReviewScreen extends ConsumerWidget {
 
   Widget _buildBody() {
     return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             SearchAnchor(
@@ -82,7 +83,14 @@ class ReviewScreen extends ConsumerWidget {
                 });
               },
             ),
-            // TODO: Implement the review list methods to choose from
+            const SizedBox(height: 16),
+            // TODO: implement the review methods that is scrollable
+            ReviewMethod(
+              title: 'GPT-3',
+              description: 'Generate text based on your input',
+              imagePath: 'lib/assets/flashcard.png',
+              onPressed: () {},
+            ),
           ],
         ));
   }

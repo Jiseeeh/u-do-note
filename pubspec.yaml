@@ -36,4 +36,6 @@ dev_dependencies:
   envied_generator: ^0.5.3
 
 flutter:
+  assets:
+    - lib/assets/
   uses-material-design: true

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:u_do_note/core/error/failures.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/authentication/data/datasources/user_remote_datasource.dart';
 import 'package:u_do_note/features/authentication/data/models/user_model.dart';
 import 'package:u_do_note/features/authentication/data/repositories/user_repository_impl.dart';
@@ -14,7 +14,7 @@ part 'user_provider.g.dart';
 
 @riverpod
 UserRemoteDataSource userRemoteDataSource(UserRemoteDataSourceRef ref) {
-  var auth = FirebaseAuth.instance;
+  var auth = ref.read(firebaseAuthProvider);
 
   return UserRemoteDataSource(auth);
 }
@@ -24,11 +24,6 @@ UserRepository userRepository(UserRepositoryRef ref) {
   final userRemoteDataSource = ref.read(userRemoteDataSourceProvider);
 
   return UserRepositoryImpl(userRemoteDataSource);
-}
-
-@riverpod
-FirebaseAuth firebaseAuth(FirebaseAuthRef ref) {
-  return FirebaseAuth.instance;
 }
 
 @riverpod
@@ -63,10 +58,10 @@ class UserNotifier extends _$UserNotifier {
   }
 
   Future<Either<Failure, UserModel>> signUpWithEAP(
-      String email, String password) {
+      String email, String displayName, String password) {
     final signUpWithEmailAndPassword =
         ref.read(signUpWithEmailAndPasswordProvider);
 
-    return signUpWithEmailAndPassword(email, password);
+    return signUpWithEmailAndPassword(email, displayName, password);
   }
 }

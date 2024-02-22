@@ -14,10 +14,13 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<Either<Failure, UserModel>> signUpWithEmailAndPassword(
-      {required String email, required String password}) async {
+      {required String email,
+      required String displayName,
+      required String password}) async {
     try {
       final userModel = await userRemoteDataSource.signUpWithEmailAndPassword(
-          email, password);
+          email, displayName, password);
+
       return Right(userModel);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(code: e.code, message: e.message!));

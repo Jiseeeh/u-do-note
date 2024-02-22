@@ -6,5 +6,7 @@ abstract class UserRepository {
   Future<Either<Failure, UserModel>> signInWithEmailAndPassword(
       {required String email, required String password});
   Future<Either<Failure, UserModel>> signUpWithEmailAndPassword(
-      {required String email, required String password});
+      {required String email,
+      required String displayName,
+      required String password});
 }

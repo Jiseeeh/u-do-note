@@ -1,0 +1,94 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'leitner_system_provider.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$firestoreHash() => r'ef4a6b0737caace50a6d79dd3e4e2aa1bc3031d5';
+
+/// See also [firestore].
+@ProviderFor(firestore)
+final firestoreProvider = AutoDisposeProvider<FirebaseFirestore>.internal(
+  firestore,
+  name: r'firestoreProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$firestoreHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
+String _$leitnerSystemRemoteDataSourceHash() =>
+    r'c904e9781e2ecc3d51b978efdfbfd1c8d91928bd';
+
+/// See also [leitnerSystemRemoteDataSource].
+@ProviderFor(leitnerSystemRemoteDataSource)
+final leitnerSystemRemoteDataSourceProvider =
+    AutoDisposeProvider<LeitnerRemoteDataSource>.internal(
+  leitnerSystemRemoteDataSource,
+  name: r'leitnerSystemRemoteDataSourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$leitnerSystemRemoteDataSourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef LeitnerSystemRemoteDataSourceRef
+    = AutoDisposeProviderRef<LeitnerRemoteDataSource>;
+String _$leitnerSystemRepositoryHash() =>
+    r'f61b17aa0a4398295a5a99d7a4bf9a3a64d46a2d';
+
+/// See also [leitnerSystemRepository].
+@ProviderFor(leitnerSystemRepository)
+final leitnerSystemRepositoryProvider =
+    AutoDisposeProvider<LeitnerSystemRepository>.internal(
+  leitnerSystemRepository,
+  name: r'leitnerSystemRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$leitnerSystemRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef LeitnerSystemRepositoryRef
+    = AutoDisposeProviderRef<LeitnerSystemRepository>;
+String _$generateFlashcardsHash() =>
+    r'67250ba4cc5b0f26987de69669f7297d1ad95335';
+
+/// See also [generateFlashcards].
+@ProviderFor(generateFlashcards)
+final generateFlashcardsProvider =
+    AutoDisposeProvider<GenerateFlashcards>.internal(
+  generateFlashcards,
+  name: r'generateFlashcardsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$generateFlashcardsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GenerateFlashcardsRef = AutoDisposeProviderRef<GenerateFlashcards>;
+String _$leitnerSystemNotifierHash() =>
+    r'c70301926612e20c64a8196dea49b5e14e43b9d3';
+
+/// See also [LeitnerSystemNotifier].
+@ProviderFor(LeitnerSystemNotifier)
+final leitnerSystemNotifierProvider =
+    AutoDisposeNotifierProvider<LeitnerSystemNotifier, void>.internal(
+  LeitnerSystemNotifier.new,
+  name: r'leitnerSystemNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$leitnerSystemNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LeitnerSystemNotifier = AutoDisposeNotifier<void>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

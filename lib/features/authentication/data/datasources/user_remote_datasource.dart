@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/features/authentication/data/models/user_model.dart';
@@ -22,13 +23,20 @@ class UserRemoteDataSource {
   }
 
   Future<UserModel> signUpWithEmailAndPassword(
-      String email, String password) async {
+      String email, String displayName, String password) async {
     final userCredential = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
 
-    // TODO: create user document with the created user's id.
+    await userCredential.user!.updateDisplayName(displayName);
+
+    final userId = userCredential.user!.uid;
+
+    FirebaseFirestore.instance.collection('users').doc(userId).set({
+      'uid': userId,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
 
     logger.i(
         "Signing up with email and password: \n email: $email \n password: $password");

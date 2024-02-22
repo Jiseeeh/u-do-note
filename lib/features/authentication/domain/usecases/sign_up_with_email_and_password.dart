@@ -9,8 +9,9 @@ class SignUpWithEmailAndPassword {
 
   SignUpWithEmailAndPassword(this._userRepository);
 
-  Future<Either<Failure, UserModel>> call(String email, String password) {
+  Future<Either<Failure, UserModel>> call(
+      String email, String displayName, String password) {
     return _userRepository.signUpWithEmailAndPassword(
-        email: email, password: password);
+        email: email, displayName: displayName, password: password);
   }
 }

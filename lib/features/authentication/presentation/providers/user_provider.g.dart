@@ -38,20 +38,6 @@ final userRepositoryProvider = AutoDisposeProvider<UserRepository>.internal(
 );
 
 typedef UserRepositoryRef = AutoDisposeProviderRef<UserRepository>;
-String _$firebaseAuthHash() => r'7791bf70ce0f01bf991a53a76abc915478673c0b';
-
-/// See also [firebaseAuth].
-@ProviderFor(firebaseAuth)
-final firebaseAuthProvider = AutoDisposeProvider<FirebaseAuth>.internal(
-  firebaseAuth,
-  name: r'firebaseAuthProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$firebaseAuthHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef FirebaseAuthRef = AutoDisposeProviderRef<FirebaseAuth>;
 String _$signInWithEmailAndPasswordHash() =>
     r'ffce0ca8bb6d15deacd5290b8c7b912a259a9688';
 
@@ -88,7 +74,7 @@ final signUpWithEmailAndPasswordProvider =
 
 typedef SignUpWithEmailAndPasswordRef
     = AutoDisposeProviderRef<SignUpWithEmailAndPassword>;
-String _$userNotifierHash() => r'57359c019e2e5eb0f955456970a44034c566e44b';
+String _$userNotifierHash() => r'9ee80d3e55fd1ce3fd23c8075da2bfdf0b7c93ac';
 
 /// See also [UserNotifier].
 @ProviderFor(UserNotifier)

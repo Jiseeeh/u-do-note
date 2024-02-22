@@ -4,9 +4,20 @@ abstract class Failure {
   Failure(this.message);
 }
 
+class GenericFailure extends Failure {
+  GenericFailure(String message) : super(message);
+}
 
 class AuthenticationException extends Failure {
   final String code;
 
-  AuthenticationException({required this.code, required String message}) : super(message);
+  AuthenticationException({required this.code, required String message})
+      : super(message);
+}
+
+class OpenAIException extends Failure {
+  final int statusCode;
+
+  OpenAIException({required this.statusCode, required String message})
+      : super(message);
 }

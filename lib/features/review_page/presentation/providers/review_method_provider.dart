@@ -21,13 +21,13 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
       ReviewMethodEntity(
         title: 'Feynman Technique',
         description:
-            'Explain a topic that a five (5) year old child can understand',
+            'Explain a topic that a five (5) year old child can understand.',
         imagePath: 'lib/assets/feynman.png',
         onPressed: () {},
       ),
       ReviewMethodEntity(
         title: 'Pomodoro Technique',
-        description: 'Generate text based on your input',
+        description: 'Generate text based on your input.',
         imagePath: 'lib/assets/pomodoro.png',
         onPressed: () {},
       ),

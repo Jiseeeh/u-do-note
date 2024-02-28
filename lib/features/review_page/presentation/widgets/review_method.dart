@@ -13,10 +13,13 @@ class ReviewMethod extends ConsumerWidget {
       required this.imagePath,
       required this.onPressed});
 
+  // TODO: fix the review method's description text overflow when the text is too long
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const double containerHeight = 170;
+
     return Container(
-      height: 150,
+      height: containerHeight,
       decoration: BoxDecoration(
         color: const Color(0xffeaf2ff),
         borderRadius: BorderRadius.circular(8),
@@ -37,7 +40,7 @@ class ReviewMethod extends ConsumerWidget {
                         title,
                         // TODO: use theme
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                            fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                       // TODO: use theme
                       Text(
@@ -66,7 +69,7 @@ class ReviewMethod extends ConsumerWidget {
           // ?MONKEY PATCHING FTW
           Container(
               width: 130,
-              height: 150,
+              height: containerHeight,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
               ),

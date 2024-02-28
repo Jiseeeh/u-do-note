@@ -64,16 +64,16 @@ class LeitnerSystemModel {
           {required Map<String, dynamic> data, required String id}) =>
       LeitnerSystemModel(
           id: id,
-          userId: data['userId'],
-          userNoteId: data['userNoteId'],
+          userId: data['user_id'],
+          userNoteId: data['user_note_id'],
           flashcards: (data['flashcards'] as List)
               .map(
                 (flashcard) => FlashcardModel(
                   id: flashcard['id'],
                   question: flashcard['question'],
                   answer: flashcard['answer'],
-                  lastReview: flashcard['lastReview'].toDate(),
-                  nextReview: flashcard['nextReview'].toDate(),
+                  lastReview: flashcard['last_review'].toDate(),
+                  nextReview: flashcard['next_review'].toDate(),
                 ),
               )
               .toList());

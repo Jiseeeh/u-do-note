@@ -38,7 +38,7 @@ class NoteModel {
   }
 
   // from firestore
-  factory NoteModel.fromJson(Map<String, dynamic> json) {
+  factory NoteModel.fromFirestore(Map<String, dynamic> json) {
     return NoteModel(
       id: json['id'],
       title: json['title'],

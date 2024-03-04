@@ -38,8 +38,8 @@ class LeitnerSystemImpl implements LeitnerSystemRepository {
     } on RequestFailedException catch (e) {
       return Left(
           OpenAIException(message: e.toString(), statusCode: e.statusCode));
-    } on Exception catch (e) {
-      return Left(GenericFailure(e.toString()));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
     }
   }
 }

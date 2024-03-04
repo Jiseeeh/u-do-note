@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
@@ -35,7 +36,13 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         children: [
           QuillToolbar.simple(
             configurations: QuillSimpleToolbarConfigurations(
-                controller: _controller, multiRowsDisplay: false),
+              controller: _controller,
+              multiRowsDisplay: false,
+              toolbarSize: 40,
+            ),
+          ),
+          const Divider(
+            color: Colors.grey,
           ),
           Expanded(
             child: QuillEditor.basic(
@@ -45,7 +52,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                 readOnly: false,
               ),
             ),
-          )
+          ),
         ],
       ),
     );

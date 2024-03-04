@@ -17,6 +17,7 @@ dependencies:
   firebase_core: ^2.25.3
   flutter:
     sdk: flutter
+  flutter_easyloading: ^3.0.5
   flutter_quill: ^9.3.1
   flutter_riverpod: ^2.4.10
   hive: ^2.2.3

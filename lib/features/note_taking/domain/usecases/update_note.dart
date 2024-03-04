@@ -8,6 +8,6 @@ class UpdateNote {
   UpdateNote(this._noteRepository);
 
   Future<Either<Failure, void>> call(String id) async {
-    return await _noteRepository.updateNote(id);
+    return await _noteRepository.updateNote(id: id);
   }
 }

@@ -8,6 +8,6 @@ class DeleteNote {
   DeleteNote(this._noteRepository);
 
   Future<Either<Failure, void>> call(String id) async {
-    return await _noteRepository.deleteNote(id);
+    return await _noteRepository.deleteNote(id:id);
   }
 }

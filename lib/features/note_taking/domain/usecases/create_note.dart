@@ -9,6 +9,6 @@ class CreateNote {
   CreateNote(this._noteRepository);
 
   Future<Either<Failure, void>> call(NoteModel note) async {
-    return await _noteRepository.createNote(note);
+    return await _noteRepository.createNote(note: note);
   }
 }

@@ -39,6 +39,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NoteTakingScreen(),
       );
     },
+    NotebooksRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NotebooksScreen(),
+      );
+    },
     ReviewRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -106,6 +112,20 @@ class NoteTakingRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'NoteTakingRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [NotebooksScreen]
+class NotebooksRoute extends PageRouteInfo<void> {
+  const NotebooksRoute({List<PageRouteInfo>? children})
+      : super(
+          NotebooksRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NotebooksRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

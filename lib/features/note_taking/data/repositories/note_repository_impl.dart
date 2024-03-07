@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/data/datasources/note_remote_datasource.dart';
@@ -34,9 +35,16 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, List<NotebookModel>>> getNotebooks() {
-    // TODO: implement getNotebooks
-    throw UnimplementedError();
+  Future<Either<Failure, List<NotebookModel>>> getNotebooks() async {
+    try {
+      var res = await _noteRemoteDataSource.getNotebooks();
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
   }
 
   @override

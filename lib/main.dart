@@ -1,6 +1,7 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase_options.dart';
@@ -37,6 +38,7 @@ class MainApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'U Do Note',
       routerConfig: appRouter.config(),
+      builder: EasyLoading.init(),
     );
   }
 }

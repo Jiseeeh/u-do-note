@@ -11,12 +11,13 @@ class NoteRemoteDataSource {
   const NoteRemoteDataSource(this._firestore, this._auth);
 
   Future<List<NotebookModel>> getNotebooks() async {
+    logger.i('Getting notebooks...');
+
     String userId = _auth.currentUser!.uid;
     var notebooks = await _firestore
         .collection('users')
         .doc(userId)
         .collection('user_notes')
-        .orderBy('created_at', descending: true)
         .get();
 
     List<NotebookModel> notebooksModel = [];
@@ -25,12 +26,14 @@ class NoteRemoteDataSource {
       notebooksModel
           .add(NotebookModel.fromFirestore(notebook.id, notebook.data()));
     }
+    logger.i('Notebooks fetched successfully.');
 
-    logger.i('Notebooks: $notebooksModel');
-    return [];
+    return notebooksModel;
   }
 
   Future<String> createNotebook({required String name}) async {
+    logger.i('Creating notebook...');
+
     String userId = _auth.currentUser!.uid;
 
     await _firestore
@@ -42,6 +45,7 @@ class NoteRemoteDataSource {
       'created_at': FieldValue.serverTimestamp(),
     });
 
+    logger.i('Notebook created successfully.');
     return 'Your $name notebook has been created.';
   }
 }

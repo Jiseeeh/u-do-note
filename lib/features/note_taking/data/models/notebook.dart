@@ -36,11 +36,13 @@ class NotebookModel {
 
   /// from firestore to model
   factory NotebookModel.fromFirestore(String id, Map<String, dynamic> data) {
+    var notes = (data['notes'] as List?) ?? [];
+    
     return NotebookModel(
       id: id,
       subject: data['subject'],
       createdAt: DateTime.parse(data['created_at'].toDate().toString()),
-      notes: (data['notes'] as List)
+      notes: notes
           .map((e) => NoteModel.fromFirestore(e))
           .toList(),
     );

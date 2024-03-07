@@ -67,11 +67,12 @@ final getNotebooksProvider = AutoDisposeProvider<GetNotebooks>.internal(
 );
 
 typedef GetNotebooksRef = AutoDisposeProviderRef<GetNotebooks>;
-String _$notesHash() => r'ebd5fd88f33589f66d43bdbf183ae7e93a1252cf';
+String _$notesHash() => r'79885d167b06f6f68ee52b6443eb30d1444416e8';
 
 /// See also [Notes].
 @ProviderFor(Notes)
-final notesProvider = NotifierProvider<Notes, List<NotebookEntity>>.internal(
+final notesProvider =
+    AsyncNotifierProvider<Notes, List<NotebookEntity>>.internal(
   Notes.new,
   name: r'notesProvider',
   debugGetCreateSourceHash:
@@ -80,6 +81,6 @@ final notesProvider = NotifierProvider<Notes, List<NotebookEntity>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$Notes = Notifier<List<NotebookEntity>>;
+typedef _$Notes = AsyncNotifier<List<NotebookEntity>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

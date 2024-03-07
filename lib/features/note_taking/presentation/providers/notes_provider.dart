@@ -42,24 +42,32 @@ GetNotebooks getNotebooks(GetNotebooksRef ref) {
 @Riverpod(keepAlive: true)
 class Notes extends _$Notes {
   @override
-  List<NotebookEntity> build() {
-    return [];
+  Future<List<NotebookEntity>> build() {
+    return getNotebooks();
   }
 
-  void getNotebooks() async {
+  Future<List<NotebookEntity>> getNotebooks() async {
     final getNotebooks = ref.read(getNotebooksProvider);
 
-    var notebookModels = await getNotebooks();
+    state = const AsyncValue.loading();
 
-    notebookModels.fold((failure) {
-      state = [];
-    }, (notebookModels) {
-      state = notebookModels.map((nb) => nb.toEntity()).toList();
+    var notebooksOrFailure = await getNotebooks();
+
+    return notebooksOrFailure.fold((failure) async {
+      state = const AsyncValue.error('No notebooks yet', StackTrace.empty);
+      return [];
+    }, (notebookModels) async {
+      var notebookEntities = notebookModels.map((nb) => nb.toEntity()).toList();
+
+      state = await AsyncValue.guard(() async {
+        return notebookEntities;
+      });
+
+      return notebookEntities;
     });
   }
 
-  // TODO: if this is not working, try stream
-
+  /// creates a notebook from the given name
   Future<String> createNotebook({required String name}) async {
     final createNotebook = ref.read(createNotebookProvider);
 

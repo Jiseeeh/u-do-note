@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/data/datasources/note_remote_datasource.dart';
@@ -12,9 +13,18 @@ class NoteRepositoryImpl implements NoteRepository {
   const NoteRepositoryImpl(this._noteRemoteDataSource);
 
   @override
-  Future<Either<Failure, void>> createNote({required NoteModel note}) {
-    // TODO: implement createNote
-    throw UnimplementedError();
+  Future<Either<Failure, String>> createNote(
+      {required String notebookId, required String title}) async {
+    try {
+      var res = await _noteRemoteDataSource.createNote(
+          notebookId: notebookId, title: title);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
   }
 
   @override
@@ -29,17 +39,11 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteNote({required String id}) {
-    // TODO: implement deleteNote
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<Failure, List<NotebookModel>>> getNotebooks() async {
     try {
-      var res = await _noteRemoteDataSource.getNotebooks();
+      var success = await _noteRemoteDataSource.getNotebooks();
 
-      return Right(res);
+      return Right(success);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
@@ -48,8 +52,32 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateNote({required String id}) {
-    // TODO: implement updateNote
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> updateNote(
+      {required String notebookId, required NoteModel note}) async {
+    try {
+      var success = await _noteRemoteDataSource.updateNote(
+          notebookId: notebookId, note: note);
+
+      return Right(success);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteNote(
+      {required String notebookId, required String noteId}) async {
+    try {
+      var res = await _noteRemoteDataSource.deleteNote(
+          notebookId: notebookId, noteId: noteId);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
   }
 }

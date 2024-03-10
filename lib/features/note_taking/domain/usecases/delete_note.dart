@@ -7,7 +7,7 @@ class DeleteNote {
 
   DeleteNote(this._noteRepository);
 
-  Future<Either<Failure, void>> call(String id) async {
-    return await _noteRepository.deleteNote(id:id);
+  Future<Either<Failure, String>> call(String notebookId, String noteId) async {
+    return await _noteRepository.deleteNote(notebookId: notebookId, noteId: noteId);
   }
 }

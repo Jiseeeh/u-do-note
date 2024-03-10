@@ -67,20 +67,62 @@ final getNotebooksProvider = AutoDisposeProvider<GetNotebooks>.internal(
 );
 
 typedef GetNotebooksRef = AutoDisposeProviderRef<GetNotebooks>;
-String _$notesHash() => r'79885d167b06f6f68ee52b6443eb30d1444416e8';
+String _$updateNoteHash() => r'e84248c06816e2e9d1768531b6fa1cd256ca325d';
 
-/// See also [Notes].
-@ProviderFor(Notes)
-final notesProvider =
-    AsyncNotifierProvider<Notes, List<NotebookEntity>>.internal(
-  Notes.new,
-  name: r'notesProvider',
+/// See also [updateNote].
+@ProviderFor(updateNote)
+final updateNoteProvider = AutoDisposeProvider<UpdateNote>.internal(
+  updateNote,
+  name: r'updateNoteProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$notesHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$updateNoteHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$Notes = AsyncNotifier<List<NotebookEntity>>;
+typedef UpdateNoteRef = AutoDisposeProviderRef<UpdateNote>;
+String _$deleteNoteHash() => r'8edc023c660ee54b0d662d699406de75b77072c9';
+
+/// See also [deleteNote].
+@ProviderFor(deleteNote)
+final deleteNoteProvider = AutoDisposeProvider<DeleteNote>.internal(
+  deleteNote,
+  name: r'deleteNoteProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$deleteNoteHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DeleteNoteRef = AutoDisposeProviderRef<DeleteNote>;
+String _$createNoteHash() => r'3e267d1ef655a98cb83c56682ffc5ffab8548ffa';
+
+/// See also [createNote].
+@ProviderFor(createNote)
+final createNoteProvider = AutoDisposeProvider<CreateNote>.internal(
+  createNote,
+  name: r'createNoteProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$createNoteHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CreateNoteRef = AutoDisposeProviderRef<CreateNote>;
+String _$notebooksHash() => r'da66035ed63f428769a5da2fb73d04480c42d760';
+
+/// See also [Notebooks].
+@ProviderFor(Notebooks)
+final notebooksProvider =
+    AsyncNotifierProvider<Notebooks, List<NotebookEntity>>.internal(
+  Notebooks.new,
+  name: r'notebooksProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$notebooksHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$Notebooks = AsyncNotifier<List<NotebookEntity>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

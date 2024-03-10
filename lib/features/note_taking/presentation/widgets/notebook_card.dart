@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
@@ -24,7 +25,9 @@ class NotebookCard extends ConsumerWidget {
           ),
           child: InkWell(
             // ? InkWell is for the ripple effect
-            onTap: () {},
+            onTap: () {
+              context.router.pushNamed('/notebook/pages/${notebook.id}');
+            },
           ),
         )),
         Padding(

@@ -12,4 +12,9 @@ class NotebookEntity {
     required this.createdAt,
     required this.notes,
   });
+
+  @override
+  String toString() {
+    return 'Notebook entity {id: $id, subject: $subject, notesLength: ${notes.length} }';
+  }
 }

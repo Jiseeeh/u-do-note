@@ -13,7 +13,7 @@ class NotebooksScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncNotes = ref.watch(notesProvider);
+    final asyncNotes = ref.watch(notebooksProvider);
 
     return SafeArea(
       child: Scaffold(

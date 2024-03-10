@@ -69,7 +69,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                           dismissOnTap: false);
 
                       String result = await ref
-                          .read(notesProvider.notifier)
+                          .read(notebooksProvider.notifier)
                           .createNotebook(name: _nameController.text);
 
                       EasyLoading.dismiss();

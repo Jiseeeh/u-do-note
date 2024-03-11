@@ -14,7 +14,6 @@ import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class NotebookPagesScreen extends ConsumerWidget {
-  // TODO: make also a notes provider and rename old to notebooks provider
   final String notebookId;
   const NotebookPagesScreen(@PathParam('notebookId') this.notebookId,
       {Key? key})
@@ -43,6 +42,8 @@ class NotebookPagesScreen extends ConsumerWidget {
     );
   }
 
+  // TODO: deleting and updating a notebook, e.g, changing the subject name
+  // and if applicable, also allow changing of background image
   Widget _buildBody(
       BuildContext context, WidgetRef ref, List<NotebookEntity>? notebooks) {
     var notebook = notebooks!.firstWhere((nb) => nb.id == notebookId);
@@ -104,6 +105,33 @@ class NotebookPagesScreen extends ConsumerWidget {
                   icon: const Icon(Icons.edit)),
               IconButton(
                   onPressed: () async {
+                    // show dialog to confirm delete
+                    var userChoice = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Delete Note'),
+                            content: const Text(
+                                'Are you sure you want to delete this note?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                  child: const Text('No')),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: const Text('Yes')),
+                            ],
+                          );
+                        });
+
+                    if (userChoice == null || userChoice == false) {
+                      return;
+                    }
+
                     EasyLoading.show(
                         status: 'loading...',
                         maskType: EasyLoadingMaskType.black,

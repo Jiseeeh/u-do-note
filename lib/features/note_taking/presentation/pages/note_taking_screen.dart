@@ -82,6 +82,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   Widget _buildBody() {
     return Column(
       children: [
+        // TODO: add to toolbar: ocr, preview mode
         QuillToolbar.simple(
           configurations: QuillSimpleToolbarConfigurations(
             controller: _controller,

@@ -41,7 +41,7 @@
 5. Repeat **4** until you added all of the use cases you need.
 6. Next is work on the data layer, make the models.
 7. The properties of the models is the same as the entity but it haves a method for converting a model from entity or vice versa.
-8. Add hive annotations to your models.
+8. Add hive annotations to your models. (If needed)
 9. After adding hive annotations, build the packages `dart run build_runner build`
 10. Setup data sources
 11. Implement the repositories in the data layer using the data sources (using composition)

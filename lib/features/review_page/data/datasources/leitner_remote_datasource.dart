@@ -11,7 +11,8 @@ class LeitnerRemoteDataSource {
 
   LeitnerRemoteDataSource(this._firestore);
 
-  Future<List<FlashcardModel>> generateFlashcards(String userId, String userNoteId) async {
+  Future<List<FlashcardModel>> generateFlashcards(
+      String userId, String userNoteId) async {
     // fetch the notes in firestore
     List<NoteModel> notes = await _getNotes(_firestore);
 
@@ -65,8 +66,8 @@ class LeitnerRemoteDataSource {
 
     print('content: $content');
     print('finish reason: ${chatCompletion.choices.first.finishReason}');
-    print(chatCompletion.systemFingerprint); 
-    print(chatCompletion.usage.promptTokens); 
+    print(chatCompletion.systemFingerprint);
+    print(chatCompletion.usage.promptTokens);
 
     var decodedJson = json.decode(content!);
 
@@ -91,7 +92,7 @@ class LeitnerRemoteDataSource {
 
     for (var note in notes.docs) {
       for (Map<String, dynamic> firestoreNote in note.data()['notes']) {
-        notesModel.add(NoteModel.fromJson(firestoreNote));
+        notesModel.add(NoteModel.fromFirestore(firestoreNote));
       }
     }
 

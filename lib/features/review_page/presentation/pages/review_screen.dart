@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
-import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_method_provider.dart';
 
 @RoutePage()
 class ReviewScreen extends ConsumerWidget {
@@ -12,7 +12,7 @@ class ReviewScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: _buildAppBar(ref),
-      body: _buildBody(),
+      body: _buildBody(ref),
     );
   }
 
@@ -21,6 +21,7 @@ class ReviewScreen extends ConsumerWidget {
     String username = currentUser!.displayName!;
 
     return AppBar(
+      scrolledUnderElevation: 0,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -48,49 +49,47 @@ class ReviewScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBody() {
-    return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            SearchAnchor(
-              isFullScreen: false,
-              builder: (context, controller) {
-                return SearchBar(
-                  controller: controller,
-                  padding: const MaterialStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 16.0)),
-                  onTap: () {
-                    controller.openView();
-                  },
-                  onChanged: (_) {
-                    controller.openView();
-                  },
-                  leading: const Icon(Icons.search),
-                );
-              },
-              suggestionsBuilder: (context, controller) {
-                // TODO: Implement the suggestions builder with the review methods
-                return List<ListTile>.generate(20, (index) {
-                  final String item = 'item$index';
-                  return ListTile(
-                    title: Text(item),
+  Widget _buildBody(WidgetRef ref) {
+    var reviewMethodsNotifier = ref.read(reviewMethodNotifierProvider.notifier);
+
+    return SafeArea(
+      child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              SearchAnchor(
+                isFullScreen: false,
+                builder: (context, controller) {
+                  return SearchBar(
+                    hintText: 'Search',
+                    backgroundColor: MaterialStateColor.resolveWith((_) {
+                      return const Color(0xffececec);
+                    }),
+                    shadowColor: MaterialStateColor.resolveWith((_) {
+                      return Colors.transparent;
+                    }),
+                    controller: controller,
+                    padding: const MaterialStatePropertyAll<EdgeInsets>(
+                        EdgeInsets.symmetric(horizontal: 16.0)),
                     onTap: () {
-                      controller.closeView(item);
+                      controller.openView();
                     },
+                    leading: const Icon(Icons.search),
                   );
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            // TODO: implement the review methods that is scrollable
-            ReviewMethod(
-              title: 'GPT-3',
-              description: 'Generate text based on your input',
-              imagePath: 'lib/assets/flashcard.png',
-              onPressed: () {},
-            ),
-          ],
-        ));
+                },
+                suggestionsBuilder: (context, controller) {
+                  return reviewMethodsNotifier
+                      .buildReviewMethodTiles(controller.text);
+                },
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: SingleChildScrollView(
+                    child: Column(
+                        children: reviewMethodsNotifier.buildReviewMethods())),
+              )
+            ],
+          )),
+    );
   }
 }

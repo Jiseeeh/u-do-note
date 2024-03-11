@@ -10,7 +10,7 @@ class HomepageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AutoTabsScaffold(
-      routes: const [ReviewRoute()],
+      routes: const [ReviewRoute(), NotebooksRoute()],
       extendBody: true,
       bottomNavigationBuilder: (_, tabsRouter) {
         // TODO: make this sht look like the bottom nav bar in the figma

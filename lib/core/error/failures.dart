@@ -5,7 +5,7 @@ abstract class Failure {
 }
 
 class GenericFailure extends Failure {
-  GenericFailure(String message) : super(message);
+  GenericFailure({required String message}) : super(message);
 }
 
 class AuthenticationException extends Failure {

@@ -1,9 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/pages/homepage_screen.dart';
 
 import 'package:u_do_note/features/authentication/presentation/pages/intro_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/sign_up_screen.dart';
+import 'package:u_do_note/features/note_taking/presentation/pages/note_taking_screen.dart';
+import 'package:u_do_note/features/note_taking/presentation/pages/notebook_pages_screen.dart';
+import 'package:u_do_note/features/note_taking/presentation/pages/notebooks_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
 
@@ -26,6 +31,11 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: LoginRoute.page, path: '/login'),
         AutoRoute(page: HomepageRoute.page, path: '/home', children: [
           AutoRoute(page: ReviewRoute.page, path: ''),
-        ])
+          AutoRoute(page: NotebooksRoute.page, path: 'notebooks'),
+          AutoRoute(page: NoteTakingRoute.page, path: 'note-taking')
+        ]),
+        AutoRoute(
+            page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
+        AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note')
       ];
 }

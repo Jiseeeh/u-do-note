@@ -17,52 +17,54 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   // TODO: implement each page view model.
   @override
   Widget build(BuildContext context) {
-    return IntroductionScreen(
-      key: _introScreenKey,
-      pages: [
-        PageViewModel(
-          title: "Title of first page",
-          body:
-              "Here you can write the description of the page, to explain something...",
-          // image: Center(
-          //     child: Image.asset(
-          //         'https://www.creativefabrica.com/wp-content/uploads/2020/12/18/Flat-Vector-Illustration-of-Human-Graphics-7228856-2-580x386.png',
-          //         height: 175.0)),
-          decoration: const PageDecoration(
-            pageColor: Colors.blue,
+    return SafeArea(
+      child: IntroductionScreen(
+        key: _introScreenKey,
+        pages: [
+          PageViewModel(
+            title: "Title of first page",
+            body:
+                "Here you can write the description of the page, to explain something...",
+            // image: Center(
+            //     child: Image.asset(
+            //         'https://www.creativefabrica.com/wp-content/uploads/2020/12/18/Flat-Vector-Illustration-of-Human-Graphics-7228856-2-580x386.png',
+            //         height: 175.0)),
+            decoration: const PageDecoration(
+              pageColor: Colors.blue,
+            ),
           ),
-        ),
-        PageViewModel(
-          title: "Title of second page",
-          body:
-              "Here you can write the description of the page, to explain something...",
-          // image:
-          //     Center(child: Image.asset('assets/images/2.png', height: 175.0)),
-          decoration: const PageDecoration(
-            pageColor: Colors.blue,
+          PageViewModel(
+            title: "Title of second page",
+            body:
+                "Here you can write the description of the page, to explain something...",
+            // image:
+            //     Center(child: Image.asset('assets/images/2.png', height: 175.0)),
+            decoration: const PageDecoration(
+              pageColor: Colors.blue,
+            ),
           ),
-        ),
-        PageViewModel(
-          title: "Title of third page",
-          body:
-              "Here you can write the description of the page, to explain something...",
-          // image:
-          //     Center(child: Image.asset('assets/images/3.png', height: 175.0)),
-          decoration: const PageDecoration(
-            pageColor: Colors.blue,
+          PageViewModel(
+            title: "Title of third page",
+            body:
+                "Here you can write the description of the page, to explain something...",
+            // image:
+            //     Center(child: Image.asset('assets/images/3.png', height: 175.0)),
+            decoration: const PageDecoration(
+              pageColor: Colors.blue,
+            ),
           ),
-        ),
-      ],
-      showSkipButton: true,
-      skip: const Text("Skip"),
-      next: const Text("Next"),
-      done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w700)),
-      onDone: () {
-        context.router.replaceNamed('/sign-up');
-      },
-      onSkip: () {
-        _introScreenKey.currentState?.skipToEnd();
-      },
+        ],
+        showSkipButton: true,
+        skip: const Text("Skip"),
+        next: const Text("Next"),
+        done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w700)),
+        onDone: () {
+          context.router.replaceNamed('/sign-up');
+        },
+        onSkip: () {
+          _introScreenKey.currentState?.skipToEnd();
+        },
+      ),
     );
   }
 }

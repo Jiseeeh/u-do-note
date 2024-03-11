@@ -32,7 +32,7 @@ class NoteRemoteDataSource {
     return response;
   }
 
-  Future<String> createNote(
+  Future<NoteModel> createNote(
       {required String notebookId, required String title}) async {
     logger.i('Creating note...');
 
@@ -45,7 +45,14 @@ class NoteRemoteDataSource {
         .doc(notebookId)
         .get();
 
-    var notes = userNote.data()!['notes'];
+    
+    var userNoteData = userNote.data();
+    var notes = [];
+
+    if (userNoteData != null && userNoteData['notes'] != null) {
+      notes = userNoteData['notes'];
+    }
+
     List<NoteModel> noteModels = [];
 
     for (var note in notes) {
@@ -80,7 +87,7 @@ class NoteRemoteDataSource {
 
     logger.i(response);
 
-    return response;
+    return newNote;
   }
 
   Future<List<NotebookModel>> getNotebooks() async {

@@ -130,7 +130,21 @@ class Notebooks extends _$Notebooks {
     var result = await createNote(notebookId, title);
 
     // TODO: update state to refresh ui
-    return result.fold((failure) => failure.message, (res) => res);
+    return result.fold((failure) => failure.message, (noteModel) {
+      List<NotebookEntity> notebookEntities =
+          state.value as List<NotebookEntity>;
+
+      var notebook = notebookEntities
+          .firstWhere((notebookEntity) => notebookEntity.id == notebookId);
+
+      notebook.notes.add(noteModel.toEntity());
+
+      notebookEntities[notebookEntities.indexOf(notebook)] = notebook;
+
+      state = AsyncValue.data(notebookEntities);
+
+      return 'Note created successfully.';
+    });
   }
 
   /// Deletes a specific note from a notebook

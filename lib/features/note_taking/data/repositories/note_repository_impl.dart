@@ -13,7 +13,7 @@ class NoteRepositoryImpl implements NoteRepository {
   const NoteRepositoryImpl(this._noteRemoteDataSource);
 
   @override
-  Future<Either<Failure, String>> createNote(
+  Future<Either<Failure, NoteModel>> createNote(
       {required String notebookId, required String title}) async {
     try {
       var res = await _noteRemoteDataSource.createNote(

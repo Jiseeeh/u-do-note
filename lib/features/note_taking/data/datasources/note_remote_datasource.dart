@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -211,16 +213,16 @@ class NoteRemoteDataSource {
   Future<String> uploadNotebookCover(XFile image) async {
     FirebaseStorage storage = FirebaseStorage.instance;
 
-    logger.i('Uploading notebook cover...');
+    final fileName = image.name;
+    logger.i('Uploading notebook cover with name: $fileName...');
 
-    var fileReference = storage.ref().child(
-        'notebook_covers/${DateTime.now().millisecondsSinceEpoch.toString()}');
+    var fileReference = storage.ref().child('notebook_covers/$fileName');
 
-    var uploadTask = fileReference.putData(await image.readAsBytes());
+    var snapshot = await fileReference.putFile(File(image.path));
 
-    var downloadUrl = uploadTask.snapshot.ref.getDownloadURL();
-
-    logger.i('Notebook cover uploaded successfully.');
+    var downloadUrl = await snapshot.ref.getDownloadURL();
+    
+    logger.i('Notebook cover uploaded successfully with url: $downloadUrl');
     return downloadUrl;
   }
 }

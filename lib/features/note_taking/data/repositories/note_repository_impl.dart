@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
-import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/data/datasources/note_remote_datasource.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';

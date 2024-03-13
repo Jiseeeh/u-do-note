@@ -15,6 +15,7 @@ dependencies:
   envied: ^0.5.3
   firebase_auth: ^4.17.3
   firebase_core: ^2.25.3
+  firebase_storage: ^11.6.10
   flutter:
     sdk: flutter
   flutter_easyloading: ^3.0.5
@@ -22,6 +23,7 @@ dependencies:
   flutter_riverpod: ^2.4.10
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  image_picker: ^1.0.7
   intl: ^0.18.1
   introduction_screen: ^3.1.6
   logger: ^2.0.2+1

@@ -123,7 +123,8 @@ class Notebooks extends _$Notebooks {
   }
 
   /// Creates a notebook from the given [name]
-  Future<String> createNotebook({required String name, required String coverImgUrl}) async {
+  Future<String> createNotebook(
+      {required String name, required String coverImgUrl}) async {
     final createNotebook = ref.read(createNotebookProvider);
 
     var result = await createNotebook(name, coverImgUrl);
@@ -180,8 +181,9 @@ class Notebooks extends _$Notebooks {
   Future<String> uploadNotebookCover({required XFile coverImg}) async {
     final uploadNotebookCover = ref.read(uploadNotebookCoverProvider);
 
-    var coverImgUrl = await uploadNotebookCover(coverImg);
+    var failureOrCoverImgUrl = await uploadNotebookCover(coverImg);
 
-    return '';
+    return failureOrCoverImgUrl.fold(
+        (failure) => '', (coverImgUrl) => coverImgUrl);
   }
 }

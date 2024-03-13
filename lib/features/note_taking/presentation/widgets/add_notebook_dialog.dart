@@ -20,8 +20,8 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   final _formKey = GlobalKey<FormState>();
   var _notebookCoverLocalPath = "";
   var _notebookCoverUrl = "";
+  XFile? _notebookCoverImg;
 
-  // TODO: add choosing of cover image from filesystem
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -81,15 +81,8 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
 
                         if (img != null) {
                           setState(() {
+                            _notebookCoverImg = img;
                             _notebookCoverLocalPath = img.path;
-                          });
-
-                          var coverUrl = await ref
-                              .read(notebooksProvider.notifier)
-                              .uploadNotebookCover(coverImg: img);
-
-                          setState(() {
-                            _notebookCoverUrl = coverUrl;
                           });
                         }
                       },
@@ -110,6 +103,16 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      if (_notebookCoverImg != null) {
+                        var coverDownloadUrl = await ref
+                            .read(notebooksProvider.notifier)
+                            .uploadNotebookCover(coverImg: _notebookCoverImg!);
+
+                        setState(() {
+                          _notebookCoverUrl = coverDownloadUrl;
+                        });
+                      }
+
                       EasyLoading.show(
                           status: 'Creating Notebook...',
                           maskType: EasyLoadingMaskType.black,
@@ -117,7 +120,9 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
 
                       String result = await ref
                           .read(notebooksProvider.notifier)
-                          .createNotebook(name: _nameController.text,coverImgUrl: _notebookCoverUrl);
+                          .createNotebook(
+                              name: _nameController.text,
+                              coverImgUrl: _notebookCoverUrl);
 
                       EasyLoading.dismiss();
 

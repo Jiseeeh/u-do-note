@@ -109,7 +109,24 @@ final createNoteProvider = AutoDisposeProvider<CreateNote>.internal(
 );
 
 typedef CreateNoteRef = AutoDisposeProviderRef<CreateNote>;
-String _$notebooksHash() => r'da66035ed63f428769a5da2fb73d04480c42d760';
+String _$uploadNotebookCoverHash() =>
+    r'463d0b698b07097f89700ae1327751d7c4d6cfcf';
+
+/// See also [uploadNotebookCover].
+@ProviderFor(uploadNotebookCover)
+final uploadNotebookCoverProvider =
+    AutoDisposeProvider<UploadNotebookCover>.internal(
+  uploadNotebookCover,
+  name: r'uploadNotebookCoverProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$uploadNotebookCoverHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef UploadNotebookCoverRef = AutoDisposeProviderRef<UploadNotebookCover>;
+String _$notebooksHash() => r'7eeccc7bb4b3555bc419e49b361311c517c963c1';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

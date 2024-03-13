@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
@@ -11,21 +15,35 @@ class NoteRemoteDataSource {
 
   const NoteRemoteDataSource(this._firestore, this._auth);
 
-  Future<String> createNotebook({required String name}) async {
+  Future<String> createNotebook(String name, String coverImgUrl) async {
     logger.i('Creating notebook...');
 
     String userId = _auth.currentUser!.uid;
+    var response = 'Notebook created successfully.';
+
+    // TODO: check if possible to just add firestore rule for this
+
+    var notebook = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('user_notes')
+        .where('subject', isEqualTo: name.toLowerCase())
+        .get();
+
+    if (notebook.docs.isNotEmpty) {
+      response = "Notebook with name $name already exists.";
+      return response;
+    }
 
     await _firestore
         .collection('users')
         .doc(userId)
         .collection('user_notes')
         .add({
-      'subject': name,
+      'subject': name.toLowerCase(),
+      'cover_url': coverImgUrl,
       'created_at': FieldValue.serverTimestamp(),
     });
-
-    const response = 'Notebook created successfully.';
 
     logger.i(response);
 
@@ -45,7 +63,6 @@ class NoteRemoteDataSource {
         .doc(notebookId)
         .get();
 
-    
     var userNoteData = userNote.data();
     var notes = [];
 
@@ -191,5 +208,21 @@ class NoteRemoteDataSource {
     logger.i(response);
 
     return response;
+  }
+
+  Future<String> uploadNotebookCover(XFile image) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    final fileName = image.name;
+    logger.i('Uploading notebook cover with name: $fileName...');
+
+    var fileReference = storage.ref().child('notebook_covers/$fileName');
+
+    var snapshot = await fileReference.putFile(File(image.path));
+
+    var downloadUrl = await snapshot.ref.getDownloadURL();
+    
+    logger.i('Notebook cover uploaded successfully with url: $downloadUrl');
+    return downloadUrl;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
@@ -28,9 +29,11 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, String>> createNotebook({required String name}) async {
+  Future<Either<Failure, String>> createNotebook(
+      String name, String coverImgUrl) async {
     try {
-      String res = await _noteRemoteDataSource.createNotebook(name: name);
+      String res =
+          await _noteRemoteDataSource.createNotebook(name, coverImgUrl);
 
       return Right(res);
     } catch (e) {
@@ -76,6 +79,18 @@ class NoteRepositoryImpl implements NoteRepository {
       return Right(res);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadNotebookCover(XFile coverImg) async {
+    try {
+      var downloadUrl =
+          await _noteRemoteDataSource.uploadNotebookCover(coverImg);
+
+      return Right(downloadUrl);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

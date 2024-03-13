@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/shared/data/models/note.dart';
@@ -12,6 +13,7 @@ import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.d
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/upload_notebook_cover.dart';
 
 part 'notes_provider.g.dart';
 
@@ -65,6 +67,13 @@ CreateNote createNote(CreateNoteRef ref) {
   return CreateNote(repository);
 }
 
+@riverpod
+UploadNotebookCover uploadNotebookCover(UploadNotebookCoverRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return UploadNotebookCover(repository);
+}
+
 @Riverpod(keepAlive: true)
 class Notebooks extends _$Notebooks {
   @override
@@ -114,11 +123,13 @@ class Notebooks extends _$Notebooks {
   }
 
   /// Creates a notebook from the given [name]
-  Future<String> createNotebook({required String name}) async {
+  Future<String> createNotebook(
+      {required String name, required String coverImgUrl}) async {
     final createNotebook = ref.read(createNotebookProvider);
 
-    var result = await createNotebook(name);
+    var result = await createNotebook(name, coverImgUrl);
 
+    // TODO: update state to refresh ui
     return result.fold((failure) => failure.message, (res) => res);
   }
 
@@ -165,5 +176,14 @@ class Notebooks extends _$Notebooks {
     state = AsyncValue.data(notebookEntities);
 
     return res.fold((failure) => failure.message, (res) => res);
+  }
+
+  Future<String> uploadNotebookCover({required XFile coverImg}) async {
+    final uploadNotebookCover = ref.read(uploadNotebookCoverProvider);
+
+    var failureOrCoverImgUrl = await uploadNotebookCover(coverImg);
+
+    return failureOrCoverImgUrl.fold(
+        (failure) => '', (coverImgUrl) => coverImgUrl);
   }
 }

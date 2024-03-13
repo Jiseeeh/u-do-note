@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 
 class AddNotebookDialog extends ConsumerStatefulWidget {
@@ -14,8 +18,10 @@ class AddNotebookDialog extends ConsumerStatefulWidget {
 class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  var _notebookCoverLocalPath = "";
+  var _notebookCoverUrl = "";
+  XFile? _notebookCoverImg;
 
-  // TODO: add choosing of cover image from filesystem
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -23,13 +29,13 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
       content: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
               controller: _nameController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  print('nb name');
                   return 'Please enter notebook name';
                 }
 
@@ -50,6 +56,40 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                 hintText: 'Enter Notebook Name',
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: _notebookCoverLocalPath.isEmpty
+                            ? const AssetImage('lib/assets/chisaki.png')
+                            : FileImage(File(_notebookCoverLocalPath))
+                                as ImageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () async {
+                        var img = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+
+                        if (img != null) {
+                          setState(() {
+                            _notebookCoverImg = img;
+                            _notebookCoverLocalPath = img.path;
+                          });
+                        }
+                      },
+                      icon: const Icon(Icons.add_a_photo)),
+                ],
+              ),
+            ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -63,6 +103,16 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      if (_notebookCoverImg != null) {
+                        var coverDownloadUrl = await ref
+                            .read(notebooksProvider.notifier)
+                            .uploadNotebookCover(coverImg: _notebookCoverImg!);
+
+                        setState(() {
+                          _notebookCoverUrl = coverDownloadUrl;
+                        });
+                      }
+
                       EasyLoading.show(
                           status: 'Creating Notebook...',
                           maskType: EasyLoadingMaskType.black,
@@ -70,12 +120,16 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
 
                       String result = await ref
                           .read(notebooksProvider.notifier)
-                          .createNotebook(name: _nameController.text);
+                          .createNotebook(
+                              name: _nameController.text,
+                              coverImgUrl: _notebookCoverUrl);
 
                       EasyLoading.dismiss();
 
-                      EasyLoading.showSuccess(result);
+                      EasyLoading.showToast(result);
                       _nameController.clear();
+
+                      if (context.mounted) Navigator.of(context).pop();
                     }
                   },
                   child: const Text('Add'),

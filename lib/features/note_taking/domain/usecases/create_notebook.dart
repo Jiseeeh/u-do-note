@@ -8,7 +8,7 @@ class CreateNotebook {
 
   CreateNotebook(this._noteRepository);
 
-  Future<Either<Failure, String>> call(String name) async {
-    return await _noteRepository.createNotebook(name: name);
+  Future<Either<Failure, String>> call(String name, String coverImgUrl) async {
+    return await _noteRepository.createNotebook(name, coverImgUrl);
   }
 }

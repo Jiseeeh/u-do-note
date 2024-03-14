@@ -1,9 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:intl/intl.dart';
 
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 
 class NotebookCard extends ConsumerWidget {
   final NotebookEntity notebook;
@@ -17,9 +18,12 @@ class NotebookCard extends ConsumerWidget {
             child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            image: const DecorationImage(
-              // TODO: use the notebook's image
-              image: AssetImage('lib/assets/chisaki.png'),
+            // TODO: check for internet connection
+            image: DecorationImage(
+              image: notebook.coverUrl.isNotEmpty
+                  ? NetworkImage(notebook.coverUrl) as ImageProvider
+                  // TODO: replace with default one
+                  : const AssetImage('lib/assets/chisaki.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -54,7 +58,9 @@ class NotebookCard extends ConsumerWidget {
                   )
                 ],
               ),
-              Text(notebook.createdAt.toString(),
+              Text(
+                  DateFormat("EEE, dd MMM yyyy")
+                      .format(notebook.createdAt.toDate()),
                   style: const TextStyle(color: AppColors.grey))
             ],
           ),

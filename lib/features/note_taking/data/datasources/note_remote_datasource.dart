@@ -15,7 +15,7 @@ class NoteRemoteDataSource {
 
   const NoteRemoteDataSource(this._firestore, this._auth);
 
-  Future<String> createNotebook(String name, String coverImgUrl) async {
+  Future<NotebookModel> createNotebook(String name, String coverImgUrl) async {
     logger.i('Creating notebook...');
 
     String userId = _auth.currentUser!.uid;
@@ -32,10 +32,12 @@ class NoteRemoteDataSource {
 
     if (notebook.docs.isNotEmpty) {
       response = "Notebook with name $name already exists.";
-      return response;
+      return NotebookModel.fromFirestore(
+          notebook.docs.first.id, notebook.docs.first.data());
     }
 
-    await _firestore
+    var createdAt = Timestamp.now();
+    var notebookDoc = await _firestore
         .collection('users')
         .doc(userId)
         .collection('user_notes')
@@ -45,9 +47,16 @@ class NoteRemoteDataSource {
       'created_at': FieldValue.serverTimestamp(),
     });
 
+    var nbModel = NotebookModel(
+        id: notebookDoc.id,
+        subject: name.toLowerCase(),
+        coverUrl: coverImgUrl,
+        createdAt: createdAt,
+        notes: []);
+
     logger.i(response);
 
-    return response;
+    return nbModel;
   }
 
   Future<NoteModel> createNote(
@@ -221,7 +230,7 @@ class NoteRemoteDataSource {
     var snapshot = await fileReference.putFile(File(image.path));
 
     var downloadUrl = await snapshot.ref.getDownloadURL();
-    
+
     logger.i('Notebook cover uploaded successfully with url: $downloadUrl');
     return downloadUrl;
   }

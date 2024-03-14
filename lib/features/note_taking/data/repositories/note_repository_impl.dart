@@ -29,13 +29,13 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, String>> createNotebook(
+  Future<Either<Failure, NotebookModel>> createNotebook(
       String name, String coverImgUrl) async {
     try {
-      String res =
+      var nbModel =
           await _noteRemoteDataSource.createNotebook(name, coverImgUrl);
 
-      return Right(res);
+      return Right(nbModel);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

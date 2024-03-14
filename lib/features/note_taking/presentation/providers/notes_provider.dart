@@ -130,7 +130,15 @@ class Notebooks extends _$Notebooks {
     var result = await createNotebook(name, coverImgUrl);
 
     // TODO: update state to refresh ui
-    return result.fold((failure) => failure.message, (res) => res);
+    return result.fold((failure) => failure.message, (nbModel) {
+      List<NotebookEntity> notebookEntities =
+          state.value as List<NotebookEntity>;
+
+      notebookEntities.add(nbModel.toEntity());
+
+      state = AsyncValue.data(notebookEntities);
+      return "Notebook created successfully.";
+    });
   }
 
   /// Creates a note in the given notebook with the given [title]

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 
@@ -5,7 +6,7 @@ class NotebookModel {
   final String id;
   final String subject;
   final String coverUrl;
-  final DateTime createdAt;
+  final Timestamp createdAt;
   final List<NoteModel> notes;
 
   NotebookModel({
@@ -46,7 +47,7 @@ class NotebookModel {
       id: id,
       subject: data['subject'],
       coverUrl: data['cover_url'],
-      createdAt: DateTime.parse(data['created_at'].toDate().toString()),
+      createdAt: data['created_at'],
       notes: notes.map((e) => NoteModel.fromFirestore(e)).toList(),
     );
   }

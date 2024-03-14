@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 
 class NotebookEntity {
   final String id;
   final String subject;
   final String coverUrl;
-  final DateTime createdAt;
+  final Timestamp createdAt;
   final List<NoteEntity> notes;
 
   NotebookEntity({

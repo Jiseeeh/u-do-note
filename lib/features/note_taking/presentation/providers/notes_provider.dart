@@ -129,7 +129,6 @@ class Notebooks extends _$Notebooks {
 
     var result = await createNotebook(name, coverImgUrl);
 
-    // TODO: update state to refresh ui
     return result.fold((failure) => failure.message, (nbModel) {
       List<NotebookEntity> notebookEntities =
           state.value as List<NotebookEntity>;
@@ -148,7 +147,6 @@ class Notebooks extends _$Notebooks {
 
     var result = await createNote(notebookId, title);
 
-    // TODO: update state to refresh ui
     return result.fold((failure) => failure.message, (noteModel) {
       List<NotebookEntity> notebookEntities =
           state.value as List<NotebookEntity>;

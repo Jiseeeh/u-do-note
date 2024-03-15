@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
 
 class NotebookCard extends ConsumerWidget {
   final NotebookEntity notebook;
@@ -53,7 +54,32 @@ class NotebookCard extends ConsumerWidget {
                         iconSize: 20,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
-                        onPressed: () {},
+                        onPressed: () async {
+                          // intent to edit or delete
+                          // true for edit, false for delete
+                          var isEdit = await getIntent(context);
+
+                          // user cancelled
+                          if (isEdit == null) return;
+
+                          // user wants to delete
+                          if (isEdit == false && context.mounted) {
+                            var userChoice = await getUserConfirmation(context);
+
+                            if (userChoice == null || userChoice == false) {
+                              // if (context.mounted) Navigator.of(context).pop();
+                            }
+
+                            //TODO: delete notebook
+                          }
+
+                          if (isEdit && context.mounted) {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AddNotebookDialog(
+                                    notebookEntity: notebook));
+                          }
+                        },
                         icon: const Icon(Icons.more_vert)),
                   )
                 ],
@@ -67,5 +93,52 @@ class NotebookCard extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  Future<dynamic> getUserConfirmation(BuildContext context) {
+    return showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Delete Notebook'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this notebook?'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        child: const Text('No')),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, true);
+                                        },
+                                        child: const Text('Yes')),
+                                  ],
+                                );
+                              });
+  }
+
+  Future<dynamic> getIntent(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Delete Note'),
+            content: const Text('What do you want to do with this notebook?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: const Text('Delete')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('Edit')),
+            ],
+          );
+        });
   }
 }

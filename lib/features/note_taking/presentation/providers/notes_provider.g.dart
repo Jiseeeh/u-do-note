@@ -126,7 +126,22 @@ final uploadNotebookCoverProvider =
 );
 
 typedef UploadNotebookCoverRef = AutoDisposeProviderRef<UploadNotebookCover>;
-String _$notebooksHash() => r'7eeccc7bb4b3555bc419e49b361311c517c963c1';
+String _$deleteNotebookHash() => r'4415607be4b3945f25f0377aaa5745cd8cfee4b1';
+
+/// See also [deleteNotebook].
+@ProviderFor(deleteNotebook)
+final deleteNotebookProvider = AutoDisposeProvider<DeleteNotebook>.internal(
+  deleteNotebook,
+  name: r'deleteNotebookProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deleteNotebookHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DeleteNotebookRef = AutoDisposeProviderRef<DeleteNotebook>;
+String _$notebooksHash() => r'aa06c6aeb5faab7d30401b6e0aeca0fe8b9667e9';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

@@ -11,6 +11,7 @@ import 'package:u_do_note/features/note_taking/domain/repositories/note_reposito
 import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/upload_notebook_cover.dart';
@@ -74,6 +75,13 @@ UploadNotebookCover uploadNotebookCover(UploadNotebookCoverRef ref) {
   return UploadNotebookCover(repository);
 }
 
+@riverpod
+DeleteNotebook deleteNotebook(DeleteNotebookRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return DeleteNotebook(repository);
+}
+
 @Riverpod(keepAlive: true)
 class Notebooks extends _$Notebooks {
   @override
@@ -124,10 +132,12 @@ class Notebooks extends _$Notebooks {
 
   /// Creates a notebook from the given [name]
   Future<String> createNotebook(
-      {required String name, required String coverImgUrl}) async {
+      {required String name,
+      required String coverImgUrl,
+      required String coverImgFileName}) async {
     final createNotebook = ref.read(createNotebookProvider);
 
-    var result = await createNotebook(name, coverImgUrl);
+    var result = await createNotebook(name, coverImgUrl, coverImgFileName);
 
     return result.fold((failure) => failure.message, (nbModel) {
       List<NotebookEntity> notebookEntities =
@@ -182,6 +192,25 @@ class Notebooks extends _$Notebooks {
     state = AsyncValue.data(notebookEntities);
 
     return res.fold((failure) => failure.message, (res) => res);
+  }
+
+  Future<String> deleteNotebook(
+      {required String notebookId, required String coverFileName}) async {
+    final deleteNotebook = ref.read(deleteNotebookProvider);
+
+    var res = await deleteNotebook(notebookId, coverFileName);
+
+    return res.fold((failure) => failure.message, (res) {
+      List<NotebookEntity> notebookEntities =
+          state.value as List<NotebookEntity>;
+
+      notebookEntities
+          .removeWhere((notebookEntity) => notebookEntity.id == notebookId);
+
+      state = AsyncValue.data(notebookEntities);
+
+      return res;
+    });
   }
 
   Future<String> uploadNotebookCover({required XFile coverImg}) async {

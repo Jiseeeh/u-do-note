@@ -6,6 +6,7 @@ class NotebookModel {
   final String id;
   final String subject;
   final String coverUrl;
+  final String coverFileName;
   final Timestamp createdAt;
   final List<NoteModel> notes;
 
@@ -13,6 +14,7 @@ class NotebookModel {
     required this.id,
     required this.subject,
     required this.coverUrl,
+    required this.coverFileName,
     required this.createdAt,
     required this.notes,
   });
@@ -23,6 +25,7 @@ class NotebookModel {
       id: entity.id,
       subject: entity.subject,
       coverUrl: entity.coverUrl,
+      coverFileName: entity.coverFileName,
       createdAt: entity.createdAt,
       notes: entity.notes.map((e) => NoteModel.fromEntity(e)).toList(),
     );
@@ -34,6 +37,7 @@ class NotebookModel {
       id: id,
       subject: subject,
       coverUrl: coverUrl,
+      coverFileName: coverFileName,
       createdAt: createdAt,
       notes: notes.map((e) => e.toEntity()).toList(),
     );
@@ -47,6 +51,7 @@ class NotebookModel {
       id: id,
       subject: data['subject'],
       coverUrl: data['cover_url'],
+      coverFileName: data['cover_file_name'],
       createdAt: data['created_at'],
       notes: notes.map((e) => NoteModel.fromFirestore(e)).toList(),
     );

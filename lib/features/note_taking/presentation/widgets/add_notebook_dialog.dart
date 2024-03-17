@@ -23,6 +23,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var _notebookCoverLocalPath = "";
+  var _notebookCoverFileName = "";
   var _notebookCoverUrl = "";
   XFile? _notebookCoverImg;
 
@@ -57,6 +58,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
 
           setState(() {
             _notebookCoverUrl = coverDownloadUrl;
+            _notebookCoverFileName = _notebookCoverImg!.name;
           });
         }
 
@@ -68,7 +70,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
         String result = await ref
             .read(notebooksProvider.notifier)
             .createNotebook(
-                name: _nameController.text, coverImgUrl: _notebookCoverUrl);
+                name: _nameController.text, coverImgUrl: _notebookCoverUrl, coverImgFileName: _notebookCoverFileName);
 
         EasyLoading.dismiss();
 
@@ -83,7 +85,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   }
 
   VoidCallback _onSave(BuildContext context) {
-  return () {
+    return () {
       print('save');
     };
   }

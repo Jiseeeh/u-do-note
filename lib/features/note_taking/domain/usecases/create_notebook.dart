@@ -9,7 +9,7 @@ class CreateNotebook {
 
   CreateNotebook(this._noteRepository);
 
-  Future<Either<Failure, NotebookModel>> call(String name, String coverImgUrl) async {
-    return await _noteRepository.createNotebook(name, coverImgUrl);
+  Future<Either<Failure, NotebookModel>> call(String name, String coverImgUrl, String coverImgFileName) async {
+    return await _noteRepository.createNotebook(name, coverImgUrl, coverImgFileName);
   }
 }

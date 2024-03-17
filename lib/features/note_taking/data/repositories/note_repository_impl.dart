@@ -30,10 +30,10 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<Either<Failure, NotebookModel>> createNotebook(
-      String name, String coverImgUrl) async {
+      String name, String coverImgUrl, String coverImgFileName) async {
     try {
-      var nbModel =
-          await _noteRemoteDataSource.createNotebook(name, coverImgUrl);
+      var nbModel = await _noteRemoteDataSource.createNotebook(
+          name, coverImgUrl, coverImgFileName);
 
       return Right(nbModel);
     } catch (e) {
@@ -91,6 +91,19 @@ class NoteRepositoryImpl implements NoteRepository {
           await _noteRemoteDataSource.uploadNotebookCover(coverImg);
 
       return Right(downloadUrl);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteNotebook(String notebookId, String coverFileName) async {
+    try {
+      var res = await _noteRemoteDataSource.deleteNotebook(notebookId, coverFileName);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

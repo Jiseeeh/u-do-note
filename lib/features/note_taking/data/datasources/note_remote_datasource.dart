@@ -15,10 +15,11 @@ class NoteRemoteDataSource {
 
   const NoteRemoteDataSource(this._firestore, this._auth);
 
-  Future<NotebookModel> createNotebook(String name, String coverImgUrl) async {
+  Future<NotebookModel> createNotebook(
+      String name, String coverImgUrl, String coverImgFileName) async {
     logger.i('Creating notebook...');
 
-    String userId = _auth.currentUser!.uid;
+    var userId = _auth.currentUser!.uid;
     var response = 'Notebook created successfully.';
 
     // TODO: check if possible to just add firestore rule for this
@@ -44,6 +45,7 @@ class NoteRemoteDataSource {
         .add({
       'subject': name.toLowerCase(),
       'cover_url': coverImgUrl,
+      'cover_file_name': coverImgFileName,
       'created_at': FieldValue.serverTimestamp(),
     });
 
@@ -51,6 +53,7 @@ class NoteRemoteDataSource {
         id: notebookDoc.id,
         subject: name.toLowerCase(),
         coverUrl: coverImgUrl,
+        coverFileName: coverImgFileName,
         createdAt: createdAt,
         notes: []);
 
@@ -63,7 +66,7 @@ class NoteRemoteDataSource {
       {required String notebookId, required String title}) async {
     logger.i('Creating note...');
 
-    String userId = _auth.currentUser!.uid;
+    var userId = _auth.currentUser!.uid;
 
     var userNote = await _firestore
         .collection('users')
@@ -119,7 +122,7 @@ class NoteRemoteDataSource {
   Future<List<NotebookModel>> getNotebooks() async {
     logger.i('Getting notebooks...');
 
-    String userId = _auth.currentUser!.uid;
+    var userId = _auth.currentUser!.uid;
     var notebooks = await _firestore
         .collection('users')
         .doc(userId)
@@ -217,6 +220,40 @@ class NoteRemoteDataSource {
     logger.i(response);
 
     return response;
+  }
+
+  Future<String> deleteNotebook(String notebookId, String coverFileName) async {
+    logger.i('Deleting notebook with id: $notebookId...');
+
+    if (coverFileName.isNotEmpty) {
+      await _deleteNotebookCover(coverFileName);
+    }
+
+    var userId = _auth.currentUser!.uid;
+
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('user_notes')
+        .doc(notebookId)
+        .delete();
+
+    var response = 'Notebook deleted successfully.';
+    logger.i(response);
+
+    return response;
+  }
+
+  Future<void> _deleteNotebookCover(String fileName) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    logger.i('Deleting notebook cover with name: $fileName...');
+
+    var fileReference = storage.ref().child('notebook_covers/$fileName');
+
+    await fileReference.delete();
+
+    logger.i('Notebook cover deleted successfully.');
   }
 
   Future<String> uploadNotebookCover(XFile image) async {

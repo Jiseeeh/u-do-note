@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
 
 class NotebookCard extends ConsumerWidget {
@@ -67,10 +69,22 @@ class NotebookCard extends ConsumerWidget {
                             var userChoice = await getUserConfirmation(context);
 
                             if (userChoice == null || userChoice == false) {
-                              // if (context.mounted) Navigator.of(context).pop();
+                              return;
                             }
 
-                            //TODO: delete notebook
+                            EasyLoading.show(
+                                status: 'Deleting your notebook...',
+                                maskType: EasyLoadingMaskType.black,
+                                dismissOnTap: false);
+
+                            var res = await ref
+                                .read(notebooksProvider.notifier)
+                                .deleteNotebook(
+                                    notebookId: notebook.id,
+                                    coverFileName: notebook.coverFileName);
+
+                            EasyLoading.dismiss();
+                            EasyLoading.showToast(res);
                           }
 
                           if (isEdit && context.mounted) {
@@ -97,26 +111,26 @@ class NotebookCard extends ConsumerWidget {
 
   Future<dynamic> getUserConfirmation(BuildContext context) {
     return showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Delete Notebook'),
-                                  content: const Text(
-                                      'Are you sure you want to delete this notebook?'),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, false);
-                                        },
-                                        child: const Text('No')),
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, true);
-                                        },
-                                        child: const Text('Yes')),
-                                  ],
-                                );
-                              });
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Delete Notebook'),
+            content:
+                const Text('Are you sure you want to delete this notebook?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: const Text('No')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('Yes')),
+            ],
+          );
+        });
   }
 
   Future<dynamic> getIntent(BuildContext context) {

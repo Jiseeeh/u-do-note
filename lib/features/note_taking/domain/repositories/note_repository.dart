@@ -13,7 +13,10 @@ abstract class NoteRepository {
   Future<Either<Failure, String>> uploadNotebookCover(XFile coverImg);
   Future<Either<Failure, bool>> updateNote(
       {required String notebookId, required NoteModel note});
-  Future<Either<Failure, String>> deleteNotebook(String notebookId, String coverFileName);
+  Future<Either<Failure, NotebookModel>> updateNotebook(
+      XFile? coverImg, NotebookModel notebook);
+  Future<Either<Failure, String>> deleteNotebook(
+      String notebookId, String coverFileName);
   Future<Either<Failure, String>> deleteNote(
       {required String notebookId, required String noteId});
 }

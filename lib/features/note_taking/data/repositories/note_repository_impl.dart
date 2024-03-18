@@ -97,11 +97,28 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteNotebook(String notebookId, String coverFileName) async {
+  Future<Either<Failure, String>> deleteNotebook(
+      String notebookId, String coverFileName) async {
     try {
-      var res = await _noteRemoteDataSource.deleteNotebook(notebookId, coverFileName);
+      var res =
+          await _noteRemoteDataSource.deleteNotebook(notebookId, coverFileName);
 
       return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NotebookModel>> updateNotebook(
+      XFile? coverImg, NotebookModel notebook) async {
+    try {
+      var notebookModel =
+          await _noteRemoteDataSource.updateNotebook(coverImg, notebook);
+
+      return Right(notebookModel);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {

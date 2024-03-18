@@ -5,6 +5,7 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/note_taking/data/datasources/note_remote_datasource.dart';
+import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/data/repositories/note_repository_impl.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/repositories/note_repository.dart';
@@ -14,6 +15,7 @@ import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart'
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/update_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/upload_notebook_cover.dart';
 
 part 'notes_provider.g.dart';
@@ -52,6 +54,13 @@ UpdateNote updateNote(UpdateNoteRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateNote(repository);
+}
+
+@riverpod
+UpdateNotebook updateNotebook(UpdateNotebookRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return UpdateNotebook(repository);
 }
 
 @riverpod
@@ -128,6 +137,26 @@ class Notebooks extends _$Notebooks {
         (notebookEntity) => notebookEntity.id == notebookId)] = notebook;
 
     state = AsyncValue.data(notebookEntities);
+  }
+
+  Future<bool> updateNotebook(
+      {required XFile? coverImg, required NotebookModel notebook}) async {
+    final updateNotebook = ref.read(updateNotebookProvider);
+
+    var failureOrNotebookModel = await updateNotebook(coverImg, notebook);
+
+    return failureOrNotebookModel.fold((failure) => false, (notebookModel) {
+      List<NotebookEntity> notebookEntities =
+          state.value as List<NotebookEntity>;
+
+      notebookEntities[notebookEntities
+          .indexWhere((notebookEntity) => notebookEntity.id == notebook.id)] =
+          notebookModel.toEntity();
+
+      state = AsyncValue.data(notebookEntities);
+
+      return true;
+    });
   }
 
   /// Creates a notebook from the given [name]

@@ -81,6 +81,21 @@ final updateNoteProvider = AutoDisposeProvider<UpdateNote>.internal(
 );
 
 typedef UpdateNoteRef = AutoDisposeProviderRef<UpdateNote>;
+String _$updateNotebookHash() => r'd9003158329bb13f5b3effed8fe743f74c877d01';
+
+/// See also [updateNotebook].
+@ProviderFor(updateNotebook)
+final updateNotebookProvider = AutoDisposeProvider<UpdateNotebook>.internal(
+  updateNotebook,
+  name: r'updateNotebookProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$updateNotebookHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef UpdateNotebookRef = AutoDisposeProviderRef<UpdateNotebook>;
 String _$deleteNoteHash() => r'8edc023c660ee54b0d662d699406de75b77072c9';
 
 /// See also [deleteNote].
@@ -141,7 +156,7 @@ final deleteNotebookProvider = AutoDisposeProvider<DeleteNotebook>.internal(
 );
 
 typedef DeleteNotebookRef = AutoDisposeProviderRef<DeleteNotebook>;
-String _$notebooksHash() => r'aa06c6aeb5faab7d30401b6e0aeca0fe8b9667e9';
+String _$notebooksHash() => r'bb265c8843e23f691de8cee615479cbe09f29105';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

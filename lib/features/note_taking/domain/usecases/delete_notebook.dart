@@ -8,6 +8,6 @@ class DeleteNotebook {
   DeleteNotebook(this.noteRepository);
 
   Future<Either<Failure, String>> call(String notebookId, String coverFileName) async {
-    return noteRepository.deleteNotebook(notebookId, coverFileName);
+    return await noteRepository.deleteNotebook(notebookId, coverFileName);
   }
 }

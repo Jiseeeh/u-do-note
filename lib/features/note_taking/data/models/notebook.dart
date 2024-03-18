@@ -57,6 +57,25 @@ class NotebookModel {
     );
   }
 
+  /// Creates a new instance of the [NotebookModel] with updated values
+  NotebookModel copyWith({
+    String? id,
+    String? subject,
+    String? coverUrl,
+    String? coverFileName,
+    Timestamp? createdAt,
+    List<NoteModel>? notes,
+  }) {
+    return NotebookModel(
+      id: id ?? this.id,
+      subject: subject ?? this.subject,
+      coverUrl: coverUrl ?? this.coverUrl,
+      coverFileName: coverFileName ?? this.coverFileName,
+      createdAt: createdAt ?? this.createdAt,
+      notes: notes ?? this.notes,
+    );
+  }
+
   @override
   String toString() {
     return 'NotebookModel(id: $id, subject: $subject, createdAt: $createdAt, notes: ${notes.map((e) => e.title).toList()})';

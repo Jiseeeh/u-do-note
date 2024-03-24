@@ -33,6 +33,7 @@ class NotebooksScreen extends ConsumerWidget {
   AppBar _buildAppBar() {
     return AppBar(
       scrolledUnderElevation: 0,
+      automaticallyImplyLeading: false,
       title: const Text(
         'U Do Note',
         style: TextStyle(fontWeight: FontWeight.bold),

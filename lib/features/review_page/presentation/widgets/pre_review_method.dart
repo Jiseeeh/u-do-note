@@ -37,6 +37,28 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
   // TODO: test with a user without notebooks
   AlertDialog _buildDialog(
       BuildContext context, List<NotebookEntity> notebooks) {
+    if (notebooks.isEmpty) {
+      return AlertDialog(
+        title: const Text('No notebooks found.'),
+        content: const Text('Please create a notebook to get started.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.router.push(const NotebooksRoute());
+            },
+            child: const Text('Create Notebook'),
+          ),
+        ],
+      );
+    }
+
     return AlertDialog(
       scrollable: true,
       title: const Text('Choose a notebook to get started.'),
@@ -142,6 +164,18 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               if (results.isNotEmpty) {
                 setState(() {
                   notebookId = results.first;
+
+                  // check if this notebook has at least one note
+                  if (notebooks
+                      .firstWhere((notebook) => notebook.id == notebookId)
+                      .notes
+                      .isEmpty) {
+                    EasyLoading.showError(
+                        "This notebook has no notes, please select another one or create a note.");
+                  }
+
+                  // ? resets the notebookId to hide the pages dropdown again
+                  notebookId = "";
                 });
               }
             },

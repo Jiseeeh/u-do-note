@@ -91,6 +91,8 @@ DeleteNotebook deleteNotebook(DeleteNotebookRef ref) {
   return DeleteNotebook(repository);
 }
 
+// TODO: try using streams to just listen to changes in the database
+// ? only when the project is stable
 @Riverpod(keepAlive: true)
 class Notebooks extends _$Notebooks {
   @override
@@ -149,8 +151,8 @@ class Notebooks extends _$Notebooks {
       List<NotebookEntity> notebookEntities =
           state.value as List<NotebookEntity>;
 
-      notebookEntities[notebookEntities
-          .indexWhere((notebookEntity) => notebookEntity.id == notebook.id)] =
+      notebookEntities[notebookEntities.indexWhere(
+              (notebookEntity) => notebookEntity.id == notebook.id)] =
           notebookModel.toEntity();
 
       state = AsyncValue.data(notebookEntities);

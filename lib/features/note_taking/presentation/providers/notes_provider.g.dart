@@ -156,7 +156,7 @@ final deleteNotebookProvider = AutoDisposeProvider<DeleteNotebook>.internal(
 );
 
 typedef DeleteNotebookRef = AutoDisposeProviderRef<DeleteNotebook>;
-String _$notebooksHash() => r'bb265c8843e23f691de8cee615479cbe09f29105';
+String _$notebooksHash() => r'7a7caad2b2ff18f564ac149c6b6615a8c4f213c0';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

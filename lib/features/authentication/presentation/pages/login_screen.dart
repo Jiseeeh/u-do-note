@@ -1,6 +1,6 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
 
@@ -85,11 +85,21 @@ class _LoginState extends ConsumerState<LoginScreen> {
                 if (_formKey.currentState!.validate()) {
                   final userProvider = ref.read(userNotifierProvider.notifier);
 
+                  EasyLoading.show(
+                      status: 'Logging you in...',
+                      maskType: EasyLoadingMaskType.black,
+                      dismissOnTap: false);
+
                   final userOrFailure = await userProvider.signInWithEAP(
                       emailController.text, passwordController.text);
 
-                  userOrFailure.fold((failure) => print("THERE IS ERROR"),
-                      (userModel) {
+                  EasyLoading.dismiss();
+
+                  userOrFailure
+                      .fold((failure) => EasyLoading.showError(failure.message),
+                          (userModel) {
+                    EasyLoading.showSuccess('Login success!');
+
                     context.router.replaceNamed('/home');
                   });
                 }

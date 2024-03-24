@@ -102,7 +102,7 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
       ),
       ReviewMethodEntity(
         title: 'Pomodoro Technique',
-        description: 'Generate text based on your input.',
+        description: 'Use a timer to break down work into intervals.',
         imagePath: 'lib/assets/pomodoro.png',
         onPressed: () {},
       ),

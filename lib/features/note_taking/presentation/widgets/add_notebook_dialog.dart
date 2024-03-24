@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 
+import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 
+// TODO: rename this file to match its functionality
 class AddNotebookDialog extends ConsumerStatefulWidget {
-  const AddNotebookDialog({super.key});
+  final NotebookEntity? notebookEntity;
+
+  const AddNotebookDialog({this.notebookEntity, Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -19,8 +24,107 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var _notebookCoverLocalPath = "";
+  var _notebookCoverFileName = "";
   var _notebookCoverUrl = "";
   XFile? _notebookCoverImg;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.notebookEntity != null) {
+      _nameController.text = widget.notebookEntity!.subject;
+      _notebookCoverUrl = widget.notebookEntity!.coverUrl;
+      _notebookCoverFileName = widget.notebookEntity!.coverFileName;
+    }
+  }
+
+  ImageProvider _getCoverImg(
+      String notebookCoverUrl, String notebookCoverLocalPath) {
+    if (notebookCoverLocalPath.isNotEmpty) {
+      return FileImage(File(_notebookCoverLocalPath)) as ImageProvider;
+    } else if (widget.notebookEntity != null && notebookCoverUrl.isNotEmpty) {
+      return NetworkImage(notebookCoverUrl) as ImageProvider;
+    } else {
+      return const AssetImage('lib/assets/chisaki.png');
+    }
+  }
+
+  VoidCallback _onCreate(BuildContext context) {
+    return () async {
+      if (_formKey.currentState!.validate()) {
+        if (_notebookCoverImg != null) {
+          var coverDownloadUrl = await ref
+              .read(notebooksProvider.notifier)
+              .uploadNotebookCover(coverImg: _notebookCoverImg!);
+
+          setState(() {
+            _notebookCoverUrl = coverDownloadUrl;
+            _notebookCoverFileName = _notebookCoverImg!.name;
+          });
+        }
+
+        EasyLoading.show(
+            status: 'Creating Notebook...',
+            maskType: EasyLoadingMaskType.black,
+            dismissOnTap: false);
+
+        String result = await ref
+            .read(notebooksProvider.notifier)
+            .createNotebook(
+                name: _nameController.text,
+                coverImgUrl: _notebookCoverUrl,
+                coverImgFileName: _notebookCoverFileName);
+
+        EasyLoading.dismiss();
+
+        EasyLoading.showToast(result);
+        _nameController.clear();
+
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
+      }
+    };
+  }
+
+  VoidCallback _onSave(BuildContext context, WidgetRef ref) {
+    return () async {
+      var isSuccess = false;
+
+      if (_formKey.currentState!.validate()) {
+        // ? user has selected a new cover image
+        if (_notebookCoverImg != null) {
+          var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
+              .copyWith(subject: _nameController.text);
+
+          EasyLoading.show(
+              status: 'Updating Notebook...',
+              maskType: EasyLoadingMaskType.black,
+              dismissOnTap: false);
+
+          isSuccess = await ref.read(notebooksProvider.notifier).updateNotebook(
+              coverImg: _notebookCoverImg, notebook: notebookModel);
+        } else {
+          var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
+              .copyWith(subject: _nameController.text);
+
+          isSuccess = await ref
+              .read(notebooksProvider.notifier)
+              .updateNotebook(coverImg: null, notebook: notebookModel);
+        }
+      }
+
+      EasyLoading.dismiss();
+
+      if (isSuccess) {
+        EasyLoading.showToast('Notebook updated successfully.');
+      } else {
+        EasyLoading.showToast('Something went wrong, please try again later.');
+      }
+      if (context.mounted) Navigator.pop(context);
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +170,8 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
-                        image: _notebookCoverLocalPath.isEmpty
-                            ? const AssetImage('lib/assets/chisaki.png')
-                            : FileImage(File(_notebookCoverLocalPath))
-                                as ImageProvider,
+                        image: _getCoverImg(
+                            _notebookCoverUrl, _notebookCoverLocalPath),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -101,38 +203,11 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      if (_notebookCoverImg != null) {
-                        var coverDownloadUrl = await ref
-                            .read(notebooksProvider.notifier)
-                            .uploadNotebookCover(coverImg: _notebookCoverImg!);
-
-                        setState(() {
-                          _notebookCoverUrl = coverDownloadUrl;
-                        });
-                      }
-
-                      EasyLoading.show(
-                          status: 'Creating Notebook...',
-                          maskType: EasyLoadingMaskType.black,
-                          dismissOnTap: false);
-
-                      String result = await ref
-                          .read(notebooksProvider.notifier)
-                          .createNotebook(
-                              name: _nameController.text,
-                              coverImgUrl: _notebookCoverUrl);
-
-                      EasyLoading.dismiss();
-
-                      EasyLoading.showToast(result);
-                      _nameController.clear();
-
-                      if (context.mounted) Navigator.of(context).pop();
-                    }
-                  },
-                  child: const Text('Add'),
+                  onPressed: widget.notebookEntity == null
+                      ? _onCreate(context)
+                      : _onSave(context, ref),
+                  child:
+                      Text(widget.notebookEntity == null ? 'Create' : 'Save'),
                 ),
               ],
             ),

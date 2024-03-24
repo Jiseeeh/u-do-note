@@ -5,7 +5,8 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/leitner_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/repositories/leitner_system_repository_impl.dart';
-import 'package:u_do_note/features/review_page/domain/repositories/leitner_sytem_repository.dart';
+import 'package:u_do_note/features/review_page/domain/repositories/leitner_system_repository.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/analyze_flashcards_result.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/generate_flashcards.dart';
 
 part 'leitner_system_provider.g.dart';
@@ -39,16 +40,36 @@ GenerateFlashcards generateFlashcards(GenerateFlashcardsRef ref) {
 }
 
 @riverpod
-class LeitnerSystemNotifier extends _$LeitnerSystemNotifier {
+AnalyzeFlashcardsResult analyzeFlashcardsResult(
+    AnalyzeFlashcardsResultRef ref) {
+  final repository = ref.read(leitnerSystemRepositoryProvider);
+
+  return AnalyzeFlashcardsResult(repository);
+}
+
+@riverpod
+class LeitnerSystem extends _$LeitnerSystem {
   @override
   void build() {
     return;
   }
 
-  Future<Either<Failure, List<FlashcardModel>>> generateFlashcards(
-      String userId, String userNoteId) {
+  // TODO: check if we can already fold the result here
+  Future<Either<Failure, LeitnerSystemModel>> generateFlashcards(
+      String userNotebookId, String content) async {
     final generateFlashcards = ref.read(generateFlashcardsProvider);
 
-    return generateFlashcards(userId: userId, userNoteId: userNoteId);
+    return await generateFlashcards(userNotebookId, content);
+  }
+
+  Future<String> analyzeFlashcardsResult(
+      String userNotebookId, LeitnerSystemModel leitnerSystemModel) async {
+    final analyzeFlashcardsResult = ref.read(analyzeFlashcardsResultProvider);
+
+    var failureOrString =
+        await analyzeFlashcardsResult(userNotebookId, leitnerSystemModel);
+
+    return failureOrString.fold(
+        (failure) => failure.message, (result) => result);
   }
 }

@@ -1,13 +1,15 @@
 class LeitnerSystemEntity {
   final String? id;
-  final String userId;
-  final String userNoteId;
+  final String? remark;
+  final int? score;
+  final String userNotebookId;
   final List<FlashcardEntity> flashcards;
 
   LeitnerSystemEntity(
       {this.id,
-      required this.userId,
-      required this.userNoteId,
+      this.remark,
+      this.score,
+      required this.userNotebookId,
       required this.flashcards});
 }
 
@@ -15,6 +17,7 @@ class FlashcardEntity {
   final String id;
   final String question;
   final String answer;
+  final int elapsedSecBeforeAnswer;
   final DateTime lastReview;
   final DateTime nextReview;
 
@@ -22,6 +25,7 @@ class FlashcardEntity {
       {required this.id,
       required this.question,
       required this.answer,
+      required this.elapsedSecBeforeAnswer,
       required this.lastReview,
       required this.nextReview});
 }

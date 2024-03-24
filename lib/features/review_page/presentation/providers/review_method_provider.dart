@@ -1,22 +1,97 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
-import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
 
 part 'review_method_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ReviewMethodNotifier extends _$ReviewMethodNotifier {
   @override
   List<ReviewMethodEntity> build() {
     // define the review methods
+    return [];
+  }
 
+  List<ReviewMethodEntity> getReviewMethods(BuildContext context) {
     List<ReviewMethodEntity> reviewMethods = [
       ReviewMethodEntity(
         title: 'Leitner System',
         description: 'Use flashcards as a tool for learning.',
         imagePath: 'lib/assets/flashcard.png',
-        onPressed: () {},
+        onPressed: () async {
+          var willContinue = await showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Column(
+                    children: [
+                      Text(
+                        'Quick Notice for Leitner System',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to generate flashcards with.',
+                        style: TextStyle(fontSize: 12),
+                      )
+                    ],
+                  ),
+                  scrollable: true,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text('Close'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: const Text('Continue'),
+                    ),
+                  ],
+                  content: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'How will I be graded with this?',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '\u2022 You will be graded based on your response time for every flashcards.Note that the moment the app finished generating flashcards, the timer will start.',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'What will happen to the flashcards when I start a new session?',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '\u2022 U Do Note will generate new flashcards every time you start a new session.',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                );
+              });
+
+          if (!willContinue) {
+            return;
+          }
+
+          if (context.mounted) {
+            showDialog(
+                context: context,
+                builder: (context) =>
+                    const PreReviewMethod(ReviewMethods.leitnerSystem));
+          }
+        },
       ),
       ReviewMethodEntity(
         title: 'Feynman Technique',
@@ -32,60 +107,7 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
         onPressed: () {},
       ),
     ];
+
     return reviewMethods;
-  }
-
-  List<Widget> buildReviewMethods() {
-    List<ReviewMethodEntity> reviewMethods = state;
-    List<Widget> reviewMethodWidgets = [];
-
-    for (var reviewMethod in reviewMethods) {
-      reviewMethodWidgets.add(ReviewMethod(
-        title: reviewMethod.title,
-        description: reviewMethod.description,
-        imagePath: reviewMethod.imagePath,
-        onPressed: reviewMethod.onPressed,
-      ));
-
-      // spacer
-      reviewMethodWidgets.add(const SizedBox(height: 16));
-    }
-
-    return reviewMethodWidgets;
-  }
-
-  List<ListTile> buildReviewMethodTiles(String currentText) {
-    List<ReviewMethodEntity> reviewMethods = state;
-    List<ListTile> reviewMethodTiles = [];
-
-    for (var reviewMethod in reviewMethods) {
-      reviewMethodTiles.add(ListTile(
-        title: Text(reviewMethod.title),
-        subtitle: Text(reviewMethod.description),
-        leading: Image.asset(reviewMethod.imagePath),
-        onTap: reviewMethod.onPressed,
-      ));
-    }
-
-    if (currentText.isEmpty) {
-      return reviewMethodTiles;
-    }
-
-    reviewMethodTiles = reviewMethodTiles
-        .where((element) => element.title
-            .toString()
-            .toLowerCase()
-            .contains(currentText.toLowerCase()))
-        .toList();
-
-    if (reviewMethodTiles.isNotEmpty) {
-      return reviewMethodTiles;
-    }
-
-    return [
-      const ListTile(
-        title: Text('No results found'),
-      )
-    ];
   }
 }

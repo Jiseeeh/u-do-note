@@ -27,6 +27,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const IntroScreen(),
       );
     },
+    LeitnerSystemRoute.name: (routeData) {
+      final args = routeData.argsAs<LeitnerSystemRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LeitnerSystemScreen(
+          args.notebookId,
+          args.leitnerSystemModel,
+          key: args.key,
+        ),
+      );
+    },
     LoginRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -104,6 +115,49 @@ class IntroRoute extends PageRouteInfo<void> {
   static const String name = 'IntroRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [LeitnerSystemScreen]
+class LeitnerSystemRoute extends PageRouteInfo<LeitnerSystemRouteArgs> {
+  LeitnerSystemRoute({
+    required String notebookId,
+    required LeitnerSystemModel leitnerSystemModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LeitnerSystemRoute.name,
+          args: LeitnerSystemRouteArgs(
+            notebookId: notebookId,
+            leitnerSystemModel: leitnerSystemModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'LeitnerSystemRoute';
+
+  static const PageInfo<LeitnerSystemRouteArgs> page =
+      PageInfo<LeitnerSystemRouteArgs>(name);
+}
+
+class LeitnerSystemRouteArgs {
+  const LeitnerSystemRouteArgs({
+    required this.notebookId,
+    required this.leitnerSystemModel,
+    this.key,
+  });
+
+  final String notebookId;
+
+  final LeitnerSystemModel leitnerSystemModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'LeitnerSystemRouteArgs{notebookId: $notebookId, leitnerSystemModel: $leitnerSystemModel, key: $key}';
+  }
 }
 
 /// generated route for

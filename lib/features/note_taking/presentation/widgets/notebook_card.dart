@@ -1,9 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:intl/intl.dart';
 
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
+import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
 
 class NotebookCard extends ConsumerWidget {
   final NotebookEntity notebook;
@@ -17,9 +21,12 @@ class NotebookCard extends ConsumerWidget {
             child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            image: const DecorationImage(
-              // TODO: use the notebook's image
-              image: AssetImage('lib/assets/chisaki.png'),
+            // TODO: check for internet connection
+            image: DecorationImage(
+              image: notebook.coverUrl.isNotEmpty
+                  ? NetworkImage(notebook.coverUrl) as ImageProvider
+                  // TODO: replace with default one
+                  : const AssetImage('lib/assets/chisaki.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -49,17 +56,103 @@ class NotebookCard extends ConsumerWidget {
                         iconSize: 20,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
-                        onPressed: () {},
+                        onPressed: () async {
+                          // intent to edit or delete
+                          // true for edit, false for delete
+                          var isEdit = await getIntent(context);
+
+                          // user cancelled
+                          if (isEdit == null) return;
+
+                          // user wants to delete
+                          if (isEdit == false && context.mounted) {
+                            var userChoice = await getUserConfirmation(context);
+
+                            if (userChoice == null || userChoice == false) {
+                              return;
+                            }
+
+                            EasyLoading.show(
+                                status: 'Deleting your notebook...',
+                                maskType: EasyLoadingMaskType.black,
+                                dismissOnTap: false);
+
+                            var res = await ref
+                                .read(notebooksProvider.notifier)
+                                .deleteNotebook(
+                                    notebookId: notebook.id,
+                                    coverFileName: notebook.coverFileName);
+
+                            EasyLoading.dismiss();
+                            EasyLoading.showToast(res);
+                          }
+
+                          if (isEdit && context.mounted) {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AddNotebookDialog(
+                                    notebookEntity: notebook));
+                          }
+                        },
                         icon: const Icon(Icons.more_vert)),
                   )
                 ],
               ),
-              Text(notebook.createdAt.toString(),
+              Text(
+                  DateFormat("EEE, dd MMM yyyy")
+                      .format(notebook.createdAt.toDate()),
                   style: const TextStyle(color: AppColors.grey))
             ],
           ),
         ),
       ],
     );
+  }
+
+  Future<dynamic> getUserConfirmation(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Delete Notebook'),
+            content:
+                const Text('Are you sure you want to delete this notebook?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: const Text('No')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('Yes')),
+            ],
+          );
+        });
+  }
+
+  Future<dynamic> getIntent(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Delete Note'),
+            content: const Text('What do you want to do with this notebook?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: const Text('Delete')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('Edit')),
+            ],
+          );
+        });
   }
 }

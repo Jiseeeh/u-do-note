@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -134,8 +135,17 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
+                  EasyLoading.show(
+                      status: 'Signing you up...',
+                      maskType: EasyLoadingMaskType.black,
+                      dismissOnTap: false);
+
                   final userOrFailure = await userProvider.signUpWithEAP(
-                      emailController.text,displayNameController.text, passwordController.text);
+                      emailController.text,
+                      displayNameController.text,
+                      passwordController.text);
+
+                  EasyLoading.dismiss();
 
                   userOrFailure.fold((failure) {
                     var failureSnackbar = createSnackbar(failure.message);
@@ -143,6 +153,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(failureSnackbar);
                   },
                       (userModel) => {
+                            EasyLoading.showSuccess('Sign up success!'),
                             context.router.replaceNamed('/login'),
                           });
                 }

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:u_do_note/core/firestore_collection_enum.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
@@ -15,10 +16,11 @@ class NoteRemoteDataSource {
 
   const NoteRemoteDataSource(this._firestore, this._auth);
 
-  Future<String> createNotebook(String name, String coverImgUrl) async {
+  Future<NotebookModel> createNotebook(
+      String name, String coverImgUrl, String coverImgFileName) async {
     logger.i('Creating notebook...');
 
-    String userId = _auth.currentUser!.uid;
+    var userId = _auth.currentUser!.uid;
     var response = 'Notebook created successfully.';
 
     // TODO: check if possible to just add firestore rule for this
@@ -32,29 +34,40 @@ class NoteRemoteDataSource {
 
     if (notebook.docs.isNotEmpty) {
       response = "Notebook with name $name already exists.";
-      return response;
+      return NotebookModel.fromFirestore(
+          notebook.docs.first.id, notebook.docs.first.data());
     }
 
-    await _firestore
+    var createdAt = Timestamp.now();
+    var notebookDoc = await _firestore
         .collection('users')
         .doc(userId)
         .collection('user_notes')
         .add({
       'subject': name.toLowerCase(),
       'cover_url': coverImgUrl,
+      'cover_file_name': coverImgFileName,
       'created_at': FieldValue.serverTimestamp(),
     });
 
+    var nbModel = NotebookModel(
+        id: notebookDoc.id,
+        subject: name.toLowerCase(),
+        coverUrl: coverImgUrl,
+        coverFileName: coverImgFileName,
+        createdAt: createdAt,
+        notes: []);
+
     logger.i(response);
 
-    return response;
+    return nbModel;
   }
 
   Future<NoteModel> createNote(
       {required String notebookId, required String title}) async {
     logger.i('Creating note...');
 
-    String userId = _auth.currentUser!.uid;
+    var userId = _auth.currentUser!.uid;
 
     var userNote = await _firestore
         .collection('users')
@@ -110,7 +123,7 @@ class NoteRemoteDataSource {
   Future<List<NotebookModel>> getNotebooks() async {
     logger.i('Getting notebooks...');
 
-    String userId = _auth.currentUser!.uid;
+    var userId = _auth.currentUser!.uid;
     var notebooks = await _firestore
         .collection('users')
         .doc(userId)
@@ -168,6 +181,54 @@ class NoteRemoteDataSource {
     return true;
   }
 
+  Future<NotebookModel> updateNotebook(
+      XFile? coverImg, NotebookModel notebook) async {
+    logger.i('Updating notebook...');
+    var userId = _auth.currentUser!.uid;
+
+    if (coverImg != null) {
+      var coverDownloadUrl = await uploadNotebookCover(coverImg);
+
+      if (notebook.coverFileName.isNotEmpty) {
+        await deleteNotebookCover(notebook.coverFileName);
+      }
+
+      var updatedModel = notebook.copyWith(
+        coverUrl: coverDownloadUrl,
+        coverFileName: coverImg.name,
+      );
+
+      await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(notebook.id)
+          .update({
+        'subject': updatedModel.subject,
+        'cover_url': updatedModel.coverUrl,
+        'cover_file_name': updatedModel.coverFileName,
+        'updated_at': FieldValue.serverTimestamp(),
+      });
+
+      logger.i('Notebook updated successfully.');
+
+      return updatedModel;
+    } else {
+      await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(notebook.id)
+          .update({
+        'subject': notebook.subject,
+        'updated_at': FieldValue.serverTimestamp(),
+      });
+
+      logger.i('Notebook updated successfully.');
+      return notebook;
+    }
+  }
+
   Future<String> deleteNote(
       {required String notebookId, required String noteId}) async {
     logger.i('Deleting note with id: $noteId...');
@@ -210,6 +271,42 @@ class NoteRemoteDataSource {
     return response;
   }
 
+  Future<String> deleteNotebook(String notebookId, String coverFileName) async {
+    logger.i('Deleting notebook with id: $notebookId...');
+
+    if (coverFileName.isNotEmpty) {
+      await deleteNotebookCover(coverFileName);
+    }
+
+    var userId = _auth.currentUser!.uid;
+
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('user_notes')
+        .doc(notebookId)
+        .delete();
+
+    var response = 'Notebook deleted successfully.';
+    logger.i(response);
+
+    return response;
+  }
+
+  Future<bool> deleteNotebookCover(String fileName) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    logger.i('Deleting notebook cover with name: $fileName...');
+
+    var fileReference = storage.ref().child('notebook_covers/$fileName');
+
+    await fileReference.delete();
+
+    logger.i('Notebook cover deleted successfully.');
+
+    return true;
+  }
+
   Future<String> uploadNotebookCover(XFile image) async {
     FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -221,7 +318,7 @@ class NoteRemoteDataSource {
     var snapshot = await fileReference.putFile(File(image.path));
 
     var downloadUrl = await snapshot.ref.getDownloadURL();
-    
+
     logger.i('Notebook cover uploaded successfully with url: $downloadUrl');
     return downloadUrl;
   }

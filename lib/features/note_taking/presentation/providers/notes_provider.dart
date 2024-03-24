@@ -5,14 +5,17 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/note_taking/data/datasources/note_remote_datasource.dart';
+import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/data/repositories/note_repository_impl.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/repositories/note_repository.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/update_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/upload_notebook_cover.dart';
 
 part 'notes_provider.g.dart';
@@ -54,6 +57,13 @@ UpdateNote updateNote(UpdateNoteRef ref) {
 }
 
 @riverpod
+UpdateNotebook updateNotebook(UpdateNotebookRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return UpdateNotebook(repository);
+}
+
+@riverpod
 DeleteNote deleteNote(DeleteNoteRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
@@ -74,6 +84,15 @@ UploadNotebookCover uploadNotebookCover(UploadNotebookCoverRef ref) {
   return UploadNotebookCover(repository);
 }
 
+@riverpod
+DeleteNotebook deleteNotebook(DeleteNotebookRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return DeleteNotebook(repository);
+}
+
+// TODO: try using streams to just listen to changes in the database
+// ? only when the project is stable
 @Riverpod(keepAlive: true)
 class Notebooks extends _$Notebooks {
   @override
@@ -122,15 +141,44 @@ class Notebooks extends _$Notebooks {
     state = AsyncValue.data(notebookEntities);
   }
 
+  Future<bool> updateNotebook(
+      {required XFile? coverImg, required NotebookModel notebook}) async {
+    final updateNotebook = ref.read(updateNotebookProvider);
+
+    var failureOrNotebookModel = await updateNotebook(coverImg, notebook);
+
+    return failureOrNotebookModel.fold((failure) => false, (notebookModel) {
+      List<NotebookEntity> notebookEntities =
+          state.value as List<NotebookEntity>;
+
+      notebookEntities[notebookEntities.indexWhere(
+              (notebookEntity) => notebookEntity.id == notebook.id)] =
+          notebookModel.toEntity();
+
+      state = AsyncValue.data(notebookEntities);
+
+      return true;
+    });
+  }
+
   /// Creates a notebook from the given [name]
   Future<String> createNotebook(
-      {required String name, required String coverImgUrl}) async {
+      {required String name,
+      required String coverImgUrl,
+      required String coverImgFileName}) async {
     final createNotebook = ref.read(createNotebookProvider);
 
-    var result = await createNotebook(name, coverImgUrl);
+    var result = await createNotebook(name, coverImgUrl, coverImgFileName);
 
-    // TODO: update state to refresh ui
-    return result.fold((failure) => failure.message, (res) => res);
+    return result.fold((failure) => failure.message, (nbModel) {
+      List<NotebookEntity> notebookEntities =
+          state.value as List<NotebookEntity>;
+
+      notebookEntities.add(nbModel.toEntity());
+
+      state = AsyncValue.data(notebookEntities);
+      return "Notebook created successfully.";
+    });
   }
 
   /// Creates a note in the given notebook with the given [title]
@@ -140,7 +188,6 @@ class Notebooks extends _$Notebooks {
 
     var result = await createNote(notebookId, title);
 
-    // TODO: update state to refresh ui
     return result.fold((failure) => failure.message, (noteModel) {
       List<NotebookEntity> notebookEntities =
           state.value as List<NotebookEntity>;
@@ -176,6 +223,25 @@ class Notebooks extends _$Notebooks {
     state = AsyncValue.data(notebookEntities);
 
     return res.fold((failure) => failure.message, (res) => res);
+  }
+
+  Future<String> deleteNotebook(
+      {required String notebookId, required String coverFileName}) async {
+    final deleteNotebook = ref.read(deleteNotebookProvider);
+
+    var res = await deleteNotebook(notebookId, coverFileName);
+
+    return res.fold((failure) => failure.message, (res) {
+      List<NotebookEntity> notebookEntities =
+          state.value as List<NotebookEntity>;
+
+      notebookEntities
+          .removeWhere((notebookEntity) => notebookEntity.id == notebookId);
+
+      state = AsyncValue.data(notebookEntities);
+
+      return res;
+    });
   }
 
   Future<String> uploadNotebookCover({required XFile coverImg}) async {

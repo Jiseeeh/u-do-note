@@ -7,12 +7,12 @@ part of 'review_method_provider.dart';
 // **************************************************************************
 
 String _$reviewMethodNotifierHash() =>
-    r'ff87a990c6d64daef5f05bc70f1a1f41b427503e';
+    r'6e23e310bbf2ccd94eb4a647e65107c291c922a7';
 
 /// See also [ReviewMethodNotifier].
 @ProviderFor(ReviewMethodNotifier)
-final reviewMethodNotifierProvider = AutoDisposeNotifierProvider<
-    ReviewMethodNotifier, List<ReviewMethodEntity>>.internal(
+final reviewMethodNotifierProvider =
+    NotifierProvider<ReviewMethodNotifier, List<ReviewMethodEntity>>.internal(
   ReviewMethodNotifier.new,
   name: r'reviewMethodNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final reviewMethodNotifierProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$ReviewMethodNotifier = AutoDisposeNotifier<List<ReviewMethodEntity>>;
+typedef _$ReviewMethodNotifier = Notifier<List<ReviewMethodEntity>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

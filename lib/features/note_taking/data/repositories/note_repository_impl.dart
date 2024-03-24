@@ -29,13 +29,13 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, String>> createNotebook(
-      String name, String coverImgUrl) async {
+  Future<Either<Failure, NotebookModel>> createNotebook(
+      String name, String coverImgUrl, String coverImgFileName) async {
     try {
-      String res =
-          await _noteRemoteDataSource.createNotebook(name, coverImgUrl);
+      var nbModel = await _noteRemoteDataSource.createNotebook(
+          name, coverImgUrl, coverImgFileName);
 
-      return Right(res);
+      return Right(nbModel);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }
@@ -91,6 +91,36 @@ class NoteRepositoryImpl implements NoteRepository {
           await _noteRemoteDataSource.uploadNotebookCover(coverImg);
 
       return Right(downloadUrl);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteNotebook(
+      String notebookId, String coverFileName) async {
+    try {
+      var res =
+          await _noteRemoteDataSource.deleteNotebook(notebookId, coverFileName);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NotebookModel>> updateNotebook(
+      XFile? coverImg, NotebookModel notebook) async {
+    try {
+      var notebookModel =
+          await _noteRemoteDataSource.updateNotebook(coverImg, notebook);
+
+      return Right(notebookModel);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

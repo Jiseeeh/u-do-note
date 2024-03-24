@@ -73,22 +73,39 @@ final generateFlashcardsProvider =
 );
 
 typedef GenerateFlashcardsRef = AutoDisposeProviderRef<GenerateFlashcards>;
-String _$leitnerSystemNotifierHash() =>
-    r'c70301926612e20c64a8196dea49b5e14e43b9d3';
+String _$analyzeFlashcardsResultHash() =>
+    r'dfd01c2cdaf5eb50ddbc6384aa55e3557d93d9ea';
 
-/// See also [LeitnerSystemNotifier].
-@ProviderFor(LeitnerSystemNotifier)
-final leitnerSystemNotifierProvider =
-    AutoDisposeNotifierProvider<LeitnerSystemNotifier, void>.internal(
-  LeitnerSystemNotifier.new,
-  name: r'leitnerSystemNotifierProvider',
+/// See also [analyzeFlashcardsResult].
+@ProviderFor(analyzeFlashcardsResult)
+final analyzeFlashcardsResultProvider =
+    AutoDisposeProvider<AnalyzeFlashcardsResult>.internal(
+  analyzeFlashcardsResult,
+  name: r'analyzeFlashcardsResultProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$leitnerSystemNotifierHash,
+      : _$analyzeFlashcardsResultHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$LeitnerSystemNotifier = AutoDisposeNotifier<void>;
+typedef AnalyzeFlashcardsResultRef
+    = AutoDisposeProviderRef<AnalyzeFlashcardsResult>;
+String _$leitnerSystemHash() => r'5ae8590abb83c871fef5c70342e3e3aad4399bb2';
+
+/// See also [LeitnerSystem].
+@ProviderFor(LeitnerSystem)
+final leitnerSystemProvider =
+    AutoDisposeNotifierProvider<LeitnerSystem, void>.internal(
+  LeitnerSystem.new,
+  name: r'leitnerSystemProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$leitnerSystemHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LeitnerSystem = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

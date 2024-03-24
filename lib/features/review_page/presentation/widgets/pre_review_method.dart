@@ -172,10 +172,10 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                       .isEmpty) {
                     EasyLoading.showError(
                         "This notebook has no notes, please select another one or create a note.");
-                  }
 
-                  // ? resets the notebookId to hide the pages dropdown again
-                  notebookId = "";
+                    // ? resets the notebookId to hide the pages dropdown again
+                    notebookId = "";
+                  }
                 });
               }
             },

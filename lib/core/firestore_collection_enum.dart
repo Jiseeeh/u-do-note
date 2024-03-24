@@ -3,4 +3,5 @@
 enum FirestoreCollection {
   users,
   user_notes,
+  remarks,
 }

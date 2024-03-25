@@ -99,7 +99,57 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
         description:
             'Explain a topic that a five (5) year old child can understand.',
         imagePath: 'lib/assets/feynman.png',
-        onPressed: () {},
+        onPressed: () async {
+          var willContinue = await showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Column(
+                    children: [
+                      Text(
+                        'Quick Notice for Feynman Technique',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to generate flashcards with.',
+                        style: TextStyle(fontSize: 12),
+                      )
+                    ],
+                  ),
+                  scrollable: true,
+                  content: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text("SAMPLE")],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text('Close'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: const Text('Continue'),
+                    ),
+                  ],
+                );
+              });
+
+          if (!willContinue) {
+            return;
+          }
+
+          if (context.mounted) {
+            // context.router.push(const FeynmanTechniqueRoute());
+            showDialog(
+                context: context,
+                builder: (context) =>
+                    const PreReviewMethod(ReviewMethods.feynmanTechnique));
+          }
+        },
       ),
       ReviewMethodEntity(
         title: 'Pomodoro Technique',

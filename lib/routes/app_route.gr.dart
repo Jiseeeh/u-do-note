@@ -15,6 +15,16 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    FeynmanTechniqueRoute.name: (routeData) {
+      final args = routeData.argsAs<FeynmanTechniqueRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: FeynmanTechniqueScreen(
+          args.contentFromPages,
+          key: args.key,
+        ),
+      );
+    },
     HomepageRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -87,6 +97,44 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [FeynmanTechniqueScreen]
+class FeynmanTechniqueRoute extends PageRouteInfo<FeynmanTechniqueRouteArgs> {
+  FeynmanTechniqueRoute({
+    required String contentFromPages,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          FeynmanTechniqueRoute.name,
+          args: FeynmanTechniqueRouteArgs(
+            contentFromPages: contentFromPages,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'FeynmanTechniqueRoute';
+
+  static const PageInfo<FeynmanTechniqueRouteArgs> page =
+      PageInfo<FeynmanTechniqueRouteArgs>(name);
+}
+
+class FeynmanTechniqueRouteArgs {
+  const FeynmanTechniqueRouteArgs({
+    required this.contentFromPages,
+    this.key,
+  });
+
+  final String contentFromPages;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'FeynmanTechniqueRouteArgs{contentFromPages: $contentFromPages, key: $key}';
+  }
 }
 
 /// generated route for

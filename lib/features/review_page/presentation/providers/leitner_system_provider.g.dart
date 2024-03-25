@@ -91,7 +91,22 @@ final analyzeFlashcardsResultProvider =
 
 typedef AnalyzeFlashcardsResultRef
     = AutoDisposeProviderRef<AnalyzeFlashcardsResult>;
-String _$leitnerSystemHash() => r'5ae8590abb83c871fef5c70342e3e3aad4399bb2';
+String _$getOldFlashcardsHash() => r'f8491d565075cd87a83de4a0951fdd8da6f54569';
+
+/// See also [getOldFlashcards].
+@ProviderFor(getOldFlashcards)
+final getOldFlashcardsProvider = AutoDisposeProvider<GetOldFlashcards>.internal(
+  getOldFlashcards,
+  name: r'getOldFlashcardsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getOldFlashcardsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetOldFlashcardsRef = AutoDisposeProviderRef<GetOldFlashcards>;
+String _$leitnerSystemHash() => r'24edb7ca131d75dcce3ad0dc56151af761e0eb21';
 
 /// See also [LeitnerSystem].
 @ProviderFor(LeitnerSystem)

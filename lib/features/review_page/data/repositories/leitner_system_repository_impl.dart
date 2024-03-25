@@ -1,5 +1,6 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/leitner_remote_datasource.dart';
@@ -13,10 +14,10 @@ class LeitnerSystemImpl implements LeitnerSystemRepository {
 
   @override
   Future<Either<Failure, LeitnerSystemModel>> generateFlashcards(
-      String userNotebookId, String content) async {
+      String title, String userNotebookId, String content) async {
     try {
       final leitnerSystemModel = await _leitnerRemoteDataSource
-          .generateFlashcards(userNotebookId, content);
+          .generateFlashcards(title, userNotebookId, content);
 
       return Right(leitnerSystemModel);
     } on RequestFailedException catch (e) {
@@ -38,6 +39,20 @@ class LeitnerSystemImpl implements LeitnerSystemRepository {
     } on RequestFailedException catch (e) {
       return Left(
           OpenAIException(message: e.toString(), statusCode: e.statusCode));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LeitnerSystemModel>>> getOldFlashcards(
+      String userNotebookId) async {
+    try {
+      var leitnerModels =
+          await _leitnerRemoteDataSource.getOldFlashcards(userNotebookId);
+      return Right(leitnerModels);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: ''));
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

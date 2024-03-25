@@ -14,7 +14,7 @@ class LeitnerRemoteDataSource {
   LeitnerRemoteDataSource(this._firestore);
 
   Future<LeitnerSystemModel> generateFlashcards(
-      String userNotebookId, String content) async {
+      String title, String userNotebookId, String content) async {
     // feed it to the openai api to get the flashcards
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,
@@ -79,6 +79,7 @@ class LeitnerRemoteDataSource {
 
     // Save the flashcards to firestore to be updated
     // after the user has reviewed the flashcards.
+    var nextReview = Timestamp.now();
     var doc = await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
@@ -86,14 +87,18 @@ class LeitnerRemoteDataSource {
         .doc(userNotebookId)
         .collection(FirestoreCollection.remarks.name)
         .add(<String, dynamic>{
+      'title': title,
       'review_method': LeitnerSystemModel.name,
       'flashcards': flashcards.map((flashcard) => flashcard.toJson()).toList(),
+      'next_review': nextReview,
       'score': '',
       'remark': '',
     });
 
     var leitnerSystemModel = LeitnerSystemModel(
       id: doc.id,
+      title: title,
+      nextReview: nextReview,
       userNotebookId: userNotebookId,
       flashcards: flashcards,
     );
@@ -164,6 +169,24 @@ class LeitnerRemoteDataSource {
 
     logger.i("Saving remarks to firestore...");
 
+    var minutes = 0;
+    switch (decodedJson['remark']) {
+      case 'Excellent':
+        minutes = 1440;
+        break;
+      case 'Good':
+        minutes = 720;
+        break;
+      case 'Average':
+        minutes = 60;
+        break;
+      case 'Poor' || 'Very Poor':
+        minutes = 5;
+        break;
+    }
+
+    var nextReview = DateTime.now().add(Duration(minutes: minutes));
+
     await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
@@ -175,6 +198,7 @@ class LeitnerRemoteDataSource {
       'flashcards': leitnerSystemModel.flashcards
           .map((flashcard) => flashcard.toJson())
           .toList(),
+      'next_review': Timestamp.fromDate(nextReview),
       'score': decodedJson['score'],
       'remark': decodedJson['remark'],
     });
@@ -182,5 +206,26 @@ class LeitnerRemoteDataSource {
     logger.i("Remarks saved to firestore.");
 
     return "Your remark is ${decodedJson['remark']} with a score of ${decodedJson['score']}.";
+  }
+
+  Future<List<LeitnerSystemModel>> getOldFlashcards(
+      String userNotebookId) async {
+    var userId = FirebaseAuth.instance.currentUser!.uid;
+
+    var snapshot = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(userNotebookId)
+        .collection(FirestoreCollection.remarks.name)
+        .where('review_method', isEqualTo: LeitnerSystemModel.name)
+        .where('next_review', isLessThanOrEqualTo: Timestamp.now())
+        .get();
+
+    print('snapshot.docs.length: ${snapshot.docs.length}');
+
+    return snapshot.docs
+        .map((doc) => LeitnerSystemModel.fromFirestore(doc.id, doc.data()))
+        .toList();
   }
 }

@@ -8,6 +8,7 @@ import 'package:u_do_note/features/review_page/data/repositories/leitner_system_
 import 'package:u_do_note/features/review_page/domain/repositories/leitner_system_repository.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/analyze_flashcards_result.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/generate_flashcards.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/get_old_flashcards.dart';
 
 part 'leitner_system_provider.g.dart';
 
@@ -48,6 +49,13 @@ AnalyzeFlashcardsResult analyzeFlashcardsResult(
 }
 
 @riverpod
+GetOldFlashcards getOldFlashcards(GetOldFlashcardsRef ref) {
+  final repository = ref.read(leitnerSystemRepositoryProvider);
+
+  return GetOldFlashcards(repository);
+}
+
+@riverpod
 class LeitnerSystem extends _$LeitnerSystem {
   @override
   void build() {
@@ -56,10 +64,10 @@ class LeitnerSystem extends _$LeitnerSystem {
 
   // TODO: check if we can already fold the result here
   Future<Either<Failure, LeitnerSystemModel>> generateFlashcards(
-      String userNotebookId, String content) async {
+      String title, String userNotebookId, String content) async {
     final generateFlashcards = ref.read(generateFlashcardsProvider);
 
-    return await generateFlashcards(userNotebookId, content);
+    return await generateFlashcards(title, userNotebookId, content);
   }
 
   Future<String> analyzeFlashcardsResult(
@@ -71,5 +79,17 @@ class LeitnerSystem extends _$LeitnerSystem {
 
     return failureOrString.fold(
         (failure) => failure.message, (result) => result);
+  }
+
+  Future<List<LeitnerSystemModel>> getOldFlashcards(String notebookId) async {
+    final getOldFlashcards = ref.read(getOldFlashcardsProvider);
+
+    var failureOrFlashcards = await getOldFlashcards(notebookId);
+
+    return failureOrFlashcards.fold((failure) {
+      return [];
+    }, (leitnerModels) {
+      return leitnerModels;
+    });
   }
 }

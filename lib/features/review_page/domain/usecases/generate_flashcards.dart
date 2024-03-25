@@ -9,8 +9,8 @@ class GenerateFlashcards {
   GenerateFlashcards(this._leitnerSystemRepository);
 
   Future<Either<Failure, LeitnerSystemModel>> call(
-      String userNotebookId, String content) async {
+      String title, String userNotebookId, String content) async {
     return await _leitnerSystemRepository.generateFlashcards(
-        userNotebookId, content);
+        title, userNotebookId, content);
   }
 }

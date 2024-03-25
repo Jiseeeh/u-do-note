@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:u_do_note/features/review_page/domain/entities/leitner.dart';
 
 class LeitnerSystemModel {
@@ -5,7 +6,9 @@ class LeitnerSystemModel {
   final String? id;
   final String? remark;
   final int? score;
-  final String userNotebookId;
+  final String? userNotebookId;
+  final String title;
+  final Timestamp nextReview;
   final List<FlashcardModel> flashcards;
   static const String name = "Leitner System";
 
@@ -13,13 +16,16 @@ class LeitnerSystemModel {
       {this.id,
       this.remark,
       this.score,
-      required this.userNotebookId,
+      this.userNotebookId,
+      required this.title,
+      required this.nextReview,
       required this.flashcards});
 
   /// converts from model to json
   Map<String, dynamic> toJson() => {
         'id': id,
         'user_notebook_id': userNotebookId,
+        'title': title,
         'remark': remark,
         'score': score,
         'flashcards': flashcards
@@ -27,10 +33,7 @@ class LeitnerSystemModel {
                   'id': flashcard.id,
                   'question': flashcard.question,
                   'answer': flashcard.answer,
-                  'elapsed_sec_before_answer':
-                      flashcard.elapsedSecBeforeAnswer,
-                  'last_review': flashcard.lastReview,
-                  'next_review': flashcard.nextReview
+                  'elapsed_sec_before_answer': flashcard.elapsedSecBeforeAnswer,
                 })
             .toList()
       };
@@ -42,14 +45,15 @@ class LeitnerSystemModel {
           remark: leitnerSystem.remark,
           score: leitnerSystem.score,
           userNotebookId: leitnerSystem.userNotebookId,
+          title: leitnerSystem.title,
+          nextReview: leitnerSystem.nextReview,
           flashcards: leitnerSystem.flashcards
               .map((flashcard) => FlashcardModel(
-                  id: flashcard.id,
-                  question: flashcard.question,
-                  answer: flashcard.answer,
-                  elapsedSecBeforeAnswer: flashcard.elapsedSecBeforeAnswer,
-                  lastReview: flashcard.lastReview,
-                  nextReview: flashcard.nextReview))
+                    id: flashcard.id,
+                    question: flashcard.question,
+                    answer: flashcard.answer,
+                    elapsedSecBeforeAnswer: flashcard.elapsedSecBeforeAnswer,
+                  ))
               .toList());
 
   /// converts from model to entity
@@ -58,36 +62,39 @@ class LeitnerSystemModel {
       remark: remark,
       score: score,
       userNotebookId: userNotebookId,
+      title: title,
+      nextReview: nextReview,
       flashcards: flashcards
           .map((flashcard) => FlashcardEntity(
-              id: flashcard.id,
-              question: flashcard.question,
-              answer: flashcard.answer,
-              elapsedSecBeforeAnswer: flashcard.elapsedSecBeforeAnswer,
-              lastReview: flashcard.lastReview,
-              nextReview: flashcard.nextReview))
+                id: flashcard.id,
+                question: flashcard.question,
+                answer: flashcard.answer,
+                elapsedSecBeforeAnswer: flashcard.elapsedSecBeforeAnswer,
+              ))
           .toList());
 
   /// converts from firestore to model
   factory LeitnerSystemModel.fromFirestore(
-          {required Map<String, dynamic> data, required String id}) =>
-      LeitnerSystemModel(
-          id: id,
-          userNotebookId: data['user_notebook_id'],
-          flashcards: (data['flashcards'] as List)
-              .map(
-                (flashcard) => FlashcardModel(
-                  id: flashcard['id'],
-                  question: flashcard['question'],
-                  answer: flashcard['answer'],
-                  elapsedSecBeforeAnswer:
-                      flashcard['elapsed_sec_before_answer'],
-                  lastReview: flashcard['last_review'].toDate(),
-                  nextReview: flashcard['next_review'].toDate(),
-                ),
-              )
-              .toList());
-
+      String id, Map<String, dynamic> data) {
+    var remark = data['remark'] ?? "";
+    var score = data['score'].toString().isEmpty ? 0 : data['score'];
+    return LeitnerSystemModel(
+        id: id,
+        title: data['title'],
+        remark: remark,
+        score: score,
+        nextReview: data['next_review'],
+        flashcards: (data['flashcards'] as List)
+            .map(
+              (flashcard) => FlashcardModel(
+                id: flashcard['id'],
+                question: flashcard['question'],
+                answer: flashcard['answer'],
+                elapsedSecBeforeAnswer: flashcard['elapsed_sec_before_answer'],
+              ),
+            )
+            .toList());
+  }
 
   /// Creates a new instance of the [LeitnerSystemModel] with updated values
   LeitnerSystemModel copyWith({
@@ -95,6 +102,8 @@ class LeitnerSystemModel {
     String? remark,
     int? score,
     String? userNotebookId,
+    String? title,
+    Timestamp? nextReview,
     List<FlashcardModel>? flashcards,
   }) {
     return LeitnerSystemModel(
@@ -102,6 +111,8 @@ class LeitnerSystemModel {
       remark: remark ?? this.remark,
       score: score ?? this.score,
       userNotebookId: userNotebookId ?? this.userNotebookId,
+      title: title ?? this.title,
+      nextReview: nextReview ?? this.nextReview,
       flashcards: flashcards ?? this.flashcards,
     );
   }
@@ -112,37 +123,36 @@ class FlashcardModel {
   final String question;
   final String answer;
   final int elapsedSecBeforeAnswer;
-  final DateTime lastReview;
-  final DateTime nextReview;
 
-  FlashcardModel(
-      {required this.id,
-      required this.question,
-      required this.answer,
-      required this.elapsedSecBeforeAnswer,
-      required this.lastReview,
-      required this.nextReview});
+  FlashcardModel({
+    required this.id,
+    required this.question,
+    required this.answer,
+    required this.elapsedSecBeforeAnswer,
+  });
 
   /// converts from json to model
   factory FlashcardModel.fromJson(Map<String, dynamic> json) {
     final String id =
         json['id'] ?? DateTime.now().millisecondsSinceEpoch.toString();
-    final DateTime now = DateTime.now();
-    final DateTime lastReview = json['last_review']?.toDate() ?? now;
-    final DateTime nextReview =
-        json['next_review']?.toDate() ?? now; // TODO:check
-    final int elapsedSecBeforeAnswer =
-        json['elapsed_sec_before_answer'] ?? 0;
+    final int elapsedSecBeforeAnswer = json['elapsed_sec_before_answer'] ?? 0;
 
     return FlashcardModel(
       id: id,
       question: json['question'],
       answer: json['answer'],
       elapsedSecBeforeAnswer: elapsedSecBeforeAnswer,
-      lastReview: lastReview,
-      nextReview: nextReview,
     );
   }
+
+  /// converts from firestore to model
+  factory FlashcardModel.fromFirestore(String id, Map<String, dynamic> data) =>
+      FlashcardModel(
+        id: id,
+        question: data['question'],
+        answer: data['answer'],
+        elapsedSecBeforeAnswer: data['elapsed_sec_before_answer'],
+      );
 
   /// Creates a new instance of the [FlashcardModel] with updated values
   FlashcardModel copyWith({
@@ -159,19 +169,16 @@ class FlashcardModel {
       answer: answer ?? this.answer,
       elapsedSecBeforeAnswer:
           elapsedSecBeforeAnswer ?? this.elapsedSecBeforeAnswer,
-      lastReview: lastReview ?? this.lastReview,
-      nextReview: nextReview ?? this.nextReview,
     );
   }
 
   /// converts from model to entity
   FlashcardEntity toEntity() => FlashcardEntity(
-      id: id,
-      question: question,
-      answer: answer,
-      elapsedSecBeforeAnswer: elapsedSecBeforeAnswer,
-      lastReview: lastReview,
-      nextReview: nextReview);
+        id: id,
+        question: question,
+        answer: answer,
+        elapsedSecBeforeAnswer: elapsedSecBeforeAnswer,
+      );
 
   /// converts from model to json
   Map<String, dynamic> toJson() => {
@@ -179,7 +186,5 @@ class FlashcardModel {
         'question': question,
         'answer': answer,
         'elapsed_sec_before_answer': elapsedSecBeforeAnswer,
-        'last_review': lastReview,
-        'next_review': nextReview,
       };
 }

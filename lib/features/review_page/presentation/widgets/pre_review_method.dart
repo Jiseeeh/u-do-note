@@ -22,11 +22,30 @@ class PreReviewMethod extends ConsumerStatefulWidget {
 class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
   var notebookId = "";
   var oldFlashcardId = "";
+  var titleFieldPlaceholder = "";
   List<String> pages = [];
   var formKey = GlobalKey<FormState>();
   var titleController = TextEditingController();
   final minTitleName = 3;
   final maxTitleName = 18;
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('Review Method: ${widget.reviewMethod}');
+
+    switch (widget.reviewMethod) {
+      case ReviewMethods.leitnerSystem:
+        titleFieldPlaceholder = "Enter a title for your flashcards";
+        break;
+      case ReviewMethods.feynmanTechnique:
+        titleFieldPlaceholder = "Enter a title for your notes";
+        break;
+      default:
+        titleFieldPlaceholder = "";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +258,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 });
                 break;
               case ReviewMethods.feynmanTechnique:
+                context.router.push(
+                    FeynmanTechniqueRoute(contentFromPages: contentFromPages));
                 break;
               case ReviewMethods.pomodoroTechnique:
                 break;
@@ -272,9 +293,9 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
                 return null;
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: "Title",
-                hintText: "Enter a title for your flashcards",
+                hintText: titleFieldPlaceholder,
                 border: InputBorder.none,
               ),
             ),

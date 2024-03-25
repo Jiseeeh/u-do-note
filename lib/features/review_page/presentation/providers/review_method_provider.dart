@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
@@ -73,7 +74,7 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        '\u2022 U Do Note will generate new flashcards every time you start a new session.',
+                        '\u2022 U Do Note will generate flashcards again only if you don\'t have any flashcards that needs to be reviewed again.',
                         style: TextStyle(fontSize: 12),
                       ),
                     ],

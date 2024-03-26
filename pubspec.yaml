@@ -45,3 +45,9 @@ flutter:
   assets:
     - lib/assets/
   uses-material-design: true
+
+fonts:
+- family: Inter
+  fonts:
+    - asset: lib/assets/fonts/Inter-ExtraBold.ttf
+

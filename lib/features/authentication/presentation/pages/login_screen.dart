@@ -49,38 +49,107 @@ class _LoginState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: Form(
-        key: _formKey,
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 0, 20, 41),
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AuthField(
-              label: 'Email',
-              controller: emailController,
-              isObscuredText: false,
-              keyboardType: TextInputType.emailAddress,
-              validator: emailValidator,
+            const SizedBox(
+              height: 80,
             ),
-            AuthField(
-              label: 'Password',
-              controller: passwordController,
-              isObscuredText: isPasswordObscured,
-              keyboardType: TextInputType.text,
-              validator: passwordValidator,
-              suffixIcon: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isPasswordObscured = !isPasswordObscured;
-                  });
-                },
-                child: Icon(isPasswordObscured
-                    ? Icons.visibility
-                    : Icons.visibility_off),
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Login",
+                    style: TextStyle(color: Colors.white, fontSize: 40),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Welcome Back",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ],
               ),
             ),
-            ElevatedButton(
+            const SizedBox(height: 20),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 237, 237, 237),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(60),
+                        topRight: Radius.circular(60))),
+                        padding: const EdgeInsets.only(top:50),
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(60),
+                        topRight: Radius.circular(60))),
+                child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(
+                        height: 60,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                           ),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              const Text(
+                                textAlign: TextAlign.left,
+                                "Email Address",
+                                style: TextStyle(fontSize: 18,),
+                              ),
+                              AuthField(
+                                label: 'Email',
+                                controller: emailController,
+                                isObscuredText: false,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: emailValidator,
+                              ),
+                              const Text(
+                                textAlign: TextAlign.left,
+                                "Password",
+                                style: TextStyle(fontSize: 18,),
+                              ),
+                              AuthField(
+                                label: 'Password',
+                                controller: passwordController,
+                                isObscuredText: isPasswordObscured,
+                                keyboardType: TextInputType.text,
+                                validator: passwordValidator,
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isPasswordObscured = !isPasswordObscured;
+                                    });
+                                  },
+                                  child: Icon(isPasswordObscured
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   final userProvider = ref.read(userNotifierProvider.notifier);
@@ -117,6 +186,93 @@ class _LoginState extends ConsumerState<LoginScreen> {
                   child: const Text('Sign Up'),
                 ),
               ],
+            ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      const Text(
+                        "Forgot Password?",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      MaterialButton(
+                        onPressed: () {},
+                        height: 50,
+                        // margin: EdgeInsets.symmetric(horizontal: 50),
+                        color: Colors.orange[900],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        // decoration: BoxDecoration(
+                        // ),
+                        child: const Center(
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Inter"),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      const Text(
+                        "Continue with social media",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: MaterialButton(
+                            onPressed: () {},
+                            height: 50,
+                            color: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Facebook",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          )),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          Expanded(
+                              child: MaterialButton(
+                            onPressed: () {},
+                            height: 50,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            color: Colors.black,
+                            child: const Center(
+                              child: Text(
+                                "Github",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          )),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
             ),
           ],
         ),

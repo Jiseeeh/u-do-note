@@ -48,7 +48,7 @@ class NotebooksScreen extends ConsumerWidget {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           childAspectRatio: (1 / 1.5),
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
           children: [for (var notebook in value) NotebookCard(notebook)],
         ),
       AsyncError(:final error) => Center(

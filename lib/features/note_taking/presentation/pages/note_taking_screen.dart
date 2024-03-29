@@ -107,7 +107,6 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   }
 
   AppBar _buildAppBar() {
-    // TODO: add editing of note title
     return AppBar(
       title: Text(widget.note.title),
     );

@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:u_do_note/core/firestore_collection_enum.dart';
 
+import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
@@ -16,8 +16,7 @@ class NoteRemoteDataSource {
 
   const NoteRemoteDataSource(this._firestore, this._auth);
 
-  Future<NotebookModel> createNotebook(
-      String name, String coverImgUrl, String coverImgFileName) async {
+  Future<NotebookModel> createNotebook(String name, XFile? coverImg) async {
     logger.i('Creating notebook...');
 
     var userId = _auth.currentUser!.uid;
@@ -33,9 +32,18 @@ class NoteRemoteDataSource {
         .get();
 
     if (notebook.docs.isNotEmpty) {
-      response = "Notebook with name $name already exists.";
-      return NotebookModel.fromFirestore(
-          notebook.docs.first.id, notebook.docs.first.data());
+      response = "Notebook with the name [$name] already exists.";
+      throw response;
+    }
+
+    var coverImgUrl = '';
+    var coverImgFileName = '';
+
+    if (coverImg != null) {
+      var urls = await uploadNotebookCover(coverImg);
+
+      coverImgUrl = urls[0];
+      coverImgFileName = urls[1];
     }
 
     var createdAt = Timestamp.now();
@@ -45,7 +53,7 @@ class NoteRemoteDataSource {
         .collection('user_notes')
         .add({
       'subject': name.toLowerCase(),
-      'cover_url': coverImgUrl,
+      'cover_url': coverImgUrl.isEmpty ? '' : coverImgUrl,
       'cover_file_name': coverImgFileName,
       'created_at': FieldValue.serverTimestamp(),
     });
@@ -187,15 +195,15 @@ class NoteRemoteDataSource {
     var userId = _auth.currentUser!.uid;
 
     if (coverImg != null) {
-      var coverDownloadUrl = await uploadNotebookCover(coverImg);
+      var urls = await uploadNotebookCover(coverImg);
 
       if (notebook.coverFileName.isNotEmpty) {
         await deleteNotebookCover(notebook.coverFileName);
       }
 
       var updatedModel = notebook.copyWith(
-        coverUrl: coverDownloadUrl,
-        coverFileName: coverImg.name,
+        coverUrl: urls[0],
+        coverFileName: urls[1],
       );
 
       await _firestore
@@ -307,10 +315,13 @@ class NoteRemoteDataSource {
     return true;
   }
 
-  Future<String> uploadNotebookCover(XFile image) async {
+  Future<List<String>> uploadNotebookCover(XFile image) async {
     FirebaseStorage storage = FirebaseStorage.instance;
 
-    final fileName = image.name;
+    final fileNameArr = image.name.split('.');
+    final fileName =
+        "${DateTime.now().millisecondsSinceEpoch.toString()}_${fileNameArr[0]}.${fileNameArr[1]}";
+
     logger.i('Uploading notebook cover with name: $fileName...');
 
     var fileReference = storage.ref().child('notebook_covers/$fileName');
@@ -320,6 +331,6 @@ class NoteRemoteDataSource {
     var downloadUrl = await snapshot.ref.getDownloadURL();
 
     logger.i('Notebook cover uploaded successfully with url: $downloadUrl');
-    return downloadUrl;
+    return [downloadUrl, fileName];
   }
 }

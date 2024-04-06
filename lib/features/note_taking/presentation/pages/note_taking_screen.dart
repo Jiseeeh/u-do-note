@@ -109,6 +109,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   AppBar _buildAppBar() {
     return AppBar(
       title: Text(widget.note.title),
+      scrolledUnderElevation: 0,
     );
   }
 }

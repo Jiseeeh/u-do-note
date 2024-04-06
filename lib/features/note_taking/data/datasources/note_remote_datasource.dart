@@ -98,7 +98,7 @@ class NoteRemoteDataSource {
     }
 
     // ? r treats the string as a raw string
-    const defaultContent = r'[{"insert":"Start taking notes\n"}]';
+    var defaultContent = r'[{"insert":"' '$title' r'\n"}]';
     var newNote = NoteModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,

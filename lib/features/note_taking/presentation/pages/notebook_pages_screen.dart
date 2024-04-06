@@ -25,6 +25,7 @@ class NotebookPagesScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(
           notebooks!.firstWhere((nb) => nb.id == notebookId).subject,
           style: const TextStyle(fontWeight: FontWeight.bold),

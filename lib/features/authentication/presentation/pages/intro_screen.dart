@@ -59,7 +59,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         next: const Text("Next"),
         done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w700)),
         onDone: () {
-          context.router.replaceNamed('/sign-up');
+          context.router.replaceNamed('/login');
         },
         onSkip: () {
           _introScreenKey.currentState?.skipToEnd();

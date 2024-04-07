@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
@@ -27,6 +28,7 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
 
 class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   final _controller = QuillController.basic();
+  var readOnly = false;
 
   @override
   void initState() {
@@ -69,27 +71,51 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-          appBar: _buildAppBar(),
-          body: _buildBody(),
-          floatingActionButton: FloatingActionButton(
-            onPressed: onSave(ref),
-            child: const Icon(Icons.save),
-          )),
-    );
+        child: Scaffold(
+            appBar: _buildAppBar(),
+            body: _buildBody(),
+            floatingActionButton: SpeedDial(
+              activeIcon: Icons.close,
+              buttonSize: const Size(50, 50),
+              curve: Curves.bounceIn,
+              children: [
+                SpeedDialChild(
+                    elevation: 0,
+                    child: const Icon(Icons.save_rounded),
+                    labelWidget: const Text('Save Note'),
+                    onTap: onSave(ref)),
+                SpeedDialChild(
+                    elevation: 0,
+                    child: const Icon(Icons.psychology_rounded),
+                    labelWidget: const Text('Analyze Note'),
+                    onTap: () {}),
+                SpeedDialChild(
+                    elevation: 0,
+                    child: const Icon(Icons.preview_rounded),
+                    labelWidget: const Text('Read only'),
+                    onTap: () {
+                      setState(() {
+                        readOnly = !readOnly;
+                      });
+                    }),
+              ],
+              child: const Icon(Icons.add_rounded),
+            )));
   }
 
   Widget _buildBody() {
     return Column(
       children: [
-        // TODO: add to toolbar: ocr, preview mode
-        QuillToolbar.simple(
-          configurations: QuillSimpleToolbarConfigurations(
-            controller: _controller,
-            multiRowsDisplay: false,
-            toolbarSize: 40,
-          ),
-        ),
+        // TODO: add to toolbar: ocr,
+        (!readOnly)
+            ? QuillToolbar.simple(
+                configurations: QuillSimpleToolbarConfigurations(
+                  controller: _controller,
+                  multiRowsDisplay: false,
+                  toolbarSize: 40,
+                ),
+              )
+            : const SizedBox(),
         const Divider(
           color: Colors.grey,
         ),
@@ -98,7 +124,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             configurations: QuillEditorConfigurations(
               padding: const EdgeInsets.all(8),
               controller: _controller,
-              readOnly: false,
+              readOnly: readOnly,
             ),
           ),
         ),

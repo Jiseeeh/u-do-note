@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
@@ -13,40 +14,78 @@ import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dia
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
-class NotebookPagesScreen extends ConsumerWidget {
+class NotebookPagesScreen extends ConsumerStatefulWidget {
   final String notebookId;
   const NotebookPagesScreen(@PathParam('notebookId') this.notebookId,
       {Key? key})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _NotebookPagesScreenState();
+}
+
+class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
+  var gridCols = 2;
+  @override
+  Widget build(BuildContext context) {
     var notebooks = ref.watch(notebooksProvider).value;
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(
-          notebooks!.firstWhere((nb) => nb.id == notebookId).subject,
+          notebooks!.firstWhere((nb) => nb.id == widget.notebookId).subject,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: _buildBody(context, ref, notebooks),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          showDialog(
-              context: context,
-              builder: ((context) => AddNoteDialog(notebookId)));
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: SpeedDial(
+        activeIcon: Icons.close,
+        buttonSize: const Size(50, 50),
+        curve: Curves.bounceIn,
+        children: [
+          SpeedDialChild(
+              elevation: 0,
+              child: const Icon(Icons.note_add),
+              labelWidget: const Text('Add Note'),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: ((context) => AddNoteDialog(widget.notebookId)));
+              }),
+          SpeedDialChild(
+              elevation: 0,
+              child: const Icon(Icons.looks_two_rounded),
+              labelWidget: const Text('Two Columns'),
+              onTap: () {
+                setState(() {
+                  if (gridCols != 2) {
+                    gridCols = 2;
+                  }
+                });
+              }),
+          SpeedDialChild(
+              elevation: 0,
+              child: const Icon(Icons.looks_3_rounded),
+              labelWidget: const Text('Three Columns'),
+              onTap: () {
+                setState(() {
+                  if (gridCols != 3) {
+                    gridCols = 3;
+                  }
+                });
+              }),
+        ],
+        child: const Icon(Icons.add_rounded),
       ),
     );
   }
 
-  // TODO: deleting and updating a notebook, e.g, changing the subject name
   // and if applicable, also allow changing of background image
   Widget _buildBody(
       BuildContext context, WidgetRef ref, List<NotebookEntity>? notebooks) {
-    var notebook = notebooks!.firstWhere((nb) => nb.id == notebookId);
+    var notebook = notebooks!.firstWhere((nb) => nb.id == widget.notebookId);
 
     if (notebook.notes.isEmpty) {
       return const Center(
@@ -55,11 +94,11 @@ class NotebookPagesScreen extends ConsumerWidget {
     }
 
     return GridView.count(
-      crossAxisCount: 2,
+      crossAxisCount: gridCols,
       crossAxisSpacing: 10,
       mainAxisSpacing: 10,
       childAspectRatio: (1 / 1.2),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
       children: [
         for (var note in notebook.notes) _buildNoteCard(context, ref, note)
       ],
@@ -99,8 +138,8 @@ class NotebookPagesScreen extends ConsumerWidget {
             children: [
               IconButton(
                   onPressed: () {
-                    context.router.push(
-                        NoteTakingRoute(notebookId: notebookId, note: note));
+                    context.router.push(NoteTakingRoute(
+                        notebookId: widget.notebookId, note: note));
                   },
                   icon: const Icon(Icons.edit)),
               IconButton(
@@ -139,7 +178,8 @@ class NotebookPagesScreen extends ConsumerWidget {
 
                     var res = await ref
                         .read(notebooksProvider.notifier)
-                        .deleteNote(notebookId: notebookId, noteId: note.id);
+                        .deleteNote(
+                            notebookId: widget.notebookId, noteId: note.id);
 
                     EasyLoading.dismiss();
                     EasyLoading.showInfo(res);

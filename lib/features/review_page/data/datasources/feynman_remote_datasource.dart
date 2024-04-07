@@ -50,7 +50,7 @@ class FeynmanRemoteDataSource {
 // the actual request.
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-1106",
+      model: "gpt-3.5-turbo-0125",
       seed: 6,
       messages: requestMessages,
       temperature: 0.2,

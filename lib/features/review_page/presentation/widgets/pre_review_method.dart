@@ -319,7 +319,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                                 children: [
                                   Text("Flashcards to review"),
                                   Text(
-                                    "The last selected notebook will be used.",
+                                    "The last selected session will be used.",
                                     style: TextStyle(fontSize: 12),
                                   )
                                 ],
@@ -371,7 +371,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                                   color: Colors.blue,
                                 ),
                                 buttonText: const Text(
-                                  "Notebooks",
+                                  "Sessions",
                                 ),
                               ),
                             ));
@@ -480,6 +480,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
               ),
               onSelectionChanged: (values) {
+                FocusScope.of(context).requestFocus(FocusNode());
                 if (values.isEmpty) {
                   setState(() {
                     notebookId = "";

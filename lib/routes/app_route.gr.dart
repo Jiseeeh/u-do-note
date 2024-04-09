@@ -85,9 +85,16 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ReviewRoute.name: (routeData) {
+      final args = routeData.argsAs<ReviewRouteArgs>(
+          orElse: () => const ReviewRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ReviewScreen(),
+        child: ReviewScreen(
+          reviewMethod: args.reviewMethod,
+          notebookId: args.notebookId,
+          noteId: args.noteId,
+          key: args.key,
+        ),
       );
     },
     SignUpRoute.name: (routeData) {
@@ -320,16 +327,49 @@ class NotebooksRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ReviewScreen]
-class ReviewRoute extends PageRouteInfo<void> {
-  const ReviewRoute({List<PageRouteInfo>? children})
-      : super(
+class ReviewRoute extends PageRouteInfo<ReviewRouteArgs> {
+  ReviewRoute({
+    ReviewMethods? reviewMethod,
+    String? notebookId,
+    String? noteId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           ReviewRoute.name,
+          args: ReviewRouteArgs(
+            reviewMethod: reviewMethod,
+            notebookId: notebookId,
+            noteId: noteId,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ReviewRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ReviewRouteArgs> page = PageInfo<ReviewRouteArgs>(name);
+}
+
+class ReviewRouteArgs {
+  const ReviewRouteArgs({
+    this.reviewMethod,
+    this.notebookId,
+    this.noteId,
+    this.key,
+  });
+
+  final ReviewMethods? reviewMethod;
+
+  final String? notebookId;
+
+  final String? noteId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ReviewRouteArgs{reviewMethod: $reviewMethod, notebookId: $notebookId, noteId: $noteId, key: $key}';
+  }
 }
 
 /// generated route for

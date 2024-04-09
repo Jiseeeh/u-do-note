@@ -1,10 +1,15 @@
-import 'package:auto_route/auto_route.dart';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/leitner_system_provider.dart';
@@ -12,7 +17,13 @@ import 'package:u_do_note/routes/app_route.dart';
 
 class PreReviewMethod extends ConsumerStatefulWidget {
   final ReviewMethods reviewMethod;
-  const PreReviewMethod(this.reviewMethod, {Key? key}) : super(key: key);
+  // ? these are from the analyze note button to skip
+  // ? the notebook and pages selection
+  final String? notebookId;
+  final List<String>? pages;
+  const PreReviewMethod(this.reviewMethod,
+      {this.notebookId, this.pages, Key? key})
+      : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -23,17 +34,30 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
   var notebookId = "";
   var oldFlashcardId = "";
   var titleFieldPlaceholder = "";
-  List<String> pages = [];
   var formKey = GlobalKey<FormState>();
   var titleController = TextEditingController();
+  var titleKey = GlobalKey();
+  var continueBtnKey = GlobalKey();
+  var notebooksKey = GlobalKey<FormFieldState>();
+  var notebookPagesKey = GlobalKey<FormFieldState>();
   final minTitleName = 3;
   final maxTitleName = 18;
+  late TutorialCoachMark tutorialCoachMark;
+  List<String> pages = [];
 
   @override
   void initState() {
     super.initState();
 
-    print('Review Method: ${widget.reviewMethod}');
+    if (widget.notebookId != null) {
+      notebookId = widget.notebookId!;
+    }
+
+    if (widget.pages != null) {
+      pages = widget.pages!;
+    }
+
+    logger.d('Review Method: ${widget.reviewMethod}');
 
     switch (widget.reviewMethod) {
       case ReviewMethods.leitnerSystem:
@@ -45,6 +69,133 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
       default:
         titleFieldPlaceholder = "";
     }
+
+    if (widget.notebookId != null && widget.pages != null) {
+      notebookId = widget.notebookId!;
+      pages = widget.pages!;
+
+      createTutorial(_createLeitnerTargets);
+      showTutorial();
+    }
+  }
+
+  void createTutorial(List<TargetFocus> Function() targetGenerator) {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targetGenerator(),
+      colorShadow: AppColors.darkBlue,
+      textSkip: "SKIP",
+      paddingFocus: 10,
+      opacityShadow: 0.5,
+      imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+      onFinish: () {
+        logger.d('Tutorial is finished');
+      },
+      onClickTargetWithTapPosition: (target, tapDetails) {
+        logger.d('onClickTargetWithTapPosition: $target');
+        logger.d(
+            "clicked at position local: ${tapDetails.localPosition} - global: ${tapDetails.globalPosition}");
+      },
+      onClickOverlay: (target) {
+        logger.d('onClickOverlay: $target');
+      },
+      onSkip: () {
+        logger.d("skip");
+        return true;
+      },
+    );
+  }
+
+  List<TargetFocus> _createLeitnerTargets() {
+    List<TargetFocus> targets = [];
+
+    targets.add(TargetFocus(
+        identify: 'title',
+        keyTarget: titleKey,
+        alignSkip: Alignment.topRight,
+        shape: ShapeLightFocus.RRect,
+        enableOverlayTab: false,
+        contents: [
+          TargetContent(
+              align: ContentAlign.top,
+              builder: (context, controller) {
+                return const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "You need to add a title for your review session here.")
+                  ],
+                );
+              })
+        ]));
+
+    targets.add(TargetFocus(
+        identify: 'notebook',
+        keyTarget: notebooksKey,
+        alignSkip: Alignment.topRight,
+        shape: ShapeLightFocus.RRect,
+        enableOverlayTab: true,
+        contents: [
+          TargetContent(
+              align: ContentAlign.top,
+              builder: (context, controller) {
+                return const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "Here you can select a notebook to review the notes from. Since you came from analyze note, the notebook of that note will be used. If you want to select another notebook, you can do so.")
+                  ],
+                );
+              })
+        ]));
+
+    targets.add(TargetFocus(
+        identify: 'pages',
+        keyTarget: notebookPagesKey,
+        alignSkip: Alignment.topRight,
+        shape: ShapeLightFocus.RRect,
+        enableOverlayTab: true,
+        contents: [
+          TargetContent(
+              align: ContentAlign.top,
+              builder: (context, controller) {
+                return const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "Here you can select the pages to review. Since you came from analyze note, that page will be used. If you want to select other pages, you can do so.")
+                  ],
+                );
+              })
+        ]));
+
+    targets.add(TargetFocus(
+        identify: 'continue',
+        keyTarget: continueBtnKey,
+        alignSkip: Alignment.topRight,
+        enableOverlayTab: true,
+        contents: [
+          TargetContent(
+              align: ContentAlign.top,
+              builder: (context, controller) {
+                return const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "You can then click on this button to continue with the review session after picking choosing a title, notebook, and pages.")
+                  ],
+                );
+              })
+        ]));
+
+    return targets;
+  }
+
+  void showTutorial() {
+    tutorialCoachMark.show(context: context);
   }
 
   @override
@@ -93,6 +244,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
           child: const Text('Cancel'),
         ),
         TextButton(
+          key: continueBtnKey,
           onPressed: () async {
             if (!formKey.currentState!.validate()) {
               return;
@@ -263,6 +415,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 break;
               case ReviewMethods.pomodoroTechnique:
                 break;
+              case ReviewMethods.acronymMnemonics:
+                break;
             }
 
             if (context.mounted) {
@@ -277,6 +431,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
         child: Column(
           children: [
             TextFormField(
+              key: titleKey,
               controller: titleController,
               validator: (value) {
                 if (value!.isEmpty) {
@@ -301,6 +456,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             ),
             const SizedBox(height: 10),
             MultiSelectDialogField(
+              key: notebooksKey,
+              initialValue: [notebookId],
               title: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -363,6 +520,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             ),
             notebookId.isNotEmpty
                 ? MultiSelectDialogField(
+                    key: notebookPagesKey,
                     title: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -373,7 +531,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         )
                       ],
                     ),
-
+                    initialValue: pages,
                     items: notebooks
                         .firstWhere((notebook) => notebook.id == notebookId)
                         .notes

@@ -141,7 +141,7 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
 
                         Future.delayed(const Duration(seconds: 1), () {
                           if (context.mounted) {
-                            context.router.replace(const ReviewRoute());
+                            context.router.replace(ReviewRoute());
                           }
                         });
                       }

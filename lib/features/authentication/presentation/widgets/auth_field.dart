@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthField extends StatelessWidget {
+class AuthField extends ConsumerWidget {
   final String label;
   final TextEditingController controller;
   final bool isObscuredText;
@@ -19,7 +20,7 @@ class AuthField extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(

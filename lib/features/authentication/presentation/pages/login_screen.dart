@@ -2,8 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/social_icon.dart';
 
 import '../widgets/auth_field.dart';
 
@@ -52,15 +54,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          // width: double.infinity,
-          decoration: const BoxDecoration(color: Color(0xff001429)),
-          // child:
-          // CustomScrollView(
-          //   slivers: [
-          //     SliverFillRemaining(
-          //       hasScrollBody: false,
-          //       fillOverscroll: false,
-
+          decoration: const BoxDecoration(color: AppColors.btnBlue),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -74,7 +68,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
               ),
               Container(
                 decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 238, 238, 238),
+                    color: AppColors.lightGrey,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(35),
                         topRight: Radius.circular(35))),
@@ -85,7 +79,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                       child: Text(
                         "Login to your account",
                         style: TextStyle(
-                            color: Color.fromARGB(255, 112, 117, 125),
+                            color: AppColors.darkGrey,
                             fontSize: 18,
                             fontFamily: 'Inter-Bold',
                             fontWeight: FontWeight.w500),
@@ -99,7 +93,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                             topRight: Radius.circular(35)),
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(100, 204, 204, 204),
+                            color: AppColors.shadow,
                             spreadRadius: 5,
                             blurRadius: 7,
                             offset: Offset(0, -3), // changes position of shadow
@@ -124,15 +118,14 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                   decoration: BoxDecoration(
                                       border: Border.all(
                                           width: 1,
-                                          color: const Color.fromARGB(
-                                              115, 197, 197, 197)),
+                                          color: AppColors.lightShadow),
                                       shape: BoxShape.circle),
                                   child: SvgPicture.asset(
                                     "assets/f.svg",
                                     height: 30,
                                     width: 30,
                                     // ignore: deprecated_member_use
-                                    color: const Color(0xff4E8EFF),
+                                    color: AppColors.darkBlue,
                                   ),
                                 ),
                                 const SocialIcon(
@@ -213,7 +206,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                   child: Text(
                                     "Forgot Password?",
                                     textAlign: TextAlign.end,
-                                    style: TextStyle(color: Color(0xff266EF1)),
+                                    style: TextStyle(color: AppColors.darkBlue),
                                   ),
                                 ),
                                 const SizedBox(
@@ -248,13 +241,10 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                     }
                                   },
                                   height: 50,
-                                  // margin: EdgeInsets.symmetric(horizontal: 50),
-                                  color: const Color(0xff001429),
+                                  color: AppColors.btnBlue,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
-                                  // decoration: BoxDecoration(
-                                  // ),
                                   child: const Center(
                                     child: Text(
                                       "LOGIN",
@@ -278,7 +268,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                       child: const Text(
                                         'Register here',
                                         style: TextStyle(
-                                            color: Color(0xff266EF1),
+                                            color: AppColors.darkBlue,
                                             fontWeight: FontWeight.w700),
                                       ),
                                     ),
@@ -300,28 +290,5 @@ class _LoginState extends ConsumerState<LoginScreen> {
       // ],
     );
     // ));
-  }
-}
-
-class SocialIcon extends StatelessWidget {
-  final String src;
-  // final Function press;
-  const SocialIcon({super.key, required this.src});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-          border: Border.all(
-              width: 1, color: const Color.fromARGB(115, 197, 197, 197)),
-          shape: BoxShape.circle),
-      child: SvgPicture.asset(
-        src,
-        height: 30,
-        width: 30,
-      ),
-    );
   }
 }

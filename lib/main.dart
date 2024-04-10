@@ -27,7 +27,6 @@ Future<void> initDeps() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   OpenAI.apiKey = Env.openAIKey;
   OpenAI.showLogs = true;
-  FirebaseAuth.instance.signOut();
 }
 
 class MainApp extends ConsumerWidget {

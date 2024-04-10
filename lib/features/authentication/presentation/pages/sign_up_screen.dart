@@ -4,10 +4,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/widgets/snackbar.dart';
 
-import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/social_icon.dart';
 import '../widgets/auth_field.dart';
 
 @RoutePage()
@@ -80,7 +81,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          decoration: const BoxDecoration(color: Color(0xff001429)),
+          decoration: const BoxDecoration(color: AppColors.btnBlue),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -94,7 +95,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
               ),
               Container(
                 decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 238, 238, 238),
+                    color: AppColors.lightGrey,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(35),
                         topRight: Radius.circular(35))),
@@ -105,7 +106,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                       child: Text(
                         "Create New Account",
                         style: TextStyle(
-                            color: Color.fromARGB(255, 112, 117, 125),
+                            color: AppColors.darkGrey,
                             fontSize: 18,
                             fontFamily: 'Inter-Bold',
                             fontWeight: FontWeight.w500),
@@ -113,13 +114,13 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                     ),
                     Container(
                       decoration: const BoxDecoration(
-                        color: Color(0xffFFFFFF),
+                        color: Colors.white,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(35),
                             topRight: Radius.circular(35)),
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(100, 204, 204, 204),
+                            color: AppColors.shadow,
                             spreadRadius: 5,
                             blurRadius: 7,
                             offset: Offset(0, -3), // changes position of shadow
@@ -127,7 +128,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                         ],
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(30,20,30,0),
+                        padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
@@ -144,15 +145,14 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                   decoration: BoxDecoration(
                                       border: Border.all(
                                           width: 1,
-                                          color: const Color.fromARGB(
-                                              115, 197, 197, 197)),
+                                          color: AppColors.lightShadow),
                                       shape: BoxShape.circle),
                                   child: SvgPicture.asset(
                                     "assets/f.svg",
                                     height: 30,
                                     width: 30,
                                     // ignore: deprecated_member_use
-                                    color: const Color(0xff4E8EFF),
+                                    color: AppColors.darkBlue,
                                   ),
                                 ),
                                 const SocialIcon(
@@ -245,7 +245,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                        const Align(
+                                      const Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           "Repeat Password",
@@ -277,46 +277,55 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         height: 10,
                                       ),
                                       MaterialButton(
-                                         onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  EasyLoading.show(
-                      status: 'Signing you up...',
-                      maskType: EasyLoadingMaskType.black,
-                      dismissOnTap: false);
+                                        onPressed: () async {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            EasyLoading.show(
+                                                status: 'Signing you up...',
+                                                maskType:
+                                                    EasyLoadingMaskType.black,
+                                                dismissOnTap: false);
 
-                  final userOrFailure = await userProvider.signUpWithEAP(
-                      emailController.text,
-                      displayNameController.text,
-                      passwordController.text);
+                                            final userOrFailure =
+                                                await userProvider
+                                                    .signUpWithEAP(
+                                                        emailController.text,
+                                                        displayNameController
+                                                            .text,
+                                                        passwordController
+                                                            .text);
 
-                  EasyLoading.dismiss();
+                                            EasyLoading.dismiss();
 
-                  userOrFailure.fold((failure) {
-                    var failureSnackbar = createSnackbar(failure.message);
+                                            userOrFailure.fold((failure) {
+                                              var failureSnackbar =
+                                                  createSnackbar(
+                                                      failure.message);
 
-                    ScaffoldMessenger.of(context).showSnackBar(failureSnackbar);
-                  },
-                      (userModel) => {
-                            EasyLoading.showSuccess('Sign up success!'),
-                            context.router.replaceNamed('/login'),
-                          });
-                }
-              },
-
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                      failureSnackbar);
+                                            },
+                                                (userModel) => {
+                                                      EasyLoading.showSuccess(
+                                                          'Sign up success!'),
+                                                      context.router
+                                                          .replaceNamed(
+                                                              '/login'),
+                                                    });
+                                          }
+                                        },
                                         height: 50,
-                                        // margin: EdgeInsets.symmetric(horizontal: 50),
-                                        color: const Color(0xff001429),
+                                        color: AppColors.btnBlue,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(50),
                                         ),
-                                        // decoration: BoxDecoration(
-                                        // ),
                                         child: const Center(
                                           child: Text(
                                             "REGISTER",
                                             style: TextStyle(
-                                                color: Colors.white,
+                                                color: AppColors.lightBlue,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -325,7 +334,8 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         height: 5,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(bottom: 10),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -340,8 +350,9 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                               child: const Text(
                                                 'Login here',
                                                 style: TextStyle(
-                                                    color: Color(0xff266EF1),
-                                                    fontWeight: FontWeight.w700),
+                                                    color: AppColors.darkBlue,
+                                                    fontWeight:
+                                                        FontWeight.w700),
                                               ),
                                             ),
                                           ],

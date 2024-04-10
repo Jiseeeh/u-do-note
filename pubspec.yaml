@@ -34,6 +34,7 @@ dependencies:
   swipable_stack: ^2.0.0
   flutter_svg: 2.0.10+1
   tutorial_coach_mark: ^1.2.11
+  flutter_onboarding_slider: ^1.0.11
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +52,7 @@ flutter:
     - assets/
     - lib/assets/fonts/
     - lib/assets/images/
+    - lib/assets/images/onboard/
   uses-material-design: true
 
 fonts:

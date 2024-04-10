@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthField extends StatelessWidget {
+class AuthField extends ConsumerWidget {
   final String label;
   final TextEditingController controller;
   final bool isObscuredText;
@@ -19,9 +20,9 @@ class AuthField extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         controller: controller,
         obscureText: isObscuredText,
@@ -30,9 +31,24 @@ class AuthField extends StatelessWidget {
         enableSuggestions: false,
         validator: validator,
         decoration: InputDecoration(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           suffixIcon: suffixIcon,
-          labelText: label,
-          border: const OutlineInputBorder(),
+          hintText: label,
+          hintStyle: const TextStyle(color:  Color.fromARGB(150, 147, 147, 147)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(
+                color: Color.fromARGB(50, 147, 147, 147), width: 2.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Color(0xff4E8EFF), width: 2.0),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Color.fromARGB(255, 208, 53, 66), width: 2.0),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
         ),
       ),
     );

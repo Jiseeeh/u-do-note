@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 
+import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 
@@ -24,7 +24,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var _notebookCoverLocalPath = "";
-  var _notebookCoverFileName = "";
+  // var _notebookCoverFileName = "";
   var _notebookCoverUrl = "";
   XFile? _notebookCoverImg;
 
@@ -35,7 +35,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
     if (widget.notebookEntity != null) {
       _nameController.text = widget.notebookEntity!.subject;
       _notebookCoverUrl = widget.notebookEntity!.coverUrl;
-      _notebookCoverFileName = widget.notebookEntity!.coverFileName;
+      // _notebookCoverFileName = widget.notebookEntity!.coverFileName;
     }
   }
 
@@ -53,17 +53,6 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   VoidCallback _onCreate(BuildContext context) {
     return () async {
       if (_formKey.currentState!.validate()) {
-        if (_notebookCoverImg != null) {
-          var coverDownloadUrl = await ref
-              .read(notebooksProvider.notifier)
-              .uploadNotebookCover(coverImg: _notebookCoverImg!);
-
-          setState(() {
-            _notebookCoverUrl = coverDownloadUrl;
-            _notebookCoverFileName = _notebookCoverImg!.name;
-          });
-        }
-
         EasyLoading.show(
             status: 'Creating Notebook...',
             maskType: EasyLoadingMaskType.black,
@@ -72,9 +61,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
         String result = await ref
             .read(notebooksProvider.notifier)
             .createNotebook(
-                name: _nameController.text,
-                coverImgUrl: _notebookCoverUrl,
-                coverImgFileName: _notebookCoverFileName);
+                name: _nameController.text, coverImg: _notebookCoverImg);
 
         EasyLoading.dismiss();
 

@@ -10,7 +10,7 @@ class HomepageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AutoTabsScaffold(
-      routes: const [ReviewRoute(), NotebooksRoute()],
+      routes: [const NotebooksRoute(), ReviewRoute()],
       extendBody: true,
       bottomNavigationBuilder: (_, tabsRouter) {
         // TODO: make this sht look like the bottom nav bar in the figma
@@ -20,9 +20,9 @@ class HomepageScreen extends ConsumerWidget {
           fixedColor: Colors.grey,
           unselectedItemColor: Colors.black,
           items: const [
+            BottomNavigationBarItem(label: 'Notes', icon: Icon(Icons.home)),
             BottomNavigationBarItem(
-                label: 'Review Page', icon: Icon(Icons.home)),
-            BottomNavigationBarItem(label: 'Notes', icon: Icon(Icons.folder)),
+                label: 'Review Methods', icon: Icon(Icons.folder)),
             BottomNavigationBarItem(
                 label: 'Analytics', icon: Icon(Icons.bar_chart)),
             BottomNavigationBarItem(

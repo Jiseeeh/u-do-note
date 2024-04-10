@@ -162,13 +162,10 @@ class Notebooks extends _$Notebooks {
   }
 
   /// Creates a notebook from the given [name]
-  Future<String> createNotebook(
-      {required String name,
-      required String coverImgUrl,
-      required String coverImgFileName}) async {
+  Future<String> createNotebook({required String name, XFile? coverImg}) async {
     final createNotebook = ref.read(createNotebookProvider);
 
-    var result = await createNotebook(name, coverImgUrl, coverImgFileName);
+    var result = await createNotebook(name, coverImg);
 
     return result.fold((failure) => failure.message, (nbModel) {
       List<NotebookEntity> notebookEntities =
@@ -244,12 +241,12 @@ class Notebooks extends _$Notebooks {
     });
   }
 
-  Future<String> uploadNotebookCover({required XFile coverImg}) async {
+  Future<List<String>> uploadNotebookCover({required XFile coverImg}) async {
     final uploadNotebookCover = ref.read(uploadNotebookCoverProvider);
 
     var failureOrCoverImgUrl = await uploadNotebookCover(coverImg);
 
     return failureOrCoverImgUrl.fold(
-        (failure) => '', (coverImgUrl) => coverImgUrl);
+        (failure) => [failure.message], (coverImgUrl) => coverImgUrl);
   }
 }

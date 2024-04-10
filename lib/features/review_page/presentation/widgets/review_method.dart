@@ -5,12 +5,15 @@ class ReviewMethod extends ConsumerWidget {
   final String title;
   final String description;
   final String imagePath;
+  final GlobalKey buttonKey;
   final Function() onPressed;
+
   const ReviewMethod(
       {super.key,
       required this.title,
       required this.description,
       required this.imagePath,
+      required this.buttonKey,
       required this.onPressed});
 
   // TODO: fix the review method's description text overflow when the text is too long
@@ -50,6 +53,7 @@ class ReviewMethod extends ConsumerWidget {
                     ],
                   )),
                   TextButton(
+                    key: buttonKey,
                     onPressed: onPressed,
                     style: ButtonStyle(
                         // lessen the border radius

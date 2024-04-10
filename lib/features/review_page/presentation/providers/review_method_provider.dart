@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
 
 part 'review_method_provider.g.dart';
@@ -10,7 +12,6 @@ part 'review_method_provider.g.dart';
 class ReviewMethodNotifier extends _$ReviewMethodNotifier {
   @override
   List<ReviewMethodEntity> build() {
-    // define the review methods
     return [];
   }
 
@@ -23,12 +24,30 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
         onPressed: () async {
           var willContinue = await showDialog(
               context: context,
+              builder: (context) => const LeitnerSystemNotice());
+
+          if (willContinue && context.mounted) {
+            showDialog(
+                context: context,
+                builder: (context) =>
+                    const PreReviewMethod(ReviewMethods.leitnerSystem));
+          }
+        },
+      ),
+      ReviewMethodEntity(
+        title: 'Feynman Technique',
+        description:
+            'Explain a topic that a five (5) year old child can understand.',
+        imagePath: 'lib/assets/feynman.png',
+        onPressed: () async {
+          var willContinue = await showDialog(
+              context: context,
               builder: (context) {
                 return AlertDialog(
                   title: const Column(
                     children: [
                       Text(
-                        'Quick Notice for Leitner System',
+                        'Quick Notice for Feynman Technique',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
@@ -38,6 +57,10 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
                     ],
                   ),
                   scrollable: true,
+                  content: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text("SAMPLE")],
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -52,32 +75,6 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
                       child: const Text('Continue'),
                     ),
                   ],
-                  content: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'How will I be graded with this?',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        '\u2022 You will be graded based on your response time for every flashcards.Note that the moment the app finished generating flashcards, the timer will start.',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'What will happen to the flashcards when I start a new session?',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        '\u2022 U Do Note will generate new flashcards every time you start a new session.',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
                 );
               });
 
@@ -86,19 +83,13 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
           }
 
           if (context.mounted) {
+            // context.router.push(const FeynmanTechniqueRoute());
             showDialog(
                 context: context,
                 builder: (context) =>
-                    const PreReviewMethod(ReviewMethods.leitnerSystem));
+                    const PreReviewMethod(ReviewMethods.feynmanTechnique));
           }
         },
-      ),
-      ReviewMethodEntity(
-        title: 'Feynman Technique',
-        description:
-            'Explain a topic that a five (5) year old child can understand.',
-        imagePath: 'lib/assets/feynman.png',
-        onPressed: () {},
       ),
       ReviewMethodEntity(
         title: 'Pomodoro Technique',

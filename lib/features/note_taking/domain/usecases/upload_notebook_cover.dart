@@ -9,7 +9,7 @@ class UploadNotebookCover {
 
   UploadNotebookCover(this.noteRepository);
 
-  Future<Either<Failure, String>> call(XFile coverImg) async {
+  Future<Either<Failure, List<String>>> call(XFile coverImg) async {
     return await noteRepository.uploadNotebookCover(coverImg);
   }
 }

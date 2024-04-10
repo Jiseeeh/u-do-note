@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/leitner_system_provider.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 typedef OnFlipCallBack = void Function(int index);
 
@@ -31,6 +32,7 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
   Map<int, bool> flips = {};
   List<FlashcardModel> flashcards = [];
   List<FlashcardModel> updatedFlashcards = [];
+  int graceMilliseconds = 500;
   late Stopwatch _stopwatch;
 
   @override
@@ -86,18 +88,29 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
                       // response time
                       if (_stopwatch.isRunning) {
                         _stopwatch.stop();
-                        final elapsedMs = _stopwatch.elapsedMilliseconds;
+                        final elapsedMs =
+                            _stopwatch.elapsedMilliseconds - graceMilliseconds;
+
+                        var elapsedMsWithGrace =
+                            elapsedMs - graceMilliseconds <= 1
+                                ? elapsedMs
+                                : elapsedMs - graceMilliseconds;
+
+                        var elapsedSeconds = elapsedMsWithGrace ~/ 1000;
+                        var elapsedSecondsWithGrace =
+                            elapsedSeconds == 0 ? 1 : elapsedSeconds;
+
                         _stopwatch.reset();
 
                         if (index > flashcards.length - 1) return;
 
                         updatedFlashcards.add(flashcards[index].copyWith(
-                          elapsedSecBeforeAnswer: elapsedMs ~/ 1000,
+                          elapsedSecBeforeAnswer: elapsedSecondsWithGrace,
                           lastReview: DateTime.now(),
                         ));
 
                         logger.i(
-                            'Card ${index + 1} response time: ${elapsedMs ~/ 1000} second(s)');
+                            'Card ${index + 1} response time: $elapsedSecondsWithGrace second(s)');
                       }
 
                       _stopwatch.start();
@@ -128,7 +141,7 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
 
                         Future.delayed(const Duration(seconds: 1), () {
                           if (context.mounted) {
-                            Navigator.pop(context);
+                            context.router.replace(ReviewRoute());
                           }
                         });
                       }

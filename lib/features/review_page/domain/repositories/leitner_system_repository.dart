@@ -5,7 +5,9 @@ import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 
 abstract class LeitnerSystemRepository {
   Future<Either<Failure, LeitnerSystemModel>> generateFlashcards(
-      String userNotebookId, String content);
+      String title, String userNotebookId, String content);
+  Future<Either<Failure, List<LeitnerSystemModel>>> getOldFlashcards(
+      String userNotebookId);
   Future<Either<Failure, String>> analyzeFlashcardsResult(
       String userNotebookId, LeitnerSystemModel leitnerSystemModel);
 }

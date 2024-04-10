@@ -10,4 +10,6 @@ class AppColors {
   static const darkGrey = Color.fromARGB(255, 112, 117, 125);
   static const shadow = Color.fromARGB(100, 204, 204, 204);
   static const lightShadow = Color.fromARGB(115, 197, 197, 197);
+  static const btnOnBoard = Color(0xFF053149);
+
 }

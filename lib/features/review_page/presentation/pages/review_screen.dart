@@ -11,50 +11,52 @@ import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dar
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_method_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
 
 @RoutePage()
 class ReviewScreen extends ConsumerStatefulWidget {
-  final ReviewMethods? reviewMethod;
-  final String? notebookId;
-  final String? noteId;
-  const ReviewScreen(
-      {this.reviewMethod, this.notebookId, this.noteId, Key? key})
-      : super(key: key);
+  const ReviewScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReviewScreenState();
 }
 
-// TODO: implement app tour for the review method
 class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final leitnerBtnGlobalKey = GlobalKey();
   final feynmanBtnGlobalKey = GlobalKey();
   final pomodoroBtnGlobalKey = GlobalKey();
 
-  // ? Add here the onPressed function for the review method you want to
-  // ? override the functionality of since the current implementation
-  // ? is adding the review methods programmatically.
-  void _customLeitnerOnPressed(BuildContext context) async {
-    // ? checks only the review method since
-    // ? the only way to get here with that is by analyzing the note
-    // ? and so the notebookId and noteId.
-    if (widget.reviewMethod == null) {
-      return;
-    }
+  void _leitnerOnPressed(BuildContext context) async {
+    var reviewState = ref.read(reviewScreenProvider);
 
     var willContinue = await showDialog(
-        context: context, builder: (context) => const LeitnerSystemNotice());
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LeitnerSystemNotice());
+
+    if (reviewState.reviewMethod == null && context.mounted) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return const PreReviewMethod(ReviewMethods.leitnerSystem);
+          });
+
+      return;
+    }
 
     if (willContinue && context.mounted) {
       // ? pre-fill the notebook and pages when coming from the analyze notes
       showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (context) {
-            return PreReviewMethod(widget.reviewMethod!,
-                notebookId: widget.notebookId, pages: [widget.noteId!]);
+            return PreReviewMethod(reviewState.getReviewMethod,
+                notebookId: reviewState.getNotebookId,
+                pages: [reviewState.getNoteId]);
           });
     }
   }
@@ -63,7 +65,10 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
   @override
   void initState() {
-    if (widget.reviewMethod != null) {
+    var reviewState = ref.read(reviewScreenProvider);
+
+    if (reviewState.getReviewMethod != null) {
+      // TODO: check if the tutorial has been shown once, if yes do not show it again
       createTutorial();
       Future.delayed(Duration.zero, showTutorial);
     }
@@ -104,10 +109,35 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   List<TargetFocus> _createTargets() {
     List<TargetFocus> targets = [];
 
-    targets.add(TargetFocus(
-        identify: 'leitnerBtn',
-        keyTarget: leitnerBtnGlobalKey,
+    targets.add(_createTarget(ref.read(reviewScreenProvider).getReviewMethod));
+
+    return targets;
+  }
+
+  TargetFocus _createTarget(ReviewMethods reviewMethod) {
+    GlobalKey key;
+
+    switch (reviewMethod) {
+      case ReviewMethods.leitnerSystem:
+        key = leitnerBtnGlobalKey;
+        break;
+      case ReviewMethods.feynmanTechnique:
+        key = feynmanBtnGlobalKey;
+        break;
+      case ReviewMethods.pomodoroTechnique:
+        key = pomodoroBtnGlobalKey;
+        break;
+      case ReviewMethods.acronymMnemonics:
+        // TODO: Handle this case.
+        key = GlobalKey();
+        break;
+    }
+
+    return TargetFocus(
+        identify: reviewMethod.toString(),
+        keyTarget: key,
         alignSkip: Alignment.topRight,
+        shape: ShapeLightFocus.RRect,
         enableOverlayTab: true,
         contents: [
           TargetContent(
@@ -122,9 +152,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   ],
                 );
               })
-        ]));
-
-    return targets;
+        ]);
   }
 
   @override
@@ -202,50 +230,36 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
-                    child: Column(children: _buildReviewMethods(context, ref))),
+                    child: Column(children: [
+                  ReviewMethod(
+                      title: 'Leitner System',
+                      description: 'Use flashcards as a tool for learning.',
+                      imagePath: 'lib/assets/flashcard.png',
+                      buttonKey: leitnerBtnGlobalKey,
+                      onPressed: () {
+                        _leitnerOnPressed(context);
+                      }),
+                  const SizedBox(height: 16),
+                  ReviewMethod(
+                      title: 'Feynman Technique',
+                      description:
+                          'Explain a topic that a five (5) year old child can understand.',
+                      imagePath: 'lib/assets/feynman.png',
+                      buttonKey: feynmanBtnGlobalKey,
+                      onPressed: () {}),
+                  const SizedBox(height: 16),
+                  ReviewMethod(
+                      title: 'Pomodoro Technique',
+                      description:
+                          'Use a timer to break down work into intervals.',
+                      imagePath: 'lib/assets/pomodoro.png',
+                      buttonKey: pomodoroBtnGlobalKey,
+                      onPressed: () {}),
+                ])),
               )
             ],
           )),
     );
-  }
-
-  List<Widget> _buildReviewMethods(BuildContext context, WidgetRef ref) {
-    List<ReviewMethodEntity> reviewMethods = ref
-        .read(reviewMethodNotifierProvider.notifier)
-        .getReviewMethods(context);
-    List<Widget> reviewMethodWidgets = [];
-
-    final btnKeys = [
-      leitnerBtnGlobalKey,
-      feynmanBtnGlobalKey,
-      pomodoroBtnGlobalKey
-    ];
-
-    final customOnPressed = [
-      _customLeitnerOnPressed,
-    ];
-
-    for (var (idx, reviewMethod) in reviewMethods.indexed) {
-      reviewMethodWidgets.add(ReviewMethod(
-        title: reviewMethod.title,
-        description: reviewMethod.description,
-        imagePath: reviewMethod.imagePath,
-        buttonKey: btnKeys[idx],
-        onPressed: () {
-          if (idx < customOnPressed.length) {
-            customOnPressed[idx](context);
-            return;
-          }
-
-          reviewMethod.onPressed();
-        },
-      ));
-
-      // ? spacer
-      reviewMethodWidgets.add(const SizedBox(height: 16));
-    }
-
-    return reviewMethodWidgets;
   }
 
   List<ListTile> _buildReviewMethodTiles(
@@ -254,13 +268,20 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         .read(reviewMethodNotifierProvider.notifier)
         .getReviewMethods(context);
     List<ListTile> reviewMethodTiles = [];
+    var reviewMethodsHandlers = [_leitnerOnPressed];
 
-    for (var reviewMethod in reviewMethods) {
+    for (var (idx, reviewMethod) in reviewMethods.indexed) {
       reviewMethodTiles.add(ListTile(
         title: Text(reviewMethod.title),
         subtitle: Text(reviewMethod.description),
         leading: Image.asset(reviewMethod.imagePath),
-        onTap: reviewMethod.onPressed,
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+
+          if (idx < reviewMethodsHandlers.length) {
+            reviewMethodsHandlers[idx](context);
+          }
+        },
       ));
     }
 

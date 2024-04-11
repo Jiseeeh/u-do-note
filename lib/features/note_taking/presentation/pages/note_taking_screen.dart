@@ -1,13 +1,13 @@
 import 'dart:convert';
 
+import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_openai/dart_openai.dart';
-import 'package:auto_route/auto_route.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
@@ -15,6 +15,7 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
@@ -255,10 +256,13 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             break;
         }
 
-        context.router.push(ReviewRoute(
-            reviewMethod: reviewMethod,
-            notebookId: widget.notebookId,
-            noteId: widget.note.id));
+        ref.read(reviewScreenProvider.notifier).setReviewMethod(reviewMethod);
+        ref
+            .read(reviewScreenProvider.notifier)
+            .setNotebookId(widget.notebookId);
+        ref.read(reviewScreenProvider.notifier).setNoteId(widget.note.id);
+
+        context.router.push(const ReviewRoute());
       }
     };
   }

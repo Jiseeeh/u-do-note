@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
@@ -10,9 +11,15 @@ class HomepageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AutoTabsScaffold(
-      routes: [const NotebooksRoute(), ReviewRoute()],
+      routes: const [NotebooksRoute(), ReviewRoute()],
       extendBody: true,
       bottomNavigationBuilder: (_, tabsRouter) {
+        tabsRouter.addListener(() {
+          // ? if not the review route
+          if (tabsRouter.activeIndex != 1) {
+            ref.read(reviewScreenProvider.notifier).resetState();
+          }
+        });
         // TODO: make this sht look like the bottom nav bar in the figma
         return BottomNavigationBar(
           currentIndex: tabsRouter.activeIndex,

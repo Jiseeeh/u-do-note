@@ -1,14 +1,17 @@
-// TODO: try to implement card flipping animation without package
+import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:swipable_stack/swipable_stack.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:swipable_stack/swipable_stack.dart';
+
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/leitner_system_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_timer.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/remaining_cards.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 typedef OnFlipCallBack = void Function(int index);
@@ -33,6 +36,8 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
   List<FlashcardModel> flashcards = [];
   List<FlashcardModel> updatedFlashcards = [];
   int graceMilliseconds = 500;
+  RemainingCardsController remainingCardsController =
+      RemainingCardsController();
   late Stopwatch _stopwatch;
 
   @override
@@ -68,6 +73,11 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
         title: const Text('Leitner System'),
       ),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Column(
+          children: [
+            TimerWidget(stopwatch: _stopwatch),
+          ],
+        ),
         Stack(
           children: [
             Center(
@@ -109,17 +119,20 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
                           lastReview: DateTime.now(),
                         ));
 
+                        remainingCardsController.syncRemainingCards(
+                            index + 1, flashcards.length);
+
                         logger.i(
                             'Card ${index + 1} response time: $elapsedSecondsWithGrace second(s)');
                       }
 
                       _stopwatch.start();
 
-                      // check if there are no more cards to review
+                      // ? check if there are no more cards to review
                       if (index == flashcards.length - 1) {
                         _stopwatch.stop();
 
-                        // save the updated flashcards to firestore
+                        // ? save the updated flashcards to firestore
                         EasyLoading.show(
                             status: 'Saving your session...',
                             maskType: EasyLoadingMaskType.black,
@@ -141,7 +154,7 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
 
                         Future.delayed(const Duration(seconds: 1), () {
                           if (context.mounted) {
-                            context.router.replace(ReviewRoute());
+                            context.router.replace(const ReviewRoute());
                           }
                         });
                       }
@@ -168,6 +181,10 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
               ),
             ),
           ],
+        ),
+        RemainingCards(
+          controller: remainingCardsController,
+          totalCards: flashcards.length,
         ),
       ]),
     );

@@ -37,6 +37,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         barrierDismissible: false,
         builder: (context) => const LeitnerSystemNotice());
 
+    if (!willContinue) return;
+
     if (reviewState.reviewMethod == null && context.mounted) {
       showDialog(
           context: context,

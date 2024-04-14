@@ -281,6 +281,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 //? when the user has old flashcards
                 if (oldLeitnerModels.isNotEmpty && context.mounted) {
                   var reviewOld = await showDialog(
+                      barrierDismissible: false,
                       context: context,
                       builder: (context) => AlertDialog(
                             title: const Text('Notice'),
@@ -311,6 +312,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         .toList();
 
                     await showDialog(
+                        barrierDismissible: false,
                         context: context,
                         builder: (context) => AlertDialog(
                               scrollable: true,
@@ -333,6 +335,12 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                                 ),
                                 TextButton(
                                   onPressed: () {
+                                    if (oldFlashcardId.isEmpty) {
+                                      EasyLoading.showError(
+                                          "Please select an old session to review.");
+                                      return;
+                                    }
+
                                     context.router.push(LeitnerSystemRoute(
                                         notebookId: notebookId,
                                         leitnerSystemModel: oldLeitnerModels

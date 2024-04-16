@@ -18,7 +18,7 @@ class FeynmanTechniqueScreen extends ConsumerStatefulWidget {
 
 class _FeynmanTechniqueScreenState
     extends ConsumerState<FeynmanTechniqueScreen> {
-  List<types.Message> _messages = [];
+  final List<types.Message> _messages = [];
   var robotMessage = types.TextMessage;
   final _robot = const types.User(
     id: '23469438-a484-4a89-ae75-a22bf8d6f3ac',

@@ -30,7 +30,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final pomodoroBtnGlobalKey = GlobalKey();
 
   void _leitnerOnPressed(BuildContext context) async {
-    var reviewState = ref.read(reviewScreenProvider);
+    var reviewState = ref.watch(reviewScreenProvider);
 
     var willContinue = await showDialog(
         context: context,

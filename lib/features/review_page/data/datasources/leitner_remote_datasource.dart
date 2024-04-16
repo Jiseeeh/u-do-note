@@ -222,7 +222,7 @@ class LeitnerRemoteDataSource {
         .where('next_review', isLessThanOrEqualTo: Timestamp.now())
         .get();
 
-    print('snapshot.docs.length: ${snapshot.docs.length}');
+    logger.d('snapshot.docs.length: ${snapshot.docs.length}');
 
     return snapshot.docs
         .map((doc) => LeitnerSystemModel.fromFirestore(doc.id, doc.data()))

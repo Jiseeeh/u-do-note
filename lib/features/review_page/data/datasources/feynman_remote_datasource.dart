@@ -1,4 +1,5 @@
 import 'package:dart_openai/dart_openai.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 
 class FeynmanRemoteDataSource {
   Future<String> getChatResponse(
@@ -57,10 +58,10 @@ class FeynmanRemoteDataSource {
       maxTokens: 500,
     );
 
-    print(chatCompletion.choices.first.message); // ...
-    print(chatCompletion.systemFingerprint); // ...
-    print(chatCompletion.usage.promptTokens); // ...
-    print(chatCompletion.id); // ...
+    logger.d(chatCompletion.choices.first.message);
+    logger.d(chatCompletion.systemFingerprint);
+    logger.d(chatCompletion.usage.promptTokens);
+    logger.d(chatCompletion.id);
 
     return chatCompletion.choices.first.message.content!.first.text!;
   }

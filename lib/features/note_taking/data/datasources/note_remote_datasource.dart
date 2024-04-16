@@ -346,7 +346,7 @@ class NoteRemoteDataSource {
       return await _processFile(pickedFile.path);
     }
 
-    return throw GenericFailure(message: 'No image selected');
+    return throw 'No image selected.';
   }
 
   Future<String> _processFile(String path) async {

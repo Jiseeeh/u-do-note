@@ -9,6 +9,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:u_do_note/core/error/failures.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
@@ -309,6 +310,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
                       if (!context.mounted) return;
 
+                      if (text is Failure) {
+                        logger.w("Encountered an error: ${text.message}");
+                        return;
+                      }
+
                       textFieldController.text = text;
 
                       var willContinue = await showDialog(
@@ -338,6 +344,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                       EasyLoading.dismiss();
 
                       if (!context.mounted) return;
+
+                      if (text is Failure) {
+                        logger.w("Encountered an error: ${text.message}");
+                        return;
+                      }
 
                       textFieldController.text = text;
 

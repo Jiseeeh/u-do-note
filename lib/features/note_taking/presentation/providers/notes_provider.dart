@@ -258,11 +258,11 @@ class Notebooks extends _$Notebooks {
         (failure) => [failure.message], (coverImgUrl) => coverImgUrl);
   }
 
-  Future<String> analyzeImageText(ImageSource imgSource) async {
+  Future<dynamic> analyzeImageText(ImageSource imgSource) async {
     final analyzeImageText = ref.read(analyzeImageTextProvider);
 
     var failureOrText = await analyzeImageText(imgSource);
 
-    return failureOrText.fold((failure) => failure.message, (text) => text);
+    return failureOrText.fold((failure) => failure, (text) => text);
   }
 }

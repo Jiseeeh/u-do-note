@@ -10,7 +10,7 @@ abstract class NoteRepository {
   Future<Either<Failure, NotebookModel>> createNotebook(
       String name, XFile? coverImg);
   Future<Either<Failure, List<NotebookModel>>> getNotebooks();
-  
+
   Future<Either<Failure, List<String>>> uploadNotebookCover(XFile coverImg);
   Future<Either<Failure, bool>> updateNote(
       {required String notebookId, required NoteModel note});
@@ -20,5 +20,6 @@ abstract class NoteRepository {
       String notebookId, String coverFileName);
   Future<Either<Failure, String>> deleteNote(
       {required String notebookId, required String noteId});
+  Future<Either<Failure, String>> analyzeImageText(ImageSource imgSource);
 }
 // TODO: remove braces from params

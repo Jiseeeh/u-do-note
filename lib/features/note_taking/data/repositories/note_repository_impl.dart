@@ -125,4 +125,17 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> analyzeImageText(
+      ImageSource imgSource) async {
+    try {
+      var recognizedText =
+          await _noteRemoteDataSource.analyzeImageText(imgSource);
+
+      return Right(recognizedText);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

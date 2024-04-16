@@ -9,6 +9,7 @@ import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/data/repositories/note_repository_impl.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/repositories/note_repository.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/analyze_image_text.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
@@ -89,6 +90,13 @@ DeleteNotebook deleteNotebook(DeleteNotebookRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return DeleteNotebook(repository);
+}
+
+@riverpod
+AnalyzeImageText analyzeImageText(AnalyzeImageTextRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return AnalyzeImageText(repository);
 }
 
 // TODO: try using streams to just listen to changes in the database
@@ -248,5 +256,13 @@ class Notebooks extends _$Notebooks {
 
     return failureOrCoverImgUrl.fold(
         (failure) => [failure.message], (coverImgUrl) => coverImgUrl);
+  }
+
+  Future<dynamic> analyzeImageText(ImageSource imgSource) async {
+    final analyzeImageText = ref.read(analyzeImageTextProvider);
+
+    var failureOrText = await analyzeImageText(imgSource);
+
+    return failureOrText.fold((failure) => failure, (text) => text);
   }
 }

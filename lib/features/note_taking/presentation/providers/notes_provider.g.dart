@@ -156,7 +156,22 @@ final deleteNotebookProvider = AutoDisposeProvider<DeleteNotebook>.internal(
 );
 
 typedef DeleteNotebookRef = AutoDisposeProviderRef<DeleteNotebook>;
-String _$notebooksHash() => r'dce33caed0700c1c029c29665f4482040ba525ff';
+String _$analyzeImageTextHash() => r'ffdb7475911e55334ae93918ebf52af73e95832c';
+
+/// See also [analyzeImageText].
+@ProviderFor(analyzeImageText)
+final analyzeImageTextProvider = AutoDisposeProvider<AnalyzeImageText>.internal(
+  analyzeImageText,
+  name: r'analyzeImageTextProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$analyzeImageTextHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AnalyzeImageTextRef = AutoDisposeProviderRef<AnalyzeImageText>;
+String _$notebooksHash() => r'7398a2e6e37ad03997d9c0f919c51f7b71761bf4';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

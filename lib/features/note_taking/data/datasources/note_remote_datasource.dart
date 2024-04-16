@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
@@ -332,5 +335,37 @@ class NoteRemoteDataSource {
 
     logger.i('Notebook cover uploaded successfully with url: $downloadUrl');
     return [downloadUrl, fileName];
+  }
+
+  Future<String> analyzeImageText(ImageSource imgSource) async {
+    logger.i('Analyzing image text...');
+
+    final pickedFile = await ImagePicker().pickImage(source: imgSource);
+
+    if (pickedFile != null) {
+      return await _processFile(pickedFile.path);
+    }
+
+    return throw 'No image selected.';
+  }
+
+  Future<String> _processFile(String path) async {
+    final inputImage = InputImage.fromFilePath(path);
+
+    return await _processImage(inputImage);
+  }
+
+  Future<String> _processImage(InputImage inputImage) async {
+    // ? had to show the loading here because of the the image picker
+    EasyLoading.show(
+        status: 'Processing Image...',
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false);
+
+    var textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+
+    final recognizedText = await textRecognizer.processImage(inputImage);
+
+    return recognizedText.text;
   }
 }

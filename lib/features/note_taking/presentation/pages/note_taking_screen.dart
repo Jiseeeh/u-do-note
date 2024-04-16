@@ -8,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
@@ -15,6 +16,7 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
+import 'package:u_do_note/features/note_taking/presentation/widgets/analyze_image_text_dialog.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
@@ -34,6 +36,7 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
 
 class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   final _controller = QuillController.basic();
+  var textFieldController = TextEditingController();
   var readOnly = false;
 
   @override
@@ -43,11 +46,6 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     final json = jsonDecode(widget.note.content);
 
     _controller.document = Document.fromJson(json);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   VoidCallback onSave(WidgetRef ref) {
@@ -297,6 +295,67 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                         readOnly = !readOnly;
                       });
                     }),
+                SpeedDialChild(
+                    elevation: 0,
+                    child: const Icon(Icons.camera_alt_rounded),
+                    labelWidget: const Text('Scan text'),
+                    onTap: () async {
+                      var text = await ref
+                          .read(notebooksProvider.notifier)
+                          .analyzeImageText(ImageSource.camera);
+
+                      // ? dismiss the loading in analyzeImageText
+                      EasyLoading.dismiss();
+
+                      if (!context.mounted) return;
+
+                      textFieldController.text = text;
+
+                      var willContinue = await showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => AnalyzeTextImageDialog(
+                              textFieldController: textFieldController));
+
+                      if (willContinue) {
+                        _controller.document
+                            .insert(_controller.document.length - 1, text);
+
+                        // ?refresh ui
+                        setState(() {});
+                      }
+                    }),
+                SpeedDialChild(
+                    elevation: 0,
+                    child: const Icon(Icons.photo_rounded),
+                    labelWidget: const Text('Scan text from image'),
+                    onTap: () async {
+                      var text = await ref
+                          .read(notebooksProvider.notifier)
+                          .analyzeImageText(ImageSource.gallery);
+
+                      // ? dismiss the loading in analyzeImageText
+                      EasyLoading.dismiss();
+
+                      if (!context.mounted) return;
+
+                      textFieldController.text = text;
+
+                      var willContinue = await showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => AnalyzeTextImageDialog(
+                                textFieldController: textFieldController,
+                              ));
+
+                      if (willContinue) {
+                        _controller.document
+                            .insert(_controller.document.length - 1, text);
+
+                        // ?refresh ui
+                        setState(() {});
+                      }
+                    }),
               ],
               child: const Icon(Icons.add_rounded),
             )));
@@ -305,7 +364,6 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   Widget _buildBody() {
     return Column(
       children: [
-        // TODO: add to toolbar: ocr,
         (!readOnly)
             ? QuillToolbar.simple(
                 configurations: QuillSimpleToolbarConfigurations(

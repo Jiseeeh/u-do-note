@@ -9,6 +9,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:u_do_note/core/error/failures.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
@@ -37,8 +38,11 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
 
 class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   final _controller = QuillController.basic();
+  final _speechToText = SpeechToText();
   var textFieldController = TextEditingController();
   var readOnly = false;
+  var _speechEnabled = false;
+  var _wordsSpoken = "";
 
   @override
   void initState() {
@@ -47,6 +51,43 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     final json = jsonDecode(widget.note.content);
 
     _controller.document = Document.fromJson(json);
+  }
+
+  Future<void> _initSpeech() async {
+    if (_speechEnabled) return;
+
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    await _speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  /// Manual stop
+  void _stopListening() async {
+    await _speechToText.stop();
+
+    setState(() {});
+  }
+
+  /// Callback after listening
+  void _onSpeechResult(result) {
+    setState(() {
+      _wordsSpoken = result.recognizedWords;
+
+      if (result.finalResult) {
+        _controller.document
+            .insert(_controller.document.length - 1, _wordsSpoken);
+
+        // ? inserting text to the document will open the keyboard
+        FocusScope.of(context).requestFocus(FocusNode());
+
+        _wordsSpoken = "";
+      }
+    });
   }
 
   VoidCallback onSave(WidgetRef ref) {
@@ -255,6 +296,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             break;
         }
 
+        // ? set the review method and note id for the review screen to use
+
         ref.read(reviewScreenProvider.notifier).setReviewMethod(reviewMethod);
         ref
             .read(reviewScreenProvider.notifier)
@@ -272,108 +315,132 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         child: Scaffold(
             appBar: _buildAppBar(),
             body: _buildBody(),
-            floatingActionButton: SpeedDial(
-              activeIcon: Icons.close,
-              buttonSize: const Size(50, 50),
-              curve: Curves.bounceIn,
-              children: [
-                SpeedDialChild(
-                    elevation: 0,
-                    child: const Icon(Icons.save_rounded),
-                    labelWidget: const Text('Save Note'),
-                    onTap: onSave(ref)),
-                SpeedDialChild(
-                    elevation: 0,
-                    child: const Icon(Icons.psychology_rounded),
-                    labelWidget: const Text('Analyze Note'),
-                    onTap: onAnalyzeNote(context, ref)),
-                SpeedDialChild(
-                    elevation: 0,
-                    child: const Icon(Icons.preview_rounded),
-                    labelWidget: const Text('Read only'),
-                    onTap: () {
-                      setState(() {
-                        readOnly = !readOnly;
-                      });
-                    }),
-                SpeedDialChild(
-                    elevation: 0,
-                    child: const Icon(Icons.camera_alt_rounded),
-                    labelWidget: const Text('Scan text'),
-                    onTap: () async {
-                      var text = await ref
-                          .read(notebooksProvider.notifier)
-                          .analyzeImageText(ImageSource.camera);
+            floatingActionButton: _speechToText.isListening
+                ? FloatingActionButton(
+                    child: const Icon(Icons.mic_off_rounded),
+                    onPressed: () {
+                      _stopListening();
+                    })
+                : SpeedDial(
+                    activeIcon: Icons.close,
+                    buttonSize: const Size(50, 50),
+                    curve: Curves.bounceIn,
+                    children: [
+                      SpeedDialChild(
+                          elevation: 0,
+                          child: const Icon(Icons.save_rounded),
+                          labelWidget: const Text('Save Note'),
+                          onTap: onSave(ref)),
+                      SpeedDialChild(
+                          elevation: 0,
+                          child: const Icon(Icons.mic_rounded),
+                          labelWidget: _speechEnabled
+                              ? const Text('Tap here to start listening')
+                              : const Text('Tap to allow speech to text'),
+                          onTap: () async {
+                            await _initSpeech();
 
-                      // ? dismiss the loading in analyzeImageText
-                      EasyLoading.dismiss();
+                            if (_speechEnabled) {
+                              _startListening();
+                              return;
+                            }
 
-                      if (!context.mounted) return;
+                            EasyLoading.showError(
+                                'Speech to text is not enabled. Please try again later.');
+                          }),
+                      SpeedDialChild(
+                          elevation: 0,
+                          child: const Icon(Icons.psychology_rounded),
+                          labelWidget: const Text('Analyze Note'),
+                          onTap: onAnalyzeNote(context, ref)),
+                      SpeedDialChild(
+                          elevation: 0,
+                          child: const Icon(Icons.preview_rounded),
+                          labelWidget: const Text('Read only'),
+                          onTap: () {
+                            setState(() {
+                              readOnly = !readOnly;
+                            });
+                          }),
+                      SpeedDialChild(
+                          elevation: 0,
+                          child: const Icon(Icons.camera_alt_rounded),
+                          labelWidget: const Text('Scan text'),
+                          onTap: () async {
+                            var text = await ref
+                                .read(notebooksProvider.notifier)
+                                .analyzeImageText(ImageSource.camera);
 
-                      if (text is Failure) {
-                        logger.w("Encountered an error: ${text.message}");
-                        return;
-                      }
+                            // ? dismiss the loading in analyzeImageText
+                            EasyLoading.dismiss();
 
-                      textFieldController.text = text;
+                            if (!context.mounted) return;
 
-                      var willContinue = await showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) => AnalyzeTextImageDialog(
-                              textFieldController: textFieldController));
+                            if (text is Failure) {
+                              logger.w("Encountered an error: ${text.message}");
+                              return;
+                            }
 
-                      if (willContinue) {
-                        _controller.document
-                            .insert(_controller.document.length - 1, text);
+                            textFieldController.text = text;
 
-                        // ?refresh ui
-                        setState(() {});
-                      }
-                    }),
-                SpeedDialChild(
-                    elevation: 0,
-                    child: const Icon(Icons.photo_rounded),
-                    labelWidget: const Text('Scan text from image'),
-                    onTap: () async {
-                      var text = await ref
-                          .read(notebooksProvider.notifier)
-                          .analyzeImageText(ImageSource.gallery);
+                            var willContinue = await showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) => AnalyzeTextImageDialog(
+                                    textFieldController: textFieldController));
 
-                      // ? dismiss the loading in analyzeImageText
-                      EasyLoading.dismiss();
+                            if (willContinue) {
+                              _controller.document.insert(
+                                  _controller.document.length - 1, text);
 
-                      if (!context.mounted) return;
+                              // ?refresh ui
+                              setState(() {});
+                            }
+                          }),
+                      SpeedDialChild(
+                          elevation: 0,
+                          child: const Icon(Icons.photo_rounded),
+                          labelWidget: const Text('Scan text from image'),
+                          onTap: () async {
+                            var text = await ref
+                                .read(notebooksProvider.notifier)
+                                .analyzeImageText(ImageSource.gallery);
 
-                      if (text is Failure) {
-                        logger.w("Encountered an error: ${text.message}");
-                        return;
-                      }
+                            // ? dismiss the loading in analyzeImageText
+                            EasyLoading.dismiss();
 
-                      textFieldController.text = text;
+                            if (!context.mounted) return;
 
-                      var willContinue = await showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) => AnalyzeTextImageDialog(
-                                textFieldController: textFieldController,
-                              ));
+                            if (text is Failure) {
+                              logger.w("Encountered an error: ${text.message}");
+                              return;
+                            }
 
-                      if (willContinue) {
-                        _controller.document
-                            .insert(_controller.document.length - 1, text);
+                            textFieldController.text = text;
 
-                        // ?refresh ui
-                        setState(() {});
-                      }
-                    }),
-              ],
-              child: const Icon(Icons.add_rounded),
-            )));
+                            var willContinue = await showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) => AnalyzeTextImageDialog(
+                                      textFieldController: textFieldController,
+                                    ));
+
+                            if (willContinue) {
+                              _controller.document.insert(
+                                  _controller.document.length - 1, text);
+
+                              // ?refresh ui
+                              setState(() {});
+                            }
+                          }),
+                    ],
+                    child: const Icon(Icons.add_rounded),
+                  )));
   }
 
   Widget _buildBody() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         (!readOnly)
             ? QuillToolbar.simple(
@@ -396,6 +463,27 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             ),
           ),
         ),
+        _speechToText.isListening
+            ? Column(
+                children: [
+                  const LinearProgressIndicator(),
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          _wordsSpoken,
+                          style: const TextStyle(
+                              color: AppColors.jetBlack,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                ],
+              )
+            : const SizedBox(height: 5),
       ],
     );
   }

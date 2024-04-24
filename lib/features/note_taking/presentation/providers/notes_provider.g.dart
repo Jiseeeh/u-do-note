@@ -81,6 +81,23 @@ final updateNoteProvider = AutoDisposeProvider<UpdateNote>.internal(
 );
 
 typedef UpdateNoteRef = AutoDisposeProviderRef<UpdateNote>;
+String _$updateMultipleNotesHash() =>
+    r'b72dad75379e6cdda5cc621490e7c98c14afebc4';
+
+/// See also [updateMultipleNotes].
+@ProviderFor(updateMultipleNotes)
+final updateMultipleNotesProvider =
+    AutoDisposeProvider<UpdateMultipleNotes>.internal(
+  updateMultipleNotes,
+  name: r'updateMultipleNotesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$updateMultipleNotesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef UpdateMultipleNotesRef = AutoDisposeProviderRef<UpdateMultipleNotes>;
 String _$updateNotebookHash() => r'd9003158329bb13f5b3effed8fe743f74c877d01';
 
 /// See also [updateNotebook].
@@ -171,7 +188,7 @@ final analyzeImageTextProvider = AutoDisposeProvider<AnalyzeImageText>.internal(
 );
 
 typedef AnalyzeImageTextRef = AutoDisposeProviderRef<AnalyzeImageText>;
-String _$notebooksHash() => r'7398a2e6e37ad03997d9c0f919c51f7b71761bf4';
+String _$notebooksHash() => r'd4baf2d59641689b74c8e4c785c71c9a704abc67';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

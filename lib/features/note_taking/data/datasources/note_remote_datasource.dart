@@ -11,6 +11,7 @@ import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
+import 'package:u_do_note/features/note_taking/utils/utils.dart';
 
 class NoteRemoteDataSource {
   final FirebaseFirestore _firestore;
@@ -74,7 +75,9 @@ class NoteRemoteDataSource {
   }
 
   Future<NoteModel> createNote(
-      {required String notebookId, required String title}) async {
+      {required String notebookId,
+      required String title,
+      String? initialContent}) async {
     logger.i('Creating note...');
 
     var userId = _auth.currentUser!.uid;
@@ -99,8 +102,17 @@ class NoteRemoteDataSource {
       noteModels.add(NoteModel.fromFirestore(note));
     }
 
+    var initialNoteText = title;
+
+    if (initialContent != null && initialContent.isNotEmpty) {
+      initialNoteText = Utils.removeControlCharacters(initialContent);
+    }
+
     // ? r treats the string as a raw string
-    var defaultContent = r'[{"insert":"' '$title' r'\n"}]';
+    var defaultContent = r'[{"insert":"' '$initialNoteText' r'\n"}]';
+
+    logger.d('defaultContent: $defaultContent');
+
     var newNote = NoteModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
@@ -157,6 +169,7 @@ class NoteRemoteDataSource {
 
     var userId = _auth.currentUser!.uid;
 
+    // TODO: simplify this just like the updateMultipleNotes method below
     var userNote = await _firestore
         .collection('users')
         .doc(userId)
@@ -187,6 +200,26 @@ class NoteRemoteDataSource {
     });
 
     logger.i('Note updated successfully.');
+
+    return true;
+  }
+
+  Future<bool> updateMultipleNotes(
+      {required String notebookId, required List<NoteModel> notesModel}) async {
+    var userId = _auth.currentUser!.uid;
+    var updatedModels = notesModel.map((noteModel) => noteModel.toJson());
+
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('user_notes')
+        .doc(notebookId)
+        .update({
+      'notes': updatedModels,
+      'updated_at': FieldValue.serverTimestamp()
+    });
+
+    logger.i('Notes updated successfully.');
 
     return true;
   }

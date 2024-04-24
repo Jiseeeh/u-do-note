@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:u_do_note/core/shared/theme/text_styles.dart';
+import 'package:u_do_note/core/shared/theme/text_theme.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/sign_up_screen.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
@@ -31,24 +33,10 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         );
       },
       finishButtonStyle: const FinishButtonStyle(
-        backgroundColor: AppColors.btnOnBoard,
+        backgroundColor: AppColors.primary,
       ),
-      skipTextButton: const Text(
-        'Skip',
-        style: TextStyle(
-          fontSize: 16,
-          color: AppColors.lightBlue,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-      trailing: const Text(
-        'Login',
-        style: TextStyle(
-          fontSize: 16,
-          color: AppColors.lightBlue,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
+      skipTextButton: const Text('Skip', style: AppTextStyles.body),
+      trailing: const Text('Login', style: AppTextStyles.body),
       trailingFunction: () {
         Navigator.push(
           context,
@@ -57,10 +45,10 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           ),
         );
       },
-      controllerColor: AppColors.lightBlue,
+      controllerColor: TextThemes.primaryTextTheme.bodyLarge?.color,
       totalPage: 5,
-      headerBackgroundColor: AppColors.btnBlue,
-      pageBackgroundColor: AppColors.btnBlue,
+      headerBackgroundColor: const Color.fromARGB(0, 0, 0, 0),
+      // pageBackgroundColor: AppColors.primary,
       background: [
         Image.asset(
           'lib/assets/images/onboard/page-1.png',
@@ -96,15 +84,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
               SizedBox(
                 height: 100,
               ),
-              Text(
-                'Create a Note',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text('Create a Note',
+                  textAlign: TextAlign.center, style: AppTextStyles.h1),
               SizedBox(
                 height: 380,
               ),
@@ -112,14 +93,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                 height: 20,
               ),
               Text(
-                'Capture ideas on the fly, organize thoughts effortlessly – with our app, note-taking is a breeze!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+                  'Capture ideas on the fly, organize thoughts effortlessly – with our app, note-taking is a breeze!',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyLg),
             ],
           ),
         ),
@@ -134,15 +110,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
               SizedBox(
                 height: 100,
               ),
-              Text(
-                'Scan text',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text('Scan text',
+                  textAlign: TextAlign.center, style: AppTextStyles.h1),
               SizedBox(
                 height: 380,
               ),
@@ -150,14 +119,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                 height: 20,
               ),
               Text(
-                'From paper to pixels in a snap – revolutionize your note-taking with our app\'s scanning and PDF upload features!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+                  'From paper to pixels in a snap – revolutionize your note-taking with our app\'s scanning and PDF upload features!',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyLg),
             ],
           ),
         ),
@@ -172,15 +136,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
               SizedBox(
                 height: 100,
               ),
-              Text(
-                'Audio to Text',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text('Audio to Text',
+                  textAlign: TextAlign.center, style: AppTextStyles.h1),
               SizedBox(
                 height: 380,
               ),
@@ -188,14 +145,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                 height: 20,
               ),
               Text(
-                'Transcribe thoughts on the go – with our app, your voice becomes written gold in seconds!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+                  'Transcribe thoughts on the go – with our app, your voice becomes written gold in seconds!',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyLg),
             ],
           ),
         ),
@@ -210,15 +162,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
               SizedBox(
                 height: 100,
               ),
-              Text(
-                'Different Learning Techniques',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text('Different Learning Techniques',
+                  textAlign: TextAlign.center, style: AppTextStyles.h1),
               SizedBox(
                 height: 380,
               ),
@@ -226,14 +171,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                 height: 20,
               ),
               Text(
-                'Elevate your learning game with our app – study using your learning style,  notes into knowledge!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+                  'Elevate your learning game with our app – study using your learning style,  notes into knowledge!',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyLg),
             ],
           ),
         ),
@@ -248,15 +188,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
               SizedBox(
                 height: 100,
               ),
-              Text(
-                'Generate Reviewers',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text('Generate Reviewers',
+                  textAlign: TextAlign.center, style: AppTextStyles.h1),
               SizedBox(
                 height: 380,
               ),
@@ -264,14 +197,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                 height: 20,
               ),
               Text(
-                'Boost your exam prep with our app turn your notes into your own personal review expert using AI!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.lightBlue,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+                  'Boost your exam prep with our app turn your notes into your own personal review expert using AI!',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyLg),
             ],
           ),
         ),

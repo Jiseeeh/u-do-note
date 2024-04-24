@@ -4,9 +4,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
-import 'package:u_do_note/core/shared/widgets/snackbar.dart';
 
+import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/shared/theme/text_styles.dart';
+import 'package:u_do_note/core/shared/widgets/snackbar.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
 import '../widgets/social_icon.dart';
 import '../widgets/auth_field.dart';
@@ -81,7 +82,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          decoration: const BoxDecoration(color: AppColors.btnBlue),
+          decoration: const BoxDecoration(color: AppColors.primary),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -152,7 +153,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                     height: 30,
                                     width: 30,
                                     // ignore: deprecated_member_use
-                                    color: AppColors.darkBlue,
+                                    color: AppColors.secondary,
                                   ),
                                 ),
                                 const SocialIcon(
@@ -174,17 +175,12 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         height: 15,
                                       ),
                                       const Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          "Email Address",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
+                                          alignment: Alignment.topLeft,
+                                          child: Text("Email Address",
+                                              textAlign: TextAlign.left,
+                                              style: AppTextStyles.h5)),
                                       AuthField(
-                                        label: 'Email Address',
+                                        label: 'juandelacruz@example.com',
                                         controller: emailController,
                                         isObscuredText: false,
                                         keyboardType:
@@ -199,13 +195,11 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         child: Text(
                                           "Display Name",
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                          style: AppTextStyles.h5,
                                         ),
                                       ),
                                       AuthField(
-                                        label: 'Display Name',
+                                        label: 'Juan dela Cruz',
                                         controller: displayNameController,
                                         isObscuredText: false,
                                         keyboardType: TextInputType.text,
@@ -219,13 +213,11 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         child: Text(
                                           "Password",
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                          style: AppTextStyles.h5,
                                         ),
                                       ),
                                       AuthField(
-                                        label: 'Password',
+                                        label: '*********',
                                         controller: passwordController,
                                         isObscuredText: isPasswordObscured,
                                         keyboardType: TextInputType.text,
@@ -250,13 +242,11 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         child: Text(
                                           "Repeat Password",
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                          style: AppTextStyles.h5,
                                         ),
                                       ),
                                       AuthField(
-                                        label: 'Repeat Password',
+                                        label: '********',
                                         controller: repeatPasswordController,
                                         isObscuredText: isPasswordObscured,
                                         keyboardType: TextInputType.text,
@@ -316,7 +306,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                           }
                                         },
                                         height: 50,
-                                        color: AppColors.btnBlue,
+                                        color: AppColors.primary,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(50),
@@ -325,7 +315,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                           child: Text(
                                             "REGISTER",
                                             style: TextStyle(
-                                                color: AppColors.lightBlue,
+                                                color: Colors.white,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -350,7 +340,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                               child: const Text(
                                                 'Login here',
                                                 style: TextStyle(
-                                                    color: AppColors.darkBlue,
+                                                    color: AppColors.secondary,
                                                     fontWeight:
                                                         FontWeight.w700),
                                               ),

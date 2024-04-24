@@ -4,8 +4,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:u_do_note/core/logger/logger.dart';
 
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
@@ -85,7 +85,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   void createTutorial() {
     tutorialCoachMark = TutorialCoachMark(
       targets: _createTargets(),
-      colorShadow: AppColors.darkBlue,
+      colorShadow: AppColors.primary,
       textSkip: "SKIP",
       paddingFocus: 10,
       opacityShadow: 0.5,

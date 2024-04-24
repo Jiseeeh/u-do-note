@@ -2,10 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
-import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/shared/theme/text_styles.dart';
+import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
 import '../widgets/social_icon.dart';
 import '../widgets/auth_field.dart';
 
@@ -54,7 +55,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          decoration: const BoxDecoration(color: AppColors.btnBlue),
+          decoration: const BoxDecoration(color: AppColors.primary),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -125,7 +126,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                     height: 30,
                                     width: 30,
                                     // ignore: deprecated_member_use
-                                    color: AppColors.darkBlue,
+                                    color: AppColors.secondary,
                                   ),
                                 ),
                                 const SocialIcon(
@@ -151,13 +152,11 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                         child: Text(
                                           "Email Address",
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                          style: AppTextStyles.h5,
                                         ),
                                       ),
                                       AuthField(
-                                        label: 'Email Address',
+                                        label: 'juandelacruz@example.com',
                                         controller: emailController,
                                         isObscuredText: false,
                                         keyboardType:
@@ -172,13 +171,11 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                         child: Text(
                                           "Password",
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                          style: AppTextStyles.h5,
                                         ),
                                       ),
                                       AuthField(
-                                        label: 'Password',
+                                        label: '********',
                                         controller: passwordController,
                                         isObscuredText: isPasswordObscured,
                                         keyboardType: TextInputType.text,
@@ -206,7 +203,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                   child: Text(
                                     "Forgot Password?",
                                     textAlign: TextAlign.end,
-                                    style: TextStyle(color: AppColors.darkBlue),
+                                    style: TextStyle(color: AppColors.secondary),
                                   ),
                                 ),
                                 const SizedBox(
@@ -241,7 +238,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                     }
                                   },
                                   height: 50,
-                                  color: AppColors.btnBlue,
+                                  color: AppColors.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
@@ -268,7 +265,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                       child: const Text(
                                         'Register here',
                                         style: TextStyle(
-                                            color: AppColors.darkBlue,
+                                            color: AppColors.secondary,
                                             fontWeight: FontWeight.w700),
                                       ),
                                     ),

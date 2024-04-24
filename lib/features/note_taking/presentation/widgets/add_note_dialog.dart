@@ -6,7 +6,9 @@ import 'package:u_do_note/features/note_taking/presentation/providers/notes_prov
 
 class AddNoteDialog extends ConsumerStatefulWidget {
   final String notebookId;
-  const AddNoteDialog(this.notebookId, {Key? key}) : super(key: key);
+  final String? initialContent;
+  const AddNoteDialog({Key? key, required this.notebookId, this.initialContent})
+      : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -74,7 +76,8 @@ class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
                           .read(notebooksProvider.notifier)
                           .createNote(
                               notebookId: widget.notebookId,
-                              title: _titleController.text);
+                              title: _titleController.text,
+                              initialContent: widget.initialContent);
 
                       EasyLoading.dismiss();
 

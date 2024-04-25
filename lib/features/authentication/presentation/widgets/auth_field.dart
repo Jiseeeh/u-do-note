@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/shared/theme/text_styles.dart';
 
 class AuthField extends ConsumerWidget {
   final String label;
@@ -35,18 +37,18 @@ class AuthField extends ConsumerWidget {
               const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           suffixIcon: suffixIcon,
           hintText: label,
-          hintStyle: const TextStyle(color:  Color.fromARGB(150, 147, 147, 147)),
+          hintStyle: AppTextStyles.body,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: const BorderSide(
-                color: Color.fromARGB(50, 147, 147, 147), width: 2.0),
+                color: AppColors.shadow, width: 2.0),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xff4E8EFF), width: 2.0),
+            borderSide: const BorderSide(color: AppColors.secondary, width: 2.0),
             borderRadius: BorderRadius.circular(15.0),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color.fromARGB(255, 208, 53, 66), width: 2.0),
+            borderSide: const BorderSide(color: AppColors.error, width: 2.0),
             borderRadius: BorderRadius.circular(15.0),
           ),
         ),

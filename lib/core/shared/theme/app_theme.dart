@@ -47,7 +47,6 @@ class AppTheme {
         error: AppColors.error,
         background: AppColors.black,
       ),
-      // backgroundColor: AppColors.black,
       scaffoldBackgroundColor: AppColors.black,
       textTheme: TextThemes.darkTextTheme,
       primaryTextTheme: TextThemes.primaryTextTheme,
@@ -74,7 +73,6 @@ class AppTheme {
       ),
       appBarTheme: const AppBarTheme(
         elevation: 0,
-        backgroundColor: AppColors.primary,
       ),
     );
   }

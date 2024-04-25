@@ -9,8 +9,9 @@ class CreateNote {
 
   CreateNote(this._noteRepository);
 
-  Future<Either<Failure, NoteModel>> call(String notebookId, String title) async {
+  Future<Either<Failure, NoteModel>> call(
+      String notebookId, String title, String? initialContent) async {
     return await _noteRepository.createNote(
-        notebookId: notebookId, title: title);
+        notebookId: notebookId, title: title, initialContent: initialContent);
   }
 }

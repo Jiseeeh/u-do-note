@@ -15,6 +15,7 @@ import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.d
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/update_multiple_notes.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/upload_notebook_cover.dart';
@@ -55,6 +56,13 @@ UpdateNote updateNote(UpdateNoteRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateNote(repository);
+}
+
+@riverpod
+UpdateMultipleNotes updateMultipleNotes(UpdateMultipleNotesRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return UpdateMultipleNotes(repository);
 }
 
 @riverpod
@@ -130,12 +138,13 @@ class Notebooks extends _$Notebooks {
   }
 
   /// Updates the given note in the given notebook
-  Future<void> updateNote(String notebookId, NoteEntity note) async {
+  Future<dynamic> updateNote(String notebookId, NoteEntity note) async {
     List<NotebookEntity> notebookEntities = state.value as List<NotebookEntity>;
 
     var updateNote = ref.read(updateNoteProvider);
 
-    await updateNote(notebookId, NoteModel.fromEntity(note));
+    var failureOrBoolean =
+        await updateNote(notebookId, NoteModel.fromEntity(note));
 
     var notebook = notebookEntities
         .firstWhere((notebookEntity) => notebookEntity.id == notebookId);
@@ -147,6 +156,38 @@ class Notebooks extends _$Notebooks {
         (notebookEntity) => notebookEntity.id == notebookId)] = notebook;
 
     state = AsyncValue.data(notebookEntities);
+
+    return failureOrBoolean.fold((failure) => failure.message, (res) => res);
+  }
+
+  Future<dynamic> updateMultipleNotes(
+      {required String notebookId,
+      required List<NoteEntity> notesEntity}) async {
+    List<NotebookEntity> notebookEntities = state.value as List<NotebookEntity>;
+
+    var updateMultipleNotes = ref.read(updateMultipleNotesProvider);
+
+    var updatedNotes = notesEntity
+        .map((noteEntity) => NoteModel.fromEntity(noteEntity))
+        .toList();
+
+    var failureOrBoolean = await updateMultipleNotes(notebookId, updatedNotes);
+
+    var notebook = notebookEntities
+        .firstWhere((notebookEntity) => notebookEntity.id == notebookId);
+
+    //? set the current notebook's notes to the updated notes
+
+    for (var (idx, _) in notebook.notes.indexed) {
+      notebook.notes[idx] = notesEntity[idx];
+    }
+
+    notebookEntities[notebookEntities.indexWhere(
+        (notebookEntity) => notebookEntity.id == notebookId)] = notebook;
+
+    state = AsyncValue.data(notebookEntities);
+
+    return failureOrBoolean.fold((failure) => failure, (res) => res);
   }
 
   Future<bool> updateNotebook(
@@ -188,10 +229,12 @@ class Notebooks extends _$Notebooks {
 
   /// Creates a note in the given notebook with the given [title]
   Future<String> createNote(
-      {required String notebookId, required String title}) async {
+      {required String notebookId,
+      required String title,
+      String? initialContent}) async {
     final createNote = ref.read(createNoteProvider);
 
-    var result = await createNote(notebookId, title);
+    var result = await createNote(notebookId, title, initialContent);
 
     return result.fold((failure) => failure.message, (noteModel) {
       List<NotebookEntity> notebookEntities =

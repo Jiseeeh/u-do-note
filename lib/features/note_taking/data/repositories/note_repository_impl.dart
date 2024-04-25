@@ -15,10 +15,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<Either<Failure, NoteModel>> createNote(
-      {required String notebookId, required String title}) async {
+      {required String notebookId,
+      required String title,
+      String? initialContent}) async {
     try {
       var res = await _noteRemoteDataSource.createNote(
-          notebookId: notebookId, title: title);
+          notebookId: notebookId, title: title, initialContent: initialContent);
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
@@ -61,6 +63,19 @@ class NoteRepositoryImpl implements NoteRepository {
           notebookId: notebookId, note: note);
 
       return Right(success);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateMultipleNotes(
+      {required String notebookId, required List<NoteModel> notesModel}) async {
+    try {
+      return Right(await _noteRemoteDataSource.updateMultipleNotes(
+          notebookId: notebookId, notesModel: notesModel));
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {

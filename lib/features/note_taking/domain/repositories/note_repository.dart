@@ -6,7 +6,9 @@ import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 
 abstract class NoteRepository {
   Future<Either<Failure, NoteModel>> createNote(
-      {required String notebookId, required String title});
+      {required String notebookId,
+      required String title,
+      String? initialContent});
   Future<Either<Failure, NotebookModel>> createNotebook(
       String name, XFile? coverImg);
   Future<Either<Failure, List<NotebookModel>>> getNotebooks();
@@ -14,6 +16,8 @@ abstract class NoteRepository {
   Future<Either<Failure, List<String>>> uploadNotebookCover(XFile coverImg);
   Future<Either<Failure, bool>> updateNote(
       {required String notebookId, required NoteModel note});
+  Future<Either<Failure, bool>> updateMultipleNotes(
+      {required String notebookId, required List<NoteModel> notesModel});
   Future<Either<Failure, NotebookModel>> updateNotebook(
       XFile? coverImg, NotebookModel notebook);
   Future<Either<Failure, String>> deleteNotebook(

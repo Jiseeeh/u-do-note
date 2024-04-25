@@ -178,11 +178,14 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Welcome back,',
-                  style: TextStyle(color: Colors.grey, fontSize: 16)),
+              Text('Welcome back,',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: AppColors.grey)),
               Text(
                 username,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.displayLarge,
               )
             ],
           ),

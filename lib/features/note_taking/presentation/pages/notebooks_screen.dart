@@ -75,9 +75,9 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
     return AppBar(
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
-      title: const Text(
+      title: Text(
         'U Do Note',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.displayLarge,
       ),
     );
   }

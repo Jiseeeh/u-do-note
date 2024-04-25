@@ -82,7 +82,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
   void createTutorial(List<TargetFocus> Function() targetGenerator) {
     tutorialCoachMark = TutorialCoachMark(
       targets: targetGenerator(),
-      colorShadow: AppColors.darkBlue,
+      colorShadow: AppColors.primary,
       textSkip: "SKIP",
       paddingFocus: 10,
       opacityShadow: 0.5,

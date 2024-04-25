@@ -37,6 +37,7 @@ dependencies:
   flutter_onboarding_slider: ^1.0.11
   google_mlkit_text_recognition: ^0.11.0
   speech_to_text: ^6.6.0
+  shared_preferences: ^2.2.3
   file_picker: ^8.0.1
   syncfusion_flutter_pdf: ^25.1.40
 
@@ -54,16 +55,14 @@ flutter:
   assets:
     - lib/assets/
     - assets/
-    - lib/assets/fonts/
     - lib/assets/images/
     - lib/assets/images/onboard/
   uses-material-design: true
 
-fonts:
-- family: Inter-Bold
   fonts:
-    - asset: lib\assets\fonts\Inter-Bold.ttf
-- family: Inter-Medium
-  fonts:
-    - asset: lib\assets\fonts\Inter-Medium.ttf
+  - family: Inter
+    fonts:
+      - asset: lib\fonts\Inter-Regular.ttf
+      - asset: lib\fonts\Inter-Bold.ttf
+        weight: 700
 

@@ -15,6 +15,7 @@ class TextThemes {
       displayMedium: AppTextStyles.h2,
       displaySmall: AppTextStyles.h3,
       headlineMedium: AppTextStyles.h4,
+      headlineSmall: AppTextStyles.h5,
     );
   }
 
@@ -30,6 +31,7 @@ class TextThemes {
       displayMedium: AppTextStyles.h2.copyWith(color: AppColors.white),
       displaySmall: AppTextStyles.h3.copyWith(color: AppColors.white),
       headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.white),
+      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.white),
     );
   }
 
@@ -45,6 +47,7 @@ class TextThemes {
       displayMedium: AppTextStyles.h2.copyWith(color: AppColors.primary),
       displaySmall: AppTextStyles.h3.copyWith(color: AppColors.primary),
       headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.primary),
+      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.primary),
     );
   }
 }

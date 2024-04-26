@@ -7,15 +7,15 @@ class LeitnerSystemNotice extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: const Column(
+      title: Column(
         children: [
           Text(
             'Quick Notice for Leitner System',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
             '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to generate flashcards with.',
-            style: TextStyle(fontSize: 12),
+            style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
       ),
@@ -34,27 +34,33 @@ class LeitnerSystemNotice extends ConsumerWidget {
           child: const Text('Continue'),
         ),
       ],
-      content: const Column(
+      content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'How will I be graded with this?',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             '\u2022 You will be graded based on your response time for every flashcards.Note that the moment the app finished generating flashcards, the timer will start.',
-            style: TextStyle(fontSize: 12),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             'What will happen to the flashcards when I start a new session?',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             '\u2022 U Do Note will generate flashcards again only if you don\'t have any flashcards that needs to be reviewed again.',
-            style: TextStyle(fontSize: 12),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),

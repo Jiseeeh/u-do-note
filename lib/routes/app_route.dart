@@ -10,6 +10,7 @@ import 'package:u_do_note/features/note_taking/presentation/pages/note_taking_sc
 import 'package:u_do_note/features/note_taking/presentation/pages/notebook_pages_screen.dart';
 import 'package:u_do_note/features/note_taking/presentation/pages/notebooks_screen.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman_technique_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/leitner_system_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';

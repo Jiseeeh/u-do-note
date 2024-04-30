@@ -21,6 +21,8 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: FeynmanTechniqueScreen(
           args.contentFromPages,
+          args.sessionName,
+          feynmanEntity: args.feynmanEntity,
           key: args.key,
         ),
       );
@@ -104,12 +106,16 @@ abstract class _$AppRouter extends RootStackRouter {
 class FeynmanTechniqueRoute extends PageRouteInfo<FeynmanTechniqueRouteArgs> {
   FeynmanTechniqueRoute({
     required String contentFromPages,
+    required String sessionName,
+    FeynmanEntity? feynmanEntity,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           FeynmanTechniqueRoute.name,
           args: FeynmanTechniqueRouteArgs(
             contentFromPages: contentFromPages,
+            sessionName: sessionName,
+            feynmanEntity: feynmanEntity,
             key: key,
           ),
           initialChildren: children,
@@ -124,16 +130,22 @@ class FeynmanTechniqueRoute extends PageRouteInfo<FeynmanTechniqueRouteArgs> {
 class FeynmanTechniqueRouteArgs {
   const FeynmanTechniqueRouteArgs({
     required this.contentFromPages,
+    required this.sessionName,
+    this.feynmanEntity,
     this.key,
   });
 
   final String contentFromPages;
 
+  final String sessionName;
+
+  final FeynmanEntity? feynmanEntity;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'FeynmanTechniqueRouteArgs{contentFromPages: $contentFromPages, key: $key}';
+    return 'FeynmanTechniqueRouteArgs{contentFromPages: $contentFromPages, sessionName: $sessionName, feynmanEntity: $feynmanEntity, key: $key}';
   }
 }
 

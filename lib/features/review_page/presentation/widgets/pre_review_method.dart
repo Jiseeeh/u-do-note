@@ -12,7 +12,9 @@ import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/leitner_system_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 class PreReviewMethod extends ConsumerStatefulWidget {
@@ -418,8 +420,120 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 });
                 break;
               case ReviewMethods.feynmanTechnique:
-                context.router.push(
-                    FeynmanTechniqueRoute(contentFromPages: contentFromPages));
+                var reviewScreenState = ref.read(reviewScreenProvider.notifier);
+
+                reviewScreenState.setReviewMethod(widget.reviewMethod);
+                reviewScreenState.setNotebookId(notebookId);
+                reviewScreenState.setNotebookPagesIds(pages);
+
+                var oldFeynmanSessions = await ref
+                    .read(feynmanTechniqueProvider.notifier)
+                    .getOldSessions(notebookId);
+
+                if (!context.mounted) return;
+
+                var willReviewOldSessions = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Notice'),
+                        content: const Text(
+                            'Do you want to review your old Feynman Sessions with this notebook?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('No'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                            child: const Text('Yes'),
+                          ),
+                        ],
+                      );
+                    });
+
+                if (!context.mounted) return;
+
+                if (!willReviewOldSessions) {
+                  context.router.push(FeynmanTechniqueRoute(
+                      contentFromPages: contentFromPages,
+                      sessionName: titleController.text));
+                  return;
+                }
+
+                var sessionId = await showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) {
+                      var sessionId = "";
+                      return AlertDialog(
+                        scrollable: true,
+                        title: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Old Feynman Sessions"),
+                            Text(
+                              "The last selected session will be used.",
+                              style: TextStyle(fontSize: 12),
+                            )
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(sessionId);
+                            },
+                            child: const Text('Continue'),
+                          ),
+                        ],
+                        content: MultiSelectDialogField(
+                          listType: MultiSelectListType.CHIP,
+                          items: oldFeynmanSessions
+                              .map((el) => MultiSelectItem<String>(
+                                  el.id!, el.sessionName))
+                              .toList(),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8)),
+                          ),
+                          onSelectionChanged: (values) {
+                            if (values.length > 1) {
+                              values.removeAt(0);
+                            }
+                          },
+                          onConfirm: (results) {
+                            sessionId = results.first;
+                          },
+                          buttonIcon: const Icon(
+                            Icons.arrow_drop_down_circle_outlined,
+                            color: Colors.blue,
+                          ),
+                          buttonText: const Text(
+                            "Sessions",
+                          ),
+                        ),
+                      );
+                    });
+
+                if (!context.mounted) return;
+
+                context.router.push(FeynmanTechniqueRoute(
+                    contentFromPages: contentFromPages,
+                    sessionName: titleController.text,
+                    feynmanEntity: oldFeynmanSessions
+                        .firstWhere((el) => el.id == sessionId)
+                        .toEntity()));
                 break;
               case ReviewMethods.pomodoroTechnique:
                 break;

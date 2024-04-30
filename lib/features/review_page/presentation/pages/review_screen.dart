@@ -68,6 +68,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
     if (!willContinue) return;
 
+    // ? feynman technique without pre filled notebook and pages
     if (reviewState.reviewMethod == null && context.mounted) {
       showDialog(
           context: context,

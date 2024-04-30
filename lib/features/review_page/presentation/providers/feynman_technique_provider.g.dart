@@ -7,7 +7,7 @@ part of 'feynman_technique_provider.dart';
 // **************************************************************************
 
 String _$feynmanRemoteDataSourceHash() =>
-    r'1eca3432bbcf22100fa7c9065005d761248a5b20';
+    r'c43e2bfeade78774649c3744723ee1fc0f8b72f9';
 
 /// See also [feynmanRemoteDataSource].
 @ProviderFor(feynmanRemoteDataSource)
@@ -57,7 +57,36 @@ final getChatResponseProvider = AutoDisposeProvider<GetChatResponse>.internal(
 );
 
 typedef GetChatResponseRef = AutoDisposeProviderRef<GetChatResponse>;
-String _$feynmanTechniqueHash() => r'32a99014681ef4c8e142c7f20b5995d88b1868f4';
+String _$saveSessionHash() => r'cb845d9dafb8c6d535dedf7cf2765da803fd52fa';
+
+/// See also [saveSession].
+@ProviderFor(saveSession)
+final saveSessionProvider = AutoDisposeProvider<SaveSession>.internal(
+  saveSession,
+  name: r'saveSessionProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$saveSessionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SaveSessionRef = AutoDisposeProviderRef<SaveSession>;
+String _$getOldSessionsHash() => r'3c9e44cf6e38ce6a6f1058eb184ededab59d8de6';
+
+/// See also [getOldSessions].
+@ProviderFor(getOldSessions)
+final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
+  getOldSessions,
+  name: r'getOldSessionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getOldSessionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
+String _$feynmanTechniqueHash() => r'bc1ea39507aeb4dccf8df9c9e5b74f70ee8d9740';
 
 /// See also [FeynmanTechnique].
 @ProviderFor(FeynmanTechnique)

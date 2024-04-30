@@ -1,54 +1,58 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/dart_openai.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:u_do_note/core/firestore_collection_enum.dart';
+
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 
 class FeynmanRemoteDataSource {
-  Future<String> getChatResponse(
-      String contentFromPages, String message) async {
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+
+  FeynmanRemoteDataSource(this._firestore, this._auth);
+
+  Future<String> getChatResponse(String contentFromPages,
+      List<String> robotMessages, List<String> userMessages) async {
     // the system message that will be sent to the request.
-    final systemMessageFeedContent = OpenAIChatCompletionChoiceMessageModel(
-      content: [
-        OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          "As a helpful assistant, you'll help the user fully understand his notes using the Feynman Technique, which is to explain a topic that a five (5) year old child can understand. Here are the notes: '$contentFromPages}'",
-        ),
-      ],
-      role: OpenAIChatMessageRole.assistant,
-    );
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          "As a helpful assistant, validate the user's message if that can be understand by a 5 year old kid. If not, tell them to simplify it. Until you, as an assistant, can understand it if you were a 5 year old kid.",
+          """
+          As a helpful assistant you will help the student to review their notes using the Feynman technique.
+          You need to act as a 5 year old child. You will ask questions to the student
+          about the content of the pages in relation to their explanation and your recent response.
+          If you think you already got it, you can say to the student that you got it and they can type "quiz" to start the quiz.
+
+          The topic: "$contentFromPages"
+          Your recent responses: "$robotMessages"
+          """,
         ),
       ],
-      role: OpenAIChatMessageRole.assistant,
+      role: OpenAIChatMessageRole.system,
     );
 
-    final assistantMessage = OpenAIChatCompletionChoiceMessageModel(
-        role: OpenAIChatMessageRole.assistant,
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            "If you think the answer is enough, tell the user that the answer is enough and come back next time to review again with you.",
-          ),
-        ]);
+    logger.d("content: $contentFromPages'");
+    logger.d("robot message: $robotMessages'");
+    logger.d("user message: $userMessages'");
 
     // the user message that will be sent to the request.
-    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+    final userMessageModel = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          message,
+          'Here are my recent messages about the topic: "$userMessages"',
         ),
       ],
       role: OpenAIChatMessageRole.user,
     );
 
-// all messages to be sent.
+    // all messages to be sent.
     final requestMessages = [
-      systemMessageFeedContent,
       systemMessage,
-      assistantMessage,
-      userMessage,
+      userMessageModel,
     ];
 
-// the actual request.
+    // the actual request.
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
       model: "gpt-3.5-turbo-0125",
@@ -64,5 +68,45 @@ class FeynmanRemoteDataSource {
     logger.d(chatCompletion.id);
 
     return chatCompletion.choices.first.message.content!.first.text!;
+  }
+
+  Future<void> saveSession(FeynmanModel feynmanModel, String notebookId) async {
+    var userId = _auth.currentUser!.uid;
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .collection(FirestoreCollection.remarks.name)
+        .add(<String, dynamic>{
+      'title': feynmanModel.sessionName,
+      'review_method': FeynmanModel.name,
+      'content_from_pages': feynmanModel.contentFromPagesUsed,
+      'messages':
+          feynmanModel.messages.map((message) => message.toJson()).toList(),
+      'recent_robot_messages': feynmanModel.recentRobotMessages,
+      'recent_user_messages': feynmanModel.recentUserMessages,
+      'score': '',
+      'total_items': '',
+      'remark': '',
+    });
+  }
+
+  Future<List<FeynmanModel>> getOldSessions(String notebookId) async {
+    var userId = _auth.currentUser!.uid;
+
+    var res = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .collection(FirestoreCollection.remarks.name)
+        .where('review_method', isEqualTo: FeynmanModel.name)
+        .get();
+
+    return res.docs
+        .map((model) => FeynmanModel.fromFirestore(model.id, model.data()))
+        .toList();
   }
 }

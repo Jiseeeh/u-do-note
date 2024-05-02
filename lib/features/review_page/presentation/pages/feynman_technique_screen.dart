@@ -3,12 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 
 @RoutePage()
 class FeynmanTechniqueScreen extends ConsumerStatefulWidget {
   final String contentFromPages;
-  const FeynmanTechniqueScreen(this.contentFromPages, {Key? key})
+  final String sessionName;
+  // ? used when the user will review old sessions
+  final FeynmanEntity? feynmanEntity;
+
+  const FeynmanTechniqueScreen(this.contentFromPages, this.sessionName,
+      {this.feynmanEntity, Key? key})
       : super(key: key);
 
   @override
@@ -19,7 +27,10 @@ class FeynmanTechniqueScreen extends ConsumerStatefulWidget {
 class _FeynmanTechniqueScreenState
     extends ConsumerState<FeynmanTechniqueScreen> {
   final List<types.Message> _messages = [];
-  var robotMessage = types.TextMessage;
+  final List<String> recentRobotMessages = [];
+  final List<String> recentUserMessages = [];
+  var isRobotThinking = false;
+  // ? hard coded ids since only user and robot are the only users in the chat
   final _robot = const types.User(
     id: '23469438-a484-4a89-ae75-a22bf8d6f3ac',
   );
@@ -27,7 +38,27 @@ class _FeynmanTechniqueScreenState
     id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
   );
 
-  // _handleRobotChat(chatCompletion.choices.first.message.content!.first.text!);
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.feynmanEntity != null) {
+      _initOldSession();
+      return;
+    }
+
+    callRobotResponse();
+  }
+
+  void _initOldSession() {
+    if (widget.feynmanEntity != null) {
+      setState(() {
+        _messages.addAll(widget.feynmanEntity!.messages);
+        recentRobotMessages.addAll(widget.feynmanEntity!.recentRobotMessages);
+        recentUserMessages.addAll(widget.feynmanEntity!.recentUserMessages);
+      });
+    }
+  }
 
   void _handleRobotChat(String message) {
     final textMessage = types.TextMessage(
@@ -36,6 +67,8 @@ class _FeynmanTechniqueScreenState
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       text: message,
     );
+
+    recentRobotMessages.add(message);
 
     _addRobotMessage(textMessage);
   }
@@ -53,6 +86,12 @@ class _FeynmanTechniqueScreenState
   }
 
   void _handleSendPressed(types.PartialText message) async {
+    FocusScope.of(context).requestFocus(FocusNode());
+
+    if (message.text.toLowerCase() == "quiz") {
+      return;
+    }
+
     final textMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -60,11 +99,28 @@ class _FeynmanTechniqueScreenState
       text: message.text,
     );
 
+    recentUserMessages.add(message.text);
+
     _addMessage(textMessage);
+
+    await callRobotResponse();
+  }
+
+  Future<void> callRobotResponse() async {
+    setState(() {
+      isRobotThinking = true;
+    });
 
     var robotRes = await ref
         .read(feynmanTechniqueProvider.notifier)
-        .getChatResponse(widget.contentFromPages, message.text);
+        .getChatResponse(
+            contentFromPages: widget.contentFromPages,
+            robotMessages: recentRobotMessages,
+            userMessages: recentUserMessages);
+
+    setState(() {
+      isRobotThinking = false;
+    });
 
     _handleRobotChat(robotRes);
   }
@@ -73,19 +129,45 @@ class _FeynmanTechniqueScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feynman Technique'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Feynman Technique',
+            ),
+            if (isRobotThinking) const LinearProgressIndicator()
+          ],
+        ),
         scrolledUnderElevation: 0,
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 50.0),
+        child: FloatingActionButton(
+          onPressed: () async {
+            var feynmanModel = FeynmanModel(
+                sessionName: widget.sessionName,
+                contentFromPagesUsed: widget.contentFromPages,
+                messages: _messages,
+                recentRobotMessages: recentRobotMessages,
+                recentUserMessages: recentUserMessages);
+
+            var reviewState = ref.watch(reviewScreenProvider);
+
+            await ref.read(feynmanTechniqueProvider.notifier).saveSession(
+                feynmanModel: feynmanModel,
+                notebookId: reviewState.notebookId!);
+          },
+          child: const Icon(Icons.save_rounded),
+        ),
       ),
       body: Chat(
         messages: _messages,
         onSendPressed: _handleSendPressed,
         user: _user,
-        theme: const DefaultChatTheme(
+        theme: DefaultChatTheme(
             seenIcon: Text(
           'read',
-          style: TextStyle(
-            fontSize: 10.0,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         )),
       ),
     );

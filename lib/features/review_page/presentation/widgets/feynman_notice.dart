@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LeitnerSystemNotice extends ConsumerWidget {
-  const LeitnerSystemNotice({super.key});
+class FeynmanNotice extends ConsumerWidget {
+  const FeynmanNotice({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -10,7 +10,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
       title: Column(
         children: [
           Text(
-            'Quick Notice for Leitner System',
+            'Quick Notice for Feynman Technique',
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
@@ -46,12 +46,12 @@ class LeitnerSystemNotice extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            '\u2022 You will be graded based on your response time for every flashcards.Note that the moment the app finished generating flashcards, the timer will start.',
+            '\u2022 You will be graded after the session through a quiz.',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 10),
           Text(
-            'What will happen to the flashcards when I start a new session?',
+            'What will happen to the sessions when I start a new session?',
             style: Theme.of(context)
                 .textTheme
                 .labelLarge
@@ -59,7 +59,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            '\u2022 U Do Note will generate flashcards again only if you don\'t have any flashcards that needs to be reviewed again.',
+            '\u2022 The previous session will be saved and you can review it anytime you want and continue where you left off.',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],

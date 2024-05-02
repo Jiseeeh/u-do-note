@@ -19,6 +19,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_chat_ui: ^1.6.12
+  flutter_chat_types: ^3.6.2
   flutter_easyloading: ^3.0.5
   flutter_quill: ^9.3.1
   flutter_riverpod: ^2.4.10

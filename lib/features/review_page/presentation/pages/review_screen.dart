@@ -87,6 +87,23 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     }
   }
 
+  void _pomodoroOnPressed(BuildContext context) async {
+    var reviewState = ref.watch(reviewScreenProvider);
+
+    var willContinue = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const FeynmanNotice());
+
+    if (!willContinue) return;
+
+    if (willContinue && context.mounted) {
+      // ? pre-fill the notebook and pages when coming from the analyze notes
+      showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
+          reviewState.getNotebookId, reviewState.getNoteId);
+    }
+  }
+
   void showPreFilledPreReviewMethodDialog(BuildContext context,
       dynamic reviewMethod, dynamic notebookId, dynamic noteId) {
     showDialog(

@@ -68,6 +68,9 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
       case ReviewMethods.feynmanTechnique:
         titleFieldPlaceholder = "Enter a title for your notes";
         break;
+      case ReviewMethods.pomodoroTechnique:
+        titleFieldPlaceholder = "Enter a title for your session";
+        break;
       default:
         titleFieldPlaceholder = "";
     }

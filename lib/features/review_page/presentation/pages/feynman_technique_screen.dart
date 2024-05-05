@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class FeynmanTechniqueScreen extends ConsumerStatefulWidget {
@@ -85,10 +87,38 @@ class _FeynmanTechniqueScreenState
     });
   }
 
-  void _handleSendPressed(types.PartialText message) async {
+  void _handleSendPressed(
+      BuildContext context, types.PartialText message) async {
     FocusScope.of(context).requestFocus(FocusNode());
 
     if (message.text.toLowerCase() == "quiz") {
+      var willTakeQuiz = await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Quiz'),
+              content: const Text(
+                  'Are you ready to take a quiz? You can take a quiz after you finish the chat.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            );
+          });
+
+      if (!willTakeQuiz || !context.mounted) return;
+
+      context.router.push(const QuizRoute());
       return;
     }
 
@@ -162,7 +192,9 @@ class _FeynmanTechniqueScreenState
       ),
       body: Chat(
         messages: _messages,
-        onSendPressed: _handleSendPressed,
+        onSendPressed: (types.PartialText message) {
+          _handleSendPressed(context, message);
+        },
         user: _user,
         theme: DefaultChatTheme(
             seenIcon: Text(

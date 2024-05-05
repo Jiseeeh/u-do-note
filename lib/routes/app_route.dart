@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/pages/homepage_screen.dart';
-
 import 'package:u_do_note/features/authentication/presentation/pages/intro_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/sign_up_screen.dart';
@@ -13,6 +13,7 @@ import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman_technique_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/leitner_system_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
 
@@ -41,6 +42,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
         AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note'),
+        AutoRoute(page: QuizRoute.page, path: '/quiz'),
         AutoRoute(page: LeitnerSystemRoute.page, path: '/leitner-system'),
         AutoRoute(page: FeynmanTechniqueRoute.page, path: '/feynman-technique'),
       ];

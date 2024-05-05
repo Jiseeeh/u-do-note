@@ -59,7 +59,7 @@ class ReviewMethod extends ConsumerWidget {
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12))),
                         backgroundColor:
-                            MaterialStateProperty.all(const Color(0xff006ffd))),
+                            MaterialStateProperty.all(AppColors.secondary)),
                     child: Text('Start',
                         style: Theme.of(context)
                             .textTheme

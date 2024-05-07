@@ -86,6 +86,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotebooksScreen(),
       );
     },
+    QuizResultsRoute.name: (routeData) {
+      final args = routeData.argsAs<QuizResultsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: QuizResultsScreen(
+          questions: args.questions,
+          correctAnswersIndex: args.correctAnswersIndex,
+          selectedAnswersIndex: args.selectedAnswersIndex,
+          key: args.key,
+        ),
+      );
+    },
     QuizRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -334,6 +346,54 @@ class NotebooksRoute extends PageRouteInfo<void> {
   static const String name = 'NotebooksRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [QuizResultsScreen]
+class QuizResultsRoute extends PageRouteInfo<QuizResultsRouteArgs> {
+  QuizResultsRoute({
+    required List<Question> questions,
+    required List<int> correctAnswersIndex,
+    required List<int> selectedAnswersIndex,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          QuizResultsRoute.name,
+          args: QuizResultsRouteArgs(
+            questions: questions,
+            correctAnswersIndex: correctAnswersIndex,
+            selectedAnswersIndex: selectedAnswersIndex,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'QuizResultsRoute';
+
+  static const PageInfo<QuizResultsRouteArgs> page =
+      PageInfo<QuizResultsRouteArgs>(name);
+}
+
+class QuizResultsRouteArgs {
+  const QuizResultsRouteArgs({
+    required this.questions,
+    required this.correctAnswersIndex,
+    required this.selectedAnswersIndex,
+    this.key,
+  });
+
+  final List<Question> questions;
+
+  final List<int> correctAnswersIndex;
+
+  final List<int> selectedAnswersIndex;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'QuizResultsRouteArgs{questions: $questions, correctAnswersIndex: $correctAnswersIndex, selectedAnswersIndex: $selectedAnswersIndex, key: $key}';
+  }
 }
 
 /// generated route for

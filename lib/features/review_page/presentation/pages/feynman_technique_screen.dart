@@ -157,50 +157,60 @@ class _FeynmanTechniqueScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Feynman Technique',
-            ),
-            if (isRobotThinking) const LinearProgressIndicator()
-          ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) {
+        // ? This is to prevent the app from assuming that the user
+        // ? has come from the analyze notes 
+        ref.read(reviewScreenProvider.notifier).resetState();
+        
+        context.router.replace(const ReviewRoute());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Feynman Technique',
+              ),
+              if (isRobotThinking) const LinearProgressIndicator()
+            ],
+          ),
+          scrolledUnderElevation: 0,
         ),
-        scrolledUnderElevation: 0,
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 50.0),
-        child: FloatingActionButton(
-          onPressed: () async {
-            var feynmanModel = FeynmanModel(
-                sessionName: widget.sessionName,
-                contentFromPagesUsed: widget.contentFromPages,
-                messages: _messages,
-                recentRobotMessages: recentRobotMessages,
-                recentUserMessages: recentUserMessages);
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 50.0),
+          child: FloatingActionButton(
+            onPressed: () async {
+              var feynmanModel = FeynmanModel(
+                  sessionName: widget.sessionName,
+                  contentFromPagesUsed: widget.contentFromPages,
+                  messages: _messages,
+                  recentRobotMessages: recentRobotMessages,
+                  recentUserMessages: recentUserMessages);
 
-            var reviewState = ref.watch(reviewScreenProvider);
+              var reviewState = ref.watch(reviewScreenProvider);
 
-            await ref.read(feynmanTechniqueProvider.notifier).saveSession(
-                feynmanModel: feynmanModel,
-                notebookId: reviewState.notebookId!);
+              await ref.read(feynmanTechniqueProvider.notifier).saveSession(
+                  feynmanModel: feynmanModel,
+                  notebookId: reviewState.notebookId!);
+            },
+            child: const Icon(Icons.save_rounded),
+          ),
+        ),
+        body: Chat(
+          messages: _messages,
+          onSendPressed: (types.PartialText message) {
+            _handleSendPressed(context, message);
           },
-          child: const Icon(Icons.save_rounded),
+          user: _user,
+          theme: DefaultChatTheme(
+              seenIcon: Text(
+            'read',
+            style: Theme.of(context).textTheme.titleMedium,
+          )),
         ),
-      ),
-      body: Chat(
-        messages: _messages,
-        onSendPressed: (types.PartialText message) {
-          _handleSendPressed(context, message);
-        },
-        user: _user,
-        theme: DefaultChatTheme(
-            seenIcon: Text(
-          'read',
-          style: Theme.of(context).textTheme.titleMedium,
-        )),
       ),
     );
   }

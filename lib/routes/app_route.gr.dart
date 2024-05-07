@@ -352,7 +352,7 @@ class NotebooksRoute extends PageRouteInfo<void> {
 /// [QuizResultsScreen]
 class QuizResultsRoute extends PageRouteInfo<QuizResultsRouteArgs> {
   QuizResultsRoute({
-    required List<Question> questions,
+    required List<QuestionEntity> questions,
     required List<int> correctAnswersIndex,
     required List<int> selectedAnswersIndex,
     Key? key,
@@ -382,7 +382,7 @@ class QuizResultsRouteArgs {
     this.key,
   });
 
-  final List<Question> questions;
+  final List<QuestionEntity> questions;
 
   final List<int> correctAnswersIndex;
 

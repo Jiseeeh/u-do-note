@@ -20,11 +20,11 @@ class QuizScreen extends ConsumerStatefulWidget {
 
 class _QuizScreenState extends ConsumerState<QuizScreen> {
   var questions = [
-    Question(
+    QuestionEntity(
         question: 'What is the capital of France?',
         choices: ['Paris', 'London', 'Berlin', 'Madrid'],
         correctAnswerIndex: 0),
-    Question(
+    QuestionEntity(
         question: 'What are the colors of the Nigerian flag?',
         choices: [
           'Red, White, Green',
@@ -33,15 +33,15 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           'Red, White, Blue'
         ],
         correctAnswerIndex: 0),
-    Question(
+    QuestionEntity(
         question: 'What is the capital of Nigeria?',
         choices: ['Paris', 'London', 'Berlin', 'Abuja'],
         correctAnswerIndex: 3),
-    Question(
+    QuestionEntity(
         question: 'How long eagles live?',
         choices: ['10 years', '20 years', '30 years', '40 years'],
         correctAnswerIndex: 2),
-    Question(
+    QuestionEntity(
         question: "Who made flutter?",
         choices: ['Google', 'Facebook', 'Twitter', 'Microsoft'],
         correctAnswerIndex: 0)
@@ -250,7 +250,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 class AnswerContainer extends ConsumerWidget {
   final int currentIndex;
   final int? selectedAnswerIndex;
-  final Question question;
+  final QuestionEntity question;
   final Function(int index) onSelectAnswer;
 
   const AnswerContainer(

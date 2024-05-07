@@ -9,7 +9,7 @@ import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class QuizResultsScreen extends ConsumerWidget {
-  final List<Question> questions;
+  final List<QuestionEntity> questions;
   final List<int> correctAnswersIndex;
   final List<int> selectedAnswersIndex;
 

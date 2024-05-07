@@ -8,6 +8,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/domain/entities/question.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class QuizScreen extends ConsumerStatefulWidget {
@@ -50,6 +51,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   late Timer timer;
   int startTime = 30;
   int? selectedAnswerIndex;
+  List<int> selectedAnswersIndex = [];
 
   @override
   void initState() {
@@ -107,6 +109,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
 
     setState(() {
+      selectedAnswersIndex.add(selectedAnswerIndex!);
       startTime = 30;
       selectedAnswerIndex = null;
     });
@@ -114,6 +117,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   void _onFinish() {
     if (selectedAnswerIndex != null) {
+      selectedAnswersIndex.add(selectedAnswerIndex!);
+
       if (questions[currentQuestionIndex].correctAnswerIndex ==
           selectedAnswerIndex) {
         score++;
@@ -121,6 +126,12 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     }
 
     timer.cancel();
+
+    context.router.replace(QuizResultsRoute(
+        questions: questions,
+        correctAnswersIndex:
+            questions.map((question) => question.correctAnswerIndex).toList(),
+        selectedAnswersIndex: selectedAnswersIndex));
 
     logger.d('Score: $score');
   }
@@ -143,7 +154,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 ),
           ),
           Text('Time: $startTime seconds left',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: AppColors.grey,
                   )),
           LinearPercentIndicator(
@@ -268,7 +279,7 @@ class AnswerContainer extends ConsumerWidget {
               border: Border.all(
                 color: selectedAnswerIndex == currentIndex
                     ? AppColors.jetBlack
-                    : AppColors.extraLightGrey,
+                    : AppColors.lightShadow,
               ),
               borderRadius: BorderRadius.circular(8),
             ),

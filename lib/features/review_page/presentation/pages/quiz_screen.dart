@@ -2,60 +2,43 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/data/models/question.dart';
 import 'package:u_do_note/features/review_page/domain/entities/question.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class QuizScreen extends ConsumerStatefulWidget {
-  const QuizScreen({super.key});
+  final FeynmanModel feynmanModel;
+  const QuizScreen({required this.feynmanModel, Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _QuizScreenState();
 }
 
 class _QuizScreenState extends ConsumerState<QuizScreen> {
-  var questions = [
-    QuestionEntity(
-        question: 'What is the capital of France?',
-        choices: ['Paris', 'London', 'Berlin', 'Madrid'],
-        correctAnswerIndex: 0),
-    QuestionEntity(
-        question: 'What are the colors of the Nigerian flag?',
-        choices: [
-          'Red, White, Green',
-          'Red, Blue, White',
-          'Green, White, Green',
-          'Red, White, Blue'
-        ],
-        correctAnswerIndex: 0),
-    QuestionEntity(
-        question: 'What is the capital of Nigeria?',
-        choices: ['Paris', 'London', 'Berlin', 'Abuja'],
-        correctAnswerIndex: 3),
-    QuestionEntity(
-        question: 'How long eagles live?',
-        choices: ['10 years', '20 years', '30 years', '40 years'],
-        correctAnswerIndex: 2),
-    QuestionEntity(
-        question: "Who made flutter?",
-        choices: ['Google', 'Facebook', 'Twitter', 'Microsoft'],
-        correctAnswerIndex: 0)
-  ];
   var currentQuestionIndex = 0;
   var score = 0;
   late Timer timer;
   int startTime = 30;
   int? selectedAnswerIndex;
   List<int> selectedAnswersIndex = [];
+  late List<QuestionModel> questions;
 
   @override
   void initState() {
     super.initState();
+
+    questions = widget.feynmanModel.questions!;
 
     startTimer();
   }
@@ -115,25 +98,51 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     });
   }
 
-  void _onFinish() {
-    if (selectedAnswerIndex != null) {
-      selectedAnswersIndex.add(selectedAnswerIndex!);
+  VoidCallback _onFinish(BuildContext context) {
+    return () async {
+      if (selectedAnswerIndex != null) {
+        selectedAnswersIndex.add(selectedAnswerIndex!);
 
-      if (questions[currentQuestionIndex].correctAnswerIndex ==
-          selectedAnswerIndex) {
-        score++;
+        if (questions[currentQuestionIndex].correctAnswerIndex ==
+            selectedAnswerIndex) {
+          score++;
+        }
       }
-    }
 
-    timer.cancel();
+      timer.cancel();
 
-    context.router.replace(QuizResultsRoute(
-        questions: questions,
-        correctAnswersIndex:
-            questions.map((question) => question.correctAnswerIndex).toList(),
-        selectedAnswersIndex: selectedAnswersIndex));
+      // ? save the quiz results
+      EasyLoading.show(
+          status: 'Saving quiz results...',
+          maskType: EasyLoadingMaskType.black,
+          dismissOnTap: false);
 
-    logger.d('Score: $score');
+      var updatedFeynmanModel = widget.feynmanModel
+          .copyWith(score: score, selectedAnswersIndex: selectedAnswersIndex);
+
+      var res = await ref
+          .read(feynmanTechniqueProvider.notifier)
+          .saveQuizResults(
+              feynmanModel: updatedFeynmanModel,
+              notebookId: ref.read(reviewScreenProvider).notebookId!);
+
+      EasyLoading.dismiss();
+
+      if (res is Failure) {
+        EasyLoading.showError(res.message);
+        return;
+      }
+
+      if (!context.mounted) return;
+
+      context.router.replace(QuizResultsRoute(
+          questions: questions.map((question) => question.toEntity()).toList(),
+          correctAnswersIndex:
+              questions.map((question) => question.correctAnswerIndex).toList(),
+          selectedAnswersIndex: selectedAnswersIndex));
+
+      logger.d('Score: $score');
+    };
   }
 
   void _onSelectAnswer(int index) {
@@ -142,7 +151,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     });
   }
 
-  Widget _buildBody() {
+  _buildBody() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -202,7 +211,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                         return AnswerContainer(
                             currentIndex: index,
                             selectedAnswerIndex: selectedAnswerIndex,
-                            question: questions[currentQuestionIndex],
+                            question:
+                                questions[currentQuestionIndex].toEntity(),
                             onSelectAnswer: _onSelectAnswer);
                       }),
                   SizedBox(
@@ -216,7 +226,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                           ),
                           onPressed:
                               currentQuestionIndex == questions.length - 1
-                                  ? _onFinish
+                                  ? _onFinish(context)
                                   : _onNext,
                           child: Text(
                             currentQuestionIndex == questions.length - 1

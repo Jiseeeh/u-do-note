@@ -3,10 +3,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/datasources/feynman_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/data/models/question.dart';
 import 'package:u_do_note/features/review_page/data/repositories/feynman_technique_repository_impl.dart';
 import 'package:u_do_note/features/review_page/domain/repositories/feynman_technique_repository.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/feynman/generate_quiz_questions.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/get_chat_response.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/get_old_sessions.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/feynman/save_quiz_results.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/save_session.dart';
 
 part 'feynman_technique_provider.g.dart';
@@ -49,6 +52,20 @@ GetOldSessions getOldSessions(GetOldSessionsRef ref) {
 }
 
 @riverpod
+GenerateQuizQuestions generateQuizQuestions(GenerateQuizQuestionsRef ref) {
+  final repository = ref.read(feynmanTechniqueRepositoryProvider);
+
+  return GenerateQuizQuestions(repository);
+}
+
+@riverpod
+SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+  final repository = ref.read(feynmanTechniqueRepositoryProvider);
+
+  return SaveQuizResults(repository);
+}
+
+@riverpod
 class FeynmanTechnique extends _$FeynmanTechnique {
   @override
   void build() {
@@ -70,13 +87,18 @@ class FeynmanTechnique extends _$FeynmanTechnique {
         (failure) => failure.message, (chatRes) => chatRes);
   }
 
-  /// Saves the session to the database.
-  Future<void> saveSession(
-      {required FeynmanModel feynmanModel, required String notebookId}) async {
+  /// Saves the session to the database and returns the document id or the failure.
+  /// If the [docId] is not null, then it updates the document with the [docId].
+  /// Otherwise, it creates a new document.
+  Future<dynamic> saveSession(
+      {required FeynmanModel feynmanModel,
+      required String notebookId,
+      String? docId}) async {
     final saveSession = ref.read(saveSessionProvider);
 
-    await saveSession(feynmanModel, notebookId);
+    var failureOrDocId = await saveSession(feynmanModel, notebookId, docId);
 
+    return failureOrDocId.fold((failure) => failure, (docId) => docId);
   }
 
   /// Get the old sessions from the database.
@@ -86,5 +108,23 @@ class FeynmanTechnique extends _$FeynmanTechnique {
     var failureOrRes = await getOldSessions(notebookId);
 
     return failureOrRes.fold((failure) => [], (sessions) => sessions);
+  }
+
+  /// Get the quiz questions from the content.
+  Future<List<QuestionModel>> generateQuizQuestions(String content) async {
+    final generateQuizQuestions = ref.read(generateQuizQuestionsProvider);
+
+    var failureOrRes = await generateQuizQuestions(content);
+
+    return failureOrRes.fold((failure) => [], (questions) => questions);
+  }
+
+  Future<dynamic> saveQuizResults(
+      {required FeynmanModel feynmanModel, required String notebookId}) async {
+    final saveQuizResults = ref.read(saveQuizResultsProvider);
+
+    var failureOrRes = await saveQuizResults(feynmanModel, notebookId);
+
+    return failureOrRes.fold((failure) => failure, (res) => res);
   }
 }

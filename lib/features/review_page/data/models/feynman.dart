@@ -1,8 +1,14 @@
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
+import 'package:u_do_note/features/review_page/data/models/question.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 
 class FeynmanModel {
   final String? id;
+  final String? remark;
+  final int? score;
+  final List<QuestionModel>? questions;
+  final List<int>? selectedAnswersIndex;
   final String sessionName;
   final String contentFromPagesUsed;
   final List<types.Message> messages;
@@ -12,6 +18,10 @@ class FeynmanModel {
 
   const FeynmanModel({
     this.id,
+    this.remark,
+    this.score,
+    this.questions,
+    this.selectedAnswersIndex,
     required this.sessionName,
     required this.contentFromPagesUsed,
     required this.messages,
@@ -23,6 +33,13 @@ class FeynmanModel {
   factory FeynmanModel.fromFirestore(String id, Map<String, dynamic> data) {
     return FeynmanModel(
       id: id,
+      remark: data['remark'],
+      score: data['score'],
+      questions: (data['questions'] as List)
+          .map((question) =>
+              QuestionModel.fromFirestore(question.id, question.data()))
+          .toList(),
+      selectedAnswersIndex: data['selected_answers_index'],
       sessionName: data['title'],
       contentFromPagesUsed: data['content_from_pages'],
       messages: (data['messages'] as List)
@@ -37,11 +54,42 @@ class FeynmanModel {
   FeynmanEntity toEntity() {
     return FeynmanEntity(
       id: id,
+      remark: remark,
+      score: score,
+      questions: questions?.map((question) => question.toEntity()).toList(),
+      selectedAnswersIndex: selectedAnswersIndex,
       sessionName: sessionName,
       contentFromPagesUsed: contentFromPagesUsed,
       messages: messages,
       recentRobotMessages: recentRobotMessages,
       recentUserMessages: recentUserMessages,
+    );
+  }
+
+  /// Copy with new values
+  FeynmanModel copyWith({
+    String? id,
+    String? remark,
+    int? score,
+    List<QuestionModel>? questions,
+    List<int>? selectedAnswersIndex,
+    String? sessionName,
+    String? contentFromPagesUsed,
+    List<types.Message>? messages,
+    List<String>? recentRobotMessages,
+    List<String>? recentUserMessages,
+  }) {
+    return FeynmanModel(
+      id: id ?? this.id,
+      remark: remark ?? this.remark,
+      score: score ?? this.score,
+      questions: questions ?? this.questions,
+      selectedAnswersIndex: selectedAnswersIndex ?? this.selectedAnswersIndex,
+      sessionName: sessionName ?? this.sessionName,
+      contentFromPagesUsed: contentFromPagesUsed ?? this.contentFromPagesUsed,
+      messages: messages ?? this.messages,
+      recentRobotMessages: recentRobotMessages ?? this.recentRobotMessages,
+      recentUserMessages: recentUserMessages ?? this.recentUserMessages,
     );
   }
 }

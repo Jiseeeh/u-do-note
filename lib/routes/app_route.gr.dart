@@ -99,9 +99,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     QuizRoute.name: (routeData) {
+      final args = routeData.argsAs<QuizRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const QuizScreen(),
+        child: QuizScreen(
+          feynmanModel: args.feynmanModel,
+          key: args.key,
+        ),
       );
     },
     ReviewRoute.name: (routeData) {
@@ -398,16 +402,39 @@ class QuizResultsRouteArgs {
 
 /// generated route for
 /// [QuizScreen]
-class QuizRoute extends PageRouteInfo<void> {
-  const QuizRoute({List<PageRouteInfo>? children})
-      : super(
+class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
+  QuizRoute({
+    required FeynmanModel feynmanModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           QuizRoute.name,
+          args: QuizRouteArgs(
+            feynmanModel: feynmanModel,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'QuizRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<QuizRouteArgs> page = PageInfo<QuizRouteArgs>(name);
+}
+
+class QuizRouteArgs {
+  const QuizRouteArgs({
+    required this.feynmanModel,
+    this.key,
+  });
+
+  final FeynmanModel feynmanModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'QuizRouteArgs{feynmanModel: $feynmanModel, key: $key}';
+  }
 }
 
 /// generated route for

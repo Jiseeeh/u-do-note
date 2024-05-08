@@ -432,6 +432,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
                 if (!context.mounted) return;
 
+                if (oldFeynmanSessions.isEmpty) {
+                  context.router.push(FeynmanTechniqueRoute(
+                      contentFromPages: contentFromPages,
+                      sessionName: titleController.text));
+                  return;
+                }
+
                 var willReviewOldSessions = await showDialog(
                     context: context,
                     builder: (context) {

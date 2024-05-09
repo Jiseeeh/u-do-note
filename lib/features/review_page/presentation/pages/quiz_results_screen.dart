@@ -34,7 +34,6 @@ class QuizResultsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quiz Results'),
-        automaticallyImplyLeading: false,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

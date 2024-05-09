@@ -37,9 +37,9 @@ class FeynmanModel {
       score: data['score'],
       questions: (data['questions'] as List)
           .map((question) =>
-              QuestionModel.fromFirestore(question.id, question.data()))
+              QuestionModel.fromJson(question))
           .toList(),
-      selectedAnswersIndex: data['selected_answers_index'],
+      selectedAnswersIndex: List<int>.from(data['selected_answers_index']),
       sessionName: data['title'],
       contentFromPagesUsed: data['content_from_pages'],
       messages: (data['messages'] as List)
@@ -63,6 +63,22 @@ class FeynmanModel {
       messages: messages,
       recentRobotMessages: recentRobotMessages,
       recentUserMessages: recentUserMessages,
+    );
+  }
+
+  /// Converts from entity to model
+  factory FeynmanModel.fromEntity(FeynmanEntity entity) {
+    return FeynmanModel(
+      id: entity.id,
+      remark: entity.remark,
+      score: entity.score,
+      questions: entity.questions?.map((question) => QuestionModel.fromEntity(question)).toList(),
+      selectedAnswersIndex: entity.selectedAnswersIndex,
+      sessionName: entity.sessionName,
+      contentFromPagesUsed: entity.contentFromPagesUsed,
+      messages: entity.messages,
+      recentRobotMessages: entity.recentRobotMessages,
+      recentUserMessages: entity.recentUserMessages,
     );
   }
 

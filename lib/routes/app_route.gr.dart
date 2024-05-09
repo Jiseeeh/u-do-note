@@ -104,6 +104,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: QuizScreen(
           feynmanModel: args.feynmanModel,
+          newSessionName: args.newSessionName,
           key: args.key,
         ),
       );
@@ -405,12 +406,14 @@ class QuizResultsRouteArgs {
 class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
   QuizRoute({
     required FeynmanModel feynmanModel,
+    String? newSessionName,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           QuizRoute.name,
           args: QuizRouteArgs(
             feynmanModel: feynmanModel,
+            newSessionName: newSessionName,
             key: key,
           ),
           initialChildren: children,
@@ -424,16 +427,19 @@ class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
 class QuizRouteArgs {
   const QuizRouteArgs({
     required this.feynmanModel,
+    this.newSessionName,
     this.key,
   });
 
   final FeynmanModel feynmanModel;
 
+  final String? newSessionName;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'QuizRouteArgs{feynmanModel: $feynmanModel, key: $key}';
+    return 'QuizRouteArgs{feynmanModel: $feynmanModel, newSessionName: $newSessionName, key: $key}';
   }
 }
 

@@ -492,7 +492,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(null);
                             },
                             child: const Text('Cancel'),
                           ),
@@ -504,6 +504,20 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                           ),
                         ],
                         content: MultiSelectDialogField(
+                          title: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Notice",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.normal)),
+                              Text(
+                                "Choose an old session to review.",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal),
+                              )
+                            ],
+                          ),
                           listType: MultiSelectListType.CHIP,
                           items: oldFeynmanSessions
                               .map((el) => MultiSelectItem<String>(
@@ -534,6 +548,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                     });
 
                 if (!context.mounted) return;
+                if (sessionId == null || sessionId.isEmpty) return;
 
                 context.router.push(FeynmanTechniqueRoute(
                     contentFromPages: contentFromPages,

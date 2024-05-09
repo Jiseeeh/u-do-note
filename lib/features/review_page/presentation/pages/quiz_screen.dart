@@ -19,7 +19,10 @@ import 'package:u_do_note/routes/app_route.dart';
 @RoutePage()
 class QuizScreen extends ConsumerStatefulWidget {
   final FeynmanModel feynmanModel;
-  const QuizScreen({required this.feynmanModel, Key? key}) : super(key: key);
+  // ? used when the user reviews an old session and started a new quiz
+  final String? newSessionName;
+  const QuizScreen({required this.feynmanModel, this.newSessionName, Key? key})
+      : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _QuizScreenState();
@@ -75,9 +78,6 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       return;
     }
 
-    logger.w(
-        'correct answer index: ${questions[currentQuestionIndex].correctAnswerIndex}, selected answer index: $selectedAnswerIndex');
-
     if (questions[currentQuestionIndex].correctAnswerIndex ==
         selectedAnswerIndex) {
       logger.d('Correct Answer');
@@ -86,6 +86,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         score++;
       });
     }
+
+    logger.d('Incorrect Answer');
 
     if (currentQuestionIndex < questions.length - 1) {
       currentQuestionIndex++;
@@ -124,7 +126,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           .read(feynmanTechniqueProvider.notifier)
           .saveQuizResults(
               feynmanModel: updatedFeynmanModel,
-              notebookId: ref.read(reviewScreenProvider).notebookId!);
+              notebookId: ref.read(reviewScreenProvider).notebookId!,
+              newSessionName: widget.newSessionName);
 
       EasyLoading.dismiss();
 

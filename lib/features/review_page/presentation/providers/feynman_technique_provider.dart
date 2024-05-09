@@ -110,7 +110,7 @@ class FeynmanTechnique extends _$FeynmanTechnique {
     return failureOrRes.fold((failure) => [], (sessions) => sessions);
   }
 
-  /// Get the quiz questions from the content.
+  /// Generate quiz questions from the [content].
   Future<List<QuestionModel>> generateQuizQuestions(String content) async {
     final generateQuizQuestions = ref.read(generateQuizQuestionsProvider);
 
@@ -119,11 +119,16 @@ class FeynmanTechnique extends _$FeynmanTechnique {
     return failureOrRes.fold((failure) => [], (questions) => questions);
   }
 
+  /// Save the quiz data [feynmanModel] with the [notebookId] to the database.
+  /// [newSessionName] is used when the user reviews an old session and started a new quiz.
   Future<dynamic> saveQuizResults(
-      {required FeynmanModel feynmanModel, required String notebookId}) async {
+      {required FeynmanModel feynmanModel,
+      required String notebookId,
+      String? newSessionName}) async {
     final saveQuizResults = ref.read(saveQuizResultsProvider);
 
-    var failureOrRes = await saveQuizResults(feynmanModel, notebookId);
+    var failureOrRes =
+        await saveQuizResults(feynmanModel, notebookId, newSessionName);
 
     return failureOrRes.fold((failure) => failure, (res) => res);
   }

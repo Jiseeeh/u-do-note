@@ -10,8 +10,8 @@ class SaveQuizResults {
   const SaveQuizResults(this._feynmanTechniqueRepository);
 
   Future<Either<Failure, void>> call(
-      FeynmanModel feynmanModel, String notebookId) async {
+      FeynmanModel feynmanModel, String notebookId, String? newSessionName) async {
     return await _feynmanTechniqueRepository.saveQuizResults(
-        feynmanModel, notebookId);
+        feynmanModel, notebookId, newSessionName);
   }
 }

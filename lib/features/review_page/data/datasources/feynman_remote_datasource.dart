@@ -139,6 +139,7 @@ class FeynmanRemoteDataSource {
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
           As a helpful assistant, you will create a 10 question quiz based on the content that the user will give.
+          The choices must be in random order.
           The response must be an array of json called "questions" with the properties "question", "choices" as an array of choice, and "correctAnswerIndex" as the index of the correct answer.
           """,
         ),
@@ -255,8 +256,8 @@ class FeynmanRemoteDataSource {
     return questions;
   }
 
-  Future<void> saveQuizResults(
-      FeynmanModel feynmanModel, String notebookId) async {
+  Future<void> saveQuizResults(FeynmanModel feynmanModel, String notebookId,
+      String? newSessionName) async {
     var userId = _auth.currentUser!.uid;
 
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -321,6 +322,34 @@ class FeynmanRemoteDataSource {
     var decodedJson = json.decode(completionContent!);
 
     var remark = decodedJson['remark'];
+
+    // ? if from old session, then make a new remark since
+    // ? updating the old will overwrite the old remark
+    if (newSessionName != null) {
+      await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(notebookId)
+          .collection(FirestoreCollection.remarks.name)
+          .add(<String, dynamic>{
+        'title': newSessionName,
+        'review_method': FeynmanModel.name,
+        'content_from_pages': feynmanModel.contentFromPagesUsed,
+        'messages':
+            feynmanModel.messages.map((message) => message.toJson()).toList(),
+        'questions': feynmanModel.questions!
+            .map((question) => question.toJson())
+            .toList(),
+        'selected_answers_index': feynmanModel.selectedAnswersIndex,
+        'recent_robot_messages': feynmanModel.recentRobotMessages,
+        'recent_user_messages': feynmanModel.recentUserMessages,
+        'score': feynmanModel.score,
+        'remark': remark,
+      });
+
+      return;
+    }
 
     await _firestore
         .collection(FirestoreCollection.users.name)

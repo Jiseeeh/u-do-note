@@ -95,6 +95,26 @@ abstract class _$AppRouter extends RootStackRouter {
           breakTime: args.breakTime,
           studyTime: args.studyTime,
           pomodoroSession: args.pomodoroSession,
+    QuizResultsRoute.name: (routeData) {
+      final args = routeData.argsAs<QuizResultsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: QuizResultsScreen(
+          questions: args.questions,
+          correctAnswersIndex: args.correctAnswersIndex,
+          selectedAnswersIndex: args.selectedAnswersIndex,
+          key: args.key,
+        ),
+      );
+    },
+    QuizRoute.name: (routeData) {
+      final args = routeData.argsAs<QuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: QuizScreen(
+          feynmanModel: args.feynmanModel,
+          newSessionName: args.newSessionName,
+          key: args.key,
         ),
       );
     },
@@ -358,6 +378,21 @@ class PomodoroTechniqueRoute extends PageRouteInfo<PomodoroTechniqueRouteArgs> {
             breakTime: breakTime,
             studyTime: studyTime,
             pomodoroSession: pomodoroSession,
+/// [QuizResultsScreen]
+class QuizResultsRoute extends PageRouteInfo<QuizResultsRouteArgs> {
+  QuizResultsRoute({
+    required List<QuestionEntity> questions,
+    required List<int> correctAnswersIndex,
+    required List<int> selectedAnswersIndex,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          QuizResultsRoute.name,
+          args: QuizResultsRouteArgs(
+            questions: questions,
+            correctAnswersIndex: correctAnswersIndex,
+            selectedAnswersIndex: selectedAnswersIndex,
+            key: key,
           ),
           initialChildren: children,
         );
@@ -387,6 +422,74 @@ class PomodoroTechniqueRouteArgs {
   @override
   String toString() {
     return 'PomodoroTechniqueRouteArgs{key: $key, breakTime: $breakTime, studyTime: $studyTime, pomodoroSession: $pomodoroSession}';
+
+  static const String name = 'QuizResultsRoute';
+
+  static const PageInfo<QuizResultsRouteArgs> page =
+      PageInfo<QuizResultsRouteArgs>(name);
+}
+
+class QuizResultsRouteArgs {
+  const QuizResultsRouteArgs({
+    required this.questions,
+    required this.correctAnswersIndex,
+    required this.selectedAnswersIndex,
+    this.key,
+  });
+
+  final List<QuestionEntity> questions;
+
+  final List<int> correctAnswersIndex;
+
+  final List<int> selectedAnswersIndex;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'QuizResultsRouteArgs{questions: $questions, correctAnswersIndex: $correctAnswersIndex, selectedAnswersIndex: $selectedAnswersIndex, key: $key}';
+  }
+}
+
+/// generated route for
+/// [QuizScreen]
+class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
+  QuizRoute({
+    required FeynmanModel feynmanModel,
+    String? newSessionName,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          QuizRoute.name,
+          args: QuizRouteArgs(
+            feynmanModel: feynmanModel,
+            newSessionName: newSessionName,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'QuizRoute';
+
+  static const PageInfo<QuizRouteArgs> page = PageInfo<QuizRouteArgs>(name);
+}
+
+class QuizRouteArgs {
+  const QuizRouteArgs({
+    required this.feynmanModel,
+    this.newSessionName,
+    this.key,
+  });
+
+  final FeynmanModel feynmanModel;
+
+  final String? newSessionName;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'QuizRouteArgs{feynmanModel: $feynmanModel, newSessionName: $newSessionName, key: $key}';
   }
 }
 

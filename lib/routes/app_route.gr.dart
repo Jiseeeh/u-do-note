@@ -95,6 +95,9 @@ abstract class _$AppRouter extends RootStackRouter {
           breakTime: args.breakTime,
           studyTime: args.studyTime,
           pomodoroSession: args.pomodoroSession,
+        ),
+      );
+    },
     QuizResultsRoute.name: (routeData) {
       final args = routeData.argsAs<QuizResultsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -378,21 +381,6 @@ class PomodoroTechniqueRoute extends PageRouteInfo<PomodoroTechniqueRouteArgs> {
             breakTime: breakTime,
             studyTime: studyTime,
             pomodoroSession: pomodoroSession,
-/// [QuizResultsScreen]
-class QuizResultsRoute extends PageRouteInfo<QuizResultsRouteArgs> {
-  QuizResultsRoute({
-    required List<QuestionEntity> questions,
-    required List<int> correctAnswersIndex,
-    required List<int> selectedAnswersIndex,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          QuizResultsRoute.name,
-          args: QuizResultsRouteArgs(
-            questions: questions,
-            correctAnswersIndex: correctAnswersIndex,
-            selectedAnswersIndex: selectedAnswersIndex,
-            key: key,
           ),
           initialChildren: children,
         );
@@ -422,6 +410,28 @@ class PomodoroTechniqueRouteArgs {
   @override
   String toString() {
     return 'PomodoroTechniqueRouteArgs{key: $key, breakTime: $breakTime, studyTime: $studyTime, pomodoroSession: $pomodoroSession}';
+  }
+}
+
+/// generated route for
+/// [QuizResultsScreen]
+class QuizResultsRoute extends PageRouteInfo<QuizResultsRouteArgs> {
+  QuizResultsRoute({
+    required List<QuestionEntity> questions,
+    required List<int> correctAnswersIndex,
+    required List<int> selectedAnswersIndex,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          QuizResultsRoute.name,
+          args: QuizResultsRouteArgs(
+            questions: questions,
+            correctAnswersIndex: correctAnswersIndex,
+            selectedAnswersIndex: selectedAnswersIndex,
+            key: key,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'QuizResultsRoute';
 

@@ -72,6 +72,7 @@ class AppTheme {
         error: AppColors.error,
       ),
       appBarTheme: const AppBarTheme(
+        scrolledUnderElevation: 0,
         elevation: 0,
       ),
     );

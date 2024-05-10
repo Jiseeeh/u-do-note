@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.2.3
   file_picker: ^8.0.1
   syncfusion_flutter_pdf: ^25.1.40
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

@@ -10,6 +10,8 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/shared/theme/text_styles.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/auth_field.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
@@ -46,6 +48,10 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
   final maxTitleName = 18;
   late TutorialCoachMark tutorialCoachMark;
   List<String> pages = [];
+  final studyDurationController = TextEditingController();
+  final breakDurationController = TextEditingController();
+  final sessionNoController = TextEditingController();
+  var pomodoroFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -539,7 +545,104 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         .toEntity()));
                 break;
               case ReviewMethods.pomodoroTechnique:
+                EasyLoading.show(
+                    status: 'Harvesting Tomatoes...',
+                    maskType: EasyLoadingMaskType.black,
+                    dismissOnTap: false);
+                EasyLoading.dismiss();
+
+                if (context.mounted) {
+                  await showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) => AlertDialog(
+                          scrollable: true,
+                          title: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Settings for Pomodoro Technique"),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context.router.push(PomodoroTechniqueRoute(
+                                    breakTime: breakDurationController.text,
+                                    studyTime: studyDurationController.text,
+                                    pomodoroSession:
+                                        sessionNoController.text));
+                              },
+                              child: const Text('Continue'),
+                            ),
+                          ],
+                          // ? Settings for Pomodoro Technique
+                          content: Form(
+                            key: pomodoroFormKey,
+                            child: Column(
+                              children: [
+                                const Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Work Duration (in minutes)",
+                                    textAlign: TextAlign.left,
+                                    style: AppTextStyles.h6,
+                                  ),
+                                ),
+                                AuthField(
+                                  label: '10',
+                                  controller: studyDurationController,
+                                  isObscuredText: false,
+                                  keyboardType: TextInputType.number,
+                                  validator: null,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Break Duration (in minutes)",
+                                    textAlign: TextAlign.left,
+                                    style: AppTextStyles.h6,
+                                  ),
+                                ),
+                                AuthField(
+                                  label: '5',
+                                  controller: breakDurationController,
+                                  isObscuredText: false,
+                                  keyboardType: TextInputType.number,
+                                  validator: null,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "No. of Sessions",
+                                    textAlign: TextAlign.left,
+                                    style: AppTextStyles.h6,
+                                  ),
+                                ),
+                                AuthField(
+                                  label: '3',
+                                  controller: sessionNoController,
+                                  isObscuredText: false,
+                                  keyboardType: TextInputType.number,
+                                  validator: null,
+                                ),
+                              ],
+                            ),
+                          )));
+                }
                 break;
+
               case ReviewMethods.acronymMnemonics:
                 break;
             }

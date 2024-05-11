@@ -330,6 +330,26 @@ class NoteRemoteDataSource {
         .doc(notebookId)
         .delete();
 
+    // ? also delete remarks associated with this notebook
+    var remarks = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('user_notes')
+        .doc(notebookId)
+        .collection('remarks')
+        .get();
+
+    for (var remark in remarks.docs) {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('user_notes')
+          .doc(notebookId)
+          .collection('remarks')
+          .doc(remark.id)
+          .delete();
+    }
+
     var response = 'Notebook deleted successfully.';
     logger.i(response);
 

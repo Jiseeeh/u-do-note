@@ -28,9 +28,9 @@ class NoteRemoteDataSource {
     // TODO: check if possible to just add firestore rule for this
 
     var notebook = await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .where('subject', isEqualTo: name.toLowerCase())
         .get();
 
@@ -51,9 +51,9 @@ class NoteRemoteDataSource {
 
     var createdAt = Timestamp.now();
     var notebookDoc = await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .add({
       'subject': name.toLowerCase(),
       'cover_url': coverImgUrl.isEmpty ? '' : coverImgUrl,
@@ -83,9 +83,9 @@ class NoteRemoteDataSource {
     var userId = _auth.currentUser!.uid;
 
     var userNote = await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .get();
 
@@ -126,9 +126,9 @@ class NoteRemoteDataSource {
     var updatedNotes = noteModels.map((n) => n.toJson()).toList();
 
     await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .update({
       'notes': updatedNotes,
@@ -147,9 +147,9 @@ class NoteRemoteDataSource {
 
     var userId = _auth.currentUser!.uid;
     var notebooks = await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .get();
 
     List<NotebookModel> notebooksModel = [];
@@ -171,9 +171,9 @@ class NoteRemoteDataSource {
 
     // TODO: simplify this just like the updateMultipleNotes method below
     var userNote = await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .get();
 
@@ -190,9 +190,9 @@ class NoteRemoteDataSource {
         notesModel.map((noteModel) => noteModel.toJson()).toList();
 
     await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .update({
       'notes': updatedNotes,
@@ -210,9 +210,9 @@ class NoteRemoteDataSource {
     var updatedModels = notesModel.map((noteModel) => noteModel.toJson());
 
     await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .update({
       'notes': updatedModels,
@@ -279,9 +279,9 @@ class NoteRemoteDataSource {
     var userId = _auth.currentUser!.uid;
 
     var userNote = await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .get();
 
@@ -298,9 +298,9 @@ class NoteRemoteDataSource {
         notesModel.map((noteModel) => noteModel.toJson()).toList();
 
     await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .update({
       'notes': updatedNotes,
@@ -324,28 +324,28 @@ class NoteRemoteDataSource {
     var userId = _auth.currentUser!.uid;
 
     await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .delete();
 
     // ? also delete remarks associated with this notebook
     var remarks = await _firestore
-        .collection('users')
+        .collection(FirestoreCollection.users.name)
         .doc(userId)
-        .collection('user_notes')
+        .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
-        .collection('remarks')
+        .collection(FirestoreCollection.remarks.name)
         .get();
 
     for (var remark in remarks.docs) {
       await _firestore
-          .collection('users')
+          .collection(FirestoreCollection.users.name)
           .doc(userId)
-          .collection('user_notes')
+          .collection(FirestoreCollection.user_notes.name)
           .doc(notebookId)
-          .collection('remarks')
+          .collection(FirestoreCollection.remarks.name)
           .doc(remark.id)
           .delete();
     }

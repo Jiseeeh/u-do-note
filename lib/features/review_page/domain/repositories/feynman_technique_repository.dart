@@ -13,5 +13,8 @@ abstract class FeynmanTechniqueRepository {
   Future<Either<Failure, List<QuestionModel>>> generateQuizQuestions(
       String content);
   Future<Either<Failure, void>> saveQuizResults(
-      FeynmanModel feynmanModel, String notebookId, String? newSessionName);
+      FeynmanModel feynmanModel,
+      String notebookId,
+      bool isFromOldSessionWithoutQuiz,
+      String? newSessionName);
 }

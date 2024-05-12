@@ -103,8 +103,9 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: QuizScreen(
-          feynmanModel: args.feynmanModel,
           newSessionName: args.newSessionName,
+          feynmanModel: args.feynmanModel,
+          isFromSessionWithoutQuiz: args.isFromSessionWithoutQuiz,
           key: args.key,
         ),
       );
@@ -405,15 +406,17 @@ class QuizResultsRouteArgs {
 /// [QuizScreen]
 class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
   QuizRoute({
-    required FeynmanModel feynmanModel,
     String? newSessionName,
+    required FeynmanModel feynmanModel,
+    bool? isFromSessionWithoutQuiz = false,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           QuizRoute.name,
           args: QuizRouteArgs(
-            feynmanModel: feynmanModel,
             newSessionName: newSessionName,
+            feynmanModel: feynmanModel,
+            isFromSessionWithoutQuiz: isFromSessionWithoutQuiz,
             key: key,
           ),
           initialChildren: children,
@@ -426,20 +429,23 @@ class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
 
 class QuizRouteArgs {
   const QuizRouteArgs({
-    required this.feynmanModel,
     this.newSessionName,
+    required this.feynmanModel,
+    this.isFromSessionWithoutQuiz = false,
     this.key,
   });
 
+  final String? newSessionName;
+
   final FeynmanModel feynmanModel;
 
-  final String? newSessionName;
+  final bool? isFromSessionWithoutQuiz;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'QuizRouteArgs{feynmanModel: $feynmanModel, newSessionName: $newSessionName, key: $key}';
+    return 'QuizRouteArgs{newSessionName: $newSessionName, feynmanModel: $feynmanModel, isFromSessionWithoutQuiz: $isFromSessionWithoutQuiz, key: $key}';
   }
 }
 

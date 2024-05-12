@@ -77,9 +77,9 @@ class LeitnerRemoteDataSource {
     }
     var userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Save the flashcards to firestore to be updated
-    // after the user has reviewed the flashcards.
-    var nextReview = Timestamp.now();
+    // ? save the flashcards to firestore to be updated
+    // ? after the user has reviewed the flashcards.
+    var now = Timestamp.now();
     var doc = await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
@@ -88,9 +88,10 @@ class LeitnerRemoteDataSource {
         .collection(FirestoreCollection.remarks.name)
         .add(<String, dynamic>{
       'title': title,
+      'created_at': now,
       'review_method': LeitnerSystemModel.name,
       'flashcards': flashcards.map((flashcard) => flashcard.toJson()).toList(),
-      'next_review': nextReview,
+      'next_review': now,
       'score': '',
       'remark': '',
     });
@@ -98,7 +99,8 @@ class LeitnerRemoteDataSource {
     var leitnerSystemModel = LeitnerSystemModel(
       id: doc.id,
       title: title,
-      nextReview: nextReview,
+      createdAt: now,
+      nextReview: now,
       userNotebookId: userNotebookId,
       flashcards: flashcards,
     );

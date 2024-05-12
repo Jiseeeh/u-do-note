@@ -6,6 +6,7 @@ class LeitnerSystemEntity {
   final int? score;
   final String? userNotebookId;
   final String title;
+  final Timestamp createdAt;
   final Timestamp nextReview;
   final List<FlashcardEntity> flashcards;
 
@@ -15,6 +16,7 @@ class LeitnerSystemEntity {
       this.score,
       required this.userNotebookId,
       required this.title,
+      required this.createdAt,
       required this.nextReview,
       required this.flashcards});
 }

@@ -50,16 +50,10 @@ class RemarkRemoteDataSource {
         RemarkDataModel? feynmanRemarkData =
             i < feynmanRemarksData.length ? feynmanRemarksData[i] : null;
 
-        // TODO: refactor, this will get messy the review strategies increase
-        // TODO: check from firstore method in remark model
         var remarkModel = RemarkModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          leitnerTimestamp: leitnerRemarkData?.timestamp,
-          feynmanTimestamp: feynmanRemarkData?.timestamp,
-          leitnerRemark: leitnerRemarkData?.remark,
-          leitnerScore: leitnerRemarkData?.score,
-          feynmanRemark: feynmanRemarkData?.remark,
-          feynmanScore: feynmanRemarkData?.score,
+          leitnerRemark: leitnerRemarkData,
+          feynmanRemark: feynmanRemarkData,
         );
 
         remarkModels.add(remarkModel);

@@ -132,13 +132,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 legendItemText: "Leitner System",
                                 name: "Leitner System",
                                 enableTooltip: true,
-                                xValueMapper: (RemarkModel model, _) =>
-                                    model.leitnerTimestamp != null
-                                        ? DateFormat.yMd().format(
-                                            model.leitnerTimestamp!.toDate())
-                                        : "",
+                                xValueMapper: (RemarkModel model, _) => model
+                                            .leitnerRemark !=
+                                        null
+                                    ? DateFormat.yMd().format(
+                                        model.leitnerRemark!.timestamp.toDate())
+                                    : "",
                                 yValueMapper: (RemarkModel model, _) =>
-                                    model.leitnerScore),
+                                    model.leitnerRemark?.score),
                             LineSeries<RemarkModel, String>(
                                 dataSource: remarksModel,
                                 markerSettings:
@@ -146,13 +147,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 legendItemText: "Feynman Technique",
                                 name: "Feynman Technique",
                                 enableTooltip: true,
-                                xValueMapper: (RemarkModel model, _) =>
-                                    model.feynmanTimestamp != null
-                                        ? DateFormat.yMd().format(
-                                            model.feynmanTimestamp!.toDate())
-                                        : "",
+                                xValueMapper: (RemarkModel model, _) => model
+                                            .feynmanRemark !=
+                                        null
+                                    ? DateFormat.yMd().format(
+                                        model.feynmanRemark!.timestamp.toDate())
+                                    : "",
                                 yValueMapper: (RemarkModel model, _) =>
-                                    model.feynmanScore),
+                                    model.feynmanRemark?.score),
                           ]),
                     ),
                   ],

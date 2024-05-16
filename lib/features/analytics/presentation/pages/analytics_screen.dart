@@ -8,6 +8,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/presentation/providers/analytics_screen_provider.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 
 @RoutePage()
 class AnalyticsScreen extends ConsumerStatefulWidget {
@@ -120,40 +122,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           tooltipBehavior: tooltipBehavior,
                           zoomPanBehavior: _zoomPanBehavior,
                           legend: const Legend(isVisible: true),
-                          primaryXAxis: const CategoryAxis(
+                          primaryXAxis: DateTimeAxis(
                             labelRotation: 60,
+                            edgeLabelPlacement: EdgeLabelPlacement.shift,
+                            dateFormat: DateFormat.yMd(),
+                            plotOffset: 10,
                           ),
                           series: [
-                            LineSeries<RemarkModel, String>(
-                                dataSource: remarksModel,
-                                markerSettings:
-                                    const MarkerSettings(isVisible: true),
-                                legendItemText: "Leitner System",
-                                name: "Leitner System",
-                                enableTooltip: true,
-                                xValueMapper: (RemarkModel model, _) => model
-                                            .leitnerRemark !=
-                                        null
-                                    ? DateFormat.yMd().format(
-                                        model.leitnerRemark!.timestamp.toDate())
-                                    : "",
-                                yValueMapper: (RemarkModel model, _) =>
-                                    model.leitnerRemark?.score),
-                            LineSeries<RemarkModel, String>(
-                                dataSource: remarksModel,
-                                markerSettings:
-                                    const MarkerSettings(isVisible: true),
-                                legendItemText: "Feynman Technique",
-                                name: "Feynman Technique",
-                                enableTooltip: true,
-                                xValueMapper: (RemarkModel model, _) => model
-                                            .feynmanRemark !=
-                                        null
-                                    ? DateFormat.yMd().format(
-                                        model.feynmanRemark!.timestamp.toDate())
-                                    : "",
-                                yValueMapper: (RemarkModel model, _) =>
-                                    model.feynmanRemark?.score),
+                            _buildLineSeries(
+                                legendItemText: "Leitner S.",
+                                reviewMethod: LeitnerSystemModel.name),
+                            _buildLineSeries(
+                                legendItemText: "Feynman T.",
+                                reviewMethod: FeynmanModel.name)
                           ]),
                     ),
                   ],
@@ -163,10 +144,35 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       ),
     );
   }
-}
 
-class SalesData {
-  SalesData(this.year, this.sales);
-  final String year;
-  final double sales;
+  LineSeries _buildLineSeries(
+      {required String legendItemText, required String reviewMethod}) {
+    return LineSeries<RemarkModel, DateTime>(
+        dataSource: remarksModel,
+        markerSettings: const MarkerSettings(isVisible: true),
+        legendItemText: legendItemText,
+        name: reviewMethod,
+        sortingOrder: SortingOrder.ascending,
+        enableTooltip: true,
+        xValueMapper: (RemarkModel model, _) {
+          switch (reviewMethod) {
+            case LeitnerSystemModel.name:
+              return model.leitnerRemark?.timestamp.toDate();
+            case FeynmanModel.name:
+              return model.feynmanRemark?.timestamp.toDate();
+            default:
+              return DateTime.now();
+          }
+        },
+        yValueMapper: (RemarkModel model, _) {
+          switch (reviewMethod) {
+            case LeitnerSystemModel.name:
+              return model.leitnerRemark?.score;
+            case FeynmanModel.name:
+              return model.feynmanRemark?.score;
+            default:
+              return 0;
+          }
+        });
+  }
 }

@@ -691,14 +691,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.10"
-  flutter_sizer:
-    dependency: "direct main"
-    description:
-      name: flutter_sizer
-      sha256: "8807183611c902697de0c07fc7f87051b25cf1d2cf6b0a7792260b2c47122735"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
   flutter_speed_dial:
     dependency: "direct main"
     description:
@@ -1253,6 +1245,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  responsive_sizer:
+    dependency: "direct main"
+    description:
+      name: responsive_sizer
+      sha256: "6aefee6065c0883681bc7559147a24d8fa1846d296a216abcda25ff349340712"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.1"
   riverpod:
     dependency: transitive
     description:

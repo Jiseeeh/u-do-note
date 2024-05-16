@@ -25,7 +25,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     tooltipBehavior = TooltipBehavior(enable: true);

@@ -125,7 +125,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           primaryXAxis: DateTimeAxis(
                             labelRotation: 60,
                             edgeLabelPlacement: EdgeLabelPlacement.shift,
-                            dateFormat: DateFormat.yMd(),
+                            dateFormat: DateFormat.MMMd(),
                             plotOffset: 10,
                           ),
                           series: [

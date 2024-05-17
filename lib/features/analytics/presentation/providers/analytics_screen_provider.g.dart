@@ -7,7 +7,7 @@ part of 'analytics_screen_provider.dart';
 // **************************************************************************
 
 String _$leitnerSystemRemarkDataSourceHash() =>
-    r'dfc644675370e9300d08fa89dff3621f2d8cf266';
+    r'abdfeccc01ca141a2b2f3e70cb2187f9cdc2a149';
 
 /// See also [leitnerSystemRemarkDataSource].
 @ProviderFor(leitnerSystemRemarkDataSource)
@@ -25,7 +25,7 @@ final leitnerSystemRemarkDataSourceProvider =
 typedef LeitnerSystemRemarkDataSourceRef
     = AutoDisposeProviderRef<RemarkRemoteDataSource>;
 String _$leitnerSystemRemarkRepositoryHash() =>
-    r'19a51c35c86346cdc8818768c6f1e2f6ba3b5a86';
+    r'cdd254f98e699f02e864728c187516af3c5ffd76';
 
 /// See also [leitnerSystemRemarkRepository].
 @ProviderFor(leitnerSystemRemarkRepository)
@@ -43,7 +43,7 @@ final leitnerSystemRemarkRepositoryProvider =
 typedef LeitnerSystemRemarkRepositoryRef
     = AutoDisposeProviderRef<RemarkRepository>;
 String _$getLeitnerSystemRemarksHash() =>
-    r'd3e3c2df4db7cf6827c596994e2f57aa82d7f5c2';
+    r'a39079b4396ab853bdfd3357dbe4de20172c167c';
 
 /// See also [getLeitnerSystemRemarks].
 @ProviderFor(getLeitnerSystemRemarks)
@@ -59,7 +59,7 @@ final getLeitnerSystemRemarksProvider =
 );
 
 typedef GetLeitnerSystemRemarksRef = AutoDisposeProviderRef<GetRemarks>;
-String _$analyticsScreenHash() => r'133617db0e5e743c6aead7ded42538e8968de5f0';
+String _$analyticsScreenHash() => r'7465c403c8d417a8836a7c334361189dfca75e7e';
 
 /// See also [AnalyticsScreen].
 @ProviderFor(AnalyticsScreen)

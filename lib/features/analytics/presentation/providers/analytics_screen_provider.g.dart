@@ -6,60 +6,54 @@ part of 'analytics_screen_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$leitnerSystemRemarkDataSourceHash() =>
-    r'abdfeccc01ca141a2b2f3e70cb2187f9cdc2a149';
+String _$remarkRemoteDataSourceHash() =>
+    r'2ce48d19fda76e2e7c2f4dd8905a87e77890be01';
 
-/// See also [leitnerSystemRemarkDataSource].
-@ProviderFor(leitnerSystemRemarkDataSource)
-final leitnerSystemRemarkDataSourceProvider =
+/// See also [remarkRemoteDataSource].
+@ProviderFor(remarkRemoteDataSource)
+final remarkRemoteDataSourceProvider =
     AutoDisposeProvider<RemarkRemoteDataSource>.internal(
-  leitnerSystemRemarkDataSource,
-  name: r'leitnerSystemRemarkDataSourceProvider',
+  remarkRemoteDataSource,
+  name: r'remarkRemoteDataSourceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$leitnerSystemRemarkDataSourceHash,
+      : _$remarkRemoteDataSourceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef LeitnerSystemRemarkDataSourceRef
+typedef RemarkRemoteDataSourceRef
     = AutoDisposeProviderRef<RemarkRemoteDataSource>;
-String _$leitnerSystemRemarkRepositoryHash() =>
-    r'cdd254f98e699f02e864728c187516af3c5ffd76';
+String _$remarkRepositoryHash() => r'67cc37b1037dbd011238cb3d1c97ca8ef6dceecd';
 
-/// See also [leitnerSystemRemarkRepository].
-@ProviderFor(leitnerSystemRemarkRepository)
-final leitnerSystemRemarkRepositoryProvider =
-    AutoDisposeProvider<RemarkRepository>.internal(
-  leitnerSystemRemarkRepository,
-  name: r'leitnerSystemRemarkRepositoryProvider',
+/// See also [remarkRepository].
+@ProviderFor(remarkRepository)
+final remarkRepositoryProvider = AutoDisposeProvider<RemarkRepository>.internal(
+  remarkRepository,
+  name: r'remarkRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$leitnerSystemRemarkRepositoryHash,
+      : _$remarkRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef LeitnerSystemRemarkRepositoryRef
-    = AutoDisposeProviderRef<RemarkRepository>;
-String _$getLeitnerSystemRemarksHash() =>
-    r'a39079b4396ab853bdfd3357dbe4de20172c167c';
+typedef RemarkRepositoryRef = AutoDisposeProviderRef<RemarkRepository>;
+String _$getRemarksHash() => r'1f5f71efc09d5166338fc5406a5920238f0f617f';
 
-/// See also [getLeitnerSystemRemarks].
-@ProviderFor(getLeitnerSystemRemarks)
-final getLeitnerSystemRemarksProvider =
-    AutoDisposeProvider<GetRemarks>.internal(
-  getLeitnerSystemRemarks,
-  name: r'getLeitnerSystemRemarksProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getLeitnerSystemRemarksHash,
+/// See also [getRemarks].
+@ProviderFor(getRemarks)
+final getRemarksProvider = AutoDisposeProvider<GetRemarks>.internal(
+  getRemarks,
+  name: r'getRemarksProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$getRemarksHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef GetLeitnerSystemRemarksRef = AutoDisposeProviderRef<GetRemarks>;
-String _$analyticsScreenHash() => r'7465c403c8d417a8836a7c334361189dfca75e7e';
+typedef GetRemarksRef = AutoDisposeProviderRef<GetRemarks>;
+String _$analyticsScreenHash() => r'c987106b167656a06b2dbb04e512bbabe2ddfda8';
 
 /// See also [AnalyticsScreen].
 @ProviderFor(AnalyticsScreen)

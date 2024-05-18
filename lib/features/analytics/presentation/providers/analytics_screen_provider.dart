@@ -10,8 +10,7 @@ import 'package:u_do_note/features/analytics/domain/usecases/get_remarks.dart';
 part 'analytics_screen_provider.g.dart';
 
 @riverpod
-RemarkRemoteDataSource leitnerSystemRemarkDataSource(
-    LeitnerSystemRemarkDataSourceRef ref) {
+RemarkRemoteDataSource remarkRemoteDataSource(RemarkRemoteDataSourceRef ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -19,16 +18,15 @@ RemarkRemoteDataSource leitnerSystemRemarkDataSource(
 }
 
 @riverpod
-RemarkRepository leitnerSystemRemarkRepository(
-    LeitnerSystemRemarkRepositoryRef ref) {
-  var dataSource = ref.read(leitnerSystemRemarkDataSourceProvider);
+RemarkRepository remarkRepository(RemarkRepositoryRef ref) {
+  var dataSource = ref.read(remarkRemoteDataSourceProvider);
 
   return RemarkRepositoryImpl(dataSource);
 }
 
 @riverpod
-GetRemarks getLeitnerSystemRemarks(GetLeitnerSystemRemarksRef ref) {
-  var repository = ref.read(leitnerSystemRemarkRepositoryProvider);
+GetRemarks getRemarks(GetRemarksRef ref) {
+  var repository = ref.read(remarkRepositoryProvider);
 
   return GetRemarks(repository);
 }
@@ -40,12 +38,11 @@ class AnalyticsScreen extends _$AnalyticsScreen {
     return;
   }
 
-  Future<List<RemarkModel>> getLeitnerSystemRemarks() async {
-    final getLeitnerSystemRemarks = ref.read(getLeitnerSystemRemarksProvider);
+  Future<List<RemarkModel>> getRemarks() async {
+    final getRemarks = ref.read(getRemarksProvider);
 
-    var failureOrLeitnerSystemRemarksModel = await getLeitnerSystemRemarks();
+    var failureOrRemarksModel = await getRemarks();
 
-    return failureOrLeitnerSystemRemarksModel.fold(
-        (failure) => [], (remarks) => remarks);
+    return failureOrRemarksModel.fold((failure) => [], (remarks) => remarks);
   }
 }

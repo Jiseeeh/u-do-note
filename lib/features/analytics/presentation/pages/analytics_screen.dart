@@ -301,6 +301,29 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       future: lineChartRemarks,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data!.length < 10) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/cat.png',
+                      height: 40.h,
+                      width: 100.w,
+                    ),
+                    Text(
+                        'Not enough data to show analytics, Please continue using the app.',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontSize: 20.sp,
+                            )),
+                  ],
+                ),
+              ),
+            );
+          }
+
           Map<String?, int> reviewMethods = {};
 
           for (var remark in snapshot.data as List<RemarkModel>) {

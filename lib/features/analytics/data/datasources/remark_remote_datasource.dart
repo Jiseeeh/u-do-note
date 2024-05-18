@@ -93,6 +93,7 @@ class RemarkRemoteDataSource {
           }
 
           return RemarkDataModel(
+              reviewMethod: doc['review_method'],
               remark: doc['remark'],
               score: doc['score'],
               timestamp: doc['created_at']);

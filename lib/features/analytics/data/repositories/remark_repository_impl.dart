@@ -6,28 +6,38 @@ import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/domain/repositories/remark_repository.dart';
 
 class RemarkRepositoryImpl implements RemarkRepository {
-  final RemarkRemoteDataSource _leitnerSystemRemarkDataSource;
+  final RemarkRemoteDataSource _remarkDataSource;
 
-  RemarkRepositoryImpl(this._leitnerSystemRemarkDataSource);
+  RemarkRepositoryImpl(this._remarkDataSource);
 
   @override
   Future<Either<Failure, List<RemarkModel>>> getRemarks() async {
     try {
-      var leitnerRemarkModel =
-          await _leitnerSystemRemarkDataSource.getRemarks();
+      var leitnerRemarkModel = await _remarkDataSource.getRemarks();
 
       return Right(leitnerRemarkModel);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }
   }
-  
+
   @override
-  Future<Either<Failure, int>> getFlashcardsToReview() async{
+  Future<Either<Failure, int>> getFlashcardsToReview() async {
     try {
-      var flashcardsToReview = await _leitnerSystemRemarkDataSource.getFlashcardsToReview();
+      var flashcardsToReview = await _remarkDataSource.getFlashcardsToReview();
 
       return Right(flashcardsToReview);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> getQuizzesToTake() async {
+    try {
+      var quizzesToReview = await _remarkDataSource.getQuizzesToTake();
+
+      return Right(quizzesToReview);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

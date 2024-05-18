@@ -23,7 +23,8 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   List<_PieChartData> pieChartRemarks = [];
   bool isAnalysisVisible = true;
-  dynamic flashcardsToReview;
+  late Future<dynamic> flashcardsToReview;
+  late Future<dynamic> quizzesToTake;
   late Future<List<RemarkModel>> lineChartRemarks;
   late TooltipBehavior tooltipBehavior;
   late ZoomPanBehavior _zoomPanBehavior;
@@ -40,21 +41,88 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       enableMouseWheelZooming: true,
     );
 
-    getGridStats();
+    initGridStats();
     initRemarks();
   }
 
-  void initRemarks() async {
+  void initRemarks() {
     lineChartRemarks = ref.read(analyticsScreenProvider.notifier).getRemarks();
-
-    setState(() {});
   }
 
-  void getGridStats() async {
-    flashcardsToReview = await ref.read(analyticsScreenProvider.notifier).getFlashcardsToReview();
+  void initGridStats() {
+    flashcardsToReview =
+        ref.read(analyticsScreenProvider.notifier).getFlashcardsToReview();
+    quizzesToTake =
+        ref.read(analyticsScreenProvider.notifier).getQuizzesToTake();
   }
 
-  Widget _buildBody(BuildContext context, List<RemarkModel> remarks) {
+  List<_PieChartData> remarkModelToPieChartData(
+      {required List<RemarkModel> remarksModel}) {
+    Map<String?, int> reviewMethods = {};
+
+    for (var remark in remarksModel) {
+      reviewMethods[remark.leitnerRemark?.reviewMethod] =
+          (reviewMethods[remark.leitnerRemark?.reviewMethod] ?? 0) + 1;
+      reviewMethods[remark.feynmanRemark?.reviewMethod] =
+          (reviewMethods[remark.feynmanRemark?.reviewMethod] ?? 0) + 1;
+    }
+
+    return reviewMethods.entries
+        .where((entry) => entry.key != null)
+        .map((entry) => _PieChartData(entry.key!, entry.value))
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: FutureBuilder(
+      future:
+          Future.wait([lineChartRemarks, flashcardsToReview, quizzesToTake]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data![0].length < 10) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/cat.png',
+                      height: 40.h,
+                      width: 100.w,
+                    ),
+                    Text(
+                        'Not enough data to show analytics, Please continue using the app.',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontSize: 20.sp,
+                            )),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          pieChartRemarks =
+              remarkModelToPieChartData(remarksModel: snapshot.data![0]);
+
+          var data = _AnalyticsData(
+              remarks: snapshot.data![0],
+              flashcardsToReview: snapshot.data![1],
+              quizzesToTake: snapshot.data![2]);
+
+          return _buildBody(context, data);
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return const Center(child: Text('Error fetching data'));
+        }
+      },
+    ));
+  }
+
+  Widget _buildBody(BuildContext context, _AnalyticsData data) {
     // wait until the data is fetched
     return Container(
       color: AppColors.secondary,
@@ -134,11 +202,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         ),
                         series: [
                           _buildLineSeries(
-                              remarks: remarks,
+                              remarks: data.remarks,
                               legendItemText: "Leitner S.",
                               reviewMethod: LeitnerSystemModel.name),
                           _buildLineSeries(
-                              remarks: remarks,
+                              remarks: data.remarks,
                               legendItemText: "Feynman T.",
                               reviewMethod: FeynmanModel.name)
                         ]),
@@ -203,7 +271,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('$flashcardsToReview',
+                                      Text('${data.flashcardsToReview}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayLarge
@@ -240,7 +308,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('6',
+                                      Text('${data.quizzesToTake}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayLarge
@@ -300,60 +368,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: FutureBuilder(
-      future: lineChartRemarks,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.data!.length < 10) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/cat.png',
-                      height: 40.h,
-                      width: 100.w,
-                    ),
-                    Text(
-                        'Not enough data to show analytics, Please continue using the app.',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontSize: 20.sp,
-                            )),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          Map<String?, int> reviewMethods = {};
-
-          for (var remark in snapshot.data as List<RemarkModel>) {
-            reviewMethods[remark.leitnerRemark?.reviewMethod] =
-                (reviewMethods[remark.leitnerRemark?.reviewMethod] ?? 0) + 1;
-            reviewMethods[remark.feynmanRemark?.reviewMethod] =
-                (reviewMethods[remark.feynmanRemark?.reviewMethod] ?? 0) + 1;
-          }
-
-          pieChartRemarks = reviewMethods.entries
-              .where((entry) => entry.key != null)
-              .map((entry) => _PieChartData(entry.key!, entry.value))
-              .toList();
-
-          return _buildBody(context, snapshot.data as List<RemarkModel>);
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return const Center(child: Text('Error fetching data'));
-        }
-      },
-    ));
-  }
-
   LineSeries _buildLineSeries(
       {required List<RemarkModel> remarks,
       required String legendItemText,
@@ -386,6 +400,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           }
         });
   }
+}
+
+class _AnalyticsData {
+  final List<RemarkModel> remarks;
+  final int flashcardsToReview;
+  final int quizzesToTake;
+
+  _AnalyticsData(
+      {required this.remarks,
+      required this.flashcardsToReview,
+      required this.quizzesToTake});
 }
 
 class _PieChartData {

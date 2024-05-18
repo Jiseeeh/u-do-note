@@ -6,6 +6,7 @@ import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/data/repositories/remark_repository_impl.dart';
 import 'package:u_do_note/features/analytics/domain/repositories/remark_repository.dart';
 import 'package:u_do_note/features/analytics/domain/usecases/get_flashcards_to_review.dart';
+import 'package:u_do_note/features/analytics/domain/usecases/get_quizzes_to_review.dart';
 import 'package:u_do_note/features/analytics/domain/usecases/get_remarks.dart';
 
 part 'analytics_screen_provider.g.dart';
@@ -40,6 +41,13 @@ GetFlashcardsToReview getFlashcardsToReview(GetFlashcardsToReviewRef ref) {
 }
 
 @riverpod
+GetQuizzesToTake getQuizzesToTake(GetQuizzesToTakeRef ref) {
+  var repository = ref.read(remarkRepositoryProvider);
+
+  return GetQuizzesToTake(repository);
+}
+
+@riverpod
 class AnalyticsScreen extends _$AnalyticsScreen {
   @override
   void build() {
@@ -61,5 +69,13 @@ class AnalyticsScreen extends _$AnalyticsScreen {
 
     return failureOrFlashcards.fold(
         (failure) => "N/A", (flashcards) => flashcards);
+  }
+
+  Future<dynamic> getQuizzesToTake() async {
+    final getQuizzesToTake = ref.read(getQuizzesToTakeProvider);
+
+    var failureOrQuizzes = await getQuizzesToTake();
+
+    return failureOrQuizzes.fold((failure) => "N/A", (quizzes) => quizzes);
   }
 }

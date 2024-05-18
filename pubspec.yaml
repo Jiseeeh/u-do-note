@@ -57,8 +57,9 @@ dev_dependencies:
 
 flutter:
   assets:
-    - lib/assets/
     - assets/
+    - assets/images/
+    - lib/assets/
     - lib/assets/images/
     - lib/assets/images/onboard/
   uses-material-design: true

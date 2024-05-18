@@ -65,6 +65,42 @@ class RemarkRemoteDataSource {
     return remarkModels;
   }
 
+  Future<int> getFlashcardsToReview() async {
+    var userId = _auth.currentUser!.uid;
+
+    var userNotes = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .get();
+
+    int flashcardsToReview = 0;
+
+    for (var userNote in userNotes.docs) {
+      var leitnerRemarkSnaps = await _getRemarkSnapshots(
+          noteId: userNote.id, reviewMethod: LeitnerSystemModel.name);
+
+      for (var remarkSnap in leitnerRemarkSnaps.docs) {
+        var doc = remarkSnap.data();
+
+        if (doc['score'].toString().isEmpty ||
+            doc['remark'].toString().isEmpty) {
+          flashcardsToReview++;
+        } else if ((doc['next_review'] as Timestamp)
+                .toDate()
+                .toUtc()
+                .isBefore(DateTime.now().toUtc()) ||
+            (doc['next_review'] as Timestamp)
+                .toDate()
+                .toUtc()
+                .isAtSameMomentAs(DateTime.now().toUtc())) {
+          flashcardsToReview++;
+        }
+      }
+    }
+    return flashcardsToReview;
+  }
+
   Future<QuerySnapshot<Map<String, dynamic>>> _getRemarkSnapshots(
       {required String noteId, required String reviewMethod}) async {
     var userId = _auth.currentUser!.uid;

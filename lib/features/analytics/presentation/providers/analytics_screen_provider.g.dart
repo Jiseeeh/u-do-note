@@ -53,7 +53,25 @@ final getRemarksProvider = AutoDisposeProvider<GetRemarks>.internal(
 );
 
 typedef GetRemarksRef = AutoDisposeProviderRef<GetRemarks>;
-String _$analyticsScreenHash() => r'c987106b167656a06b2dbb04e512bbabe2ddfda8';
+String _$getFlashcardsToReviewHash() =>
+    r'3de7a0a857f6b1732a95952e5c02521e56fe0400';
+
+/// See also [getFlashcardsToReview].
+@ProviderFor(getFlashcardsToReview)
+final getFlashcardsToReviewProvider =
+    AutoDisposeProvider<GetFlashcardsToReview>.internal(
+  getFlashcardsToReview,
+  name: r'getFlashcardsToReviewProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getFlashcardsToReviewHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetFlashcardsToReviewRef
+    = AutoDisposeProviderRef<GetFlashcardsToReview>;
+String _$analyticsScreenHash() => r'074b08f1e0ce8370c6127ec694478bf70932506f';
 
 /// See also [AnalyticsScreen].
 @ProviderFor(AnalyticsScreen)

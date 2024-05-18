@@ -23,6 +23,7 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   List<_PieChartData> pieChartRemarks = [];
   bool isAnalysisVisible = true;
+  dynamic flashcardsToReview;
   late Future<List<RemarkModel>> lineChartRemarks;
   late TooltipBehavior tooltipBehavior;
   late ZoomPanBehavior _zoomPanBehavior;
@@ -39,6 +40,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       enableMouseWheelZooming: true,
     );
 
+    getGridStats();
     initRemarks();
   }
 
@@ -46,6 +48,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     lineChartRemarks = ref.read(analyticsScreenProvider.notifier).getRemarks();
 
     setState(() {});
+  }
+
+  void getGridStats() async {
+    flashcardsToReview = await ref.read(analyticsScreenProvider.notifier).getFlashcardsToReview();
   }
 
   Widget _buildBody(BuildContext context, List<RemarkModel> remarks) {
@@ -197,7 +203,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('16',
+                                      Text('$flashcardsToReview',
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayLarge

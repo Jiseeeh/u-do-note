@@ -21,4 +21,15 @@ class RemarkRepositoryImpl implements RemarkRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+  
+  @override
+  Future<Either<Failure, int>> getFlashcardsToReview() async{
+    try {
+      var flashcardsToReview = await _leitnerSystemRemarkDataSource.getFlashcardsToReview();
+
+      return Right(flashcardsToReview);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

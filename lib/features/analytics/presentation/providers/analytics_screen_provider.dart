@@ -5,6 +5,7 @@ import 'package:u_do_note/features/analytics/data/datasources/remark_remote_data
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/data/repositories/remark_repository_impl.dart';
 import 'package:u_do_note/features/analytics/domain/repositories/remark_repository.dart';
+import 'package:u_do_note/features/analytics/domain/usecases/get_flashcards_to_review.dart';
 import 'package:u_do_note/features/analytics/domain/usecases/get_remarks.dart';
 
 part 'analytics_screen_provider.g.dart';
@@ -32,6 +33,13 @@ GetRemarks getRemarks(GetRemarksRef ref) {
 }
 
 @riverpod
+GetFlashcardsToReview getFlashcardsToReview(GetFlashcardsToReviewRef ref) {
+  var repository = ref.read(remarkRepositoryProvider);
+
+  return GetFlashcardsToReview(repository);
+}
+
+@riverpod
 class AnalyticsScreen extends _$AnalyticsScreen {
   @override
   void build() {
@@ -44,5 +52,14 @@ class AnalyticsScreen extends _$AnalyticsScreen {
     var failureOrRemarksModel = await getRemarks();
 
     return failureOrRemarksModel.fold((failure) => [], (remarks) => remarks);
+  }
+
+  Future<dynamic> getFlashcardsToReview() async {
+    final getFlashcardsToReview = ref.read(getFlashcardsToReviewProvider);
+
+    var failureOrFlashcards = await getFlashcardsToReview();
+
+    return failureOrFlashcards.fold(
+        (failure) => "N/A", (flashcards) => flashcards);
   }
 }

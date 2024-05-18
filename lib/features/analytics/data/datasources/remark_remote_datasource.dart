@@ -16,7 +16,7 @@ class RemarkRemoteDataSource {
 
   RemarkRemoteDataSource(this._firestore, this._auth);
 
-  Future<List<RemarkModel>> getLeitnerSystemRemarks() async {
+  Future<List<RemarkModel>> getRemarks() async {
     var userId = _auth.currentUser!.uid;
 
     var userNotes = await _firestore

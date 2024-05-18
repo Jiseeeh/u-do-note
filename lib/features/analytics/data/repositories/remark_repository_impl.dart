@@ -14,7 +14,7 @@ class RemarkRepositoryImpl implements RemarkRepository {
   Future<Either<Failure, List<RemarkModel>>> getRemarks() async {
     try {
       var leitnerRemarkModel =
-          await _leitnerSystemRemarkDataSource.getLeitnerSystemRemarks();
+          await _leitnerSystemRemarkDataSource.getRemarks();
 
       return Right(leitnerRemarkModel);
     } catch (e) {

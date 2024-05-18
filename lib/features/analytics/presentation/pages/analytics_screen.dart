@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
@@ -21,7 +22,8 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
 }
 
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
-  List<RemarkModel> remarksModel = [];
+  List<RemarkModel> lineChartRemarks = [];
+  List<_PieChartData> pieChartRemarks = [];
   late TooltipBehavior tooltipBehavior;
   late ZoomPanBehavior _zoomPanBehavior;
 
@@ -36,15 +38,58 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       enableDoubleTapZooming: true,
       enableMouseWheelZooming: true,
     );
+
     initRemarks();
   }
 
   void initRemarks() async {
-    remarksModel = await ref
-        .read(analyticsScreenProvider.notifier)
-        .getLeitnerSystemRemarks();
+    lineChartRemarks =
+        await ref.read(analyticsScreenProvider.notifier).getRemarks();
+
+    Map<String?, int> reviewMethods = {};
+
+    for (var remark in lineChartRemarks) {
+      reviewMethods[remark.leitnerRemark?.reviewMethod] =
+          (reviewMethods[remark.leitnerRemark?.reviewMethod] ?? 0) + 1;
+      reviewMethods[remark.feynmanRemark?.reviewMethod] =
+          (reviewMethods[remark.feynmanRemark?.reviewMethod] ?? 0) + 1;
+    }
+
+    pieChartRemarks = reviewMethods.entries
+        .where((entry) => entry.key != null)
+        .map((entry) => _PieChartData(entry.key!, entry.value))
+        .toList();
+
+    logger.w("counts $reviewMethods");
+
+    showAnalysisModalBottomSheet();
 
     setState(() {});
+  }
+
+  void showAnalysisModalBottomSheet() {
+    // TODO: using shared prefs, show this modal only in intervals
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) => Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30))),
+              child: Row(
+                children: [
+                  const Icon(Icons.lightbulb),
+                  Expanded(
+                    child: Text(
+                        'Your performance is good, you are doing great in Leitner System but it seems you need to improve in Feynman Technique. Keep going!',
+                        style: Theme.of(context).textTheme.bodyMedium),
+                  ),
+                ],
+              ),
+            ));
   }
 
   @override
@@ -107,12 +152,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     topRight: Radius.circular(30),
                   ),
                 ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SfCartesianChart(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(children: [
+                      const SizedBox(height: 5),
+                      SfCartesianChart(
                           title: ChartTitle(
                               text: 'Scores in Different Strategies',
                               textStyle: Theme.of(context)
@@ -136,8 +181,122 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 legendItemText: "Feynman T.",
                                 reviewMethod: FeynmanModel.name)
                           ]),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: (100.w / 100.h) / 0.4,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                  color: AppColors.lightGrey,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.assignment),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text('16',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge
+                                                ?.copyWith(
+                                                  color: AppColors.black,
+                                                  fontSize: 25.sp,
+                                                )),
+                                        const SizedBox(height: 5),
+                                        Text('Flashcard to review',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelSmall
+                                                ?.copyWith(
+                                                  color: AppColors.grey,
+                                                )),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                  color: AppColors.lightGrey,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.quiz_rounded),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text('6',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge
+                                                ?.copyWith(
+                                                  color: AppColors.black,
+                                                  fontSize: 25.sp,
+                                                )),
+                                        const SizedBox(height: 5),
+                                        Text('Quizzes to take',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelSmall
+                                                ?.copyWith(
+                                                  color: AppColors.grey,
+                                                )),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SfCircularChart(
+                        title: ChartTitle(
+                            text: 'Review Strategies Distribution',
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .displayMedium
+                                ?.copyWith(fontSize: 17.sp)),
+                        tooltipBehavior: tooltipBehavior,
+                        legend: const Legend(
+                            isVisible: true,
+                            overflowMode: LegendItemOverflowMode.wrap),
+                        series: <CircularSeries>[
+                          PieSeries<_PieChartData, String>(
+                            dataSource: pieChartRemarks,
+                            dataLabelSettings: const DataLabelSettings(
+                                isVisible: true,
+                                labelPosition: ChartDataLabelPosition.outside),
+                            name: "Review Strategies",
+                            enableTooltip: true,
+                            explode: true,
+                            xValueMapper: (_PieChartData data, _) =>
+                                data.reviewMethod,
+                            yValueMapper: (_PieChartData data, _) => data.count,
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 5.h)
+                    ]),
+                  ),
                 ))
           ],
         ),
@@ -148,7 +307,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   LineSeries _buildLineSeries(
       {required String legendItemText, required String reviewMethod}) {
     return LineSeries<RemarkModel, DateTime>(
-        dataSource: remarksModel,
+        dataSource: lineChartRemarks,
         markerSettings: const MarkerSettings(isVisible: true),
         legendItemText: legendItemText,
         name: reviewMethod,
@@ -175,4 +334,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           }
         });
   }
+}
+
+class _PieChartData {
+  final String reviewMethod;
+  final int count;
+
+  _PieChartData(this.reviewMethod, this.count);
 }

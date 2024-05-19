@@ -247,7 +247,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               ],
                             ),
                           )
-                        : SizedBox(height: 1.0.h),
+                        : const SizedBox(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GridView.count(

@@ -45,14 +45,14 @@ class AppTheme {
         primary: AppColors.primary,
         secondary: AppColors.lightGrey,
         error: AppColors.error,
-        background: AppColors.black,
+        background: AppColors.primary,
       ),
-      scaffoldBackgroundColor: AppColors.black,
+      scaffoldBackgroundColor: AppColors.primary,
       textTheme: TextThemes.darkTextTheme,
       primaryTextTheme: TextThemes.primaryTextTheme,
       appBarTheme: const AppBarTheme(
         elevation: 0,
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.primary,
         titleTextStyle: AppTextStyles.h2,
       ),
     );

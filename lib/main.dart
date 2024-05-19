@@ -39,7 +39,7 @@ class MainApp extends ConsumerWidget {
     final themeMode = ref.watch(appThemeProvider);
     return MaterialApp.router(
       title: 'U Do Note',
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
       routerConfig: appRouter.config(),

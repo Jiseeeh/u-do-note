@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
@@ -29,6 +30,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   bool isAnalysisVisible = true;
   bool willShowAnalysis = false;
   bool isLoading = true;
+  String lastAnalysisAgo = '';
   dynamic flashcardsToReview;
   dynamic quizzesToTake;
   List<RemarkModel> lineChartRemarks = [];
@@ -80,10 +82,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           isAnalysisVisible = true;
         });
 
+        await prefs.set('last_analysis', now);
         await prefs.set('next_analysis', now.add(const Duration(days: 1)));
         return true;
       } else {
         var data = await prefs.get('analytics_data');
+        var lastAnalysis = await prefs.get('last_analysis');
 
         if (data != null) {
           var analyticsData =
@@ -94,6 +98,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             pieChartRemarks = analyticsData.pieChartData;
             flashcardsToReview = analyticsData.flashcardsToReview;
             quizzesToTake = analyticsData.quizzesToTake;
+            lastAnalysisAgo =
+                timeago.format(DateTime.parse(lastAnalysis.toString()));
             isLoading = false;
           });
         }
@@ -101,6 +107,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         return false;
       }
     } else {
+      await prefs.set('last_analysis', now);
       await prefs.set('next_analysis', now.add(const Duration(days: 1)));
 
       return true;
@@ -216,7 +223,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 color: AppColors.white,
                               )),
                       const SizedBox(height: 5),
-                      Text('Last analysis: 2 days ago',
+                      Text('Last analysis: $lastAnalysisAgo',
                           style:
                               Theme.of(context).textTheme.labelLarge?.copyWith(
                                     color: AppColors.white,

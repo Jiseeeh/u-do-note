@@ -12,4 +12,25 @@ class RemarkDataModel {
     required this.score,
     required this.timestamp,
   });
+
+  /// Converts to a json object
+  Map<String, dynamic> toJson() {
+    return {
+      'reviewMethod': reviewMethod,
+      'remark': remark,
+      'score': score,
+      'timestamp': timestamp.toDate().toString(),
+    };
+  }
+
+
+  /// Converts from json to a RemarkDataModel
+  factory RemarkDataModel.fromJson(Map<String, dynamic> json) {
+    return RemarkDataModel(
+      reviewMethod: json['reviewMethod'],
+      remark: json['remark'],
+      score: json['score'],
+      timestamp: Timestamp.fromDate(DateTime.parse(json['timestamp'])),
+    );
+  }
 }

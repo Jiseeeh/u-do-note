@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/presentation/providers/analytics_screen_provider.dart';
@@ -23,9 +27,11 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   List<_PieChartData> pieChartRemarks = [];
   bool isAnalysisVisible = true;
-  late Future<dynamic> flashcardsToReview;
-  late Future<dynamic> quizzesToTake;
-  late Future<List<RemarkModel>> lineChartRemarks;
+  bool willShowAnalysis = false;
+  bool isLoading = true;
+  dynamic flashcardsToReview;
+  dynamic quizzesToTake;
+  List<RemarkModel> lineChartRemarks = [];
   late TooltipBehavior tooltipBehavior;
   late ZoomPanBehavior _zoomPanBehavior;
 
@@ -41,19 +47,95 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       enableMouseWheelZooming: true,
     );
 
-    initGridStats();
-    initRemarks();
+    initData();
   }
 
-  void initRemarks() {
-    lineChartRemarks = ref.read(analyticsScreenProvider.notifier).getRemarks();
+  void initData() async {
+    var willFetch = await willFetchNewAnalysis();
+
+    if (willFetch) {
+      lineChartRemarks =
+          await ref.read(analyticsScreenProvider.notifier).getRemarks();
+
+      pieChartRemarks =
+          remarkModelToPieChartData(remarksModel: lineChartRemarks);
+
+      initGridStats();
+    }
   }
 
-  void initGridStats() {
-    flashcardsToReview =
-        ref.read(analyticsScreenProvider.notifier).getFlashcardsToReview();
+  Future<bool> willFetchNewAnalysis() async {
+    var prefs = ref.read(sharedPrefsProvider.notifier);
+    var now = DateTime.now();
+
+    var hasCache = await prefs.has('analytics_data');
+
+    if (hasCache) {
+      var nextAnalysis = await prefs.get('next_analysis');
+      var nextAnalysisDate = DateTime.parse(nextAnalysis.toString());
+
+      if (nextAnalysisDate.toUtc().isBefore(now) ||
+          nextAnalysisDate.toUtc().isAtSameMomentAs(now)) {
+        setState(() {
+          isAnalysisVisible = true;
+        });
+
+        await prefs.set('next_analysis', now.add(const Duration(days: 1)));
+        return true;
+      } else {
+        var data = await prefs.get('analytics_data');
+
+        if (data != null) {
+          var analyticsData =
+              _AnalyticsData.fromJson(jsonDecode(data.toString()));
+
+          setState(() {
+            lineChartRemarks = analyticsData.lineChartRemarks;
+            pieChartRemarks = analyticsData.pieChartData;
+            flashcardsToReview = analyticsData.flashcardsToReview;
+            quizzesToTake = analyticsData.quizzesToTake;
+            isLoading = false;
+          });
+        }
+
+        return false;
+      }
+    } else {
+      await prefs.set('next_analysis', now.add(const Duration(days: 1)));
+
+      return true;
+    }
+  }
+
+  void initGridStats() async {
+    flashcardsToReview = await ref
+        .read(analyticsScreenProvider.notifier)
+        .getFlashcardsToReview();
     quizzesToTake =
-        ref.read(analyticsScreenProvider.notifier).getQuizzesToTake();
+        await ref.read(analyticsScreenProvider.notifier).getQuizzesToTake();
+
+    saveAnalyticsDataToLocal();
+
+    setState(() {
+      willShowAnalysis = true;
+      isLoading = false;
+    });
+  }
+
+  void saveAnalyticsDataToLocal() {
+    var prefs = ref.read(sharedPrefsProvider.notifier);
+
+    var analyticsData = _AnalyticsData(
+        lineChartRemarks: lineChartRemarks,
+        pieChartData: pieChartRemarks,
+        flashcardsToReview: flashcardsToReview,
+        quizzesToTake: quizzesToTake);
+
+    var json = analyticsData.toJson();
+
+    var encodedAnalyticsData = jsonEncode(json);
+
+    prefs.set('analytics_data', encodedAnalyticsData);
   }
 
   List<_PieChartData> remarkModelToPieChartData(
@@ -75,54 +157,33 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: FutureBuilder(
-      future:
-          Future.wait([lineChartRemarks, flashcardsToReview, quizzesToTake]),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.data![0].length < 10) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/cat.png',
-                      height: 40.h,
-                      width: 100.w,
-                    ),
-                    Text(
-                        'Not enough data to show analytics, Please continue using the app.',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontSize: 20.sp,
-                            )),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          pieChartRemarks =
-              remarkModelToPieChartData(remarksModel: snapshot.data![0]);
-
-          var data = _AnalyticsData(
-              remarks: snapshot.data![0],
-              flashcardsToReview: snapshot.data![1],
-              quizzesToTake: snapshot.data![2]);
-
-          return _buildBody(context, data);
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return const Center(child: Text('Error fetching data'));
-        }
-      },
-    ));
+    return Skeletonizer(
+        enabled: isLoading, child: Scaffold(body: _buildBody(context)));
   }
 
-  Widget _buildBody(BuildContext context, _AnalyticsData data) {
+  Widget _buildBody(BuildContext context) {
+    if (lineChartRemarks.length < 10) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/cat.png',
+                height: 40.h,
+                width: 100.w,
+              ),
+              Text(
+                  'Not enough data to show analytics, Please continue using the app.',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontSize: 20.sp,
+                      )),
+            ],
+          ),
+        ),
+      );
+    }
     // wait until the data is fetched
     return Container(
       color: AppColors.secondary,
@@ -202,52 +263,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         ),
                         series: [
                           _buildLineSeries(
-                              remarks: data.remarks,
+                              remarks: lineChartRemarks,
                               legendItemText: "Leitner S.",
                               reviewMethod: LeitnerSystemModel.name),
                           _buildLineSeries(
-                              remarks: data.remarks,
+                              remarks: lineChartRemarks,
                               legendItemText: "Feynman T.",
                               reviewMethod: FeynmanModel.name)
                         ]),
-                    isAnalysisVisible
-                        ? Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.lightbulb),
-                                SizedBox(width: 5.w),
-                                Expanded(
-                                  child: Text(
-                                      'This is a sample text. This will be shown in intervals to give you insights about your performance.',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium),
-                                ),
-                                SizedBox(
-                                  height: 10.h,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.close_rounded),
-                                        onPressed: () {
-                                          setState(() {
-                                            isAnalysisVisible = false;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        : const SizedBox(),
+                    _buildAnalysisBanner(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GridView.count(
@@ -271,7 +295,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('${data.flashcardsToReview}',
+                                      Text('$flashcardsToReview',
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayLarge
@@ -308,7 +332,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('${data.quizzesToTake}',
+                                      Text('$quizzesToTake',
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayLarge
@@ -368,6 +392,45 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     );
   }
 
+  Widget _buildAnalysisBanner() {
+    if (willShowAnalysis && isAnalysisVisible) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+            color: AppColors.white, borderRadius: BorderRadius.circular(8)),
+        child: Row(
+          children: [
+            const Icon(Icons.lightbulb),
+            SizedBox(width: 5.w),
+            Expanded(
+              child: Text(
+                  'This is a sample text. This will be shown in intervals to give you insights about your performance.',
+                  style: Theme.of(context).textTheme.bodyMedium),
+            ),
+            SizedBox(
+              height: 10.h,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.close_rounded),
+                    onPressed: () {
+                      setState(() {
+                        isAnalysisVisible = false;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
   LineSeries _buildLineSeries(
       {required List<RemarkModel> remarks,
       required String legendItemText,
@@ -403,14 +466,39 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 }
 
 class _AnalyticsData {
-  final List<RemarkModel> remarks;
-  final int flashcardsToReview;
-  final int quizzesToTake;
+  final List<RemarkModel> lineChartRemarks;
+  final List<_PieChartData> pieChartData;
+  final dynamic flashcardsToReview;
+  final dynamic quizzesToTake;
 
   _AnalyticsData(
-      {required this.remarks,
+      {required this.lineChartRemarks,
+      required this.pieChartData,
       required this.flashcardsToReview,
       required this.quizzesToTake});
+
+  /// Converts to a json object
+  Map<String, dynamic> toJson() {
+    return {
+      'lineChartRemarks': lineChartRemarks.map((e) => e.toJson()).toList(),
+      'pieChartData': pieChartData.map((e) => e.toJson()).toList(),
+      'flashcardsToReview': flashcardsToReview,
+      'quizzesToTake': quizzesToTake
+    };
+  }
+
+  /// Converts from json to _AnalyticsData
+  factory _AnalyticsData.fromJson(Map<String, dynamic> json) {
+    return _AnalyticsData(
+        lineChartRemarks: (json['lineChartRemarks'] as List)
+            .map((e) => RemarkModel.fromJson(e))
+            .toList(),
+        pieChartData: (json['pieChartData'] as List)
+            .map((e) => _PieChartData.fromJson(e))
+            .toList(),
+        flashcardsToReview: json['flashcardsToReview'],
+        quizzesToTake: json['quizzesToTake']);
+  }
 }
 
 class _PieChartData {
@@ -418,4 +506,17 @@ class _PieChartData {
   final int count;
 
   _PieChartData(this.reviewMethod, this.count);
+
+  /// Converts to a json object
+  Map<String, dynamic> toJson() {
+    return {
+      'reviewMethod': reviewMethod,
+      'count': count,
+    };
+  }
+
+  /// Converts from json to _PieChartData
+  factory _PieChartData.fromJson(Map<String, dynamic> json) {
+    return _PieChartData(json['reviewMethod'], json['count']);
+  }
 }

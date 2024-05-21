@@ -9,6 +9,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/performance_state.dart';
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
@@ -31,6 +33,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   bool willShowAnalysis = false;
   bool isLoading = true;
   String analysis = '';
+  String performanceState = '';
   String lastAnalysisAgo = '';
   dynamic flashcardsToReview;
   dynamic quizzesToTake;
@@ -130,7 +133,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     saveAnalyticsDataToLocal();
 
     setState(() {
-      analysis = analysisContent;
+      if (analysisContent is Failure) {
+        analysis = "Failed to get analysis, Please try again later.";
+      } else {
+        var json = jsonDecode(analysisContent);
+
+        analysis = json['content'];
+        performanceState = json['state'];
+      }
+
       willShowAnalysis = true;
       isLoading = false;
     });
@@ -239,7 +250,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                   )),
                     ]),
                 Icon(
-                  Icons.trending_up,
+                  performanceState == PerformanceState.improving.name
+                      ? Icons.trending_up_rounded
+                      : performanceState == PerformanceState.stagnant.name
+                          ? Icons.trending_flat_rounded
+                          : Icons.trending_down_rounded,
                   color: AppColors.white,
                   size: 20.0.w,
                 )

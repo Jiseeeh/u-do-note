@@ -7,4 +7,5 @@ abstract class RemarkRepository {
   Future<Either<Failure, List<RemarkModel>>> getRemarks();
   Future<Either<Failure, int>> getFlashcardsToReview();
   Future<Either<Failure, int>> getQuizzesToTake();
+  Future<Either<Failure, String>> getAnalysis(List<RemarkModel> remarksModel);
 }

@@ -42,4 +42,16 @@ class RemarkRepositoryImpl implements RemarkRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> getAnalysis(
+      List<RemarkModel> remarksModel) async {
+    try {
+      var analysis = await _remarkDataSource.getAnalysis(remarksModel);
+
+      return Right(analysis);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

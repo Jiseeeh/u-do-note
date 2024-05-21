@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
@@ -133,6 +134,74 @@ class RemarkRemoteDataSource {
     }
 
     return quizzesToTake;
+  }
+
+  Future<String> getAnalysis(List<RemarkModel> remarksModel) async {
+    String remarks = "";
+
+    for (var i = 0; i < remarksModel.length; i++) {
+      remarks += "${remarksModel[i].toString()}\n";
+    }
+
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(
+          """
+          You are an analyst. You will be given a set of remarks of each learning strategy of the student.
+          Your task is to analyze the remarks and provide a summary, of the student's learning progress and also predict the student's future performance.
+          Your response should be in json format with the properties 'content' which includes the summary and the prediction or insight. Next is the 'state' that determines if the student is 'improving', 'stagnant' or 'declining'.
+          """,
+        ),
+      ],
+      role: OpenAIChatMessageRole.system,
+    );
+
+    final assistantMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text("""
+          {
+            "content": "You are doing great in Leitner System but it seems you have have some challenges with Feynman Technique. You should try to improve on that. You are on the right track. Keep it up!",
+            "state": "improving"  
+          }
+          """),
+      ],
+      role: OpenAIChatMessageRole.assistant,
+    );
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text("""
+          Here are my remarks, please analyze them and provide me a summary of my learning progress and predict my future performance.
+
+          $remarks
+          """),
+      ],
+      role: OpenAIChatMessageRole.user,
+    );
+
+    var requestMessages = [
+      systemMessage,
+      assistantMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-3.5-turbo-0125",
+      seed: 6,
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 500,
+    );
+
+    logger.d(chatCompletion.choices.first.message);
+    logger.d(chatCompletion.systemFingerprint);
+    logger.d(chatCompletion.usage.promptTokens);
+    logger.d(chatCompletion.id);
+
+    String json = chatCompletion.choices.first.message.content!.first.text!;
+
+    return json;
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>> _getRemarkSnapshots(

@@ -30,6 +30,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   bool isAnalysisVisible = true;
   bool willShowAnalysis = false;
   bool isLoading = true;
+  String analysis = '';
   String lastAnalysisAgo = '';
   dynamic flashcardsToReview;
   dynamic quizzesToTake;
@@ -107,6 +108,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         return false;
       }
     } else {
+      lastAnalysisAgo = timeago.format(now);
+
       await prefs.set('last_analysis', now);
       await prefs.set('next_analysis', now.add(const Duration(days: 1)));
 
@@ -120,10 +123,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         .getFlashcardsToReview();
     quizzesToTake =
         await ref.read(analyticsScreenProvider.notifier).getQuizzesToTake();
+    var analysisContent = await ref
+        .read(analyticsScreenProvider.notifier)
+        .getAnalysis(lineChartRemarks);
 
     saveAnalyticsDataToLocal();
 
     setState(() {
+      analysis = analysisContent;
       willShowAnalysis = true;
       isLoading = false;
     });
@@ -164,12 +171,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Skeletonizer(
-        enabled: isLoading, child: Scaffold(body: _buildBody(context)));
-  }
-
-  Widget _buildBody(BuildContext context) {
-    if (lineChartRemarks.length < 10) {
+    if (isLoading) {
+      return Skeletonizer(child: Scaffold(body: _buildBody(context)));
+    } else if (!isLoading && lineChartRemarks.length < 10) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -190,7 +194,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           ),
         ),
       );
+    } else {
+      return Scaffold(body: _buildBody(context));
     }
+  }
+
+  Widget _buildBody(BuildContext context) {
     // wait until the data is fetched
     return Container(
       color: AppColors.secondary,
@@ -410,9 +419,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             const Icon(Icons.lightbulb),
             SizedBox(width: 5.w),
             Expanded(
-              child: Text(
-                  'This is a sample text. This will be shown in intervals to give you insights about your performance.',
-                  style: Theme.of(context).textTheme.bodyMedium),
+              child:
+                  Text(analysis, style: Theme.of(context).textTheme.bodyMedium),
             ),
             SizedBox(
               height: 10.h,

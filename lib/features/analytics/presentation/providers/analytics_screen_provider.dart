@@ -1,10 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/analytics/data/datasources/remark_remote_datasource.dart';
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/data/repositories/remark_repository_impl.dart';
 import 'package:u_do_note/features/analytics/domain/repositories/remark_repository.dart';
+import 'package:u_do_note/features/analytics/domain/usecases/get_analysis.dart';
 import 'package:u_do_note/features/analytics/domain/usecases/get_flashcards_to_review.dart';
 import 'package:u_do_note/features/analytics/domain/usecases/get_quizzes_to_review.dart';
 import 'package:u_do_note/features/analytics/domain/usecases/get_remarks.dart';
@@ -48,6 +50,13 @@ GetQuizzesToTake getQuizzesToTake(GetQuizzesToTakeRef ref) {
 }
 
 @riverpod
+GetAnalysis getAnalysis(GetAnalysisRef ref) {
+  var repository = ref.read(remarkRepositoryProvider);
+
+  return GetAnalysis(repository);
+}
+
+@riverpod
 class AnalyticsScreen extends _$AnalyticsScreen {
   @override
   void build() {
@@ -77,5 +86,16 @@ class AnalyticsScreen extends _$AnalyticsScreen {
     var failureOrQuizzes = await getQuizzesToTake();
 
     return failureOrQuizzes.fold((failure) => "N/A", (quizzes) => quizzes);
+  }
+
+  Future<String> getAnalysis(List<RemarkModel> remarksModel) async {
+    final getAnalysis = ref.read(getAnalysisProvider);
+
+    var failureOrAnalysis = await getAnalysis(remarksModel);
+
+    return failureOrAnalysis.fold((failure) {
+      logger.w("Failed to get analysis: ${failure.message}");
+      return "N/A";
+    }, (analysis) => analysis);
   }
 }

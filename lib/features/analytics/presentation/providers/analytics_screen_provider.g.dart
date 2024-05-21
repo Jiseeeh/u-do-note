@@ -86,7 +86,21 @@ final getQuizzesToTakeProvider = AutoDisposeProvider<GetQuizzesToTake>.internal(
 );
 
 typedef GetQuizzesToTakeRef = AutoDisposeProviderRef<GetQuizzesToTake>;
-String _$analyticsScreenHash() => r'19cd7f4b99d0be2fd2a234871dcc1f271a1c405b';
+String _$getAnalysisHash() => r'872ef6fc6314a9fffe007abf9e64bc73be951bcd';
+
+/// See also [getAnalysis].
+@ProviderFor(getAnalysis)
+final getAnalysisProvider = AutoDisposeProvider<GetAnalysis>.internal(
+  getAnalysis,
+  name: r'getAnalysisProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$getAnalysisHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetAnalysisRef = AutoDisposeProviderRef<GetAnalysis>;
+String _$analyticsScreenHash() => r'640a92544620387684e282cc43b0901a1c7d0a94';
 
 /// See also [AnalyticsScreen].
 @ProviderFor(AnalyticsScreen)

@@ -46,7 +46,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
     } else if (widget.notebookEntity != null && notebookCoverUrl.isNotEmpty) {
       return NetworkImage(notebookCoverUrl) as ImageProvider;
     } else {
-      return const AssetImage('lib/assets/chisaki.png');
+      return const AssetImage('assets/images/chisaki.png');
     }
   }
 

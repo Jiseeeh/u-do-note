@@ -274,7 +274,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   ReviewMethod(
                       title: 'Leitner System',
                       description: 'Use flashcards as a tool for learning.',
-                      imagePath: 'lib/assets/flashcard.png',
+                      imagePath: 'assets/images/flashcard.png',
                       buttonKey: leitnerBtnGlobalKey,
                       onPressed: () {
                         _leitnerOnPressed(context);
@@ -284,7 +284,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       title: 'Feynman Technique',
                       description:
                           'Explain a topic that a five (5) year old child can understand.',
-                      imagePath: 'lib/assets/feynman.png',
+                      imagePath: 'assets/images/feynman.png',
                       buttonKey: feynmanBtnGlobalKey,
                       onPressed: () {
                         _feynmanOnPressed(context);
@@ -294,7 +294,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       title: 'Pomodoro Technique',
                       description:
                           'Use a timer to break down work into intervals.',
-                      imagePath: 'lib/assets/pomodoro.png',
+                      imagePath: 'assets/images/pomodoro.png',
                       buttonKey: pomodoroBtnGlobalKey,
                       onPressed: () {}),
                 ])),

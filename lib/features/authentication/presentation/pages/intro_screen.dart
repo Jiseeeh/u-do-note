@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,7 +32,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       onFinish: () {
         Navigator.push(
           context,
-          CupertinoPageRoute(
+          MaterialPageRoute(
             builder: (context) => const SignUpScreen(),
           ),
         );
@@ -45,7 +45,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       trailingFunction: () {
         Navigator.push(
           context,
-          CupertinoPageRoute(
+          MaterialPageRoute(
             builder: (context) => const LoginScreen(),
           ),
         );
@@ -56,23 +56,23 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       // pageBackgroundColor: AppColors.primary,
       background: [
         Image.asset(
-          'lib/assets/images/onboard/page-1.png',
+          'assets/images/onboard/page-1.png',
           height: imgHeight,
         ),
         Image.asset(
-          'lib/assets/images/onboard/page-2.png',
+          'assets/images/onboard/page-2.png',
           height: imgHeight,
         ),
         Image.asset(
-          'lib/assets/images/onboard/page-3.png',
+          'assets/images/onboard/page-3.png',
           height: imgHeight,
         ),
         Image.asset(
-          'lib/assets/images/onboard/page-4.png',
+          'assets/images/onboard/page-4.png',
           height: imgHeight,
         ),
         Image.asset(
-          'lib/assets/images/onboard/page-5.png',
+          'assets/images/onboard/page-5.png',
           height: imgHeight,
         ),
       ],

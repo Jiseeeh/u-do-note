@@ -20,7 +20,7 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
       ReviewMethodEntity(
         title: 'Leitner System',
         description: 'Use flashcards as a tool for learning.',
-        imagePath: 'lib/assets/flashcard.png',
+        imagePath: 'assets/images/flashcard.png',
         onPressed: () async {
           var willContinue = await showDialog(
               context: context,
@@ -38,7 +38,7 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
         title: 'Feynman Technique',
         description:
             'Explain a topic that a five (5) year old child can understand.',
-        imagePath: 'lib/assets/feynman.png',
+        imagePath: 'assets/images/feynman.png',
         onPressed: () async {
           var willContinue = await showDialog(
               context: context,
@@ -94,7 +94,7 @@ class ReviewMethodNotifier extends _$ReviewMethodNotifier {
       ReviewMethodEntity(
         title: 'Pomodoro Technique',
         description: 'Use a timer to break down work into intervals.',
-        imagePath: 'lib/assets/pomodoro.png',
+        imagePath: 'assets/images/pomodoro.png',
         onPressed: () {},
       ),
     ];

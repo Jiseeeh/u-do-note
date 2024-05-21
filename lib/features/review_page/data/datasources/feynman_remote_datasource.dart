@@ -103,6 +103,7 @@ class FeynmanRemoteDataSource {
         .collection(FirestoreCollection.remarks.name)
         .add(<String, dynamic>{
       'title': feynmanModel.sessionName,
+      'created_at': feynmanModel.createdAt,
       'review_method': FeynmanModel.name,
       'content_from_pages': feynmanModel.contentFromPagesUsed,
       'messages':
@@ -257,7 +258,7 @@ class FeynmanRemoteDataSource {
   }
 
   Future<void> saveQuizResults(FeynmanModel feynmanModel, String notebookId,
-      String? newSessionName) async {
+      bool isFromOldSessionWithoutQuiz, String? newSessionName) async {
     var userId = _auth.currentUser!.uid;
 
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -322,6 +323,31 @@ class FeynmanRemoteDataSource {
     var decodedJson = json.decode(completionContent!);
 
     var remark = decodedJson['remark'];
+
+    if (isFromOldSessionWithoutQuiz) {
+      // ? instance when the user saved a session but did not start a quiz
+      // ? making the remark empty and the score 0
+      // ? but after quiz, the score will not be 0, but the remark is
+      // ? so we will just update the remark.
+      var userId = _auth.currentUser!.uid;
+
+      await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(notebookId)
+          .collection(FirestoreCollection.remarks.name)
+          .doc(feynmanModel.id)
+          .update({
+        'questions': feynmanModel.questions!
+            .map((question) => question.toJson())
+            .toList(),
+        'selected_answers_index': feynmanModel.selectedAnswersIndex,
+        'score': feynmanModel.score,
+        'remark': remark,
+      });
+      return;
+    }
 
     // ? if from old session, then make a new remark since
     // ? updating the old will overwrite the old remark

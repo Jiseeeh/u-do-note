@@ -8,6 +8,7 @@ class LeitnerSystemModel {
   final int? score;
   final String? userNotebookId;
   final String title;
+  final Timestamp createdAt;
   final Timestamp nextReview;
   final List<FlashcardModel> flashcards;
   static const String name = "Leitner System";
@@ -18,6 +19,7 @@ class LeitnerSystemModel {
       this.score,
       this.userNotebookId,
       required this.title,
+      required this.createdAt,
       required this.nextReview,
       required this.flashcards});
 
@@ -46,6 +48,7 @@ class LeitnerSystemModel {
           score: leitnerSystem.score,
           userNotebookId: leitnerSystem.userNotebookId,
           title: leitnerSystem.title,
+          createdAt: leitnerSystem.createdAt,
           nextReview: leitnerSystem.nextReview,
           flashcards: leitnerSystem.flashcards
               .map((flashcard) => FlashcardModel(
@@ -63,6 +66,7 @@ class LeitnerSystemModel {
       score: score,
       userNotebookId: userNotebookId,
       title: title,
+      createdAt: createdAt,
       nextReview: nextReview,
       flashcards: flashcards
           .map((flashcard) => FlashcardEntity(
@@ -81,6 +85,7 @@ class LeitnerSystemModel {
     return LeitnerSystemModel(
         id: id,
         title: data['title'],
+        createdAt: data['created_at'],
         remark: remark,
         score: score,
         nextReview: data['next_review'],
@@ -103,6 +108,7 @@ class LeitnerSystemModel {
     int? score,
     String? userNotebookId,
     String? title,
+    Timestamp? createdAt,
     Timestamp? nextReview,
     List<FlashcardModel>? flashcards,
   }) {
@@ -112,6 +118,7 @@ class LeitnerSystemModel {
       score: score ?? this.score,
       userNotebookId: userNotebookId ?? this.userNotebookId,
       title: title ?? this.title,
+      createdAt: createdAt ?? this.createdAt,
       nextReview: nextReview ?? this.nextReview,
       flashcards: flashcards ?? this.flashcards,
     );

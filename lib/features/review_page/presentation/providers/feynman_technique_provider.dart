@@ -124,11 +124,12 @@ class FeynmanTechnique extends _$FeynmanTechnique {
   Future<dynamic> saveQuizResults(
       {required FeynmanModel feynmanModel,
       required String notebookId,
+      required bool isFromOldSessionWithoutQuiz,
       String? newSessionName}) async {
     final saveQuizResults = ref.read(saveQuizResultsProvider);
 
-    var failureOrRes =
-        await saveQuizResults(feynmanModel, notebookId, newSessionName);
+    var failureOrRes = await saveQuizResults(
+        feynmanModel, notebookId, isFromOldSessionWithoutQuiz, newSessionName);
 
     return failureOrRes.fold((failure) => failure, (res) => res);
   }

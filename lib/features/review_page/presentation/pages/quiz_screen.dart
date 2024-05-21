@@ -21,7 +21,13 @@ class QuizScreen extends ConsumerStatefulWidget {
   final FeynmanModel feynmanModel;
   // ? used when the user reviews an old session and started a new quiz
   final String? newSessionName;
-  const QuizScreen({required this.feynmanModel, this.newSessionName, Key? key})
+  // ? used when the user opens an old session that on quiz has been taken
+  final bool? isFromSessionWithoutQuiz;
+  const QuizScreen(
+      {this.newSessionName,
+      required this.feynmanModel,
+      this.isFromSessionWithoutQuiz = false,
+      Key? key})
       : super(key: key);
 
   @override
@@ -127,6 +133,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
           .saveQuizResults(
               feynmanModel: updatedFeynmanModel,
               notebookId: ref.read(reviewScreenProvider).notebookId!,
+              isFromOldSessionWithoutQuiz: widget.isFromSessionWithoutQuiz!,
               newSessionName: widget.newSessionName);
 
       EasyLoading.dismiss();

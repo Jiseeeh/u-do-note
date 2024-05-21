@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:u_do_note/core/shared/theme/app_theme.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'firebase_options.dart';
+import 'package:u_do_note/core/shared/theme/app_theme.dart';
 import 'package:u_do_note/observers.dart';
 import 'package:u_do_note/routes/app_route.dart';
 import 'package:u_do_note/env/env.dart';
@@ -37,13 +38,15 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(appThemeProvider);
-    return MaterialApp.router(
-      title: 'U Do Note',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: themeMode,
-      routerConfig: appRouter.config(),
-      builder: EasyLoading.init(),
-    );
+
+    return ResponsiveSizer(
+        builder: (context, orientation, screenType) => MaterialApp.router(
+              title: 'U Do Note',
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: themeMode,
+              routerConfig: appRouter.config(),
+              builder: EasyLoading.init(),
+            ));
   }
 }

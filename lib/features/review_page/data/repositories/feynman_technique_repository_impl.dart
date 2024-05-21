@@ -67,8 +67,8 @@ class FeynmanTechniqueImpl implements FeynmanTechniqueRepository {
 
   @override
   Future<Either<Failure, void>> saveQuizResults(
-      FeynmanModel feynmanModel, String notebookId, String? newSessionName) async {
-    await _feynmanRemoteDataSource.saveQuizResults(feynmanModel, notebookId, newSessionName);
+      FeynmanModel feynmanModel, String notebookId, bool isFromOldSessionWithoutQuiz, String? newSessionName) async {
+    await _feynmanRemoteDataSource.saveQuizResults(feynmanModel, notebookId, isFromOldSessionWithoutQuiz, newSessionName);
 
     try {
       return const Right(null);

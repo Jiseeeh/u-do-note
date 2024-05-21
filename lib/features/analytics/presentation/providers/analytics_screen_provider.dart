@@ -63,6 +63,8 @@ class AnalyticsScreen extends _$AnalyticsScreen {
     return;
   }
 
+  
+  /// Returns the remarks in all learning strategies.
   Future<List<RemarkModel>> getRemarks() async {
     final getRemarks = ref.read(getRemarksProvider);
 
@@ -71,6 +73,8 @@ class AnalyticsScreen extends _$AnalyticsScreen {
     return failureOrRemarksModel.fold((failure) => [], (remarks) => remarks);
   }
 
+
+  /// Returns the number of flashcards to review.
   Future<dynamic> getFlashcardsToReview() async {
     final getFlashcardsToReview = ref.read(getFlashcardsToReviewProvider);
 
@@ -80,6 +84,7 @@ class AnalyticsScreen extends _$AnalyticsScreen {
         (failure) => "N/A", (flashcards) => flashcards);
   }
 
+  /// Returns the number of quizzes to take.
   Future<dynamic> getQuizzesToTake() async {
     final getQuizzesToTake = ref.read(getQuizzesToTakeProvider);
 
@@ -88,14 +93,16 @@ class AnalyticsScreen extends _$AnalyticsScreen {
     return failureOrQuizzes.fold((failure) => "N/A", (quizzes) => quizzes);
   }
 
-  Future<String> getAnalysis(List<RemarkModel> remarksModel) async {
+  /// Analyzes the [remarksModel] and returns the analysis in json format.
+  /// With the properties 'content' and 'state'.
+  Future<dynamic> getAnalysis(List<RemarkModel> remarksModel) async {
     final getAnalysis = ref.read(getAnalysisProvider);
 
     var failureOrAnalysis = await getAnalysis(remarksModel);
 
     return failureOrAnalysis.fold((failure) {
       logger.w("Failed to get analysis: ${failure.message}");
-      return "N/A";
+      return failure;
     }, (analysis) => analysis);
   }
 }

@@ -249,15 +249,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     color: AppColors.white,
                                   )),
                     ]),
-                Icon(
-                  performanceState == PerformanceState.improving.name
-                      ? Icons.trending_up_rounded
-                      : performanceState == PerformanceState.stagnant.name
-                          ? Icons.trending_flat_rounded
-                          : Icons.trending_down_rounded,
-                  color: AppColors.white,
-                  size: 20.0.w,
-                )
+                _buildPerformanceIcon()
               ],
             ),
           ),
@@ -420,6 +412,24 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               ))
         ],
       ),
+    );
+  }
+
+  Icon _buildPerformanceIcon() {
+    var icon = Icons.analytics_rounded;
+
+    if (performanceState == PerformanceState.improving.name) {
+      icon = Icons.trending_up_rounded;
+    } else if (performanceState == PerformanceState.stagnant.name) {
+      icon = Icons.trending_flat_rounded;
+    } else if (performanceState == PerformanceState.declining.name) {
+      icon = Icons.trending_down_rounded;
+    }
+
+    return Icon(
+      icon,
+      color: AppColors.white,
+      size: 20.0.w,
     );
   }
 

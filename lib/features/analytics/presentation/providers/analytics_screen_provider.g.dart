@@ -100,7 +100,7 @@ final getAnalysisProvider = AutoDisposeProvider<GetAnalysis>.internal(
 );
 
 typedef GetAnalysisRef = AutoDisposeProviderRef<GetAnalysis>;
-String _$analyticsScreenHash() => r'640a92544620387684e282cc43b0901a1c7d0a94';
+String _$analyticsScreenHash() => r'221a9393f670d6ed5e6d702229258fa6b0be8ce3';
 
 /// See also [AnalyticsScreen].
 @ProviderFor(AnalyticsScreen)

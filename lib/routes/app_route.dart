@@ -19,6 +19,7 @@ import 'package:u_do_note/features/review_page/presentation/pages/leitner_system
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
 
 part 'app_route.gr.dart';
@@ -45,6 +46,7 @@ class AppRouter extends _$AppRouter {
               page: AnalyticsRoute.page,
               path: 'analytics',
               maintainState: false),
+          AutoRoute(page: SettingsRoute.page, path: 'settings'),
           AutoRoute(
               page: NoteTakingRoute.page,
               path: 'note-taking') // test if this should be here

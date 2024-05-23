@@ -1,9 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/settings/presentation/providers/settings_screen_provider.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -19,7 +24,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     profile = Image.asset('assets/images/chisaki.png');
@@ -173,8 +177,67 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: TextButton(
-                                    onPressed: () {},
-                                    child: Text('Logout',
+                                    onPressed: () async {
+                                      var willSignOut = await showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Sign Out'),
+                                            content: const Text(
+                                                'Are you sure you want to sign out?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(false);
+                                                },
+                                                child: const Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(true);
+                                                },
+                                                child: const Text(
+                                                    'Yes, sign me out.'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+
+                                      if (willSignOut) {
+                                        EasyLoading.show(
+                                            status: 'Signing you out...',
+                                            maskType: EasyLoadingMaskType.black,
+                                            dismissOnTap: false);
+
+                                        var prefs = await ref.read(
+                                            sharedPreferencesProvider.future);
+
+                                        await ref
+                                            .read(settingsProvider.notifier)
+                                            .signOut();
+
+                                        EasyLoading.dismiss();
+
+                                        if (!context.mounted) return;
+
+                                        var hasSeenIntro =
+                                            prefs.getBool('hasSeenIntro');
+
+                                        if (hasSeenIntro != null &&
+                                            hasSeenIntro) {
+                                          context.router
+                                              .replace(const LoginRoute());
+                                        } else {
+                                          context.router
+                                              .replace(const IntroRoute());
+                                        }
+                                      }
+                                    },
+                                    child: Text('Sign Out',
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelLarge

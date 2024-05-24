@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'firebase_options.dart';
+import 'package:u_do_note/core/shared/domain/providers/app_theme_provider.dart';
 import 'package:u_do_note/core/shared/theme/app_theme.dart';
 import 'package:u_do_note/observers.dart';
 import 'package:u_do_note/routes/app_route.dart';
@@ -37,7 +38,7 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(appThemeProvider);
+    final themeMode = ref.watch(themeNotifierProvider);
 
     return ResponsiveSizer(
         builder: (context, orientation, screenType) => MaterialApp.router(

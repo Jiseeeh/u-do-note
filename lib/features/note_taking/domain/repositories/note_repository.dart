@@ -25,5 +25,6 @@ abstract class NoteRepository {
   Future<Either<Failure, String>> deleteNote(
       {required String notebookId, required String noteId});
   Future<Either<Failure, String>> analyzeImageText(ImageSource imgSource);
+  Future<Either<Failure, String>> analyzeNote(String content);
 }
 // TODO: remove braces from params

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/core/shared/theme/text_theme.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
@@ -19,6 +20,19 @@ class IntroScreen extends ConsumerStatefulWidget {
 }
 
 class _IntroScreenState extends ConsumerState<IntroScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    setHasSeenIntro();
+  }
+
+  void setHasSeenIntro() async {
+    var prefs = await ref.read(sharedPreferencesProvider.future);
+
+    await prefs.setBool('hasSeenIntro', true);
+  }
+
   @override
   Widget build(
     BuildContext context,

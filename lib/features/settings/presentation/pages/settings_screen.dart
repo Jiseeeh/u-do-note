@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,12 +22,18 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Image? profile;
   bool isLoading = true;
+  // ? not null assert since user cannot get here unless they are logged in
+  var user = FirebaseAuth.instance.currentUser!;
 
   @override
   void initState() {
     super.initState();
 
-    profile = Image.asset('assets/images/chisaki.png');
+    if (user.photoURL != null) {
+      profile = Image.network(user.photoURL!);
+    } else {
+      profile = Image.asset('assets/images/chisaki.png');
+    }
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
@@ -72,13 +79,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     child: CircleAvatar(
                         radius: 10.h, backgroundImage: profile!.image),
                   ),
-                  Text('Chisaki',
+                  Text(user.displayName!,
                       style: Theme.of(context)
                           .textTheme
                           .displayMedium
                           ?.copyWith(fontSize: 20.sp, color: AppColors.black)),
                   SizedBox(height: 0.5.h),
-                  Text('chisaki@gmail.com',
+                  Text(user.email!,
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium

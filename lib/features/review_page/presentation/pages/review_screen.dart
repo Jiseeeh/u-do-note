@@ -12,6 +12,7 @@ import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_method_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/feynman_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
@@ -52,15 +53,49 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
     if (willContinue && context.mounted) {
       // ? pre-fill the notebook and pages when coming from the analyze notes
+      showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
+          reviewState.getNotebookId, reviewState.getNoteId);
+    }
+  }
+
+  void _feynmanOnPressed(BuildContext context) async {
+    var reviewState = ref.watch(reviewScreenProvider);
+
+    var willContinue = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const FeynmanNotice());
+
+    if (!willContinue) return;
+
+    // ? feynman technique without pre filled notebook and pages
+    if (reviewState.reviewMethod == null && context.mounted) {
       showDialog(
           context: context,
           barrierDismissible: false,
           builder: (context) {
-            return PreReviewMethod(reviewState.getReviewMethod,
-                notebookId: reviewState.getNotebookId,
-                pages: [reviewState.getNoteId]);
+            return const PreReviewMethod(ReviewMethods.feynmanTechnique);
           });
+
+      return;
     }
+
+    if (willContinue && context.mounted) {
+      // ? pre-fill the notebook and pages when coming from the analyze notes
+      showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
+          reviewState.getNotebookId, reviewState.getNoteId);
+    }
+  }
+
+  void showPreFilledPreReviewMethodDialog(BuildContext context,
+      dynamic reviewMethod, dynamic notebookId, dynamic noteId) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return PreReviewMethod(reviewMethod,
+              notebookId: notebookId, pages: [noteId]);
+        });
   }
 
   late TutorialCoachMark tutorialCoachMark;
@@ -178,11 +213,14 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Welcome back,',
-                  style: TextStyle(color: Colors.grey, fontSize: 16)),
+              Text('Welcome back,',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: AppColors.grey)),
               Text(
                 username,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.displayLarge,
               )
             ],
           ),
@@ -236,7 +274,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   ReviewMethod(
                       title: 'Leitner System',
                       description: 'Use flashcards as a tool for learning.',
-                      imagePath: 'lib/assets/flashcard.png',
+                      imagePath: 'assets/images/flashcard.png',
                       buttonKey: leitnerBtnGlobalKey,
                       onPressed: () {
                         _leitnerOnPressed(context);
@@ -246,15 +284,17 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       title: 'Feynman Technique',
                       description:
                           'Explain a topic that a five (5) year old child can understand.',
-                      imagePath: 'lib/assets/feynman.png',
+                      imagePath: 'assets/images/feynman.png',
                       buttonKey: feynmanBtnGlobalKey,
-                      onPressed: () {}),
+                      onPressed: () {
+                        _feynmanOnPressed(context);
+                      }),
                   const SizedBox(height: 16),
                   ReviewMethod(
                       title: 'Pomodoro Technique',
                       description:
                           'Use a timer to break down work into intervals.',
-                      imagePath: 'lib/assets/pomodoro.png',
+                      imagePath: 'assets/images/pomodoro.png',
                       buttonKey: pomodoroBtnGlobalKey,
                       onPressed: () {}),
                 ])),

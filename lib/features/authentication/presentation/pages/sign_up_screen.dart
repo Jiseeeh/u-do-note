@@ -90,7 +90,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
               const Align(
                 alignment: Alignment.center,
                 child: Image(
-                  image: AssetImage('lib/assets/images/register-accent.png'),
+                  image: AssetImage('assets/images/register-accent.png'),
                   fit: BoxFit.fill,
                 ),
               ),

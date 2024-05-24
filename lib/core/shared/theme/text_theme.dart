@@ -4,7 +4,6 @@ import 'package:u_do_note/core/shared/theme/text_styles.dart';
 
 class TextThemes {
   /// Main text theme
-
   static TextTheme get textTheme {
     return const TextTheme(
       bodyLarge: AppTextStyles.bodyLg,
@@ -15,11 +14,11 @@ class TextThemes {
       displayMedium: AppTextStyles.h2,
       displaySmall: AppTextStyles.h3,
       headlineMedium: AppTextStyles.h4,
+      headlineSmall: AppTextStyles.h5,
     );
   }
 
   /// Dark text theme
-
   static TextTheme get darkTextTheme {
     return TextTheme(
       bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.white),
@@ -30,11 +29,11 @@ class TextThemes {
       displayMedium: AppTextStyles.h2.copyWith(color: AppColors.white),
       displaySmall: AppTextStyles.h3.copyWith(color: AppColors.white),
       headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.white),
+      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.white),
     );
   }
 
   /// Primary text theme
-
   static TextTheme get primaryTextTheme {
     return TextTheme(
       bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.primary),
@@ -45,6 +44,7 @@ class TextThemes {
       displayMedium: AppTextStyles.h2.copyWith(color: AppColors.primary),
       displaySmall: AppTextStyles.h3.copyWith(color: AppColors.primary),
       headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.primary),
+      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.primary),
     );
   }
 }

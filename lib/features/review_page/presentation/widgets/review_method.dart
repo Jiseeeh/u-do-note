@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 
 class ReviewMethod extends ConsumerWidget {
   final String title;
@@ -39,16 +40,14 @@ class ReviewMethod extends ConsumerWidget {
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        title,
-                        // TODO: use theme
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      // TODO: use theme
+                      Text(title,
+                          style: Theme.of(context).textTheme.headlineSmall),
                       Text(
                         description,
-                        style: const TextStyle(color: Colors.grey),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: AppColors.grey),
                       ),
                     ],
                   )),
@@ -60,10 +59,12 @@ class ReviewMethod extends ConsumerWidget {
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12))),
                         backgroundColor:
-                            MaterialStateProperty.all(const Color(0xff006ffd))),
-                    // TODO: use theme
-                    child: const Text('Start',
-                        style: TextStyle(color: Colors.white)),
+                            MaterialStateProperty.all(AppColors.secondary)),
+                    child: Text('Start',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: AppColors.white)),
                   )
                 ],
               ),

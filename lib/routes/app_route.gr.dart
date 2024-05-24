@@ -15,12 +15,20 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AnalyticsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AnalyticsScreen(),
+      );
+    },
     FeynmanTechniqueRoute.name: (routeData) {
       final args = routeData.argsAs<FeynmanTechniqueRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: FeynmanTechniqueScreen(
           args.contentFromPages,
+          args.sessionName,
+          feynmanEntity: args.feynmanEntity,
           key: args.key,
         ),
       );
@@ -84,10 +92,40 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotebooksScreen(),
       );
     },
+    QuizResultsRoute.name: (routeData) {
+      final args = routeData.argsAs<QuizResultsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: QuizResultsScreen(
+          questions: args.questions,
+          correctAnswersIndex: args.correctAnswersIndex,
+          selectedAnswersIndex: args.selectedAnswersIndex,
+          key: args.key,
+        ),
+      );
+    },
+    QuizRoute.name: (routeData) {
+      final args = routeData.argsAs<QuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: QuizScreen(
+          newSessionName: args.newSessionName,
+          feynmanModel: args.feynmanModel,
+          isFromSessionWithoutQuiz: args.isFromSessionWithoutQuiz,
+          key: args.key,
+        ),
+      );
+    },
     ReviewRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ReviewScreen(),
+      );
+    },
+    SettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SettingsScreen(),
       );
     },
     SignUpRoute.name: (routeData) {
@@ -100,16 +138,34 @@ abstract class _$AppRouter extends RootStackRouter {
 }
 
 /// generated route for
+/// [AnalyticsScreen]
+class AnalyticsRoute extends PageRouteInfo<void> {
+  const AnalyticsRoute({List<PageRouteInfo>? children})
+      : super(
+          AnalyticsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AnalyticsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [FeynmanTechniqueScreen]
 class FeynmanTechniqueRoute extends PageRouteInfo<FeynmanTechniqueRouteArgs> {
   FeynmanTechniqueRoute({
     required String contentFromPages,
+    required String sessionName,
+    FeynmanEntity? feynmanEntity,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           FeynmanTechniqueRoute.name,
           args: FeynmanTechniqueRouteArgs(
             contentFromPages: contentFromPages,
+            sessionName: sessionName,
+            feynmanEntity: feynmanEntity,
             key: key,
           ),
           initialChildren: children,
@@ -124,16 +180,22 @@ class FeynmanTechniqueRoute extends PageRouteInfo<FeynmanTechniqueRouteArgs> {
 class FeynmanTechniqueRouteArgs {
   const FeynmanTechniqueRouteArgs({
     required this.contentFromPages,
+    required this.sessionName,
+    this.feynmanEntity,
     this.key,
   });
 
   final String contentFromPages;
 
+  final String sessionName;
+
+  final FeynmanEntity? feynmanEntity;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'FeynmanTechniqueRouteArgs{contentFromPages: $contentFromPages, key: $key}';
+    return 'FeynmanTechniqueRouteArgs{contentFromPages: $contentFromPages, sessionName: $sessionName, feynmanEntity: $feynmanEntity, key: $key}';
   }
 }
 
@@ -319,6 +381,101 @@ class NotebooksRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [QuizResultsScreen]
+class QuizResultsRoute extends PageRouteInfo<QuizResultsRouteArgs> {
+  QuizResultsRoute({
+    required List<QuestionEntity> questions,
+    required List<int> correctAnswersIndex,
+    required List<int> selectedAnswersIndex,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          QuizResultsRoute.name,
+          args: QuizResultsRouteArgs(
+            questions: questions,
+            correctAnswersIndex: correctAnswersIndex,
+            selectedAnswersIndex: selectedAnswersIndex,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'QuizResultsRoute';
+
+  static const PageInfo<QuizResultsRouteArgs> page =
+      PageInfo<QuizResultsRouteArgs>(name);
+}
+
+class QuizResultsRouteArgs {
+  const QuizResultsRouteArgs({
+    required this.questions,
+    required this.correctAnswersIndex,
+    required this.selectedAnswersIndex,
+    this.key,
+  });
+
+  final List<QuestionEntity> questions;
+
+  final List<int> correctAnswersIndex;
+
+  final List<int> selectedAnswersIndex;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'QuizResultsRouteArgs{questions: $questions, correctAnswersIndex: $correctAnswersIndex, selectedAnswersIndex: $selectedAnswersIndex, key: $key}';
+  }
+}
+
+/// generated route for
+/// [QuizScreen]
+class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
+  QuizRoute({
+    String? newSessionName,
+    required FeynmanModel feynmanModel,
+    bool? isFromSessionWithoutQuiz = false,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          QuizRoute.name,
+          args: QuizRouteArgs(
+            newSessionName: newSessionName,
+            feynmanModel: feynmanModel,
+            isFromSessionWithoutQuiz: isFromSessionWithoutQuiz,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'QuizRoute';
+
+  static const PageInfo<QuizRouteArgs> page = PageInfo<QuizRouteArgs>(name);
+}
+
+class QuizRouteArgs {
+  const QuizRouteArgs({
+    this.newSessionName,
+    required this.feynmanModel,
+    this.isFromSessionWithoutQuiz = false,
+    this.key,
+  });
+
+  final String? newSessionName;
+
+  final FeynmanModel feynmanModel;
+
+  final bool? isFromSessionWithoutQuiz;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'QuizRouteArgs{newSessionName: $newSessionName, feynmanModel: $feynmanModel, isFromSessionWithoutQuiz: $isFromSessionWithoutQuiz, key: $key}';
+  }
+}
+
+/// generated route for
 /// [ReviewScreen]
 class ReviewRoute extends PageRouteInfo<void> {
   const ReviewRoute({List<PageRouteInfo>? children})
@@ -328,6 +485,20 @@ class ReviewRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ReviewRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SettingsScreen]
+class SettingsRoute extends PageRouteInfo<void> {
+  const SettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          SettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SettingsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

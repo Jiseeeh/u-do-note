@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 
+import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/shared/theme/text_styles.dart';
+
 class AuthField extends ConsumerWidget {
   final String label;
   final TextEditingController controller;
@@ -40,11 +43,11 @@ class AuthField extends ConsumerWidget {
           hintStyle: AppTextStyles.body,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
-            borderSide: const BorderSide(
-                color: AppColors.shadow, width: 2.0),
+            borderSide: const BorderSide(color: AppColors.shadow, width: 2.0),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: AppColors.secondary, width: 2.0),
+            borderSide:
+                const BorderSide(color: AppColors.secondary, width: 2.0),
             borderRadius: BorderRadius.circular(15.0),
           ),
           errorBorder: OutlineInputBorder(

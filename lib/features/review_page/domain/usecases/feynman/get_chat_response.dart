@@ -5,11 +5,11 @@ import 'package:u_do_note/features/review_page/domain/repositories/feynman_techn
 class GetChatResponse {
   final FeynmanTechniqueRepository _feynmanTechniqueRepository;
 
-  GetChatResponse(this._feynmanTechniqueRepository);
+  const GetChatResponse(this._feynmanTechniqueRepository);
 
-  Future<Either<Failure, String>> call(
-      String contentFromPages, String message) async {
+  Future<Either<Failure, String>> call(String contentFromPages,
+      List<String> robotMessages, List<String> userMessages) async {
     return await _feynmanTechniqueRepository.getChatResponse(
-        contentFromPages, message);
+        contentFromPages, robotMessages, userMessages);
   }
 }

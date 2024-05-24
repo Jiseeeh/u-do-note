@@ -63,7 +63,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
               const Align(
                 alignment: Alignment.center,
                 child: Image(
-                  image: AssetImage('lib/assets/images/login-accent.png'),
+                  image: AssetImage('assets/images/login-accent.png'),
                   fit: BoxFit.fill,
                 ),
               ),

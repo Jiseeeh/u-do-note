@@ -26,7 +26,7 @@ class NotebookCard extends ConsumerWidget {
               image: notebook.coverUrl.isNotEmpty
                   ? NetworkImage(notebook.coverUrl) as ImageProvider
                   // TODO: replace with default one
-                  : const AssetImage('lib/assets/chisaki.png'),
+                  : const AssetImage('assets/images/chisaki.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -47,7 +47,7 @@ class NotebookCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(notebook.subject,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                        style: Theme.of(context).textTheme.headlineSmall),
                   ),
                   SizedBox(
                     width: 20,
@@ -101,7 +101,10 @@ class NotebookCard extends ConsumerWidget {
               Text(
                   DateFormat("EEE, dd MMM yyyy")
                       .format(notebook.createdAt.toDate()),
-                  style: const TextStyle(color: AppColors.grey))
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: AppColors.grey))
             ],
           ),
         ),

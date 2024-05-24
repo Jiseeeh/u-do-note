@@ -25,6 +25,12 @@ class ReviewScreen extends _$ReviewScreen {
     logger.d('state is now $state after setting notebook id to $notebookId');
   }
 
+  void setNotebookPagesIds(List<String> notebookPagesIds) {
+    state.setNotebookPagesIds(notebookPagesIds);
+
+    logger.d('state is now $state after setting notebook ids to $notebookPagesIds');
+  }
+
   void setNoteId(String noteId) {
     state.setNoteId(noteId);
 

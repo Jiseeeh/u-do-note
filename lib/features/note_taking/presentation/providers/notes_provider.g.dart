@@ -188,7 +188,7 @@ final analyzeImageTextProvider = AutoDisposeProvider<AnalyzeImageText>.internal(
 );
 
 typedef AnalyzeImageTextRef = AutoDisposeProviderRef<AnalyzeImageText>;
-String _$notebooksHash() => r'd4baf2d59641689b74c8e4c785c71c9a704abc67';
+String _$notebooksHash() => r'87d3ba185665ee2d38a6b2a6e628f2331da91596';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

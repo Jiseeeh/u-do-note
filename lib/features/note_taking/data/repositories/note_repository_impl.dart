@@ -153,4 +153,15 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> analyzeNote(String content) async {
+    try {
+      var analyzedText = await _noteRemoteDataSource.analyzeNote(content);
+
+      return Right(analyzedText);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

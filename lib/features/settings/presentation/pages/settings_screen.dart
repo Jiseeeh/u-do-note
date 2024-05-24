@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:u_do_note/core/shared/domain/providers/app_theme_provider.dart';
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/settings/presentation/providers/settings_screen_provider.dart';
@@ -24,6 +25,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool isLoading = true;
   // ? not null assert since user cannot get here unless they are logged in
   var user = FirebaseAuth.instance.currentUser!;
+  late String theme;
 
   @override
   void initState() {
@@ -40,6 +42,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         isLoading = false;
       });
     });
+
+    initTheme();
+  }
+
+  void initTheme() async {
+    var themeMode = ref.read(themeNotifierProvider);
+
+    theme = themeMode.name.substring(0, 1).toUpperCase() +
+        themeMode.name.substring(1);
   }
 
   @override
@@ -55,6 +66,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var currentTheme = ref.watch(themeNotifierProvider);
+    theme = currentTheme.name.substring(0, 1).toUpperCase() +
+        currentTheme.name.substring(1);
+
     return Skeletonizer(
       enabled: isLoading,
       child: Scaffold(
@@ -108,14 +123,46 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       children: [
                         Column(
                           children: [
-                            SwitchListTile(
-                              title: Text('Dark Mode: ',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.copyWith(fontSize: 14.sp)),
-                              value: false,
-                              onChanged: (value) {},
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Current Theme: ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.copyWith(fontSize: 14.sp)),
+                                  DropdownButton<String>(
+                                    value: theme,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        if (newValue != null) {
+                                          var themeNotifier = ref.read(
+                                              themeNotifierProvider.notifier);
+
+                                          themeNotifier
+                                              .setTheme(newValue.toLowerCase());
+                                        }
+                                      });
+                                    },
+                                    items: <String>['Light', 'Dark', 'System']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge
+                                                ?.copyWith(fontSize: 14.sp)),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

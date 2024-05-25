@@ -126,6 +126,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         .getFlashcardsToReview();
     quizzesToTake =
         await ref.read(analyticsScreenProvider.notifier).getQuizzesToTake();
+
+    if (lineChartRemarks.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
     var analysisContent = await ref
         .read(analyticsScreenProvider.notifier)
         .getAnalysis(lineChartRemarks);

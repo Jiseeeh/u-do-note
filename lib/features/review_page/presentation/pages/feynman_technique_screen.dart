@@ -106,7 +106,7 @@ class _FeynmanTechniqueScreenState
         var willTakeNewQuiz = await showDialog(
             barrierDismissible: false,
             context: context,
-            builder: (context) {
+            builder: (dialogContext) {
               return AlertDialog(
                 title: const Text('Quiz'),
                 content: const Text(
@@ -114,13 +114,13 @@ class _FeynmanTechniqueScreenState
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(false);
+                      Navigator.of(dialogContext).pop(false);
                     },
                     child: const Text('Check old results'),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(true);
+                      Navigator.of(dialogContext).pop(true);
                     },
                     child: const Text('Start a quiz'),
                   ),
@@ -153,7 +153,7 @@ class _FeynmanTechniqueScreenState
       var willTakeQuiz = await showDialog(
           barrierDismissible: false,
           context: context,
-          builder: (context) {
+          builder: (dialogContext) {
             return AlertDialog(
               title: const Text('Quiz'),
               content: widget.feynmanEntity == null
@@ -167,13 +167,13 @@ class _FeynmanTechniqueScreenState
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(false);
+                    Navigator.of(dialogContext).pop(false);
                   },
                   child: const Text('No'),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(true);
+                    Navigator.of(dialogContext).pop(true);
                   },
                   child: const Text('Yes'),
                 ),
@@ -222,7 +222,7 @@ class _FeynmanTechniqueScreenState
         var newSessionName = await showDialog(
             barrierDismissible: false,
             context: context,
-            builder: (context) {
+            builder: (dialogContext) {
               return AlertDialog(
                 title: const Text('Quiz'),
                 content: Form(
@@ -246,7 +246,7 @@ class _FeynmanTechniqueScreenState
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(null);
+                      Navigator.of(dialogContext).pop(null);
                     },
                     child: const Text('Cancel'),
                   ),
@@ -256,7 +256,7 @@ class _FeynmanTechniqueScreenState
                         return;
                       }
 
-                      Navigator.of(context).pop(newSessionNameController.text);
+                      Navigator.of(dialogContext).pop(newSessionNameController.text);
                     },
                     child: const Text('Continue'),
                   ),

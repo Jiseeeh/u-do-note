@@ -40,7 +40,7 @@ class QuizResultsScreen extends ConsumerWidget {
           var willProceed = await showDialog(
               context: context,
               barrierDismissible: false,
-              builder: (context) {
+              builder: (dialogContext) {
                 return AlertDialog(
                   title: const Text('Notice'),
                   content:
@@ -48,12 +48,12 @@ class QuizResultsScreen extends ConsumerWidget {
                   actions: [
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop(false);
+                          Navigator.of(dialogContext).pop(false);
                         },
                         child: const Text('No')),
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop(true);
+                          Navigator.of(dialogContext).pop(true);
                         },
                         child: const Text('Yes'))
                   ],

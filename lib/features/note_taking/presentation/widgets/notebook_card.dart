@@ -90,7 +90,7 @@ class NotebookCard extends ConsumerWidget {
                           if (isEdit && context.mounted) {
                             showDialog(
                                 context: context,
-                                builder: (context) => AddNotebookDialog(
+                                builder: (dialogContext) => AddNotebookDialog(
                                     notebookEntity: notebook));
                           }
                         },
@@ -115,7 +115,7 @@ class NotebookCard extends ConsumerWidget {
   Future<dynamic> getUserConfirmation(BuildContext context) {
     return showDialog(
         context: context,
-        builder: (context) {
+        builder: (dialogContext) {
           return AlertDialog(
             title: const Text('Delete Notebook'),
             content:
@@ -123,12 +123,12 @@ class NotebookCard extends ConsumerWidget {
             actions: [
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, false);
+                    Navigator.pop(dialogContext, false);
                   },
                   child: const Text('No')),
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    Navigator.pop(dialogContext, true);
                   },
                   child: const Text('Yes')),
             ],
@@ -139,19 +139,19 @@ class NotebookCard extends ConsumerWidget {
   Future<dynamic> getIntent(BuildContext context) {
     return showDialog(
         context: context,
-        builder: (context) {
+        builder: (dialogContext) {
           return AlertDialog(
             title: const Text('Delete Note'),
             content: const Text('What do you want to do with this notebook?'),
             actions: [
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, false);
+                    Navigator.pop(dialogContext, false);
                   },
                   child: const Text('Delete')),
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    Navigator.pop(dialogContext, true);
                   },
                   child: const Text('Edit')),
             ],

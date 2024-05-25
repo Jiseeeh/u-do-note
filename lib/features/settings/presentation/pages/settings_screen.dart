@@ -235,7 +235,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       var willSignOut = await showDialog(
                                         barrierDismissible: false,
                                         context: context,
-                                        builder: (context) {
+                                        builder: (dialogContext) {
                                           return AlertDialog(
                                             title: const Text('Sign Out'),
                                             content: const Text(
@@ -243,14 +243,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                             actions: [
                                               TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context)
+                                                  Navigator.of(dialogContext)
                                                       .pop(false);
                                                 },
                                                 child: const Text('Cancel'),
                                               ),
                                               TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context)
+                                                  Navigator.of(dialogContext)
                                                       .pop(true);
                                                 },
                                                 child: const Text(

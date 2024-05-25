@@ -40,7 +40,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
                 onTap: () {
                   showDialog(
                       context: context,
-                      builder: ((context) => const AddNotebookDialog()));
+                      builder: ((dialogContext) => const AddNotebookDialog()));
                 }),
             SpeedDialChild(
                 elevation: 0,
@@ -83,6 +83,12 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
   }
 
   Widget _buildBody({required AsyncValue<List<NotebookEntity>> userNotes}) {
+    if (userNotes.hasValue && userNotes.value!.isEmpty) {
+      return const Center(
+        child: Text('No Notebooks yet.'),
+      );
+    }
+
     return switch (userNotes) {
       AsyncData(:final value) => GridView.count(
           crossAxisCount: gridCols,

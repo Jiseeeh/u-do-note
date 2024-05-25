@@ -64,7 +64,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               onTap: () {
                 showDialog(
                     context: context,
-                    builder: ((context) =>
+                    builder: ((dialogContext) =>
                         AddNoteDialog(notebookId: widget.notebookId)));
               }),
           SpeedDialChild(
@@ -125,7 +125,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                   showDialog(
                       context: context,
-                      builder: (context) => AlertDialog(
+                      builder: (dialogContext) => AlertDialog(
                             scrollable: true,
                             title: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +140,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  Navigator.of(dialogContext).pop();
                                 },
                                 child: const Text('Cancel'),
                               ),
@@ -196,7 +196,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                   EasyLoading.showInfo('Updated successfully');
 
                                   if (context.mounted) {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(dialogContext).pop();
                                   }
                                 },
                                 child: const Text('Confirm'),
@@ -240,7 +240,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                                     showDialog(
                                         context: context,
-                                        builder: ((context) => AddNoteDialog(
+                                        builder: ((dialogContext) => AddNoteDialog(
                                               notebookId: widget.notebookId,
                                               initialContent: extractedText,
                                             )));

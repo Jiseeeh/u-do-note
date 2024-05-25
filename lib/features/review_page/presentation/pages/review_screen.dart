@@ -36,7 +36,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     var willContinue = await showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const LeitnerSystemNotice());
+        builder: (dialogContext) => const LeitnerSystemNotice());
 
     if (!willContinue) return;
 
@@ -44,7 +44,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) {
+          builder: (dialogContext) {
             return const PreReviewMethod(ReviewMethods.leitnerSystem);
           });
 
@@ -64,7 +64,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     var willContinue = await showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const FeynmanNotice());
+        builder: (dialogContext) => const FeynmanNotice());
 
     if (!willContinue) return;
 
@@ -73,7 +73,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) {
+          builder: (dialogContext) {
             return const PreReviewMethod(ReviewMethods.feynmanTechnique);
           });
 
@@ -92,7 +92,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) {
+        builder: (dialogContext) {
           return PreReviewMethod(reviewMethod,
               notebookId: notebookId, pages: [noteId]);
         });

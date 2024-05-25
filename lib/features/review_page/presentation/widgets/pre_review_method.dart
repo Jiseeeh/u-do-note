@@ -285,7 +285,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                   var reviewOld = await showDialog(
                       barrierDismissible: false,
                       context: context,
-                      builder: (context) => AlertDialog(
+                      builder: (dialogContext) => AlertDialog(
                             title: const Text('Notice'),
                             scrollable: true,
                             content: const Text(
@@ -293,13 +293,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop(false);
+                                  Navigator.of(dialogContext).pop(false);
                                 },
                                 child: const Text('No'),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop(true);
+                                  Navigator.of(dialogContext).pop(true);
                                 },
                                 child: const Text('Yes'),
                               ),
@@ -316,7 +316,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                     await showDialog(
                         barrierDismissible: false,
                         context: context,
-                        builder: (context) => AlertDialog(
+                        builder: (dialogContext) => AlertDialog(
                               scrollable: true,
                               title: const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,7 +331,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(dialogContext).pop();
                                   },
                                   child: const Text('Cancel'),
                                 ),
@@ -441,7 +441,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
                 var willReviewOldSessions = await showDialog(
                     context: context,
-                    builder: (context) {
+                    builder: (dialogContext) {
                       return AlertDialog(
                         title: const Text('Notice'),
                         content: const Text(
@@ -449,13 +449,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(false);
+                              Navigator.of(dialogContext).pop(false);
                             },
                             child: const Text('No'),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(true);
+                              Navigator.of(dialogContext).pop(true);
                             },
                             child: const Text('Yes'),
                           ),
@@ -475,7 +475,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 var sessionId = await showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) {
+                    builder: (dialogContext) {
                       var sessionId = "";
                       return AlertDialog(
                         scrollable: true,
@@ -492,13 +492,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(null);
+                              Navigator.of(dialogContext).pop(null);
                             },
                             child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(sessionId);
+                              Navigator.of(dialogContext).pop(sessionId);
                             },
                             child: const Text('Continue'),
                           ),

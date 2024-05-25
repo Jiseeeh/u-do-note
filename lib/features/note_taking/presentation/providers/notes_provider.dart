@@ -117,7 +117,7 @@ AnalyzeNote analyzeNote(AnalyzeNoteRef ref) {
 
 // TODO: try using streams to just listen to changes in the database
 // ? only when the project is stable
-@Riverpod(keepAlive: true)
+@riverpod
 class Notebooks extends _$Notebooks {
   @override
   Future<List<NotebookEntity>> build() {

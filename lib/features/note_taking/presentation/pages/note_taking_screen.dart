@@ -50,7 +50,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   String? _learningTechniqueAnalyzed;
   String? _reasonAnalyzed;
   String? _topicAnalyzed;
-  late Timer _timer;
+  Timer? _timer;
+  Timer? _noteLenTimer;
 
   @override
   void initState() {
@@ -65,9 +66,10 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
   @override
   void dispose() {
-    logger.d('Disposing Timer');
+    logger.d('Disposing Timers...');
 
-    _timer.cancel();
+    _timer?.cancel();
+    _noteLenTimer?.cancel();
     super.dispose();
   }
 
@@ -78,6 +80,24 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     var now = DateTime.now();
 
     logger.d('Checking if note has been analyzed before...');
+
+    // ? check initial note content if at least 1000 characters
+    // ? can add future feature to check for the length of the note
+    // ? and analyze it if it's more than 1000 characters
+    if (_controller.document.toPlainText().length < 1000) {
+      logger.d('Note has less than 1000 characters, skipping analysis...');
+
+      _noteLenTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        logger.d(
+            'Note len currently at ${_controller.document.toPlainText().length}');
+
+        if (_controller.document.toPlainText().length >= 1000) {
+          timer.cancel();
+          checkIfAnalyzed(context);
+        }
+      });
+      return;
+    }
 
     if (note != null) {
       var noteData = _NoteData.fromJson(jsonDecode(note.toString()));
@@ -196,21 +216,22 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
   void showAnalysisDialog(BuildContext context) async {
     var isGoingToReview = await showDialog(
+        barrierDismissible: false,
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (dialogContext) => AlertDialog(
               scrollable: true,
               title: RichText(
                 text: TextSpan(
                   children: [
                     TextSpan(
                         text: 'Hey! It looks like your note is about ',
-                        style: Theme.of(context)
+                        style: Theme.of(dialogContext)
                             .textTheme
                             .headlineMedium
                             ?.copyWith(fontSize: 16.sp)),
                     TextSpan(
                         text: _topicAnalyzed,
-                        style: Theme.of(context)
+                        style: Theme.of(dialogContext)
                             .textTheme
                             .headlineMedium
                             ?.copyWith(
@@ -279,13 +300,13 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(false);
+                    Navigator.of(dialogContext).pop(false);
                   },
                   child: const Text('Close'),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(true);
+                    Navigator.of(dialogContext).pop(true);
                   },
                   child: const Text('Go'),
                 ),
@@ -395,7 +416,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             var willContinue = await showDialog(
                                 barrierDismissible: false,
                                 context: context,
-                                builder: (context) => AnalyzeTextImageDialog(
+                                builder: (dialogContext) => AnalyzeTextImageDialog(
                                     textFieldController: textFieldController));
 
                             if (willContinue) {
@@ -430,7 +451,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             var willContinue = await showDialog(
                                 barrierDismissible: false,
                                 context: context,
-                                builder: (context) => AnalyzeTextImageDialog(
+                                builder: (dialogContext) => AnalyzeTextImageDialog(
                                       textFieldController: textFieldController,
                                     ));
 

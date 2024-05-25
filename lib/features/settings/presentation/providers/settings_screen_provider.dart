@@ -37,7 +37,6 @@ class Settings extends _$Settings {
     return;
   }
 
-
   /// Signs out the current user and clears the data specific to the user
   Future<void> signOut() async {
     var signOut = ref.read(signOutProvider);

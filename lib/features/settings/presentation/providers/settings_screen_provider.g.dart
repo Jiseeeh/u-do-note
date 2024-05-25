@@ -55,7 +55,7 @@ final signOutProvider = AutoDisposeProvider<SignOut>.internal(
 );
 
 typedef SignOutRef = AutoDisposeProviderRef<SignOut>;
-String _$settingsHash() => r'cbc571bfae1fc45256b3eeb6c58956a70697fc4b';
+String _$settingsHash() => r'7210763a57e1491d4030276a48cb383e3ebc6c64';
 
 /// See also [Settings].
 @ProviderFor(Settings)

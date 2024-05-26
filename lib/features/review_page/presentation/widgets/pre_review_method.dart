@@ -263,7 +263,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 .notes
                 .forEach((note) {
               if (pages.contains(note.id)) {
-                contentFromPages += note.content;
+                contentFromPages += note.plainTextContent;
               }
             });
 

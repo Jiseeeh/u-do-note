@@ -201,7 +201,10 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
       var noteModel = NoteModel.fromEntity(widget.note);
 
       var newNoteEntity = noteModel
-          .copyWith(content: json, updatedAt: Timestamp.now())
+          .copyWith(
+              content: json,
+              plainTextContent: _controller.document.toPlainText(),
+              updatedAt: Timestamp.now())
           .toEntity();
 
       await ref
@@ -416,8 +419,10 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             var willContinue = await showDialog(
                                 barrierDismissible: false,
                                 context: context,
-                                builder: (dialogContext) => AnalyzeTextImageDialog(
-                                    textFieldController: textFieldController));
+                                builder: (dialogContext) =>
+                                    AnalyzeTextImageDialog(
+                                        textFieldController:
+                                            textFieldController));
 
                             if (willContinue) {
                               _controller.document.insert(
@@ -451,7 +456,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             var willContinue = await showDialog(
                                 barrierDismissible: false,
                                 context: context,
-                                builder: (dialogContext) => AnalyzeTextImageDialog(
+                                builder: (dialogContext) =>
+                                    AnalyzeTextImageDialog(
                                       textFieldController: textFieldController,
                                     ));
 

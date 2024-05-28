@@ -119,7 +119,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$feynmanTechniqueHash() => r'a61e999295c3cb32aac599316bb6253ef60c8d41';
+String _$feynmanTechniqueHash() => r'd69f52637c4cb432fbdffcd1ed0bbda22676610d';
 
 /// See also [FeynmanTechnique].
 @ProviderFor(FeynmanTechnique)

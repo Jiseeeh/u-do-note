@@ -202,7 +202,7 @@ final analyzeNoteProvider = AutoDisposeProvider<AnalyzeNote>.internal(
 );
 
 typedef AnalyzeNoteRef = AutoDisposeProviderRef<AnalyzeNote>;
-String _$notebooksHash() => r'5c8faa252b279d709b1579279fc8ff004950943d';
+String _$notebooksHash() => r'e65224a1a984595b8b6439445f771c5d0dfe4cf5';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

@@ -7,7 +7,7 @@ part of 'review_method_provider.dart';
 // **************************************************************************
 
 String _$reviewMethodNotifierHash() =>
-    r'6eafc465b4b4f6653fc48e4ffa7521a2761ca12f';
+    r'd178bbd7e85e71da07922aa28f3bb4261e23afba';
 
 /// See also [ReviewMethodNotifier].
 @ProviderFor(ReviewMethodNotifier)

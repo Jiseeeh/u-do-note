@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -34,6 +35,7 @@ class _FeynmanTechniqueScreenState
   final List<types.Message> _messages = [];
   final List<String> recentRobotMessages = [];
   final List<String> recentUserMessages = [];
+  final List<ChatMessage> _history = [];
   var isRobotThinking = false;
   var formKey = GlobalKey<FormState>();
   var newSessionNameController = TextEditingController();
@@ -215,7 +217,8 @@ class _FeynmanTechniqueScreenState
                   recentRobotMessages: recentRobotMessages,
                   recentUserMessages: recentUserMessages);
 
-          context.router.push(QuizRoute(feynmanModel: feynmanModel, isFromSessionWithoutQuiz: true));
+          context.router.push(QuizRoute(
+              feynmanModel: feynmanModel, isFromSessionWithoutQuiz: true));
           return;
         }
 
@@ -256,7 +259,8 @@ class _FeynmanTechniqueScreenState
                         return;
                       }
 
-                      Navigator.of(dialogContext).pop(newSessionNameController.text);
+                      Navigator.of(dialogContext)
+                          .pop(newSessionNameController.text);
                     },
                     child: const Text('Continue'),
                   ),
@@ -291,6 +295,9 @@ class _FeynmanTechniqueScreenState
       text: message.text,
     );
 
+    _history.add(ChatMessage(
+        content: message.text, role: OpenAIChatMessageRole.user));
+
     recentUserMessages.add(message.text);
 
     _addMessage(textMessage);
@@ -307,8 +314,10 @@ class _FeynmanTechniqueScreenState
         .read(feynmanTechniqueProvider.notifier)
         .getChatResponse(
             contentFromPages: widget.contentFromPages,
-            robotMessages: recentRobotMessages,
-            userMessages: recentUserMessages);
+            history: _history);
+
+    _history.add(
+        ChatMessage(content: robotRes, role: OpenAIChatMessageRole.assistant));
 
     setState(() {
       isRobotThinking = false;

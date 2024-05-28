@@ -14,10 +14,10 @@ class FeynmanTechniqueImpl implements FeynmanTechniqueRepository {
 
   @override
   Future<Either<Failure, String>> getChatResponse(String contentFromPages,
-      List<String> robotMessages, List<String> userMessages) async {
+      List<ChatMessage> history) async {
     try {
       var res = await _feynmanRemoteDataSource.getChatResponse(
-          contentFromPages, robotMessages, userMessages);
+          contentFromPages, history);
 
       return Right(res);
     } on RequestFailedException catch (e) {

@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:u_do_note/core/firestore_collection_enum.dart';
 
+import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/question.dart';
@@ -15,51 +15,48 @@ class FeynmanRemoteDataSource {
 
   FeynmanRemoteDataSource(this._firestore, this._auth);
 
-  Future<String> getChatResponse(String contentFromPages,
-      List<String> robotMessages, List<String> userMessages) async {
-    // the system message that will be sent to the request.
-    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
-      content: [
-        OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          """
-          As a helpful assistant you will help the student to review their notes using the Feynman technique.
-          You need to act as a 5 year old child. You will ask questions to the student
-          about the content of the pages in relation to their explanation and your recent response.
-          If you think you already got it, you can say to the student that you got it and they can type "quiz" to start the quiz.
+  Future<String> getChatResponse(
+      String contentFromPages, List<ChatMessage> history) async {
+    List<OpenAIChatCompletionChoiceMessageModel> requestMessages = [];
+    final systemPrompt = """
+    Act as a curious 5-year-old child. Your goal is to ask questions to help the student understand the content: "$contentFromPages". Follow these guidelines:
 
-          The topic: "$contentFromPages"
-          Your recent responses: "$robotMessages"
-          """,
-        ),
-      ],
-      role: OpenAIChatMessageRole.system,
-    );
+    1. Do not affirm correctness with phrases like "good job" "great", or anything that implies correctness because you are a 5 year old child.
+    2. Tell the student to simplify their answers if they are too complex or has too many jargons.
+    3. If the student does not know the answer, move on to the next question.
+    4. If the student gives an unrelated answer, gently remind them to focus on the content.
+    5. Always end your response with a question unless you think the student already understands the material and tell them to type "quiz" to start a quiz.
+                         """;
 
-    logger.d("content: $contentFromPages'");
-    logger.d("robot message: $robotMessages'");
-    logger.d("user message: $userMessages'");
+    if (history.isEmpty) {
+      requestMessages.add(OpenAIChatCompletionChoiceMessageModel(
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(systemPrompt),
+        ],
+        role: OpenAIChatMessageRole.system,
+      ));
+    } else {
+      requestMessages.add(OpenAIChatCompletionChoiceMessageModel(
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(systemPrompt)
+        ],
+        role: OpenAIChatMessageRole.system,
+      ));
 
-    // the user message that will be sent to the request.
-    final userMessageModel = OpenAIChatCompletionChoiceMessageModel(
-      content: [
-        OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          'Here are my recent messages about the topic: "$userMessages"',
-        ),
-      ],
-      role: OpenAIChatMessageRole.user,
-    );
-
-    // all messages to be sent.
-    final requestMessages = [
-      systemMessage,
-      userMessageModel,
-    ];
+      for (var chat in history) {
+        requestMessages.add(OpenAIChatCompletionChoiceMessageModel(
+          content: [
+            OpenAIChatCompletionChoiceMessageContentItemModel.text(chat.content)
+          ],
+          role: chat.role,
+        ));
+      }
+    }
 
     // the actual request.
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
       model: "gpt-3.5-turbo-0125",
-      seed: 6,
       messages: requestMessages,
       temperature: 0.2,
       maxTokens: 500,

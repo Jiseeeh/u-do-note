@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 import 'package:u_do_note/features/review_page/data/models/question.dart';
@@ -132,3 +133,14 @@ class FeynmanModel {
     );
   }
 }
+
+class ChatMessage {
+  final String content;
+  final OpenAIChatMessageRole role;
+
+  ChatMessage({
+    required this.content,
+    required this.role,
+  });
+}
+

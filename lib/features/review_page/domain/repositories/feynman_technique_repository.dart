@@ -5,7 +5,7 @@ import 'package:u_do_note/features/review_page/data/models/question.dart';
 
 abstract class FeynmanTechniqueRepository {
   Future<Either<Failure, String>> getChatResponse(String contentFromPages,
-      List<String> robotMessages, List<String> userMessages);
+      List<ChatMessage> history);
 
   Future<Either<Failure, String>> saveSession(
       FeynmanModel feynmanModel, String notebookId, String? docId);

@@ -76,12 +76,10 @@ class FeynmanTechnique extends _$FeynmanTechnique {
   /// [robotMessages],  and the [contentFromPages],
   Future<String> getChatResponse(
       {required String contentFromPages,
-      required List<String> robotMessages,
-      required List<String> userMessages}) async {
+      required List<ChatMessage> history}) async {
     final getChatRes = ref.read(getChatResponseProvider);
 
-    var failureOrRes =
-        await getChatRes(contentFromPages, robotMessages, userMessages);
+    var failureOrRes = await getChatRes(contentFromPages, history);
 
     return failureOrRes.fold(
         (failure) => failure.message, (chatRes) => chatRes);

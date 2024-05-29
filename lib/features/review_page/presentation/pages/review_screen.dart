@@ -192,6 +192,19 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         ]);
   }
 
+  String _getGreeting() {
+    var hour = DateTime.now().hour;
+
+    if (hour < 12) {
+      return 'Good Morning,';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon,';
+    }
+
+    return 'Good Evening,';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,7 +226,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Welcome back,',
+              Text(_getGreeting(),
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge

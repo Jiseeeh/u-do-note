@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
@@ -65,7 +66,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       if (startTime == 0) {
         timer.cancel();
 
-        // force next question
+        // ? force next question
         setState(() {
           currentQuestionIndex++;
           startTime = 30;
@@ -166,41 +167,51 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          Text(
-            'Question ${currentQuestionIndex + 1} of ${questions.length}',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: AppColors.grey,
+          SizedBox(
+            height: 10.h,
+            child: Column(
+              children: [
+                Text(
+                  'Question ${currentQuestionIndex + 1} of ${questions.length}',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: AppColors.grey,
+                      ),
                 ),
+                Text('Time: $startTime seconds left',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: AppColors.grey,
+                        )),
+                LinearPercentIndicator(
+                  lineHeight: 8,
+                  percent: startTime / 30,
+                  barRadius: const Radius.circular(8),
+                  leading: const Icon(Icons.timer, color: AppColors.grey),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  backgroundColor: AppColors.lightShadow,
+                  progressColor: AppColors.secondary,
+                ),
+                const Divider(
+                    height: 1, color: AppColors.lightShadow, thickness: 1),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
-          Text('Time: $startTime seconds left',
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: AppColors.grey,
-                  )),
-          LinearPercentIndicator(
-            lineHeight: 8,
-            percent: startTime / 30,
-            barRadius: const Radius.circular(8),
-            leading: const Icon(Icons.timer, color: AppColors.grey),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            backgroundColor: AppColors.lightShadow,
-            progressColor: AppColors.secondary,
-          ),
-          const Divider(height: 1, color: AppColors.lightShadow, thickness: 1),
-          const SizedBox(height: 16),
           Container(
+            height: 20.h,
             width: double.infinity,
-            padding: const EdgeInsets.all(64),
             decoration: BoxDecoration(
               color: AppColors.extraLightGrey,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Text(
-              questions[currentQuestionIndex].question,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+            child: Center(
+              child: Text(
+                questions[currentQuestionIndex].question,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -213,6 +224,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ListView.builder(
                       shrinkWrap: true,

@@ -21,7 +21,7 @@ class NoteRemoteDataSource {
 
   const NoteRemoteDataSource(this._firestore, this._auth);
 
-  Future<NotebookModel> createNotebook(String name, XFile? coverImg) async {
+  Future<String> createNotebook(String name, XFile? coverImg) async {
     logger.i('Creating notebook...');
 
     var userId = _auth.currentUser!.uid;
@@ -51,8 +51,7 @@ class NoteRemoteDataSource {
       coverImgFileName = urls[1];
     }
 
-    var createdAt = Timestamp.now();
-    var notebookDoc = await _firestore
+    await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
         .collection(FirestoreCollection.user_notes.name)
@@ -63,20 +62,12 @@ class NoteRemoteDataSource {
       'created_at': FieldValue.serverTimestamp(),
     });
 
-    var nbModel = NotebookModel(
-        id: notebookDoc.id,
-        subject: name.toLowerCase(),
-        coverUrl: coverImgUrl,
-        coverFileName: coverImgFileName,
-        createdAt: createdAt,
-        notes: []);
-
     logger.i(response);
 
-    return nbModel;
+    return response;
   }
 
-  Future<NoteModel> createNote(
+  Future<String> createNote(
       {required String notebookId,
       required String title,
       String? initialContent}) async {
@@ -142,13 +133,15 @@ class NoteRemoteDataSource {
 
     logger.i(response);
 
-    return newNote;
+    return response;
   }
 
   Future<List<NotebookModel>> getNotebooks() async {
     logger.i('Getting notebooks...');
 
     var userId = _auth.currentUser!.uid;
+    // _firestore.collection(FirestoreCollection.users.name).doc(userId).collection(FirestoreCollection.user_notes.name).snapshots()
+
     var notebooks = await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
@@ -166,21 +159,20 @@ class NoteRemoteDataSource {
     return notebooksModel;
   }
 
-  Future<bool> updateNote(
+  Future<String> updateNote(
       {required String notebookId, required NoteModel note}) async {
     logger.i('Updating note...');
 
     var userId = _auth.currentUser!.uid;
 
-    // TODO: simplify this just like the updateMultipleNotes method below
-    var userNote = await _firestore
+    var notebookSnapshot = await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
         .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .get();
 
-    var notes = userNote.data()!['notes'];
+    var notes = notebookSnapshot.data()!['notes'];
     List<NoteModel> notesModel = [];
 
     for (var note in notes) {
@@ -189,8 +181,7 @@ class NoteRemoteDataSource {
 
     notesModel[notesModel.indexWhere((n) => n.id == note.id)] = note;
 
-    var updatedNotes =
-        notesModel.map((noteModel) => noteModel.toJson()).toList();
+    var updatedNotes = notesModel.map((note) => note.toJson()).toList();
 
     await _firestore
         .collection(FirestoreCollection.users.name)
@@ -202,15 +193,14 @@ class NoteRemoteDataSource {
       'updated_at': FieldValue.serverTimestamp()
     });
 
-    logger.i('Note updated successfully.');
+    const response = 'Note saved successfully.';
 
-    return true;
+    return response;
   }
 
-  Future<bool> updateMultipleNotes(
+  Future<String> updateMultipleNotes(
       {required String notebookId, required List<NoteModel> notesModel}) async {
     var userId = _auth.currentUser!.uid;
-    var updatedModels = notesModel.map((noteModel) => noteModel.toJson());
 
     await _firestore
         .collection(FirestoreCollection.users.name)
@@ -218,17 +208,18 @@ class NoteRemoteDataSource {
         .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .update({
-      'notes': updatedModels,
+      'notes': notesModel.map((note) => note.toJson()).toList(),
       'updated_at': FieldValue.serverTimestamp()
     });
 
-    logger.i('Notes updated successfully.');
+    const response = 'Notes updated successfully.';
 
-    return true;
+    logger.i(response);
+
+    return response;
   }
 
-  Future<NotebookModel> updateNotebook(
-      XFile? coverImg, NotebookModel notebook) async {
+  Future<bool> updateNotebook(XFile? coverImg, NotebookModel notebook) async {
     logger.i('Updating notebook...');
     var userId = _auth.currentUser!.uid;
 
@@ -258,7 +249,7 @@ class NoteRemoteDataSource {
 
       logger.i('Notebook updated successfully.');
 
-      return updatedModel;
+      return true;
     } else {
       await _firestore
           .collection(FirestoreCollection.users.name)
@@ -271,7 +262,7 @@ class NoteRemoteDataSource {
       });
 
       logger.i('Notebook updated successfully.');
-      return notebook;
+      return true;
     }
   }
 
@@ -288,7 +279,13 @@ class NoteRemoteDataSource {
         .doc(notebookId)
         .get();
 
-    var notes = userNote.data()!['notes'];
+    var userNoteData = userNote.data();
+    var notes = [];
+
+    if (userNoteData != null && userNoteData['notes'] != null) {
+      notes = userNoteData['notes'];
+    }
+
     List<NoteModel> notesModel = [];
 
     for (var note in notes) {
@@ -452,15 +449,13 @@ class NoteRemoteDataSource {
     final assistantMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.assistant,
         content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            """
+          OpenAIChatCompletionChoiceMessageContentItemModel.text("""
             {
               "learningTechnique": "Feynman Technique",
               "reason": "Your note has an extensive explanation of two quotes, demonstrating understanding by breaking down complex concepts into simpler terms. The Feynman Technique involves explaining concepts in simple terms as if teaching them to someone else.",
               "topic": "Philosophy" 
             },
-            """
-          ),
+            """),
         ]);
 
     final userMessage = OpenAIChatCompletionChoiceMessageModel(

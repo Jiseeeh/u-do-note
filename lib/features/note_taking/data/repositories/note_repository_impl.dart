@@ -14,7 +14,7 @@ class NoteRepositoryImpl implements NoteRepository {
   const NoteRepositoryImpl(this._noteRemoteDataSource);
 
   @override
-  Future<Either<Failure, NoteModel>> createNote(
+  Future<Either<Failure, String>> createNote(
       {required String notebookId,
       required String title,
       String? initialContent}) async {
@@ -31,12 +31,12 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, NotebookModel>> createNotebook(
+  Future<Either<Failure, String>> createNotebook(
       String name, XFile? coverImg) async {
     try {
-      var nbModel = await _noteRemoteDataSource.createNotebook(name, coverImg);
+      var res = await _noteRemoteDataSource.createNotebook(name, coverImg);
 
-      return Right(nbModel);
+      return Right(res);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }
@@ -56,13 +56,13 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateNote(
+  Future<Either<Failure, String>> updateNote(
       {required String notebookId, required NoteModel note}) async {
     try {
-      var success = await _noteRemoteDataSource.updateNote(
+      var res = await _noteRemoteDataSource.updateNote(
           notebookId: notebookId, note: note);
 
-      return Right(success);
+      return Right(res);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
@@ -71,11 +71,13 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateMultipleNotes(
+  Future<Either<Failure, String>> updateMultipleNotes(
       {required String notebookId, required List<NoteModel> notesModel}) async {
     try {
-      return Right(await _noteRemoteDataSource.updateMultipleNotes(
-          notebookId: notebookId, notesModel: notesModel));
+      var res = await _noteRemoteDataSource.updateMultipleNotes(
+          notebookId: notebookId, notesModel: notesModel);
+
+      return Right(res);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
@@ -127,13 +129,13 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
-  Future<Either<Failure, NotebookModel>> updateNotebook(
+  Future<Either<Failure, bool>> updateNotebook(
       XFile? coverImg, NotebookModel notebook) async {
     try {
-      var notebookModel =
+      var res =
           await _noteRemoteDataSource.updateNotebook(coverImg, notebook);
 
-      return Right(notebookModel);
+      return Right(res);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {

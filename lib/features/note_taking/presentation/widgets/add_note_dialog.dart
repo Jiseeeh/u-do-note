@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 
 class AddNoteDialog extends ConsumerStatefulWidget {
@@ -72,7 +73,7 @@ class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
                           maskType: EasyLoadingMaskType.black,
                           dismissOnTap: false);
 
-                      String result = await ref
+                      var res = await ref
                           .read(notebooksProvider.notifier)
                           .createNote(
                               notebookId: widget.notebookId,
@@ -81,7 +82,12 @@ class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
 
                       EasyLoading.dismiss();
 
-                      EasyLoading.showSuccess(result);
+                      if (res is Failure) {
+                        EasyLoading.showError(res.message);
+                        return;
+                      }
+
+                      EasyLoading.showSuccess(res);
                       _titleController.clear();
 
                       if (context.mounted) Navigator.of(context).pop();

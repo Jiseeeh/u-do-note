@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -58,14 +59,18 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
             maskType: EasyLoadingMaskType.black,
             dismissOnTap: false);
 
-        String result = await ref
-            .read(notebooksProvider.notifier)
-            .createNotebook(
-                name: _nameController.text, coverImg: _notebookCoverImg);
+        var res = await ref.read(notebooksProvider.notifier).createNotebook(
+            name: _nameController.text, coverImg: _notebookCoverImg);
 
         EasyLoading.dismiss();
 
-        EasyLoading.showToast(result);
+        if (res is Failure) {
+          EasyLoading.showToast(
+              'Something went wrong, please try again later.');
+          return;
+        }
+
+        EasyLoading.showSuccess(res);
         _nameController.clear();
 
         if (context.mounted) {
@@ -90,15 +95,29 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
               maskType: EasyLoadingMaskType.black,
               dismissOnTap: false);
 
-          isSuccess = await ref.read(notebooksProvider.notifier).updateNotebook(
+          var res = await ref.read(notebooksProvider.notifier).updateNotebook(
               coverImg: _notebookCoverImg, notebook: notebookModel);
+
+          if (res is Failure) {
+            isSuccess = false;
+            return;
+          }
+
+          isSuccess = res as bool;
         } else {
           var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
               .copyWith(subject: _nameController.text);
 
-          isSuccess = await ref
+          var res = await ref
               .read(notebooksProvider.notifier)
               .updateNotebook(coverImg: null, notebook: notebookModel);
+
+          if (res is Failure) {
+            isSuccess = false;
+            return;
+          }
+
+          isSuccess = res as bool;
         }
       }
 

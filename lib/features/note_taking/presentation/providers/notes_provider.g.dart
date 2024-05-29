@@ -202,12 +202,27 @@ final analyzeNoteProvider = AutoDisposeProvider<AnalyzeNote>.internal(
 );
 
 typedef AnalyzeNoteRef = AutoDisposeProviderRef<AnalyzeNote>;
-String _$notebooksHash() => r'e65224a1a984595b8b6439445f771c5d0dfe4cf5';
+String _$notebooksStreamHash() => r'4c5c6f1fa58c73ef7b83ed72e4c3c75a3bda2ec1';
+
+/// See also [notebooksStream].
+@ProviderFor(notebooksStream)
+final notebooksStreamProvider =
+    AutoDisposeStreamProvider<List<NotebookEntity>>.internal(
+  notebooksStream,
+  name: r'notebooksStreamProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$notebooksStreamHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
+String _$notebooksHash() => r'61eca6074eeff0b2391791de253ce62b569dcebe';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)
-final notebooksProvider =
-    AutoDisposeAsyncNotifierProvider<Notebooks, List<NotebookEntity>>.internal(
+final notebooksProvider = AutoDisposeNotifierProvider<Notebooks, void>.internal(
   Notebooks.new,
   name: r'notebooksProvider',
   debugGetCreateSourceHash:
@@ -216,6 +231,6 @@ final notebooksProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$Notebooks = AutoDisposeAsyncNotifier<List<NotebookEntity>>;
+typedef _$Notebooks = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

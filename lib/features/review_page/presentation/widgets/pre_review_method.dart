@@ -202,7 +202,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
   @override
   Widget build(BuildContext context) {
-    var asyncNotebooks = ref.watch(notebooksProvider);
+    var asyncNotebooks = ref.watch(notebooksStreamProvider);
 
     return switch (asyncNotebooks) {
       AsyncData(value: final notebooks) => _buildDialog(context, notebooks),

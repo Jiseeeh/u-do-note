@@ -207,13 +207,20 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
               updatedAt: Timestamp.now())
           .toEntity();
 
-      await ref
+      var res = await ref
           .read(notebooksProvider.notifier)
           .updateNote(widget.notebookId, newNoteEntity);
 
       EasyLoading.dismiss();
 
-      EasyLoading.showSuccess('Note saved!');
+      if (res is Failure) {
+        logger.w("Encountered an error: ${res.message}");
+        EasyLoading.showError(
+            'U Do Note could not save the note. Please try again later.');
+        return;
+      }
+
+      EasyLoading.showSuccess(res);
     };
   }
 

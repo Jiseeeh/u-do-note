@@ -85,7 +85,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         body: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.symmetric(vertical: 0.5.h),
               height: 30.h,
               width: 100.w,
               child: Column(
@@ -99,7 +99,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           .textTheme
                           .displayMedium
                           ?.copyWith(fontSize: 20.sp, color: AppColors.black)),
-                  SizedBox(height: 0.5.h),
+                  SizedBox(height: 1.h),
                   Text(user.email!,
                       style: Theme.of(context)
                           .textTheme

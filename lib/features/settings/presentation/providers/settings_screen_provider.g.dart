@@ -7,7 +7,7 @@ part of 'settings_screen_provider.dart';
 // **************************************************************************
 
 String _$settingsRemoteDataSourceHash() =>
-    r'5e5fd95900ec23f6435415d5a7d8c4162a552336';
+    r'ac98a9458850e4d1cc16bf809e00b7c9aa114276';
 
 /// See also [settingsRemoteDataSource].
 @ProviderFor(settingsRemoteDataSource)
@@ -55,7 +55,24 @@ final signOutProvider = AutoDisposeProvider<SignOut>.internal(
 );
 
 typedef SignOutRef = AutoDisposeProviderRef<SignOut>;
-String _$settingsHash() => r'cbc571bfae1fc45256b3eeb6c58956a70697fc4b';
+String _$uploadProfilePictureHash() =>
+    r'cf12acafe6536988c6f91e64bc2dac22f7a146a5';
+
+/// See also [uploadProfilePicture].
+@ProviderFor(uploadProfilePicture)
+final uploadProfilePictureProvider =
+    AutoDisposeProvider<UploadProfilePicture>.internal(
+  uploadProfilePicture,
+  name: r'uploadProfilePictureProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$uploadProfilePictureHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef UploadProfilePictureRef = AutoDisposeProviderRef<UploadProfilePicture>;
+String _$settingsHash() => r'3cd5b7ff43701e313a5d2a8440e840f75fca3c94';
 
 /// See also [Settings].
 @ProviderFor(Settings)

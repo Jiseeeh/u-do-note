@@ -13,8 +13,8 @@ import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
-import 'package:u_do_note/core/error/failures.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
@@ -41,7 +41,13 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var notebooks = ref.watch(notebooksProvider).value;
+    var notebooks = ref.watch(notebooksStreamProvider).value;
+
+    if (notebooks != null && notebooks.isEmpty) {
+      return const Center(
+        child: Text('No notebooks yet'),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -193,7 +199,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                     return;
                                   }
 
-                                  EasyLoading.showInfo('Updated successfully');
+                                  EasyLoading.showInfo(res);
 
                                   if (context.mounted) {
                                     Navigator.of(dialogContext).pop();
@@ -240,7 +246,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                                     showDialog(
                                         context: context,
-                                        builder: ((dialogContext) => AddNoteDialog(
+                                        builder: ((dialogContext) =>
+                                            AddNoteDialog(
                                               notebookId: widget.notebookId,
                                               initialContent: extractedText,
                                             )));
@@ -380,7 +387,14 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                             notebookId: widget.notebookId, noteId: note.id);
 
                     EasyLoading.dismiss();
-                    EasyLoading.showInfo(res);
+
+                    if (res is Failure) {
+                      logger.w('Encountered error: ${res.message}');
+                      EasyLoading.showError(res.message);
+                      return;
+                    }
+
+                    EasyLoading.showSuccess(res);
                   },
                   icon: const Icon(Icons.delete)),
             ],

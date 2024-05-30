@@ -202,7 +202,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
   @override
   Widget build(BuildContext context) {
-    var asyncNotebooks = ref.watch(notebooksProvider);
+    var asyncNotebooks = ref.watch(notebooksStreamProvider);
 
     return switch (asyncNotebooks) {
       AsyncData(value: final notebooks) => _buildDialog(context, notebooks),
@@ -449,6 +449,10 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         actions: [
                           TextButton(
                             onPressed: () {
+                              // ! temporary fix for the dialog before this dialog not closing
+                              // ! and thus will show again on the next open of this tab
+                              Navigator.of(context).pop(false);
+
                               Navigator.of(dialogContext).pop(false);
                             },
                             child: const Text('No'),

@@ -10,7 +10,7 @@ class UpdateNotebook {
 
   UpdateNotebook(this._noteRepository);
 
-  Future<Either<Failure, NotebookModel>> call(
+  Future<Either<Failure, bool>> call(
       XFile? coverImg, NotebookModel notebook) async {
     return await _noteRepository.updateNotebook(coverImg, notebook);
   }

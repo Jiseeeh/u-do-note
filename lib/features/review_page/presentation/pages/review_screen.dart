@@ -1,13 +1,13 @@
 import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
-import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_method_provider.dart';
@@ -192,6 +192,19 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         ]);
   }
 
+  String _getGreeting() {
+    var hour = DateTime.now().hour;
+
+    if (hour < 12) {
+      return 'Good Morning,';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon,';
+    }
+
+    return 'Good Evening,';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,9 +214,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   }
 
   AppBar _buildAppBar(WidgetRef ref) {
-    var currentUser = ref.read(firebaseAuthProvider).currentUser;
-    String username = currentUser!.displayName!;
-
+    var username = FirebaseAuth.instance.currentUser!.displayName!;
     return AppBar(
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
@@ -213,7 +224,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Welcome back,',
+              Text(_getGreeting(),
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge

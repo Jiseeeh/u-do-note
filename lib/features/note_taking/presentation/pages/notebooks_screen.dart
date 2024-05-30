@@ -1,9 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/notebook_card.dart';
@@ -22,12 +21,10 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncNotes = ref.watch(notebooksProvider);
-
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(),
-        body: _buildBody(userNotes: asyncNotes),
+        body: _buildBody(),
         floatingActionButton: SpeedDial(
           activeIcon: Icons.close,
           buttonSize: const Size(50, 50),
@@ -82,25 +79,26 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
     );
   }
 
-  Widget _buildBody({required AsyncValue<List<NotebookEntity>> userNotes}) {
-    if (userNotes.hasValue && userNotes.value!.isEmpty) {
-      return const Center(
-        child: Text('No Notebooks yet.'),
-      );
-    }
+  Widget _buildBody() {
+    var notebooks = ref.watch(notebooksStreamProvider);
 
-    return switch (userNotes) {
+    return switch (notebooks) {
       AsyncData(:final value) => GridView.count(
           crossAxisCount: gridCols,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           childAspectRatio: (1 / 1.5),
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
-          children: [for (var notebook in value) NotebookCard(notebook)],
+          children: [
+            if (value.isEmpty)
+              const Center(
+                child: Text('No Notebooks yet.'),
+              )
+            else
+              for (var notebook in value) NotebookCard(notebook)
+          ],
         ),
-      AsyncError(:final error) => Center(
-          child: Text(error.toString()),
-        ),
+      AsyncError(:final error) => Center(child: Text(error.toString())),
       _ => const Center(
           child: CircularProgressIndicator(),
         ),

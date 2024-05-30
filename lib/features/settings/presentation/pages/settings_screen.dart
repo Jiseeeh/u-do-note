@@ -3,9 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/domain/providers/app_theme_provider.dart';
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
@@ -23,13 +26,45 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Image? profile;
   bool isLoading = true;
-  // ? not null assert since user cannot get here unless they are logged in
-  var user = FirebaseAuth.instance.currentUser!;
+  var nameController = TextEditingController();
+  var nameFocusNode = FocusNode();
+  var currentName = '';
   late String theme;
 
   @override
   void initState() {
     super.initState();
+    var user = FirebaseAuth.instance.currentUser!;
+
+    nameController.text = user.displayName!;
+    currentName = user.displayName!;
+
+    nameFocusNode.addListener(() {
+      if (!nameFocusNode.hasFocus) {
+        if (nameController.text.isEmpty) {
+          EasyLoading.showError('Name cannot be empty!');
+          return;
+        }
+
+        if (nameController.text.length < 3) {
+          EasyLoading.showError('Name must be at least 3 characters long!');
+          return;
+        }
+
+        if (nameController.text.length > 20) {
+          EasyLoading.showError('Name must be at most 16 characters long!');
+          return;
+        }
+
+        if (nameController.text != currentName) {
+          logger.w('updating name');
+
+          FirebaseAuth.instance.currentUser!
+              .updateDisplayName(nameController.text);
+          currentName = nameController.text;
+        }
+      }
+    });
 
     if (user.photoURL != null) {
       profile = Image.network(user.photoURL!);
@@ -69,6 +104,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     var currentTheme = ref.watch(themeNotifierProvider);
     theme = currentTheme.name.substring(0, 1).toUpperCase() +
         currentTheme.name.substring(1);
+    // ? not null assert since user cannot get here unless they are logged in
+    var user = FirebaseAuth.instance.currentUser!;
 
     return Skeletonizer(
       enabled: isLoading,
@@ -85,21 +122,75 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         body: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.only(top: 2.h),
               height: 30.h,
               width: 100.w,
               child: Column(
                 children: [
                   Skeleton.ignore(
-                    child: CircleAvatar(
-                        radius: 10.h, backgroundImage: profile!.image),
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                            radius: 10.h, backgroundImage: profile!.image),
+                        Positioned(
+                            bottom: 0,
+                            right: 5.w,
+                            child: CircleAvatar(
+                              backgroundColor: AppColors.lightGrey,
+                              child: IconButton(
+                                onPressed: () async {
+                                  EasyLoading.show(
+                                      status: 'Loading image picker...',
+                                      maskType: EasyLoadingMaskType.black,
+                                      dismissOnTap: false);
+
+                                  var img = await ImagePicker()
+                                      .pickImage(source: ImageSource.gallery);
+
+                                  EasyLoading.dismiss();
+
+                                  var res = await ref
+                                      .read(settingsProvider.notifier)
+                                      .uploadProfilePicture(image: img);
+
+                                  if (res is Failure) {
+                                    EasyLoading.showError(res.message);
+                                    return;
+                                  }
+
+                                  profile = Image.network(res as String);
+
+                                  setState(() {});
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  size: 16.sp, // Adjust the size as needed
+                                  color: AppColors
+                                      .black, // Adjust the color as needed
+                                ),
+                              ),
+                            ))
+                      ],
+                    ),
                   ),
-                  Text(user.displayName!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium
-                          ?.copyWith(fontSize: 20.sp, color: AppColors.black)),
-                  SizedBox(height: 0.5.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35.0.w),
+                    child: SizedBox(
+                      width: 100.w,
+                      child: TextField(
+                          controller: nameController,
+                          focusNode: nameFocusNode,
+                          textAlign: TextAlign.center,
+                          decoration:
+                              const InputDecoration.collapsed(hintText: ''),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium
+                              ?.copyWith(
+                                  fontSize: 20.sp, color: AppColors.black)),
+                    ),
+                  ),
+                  SizedBox(height: 1.h),
                   Text(user.email!,
                       style: Theme.of(context)
                           .textTheme

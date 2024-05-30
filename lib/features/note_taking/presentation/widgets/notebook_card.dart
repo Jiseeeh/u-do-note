@@ -4,6 +4,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -84,7 +86,16 @@ class NotebookCard extends ConsumerWidget {
                                     coverFileName: notebook.coverFileName);
 
                             EasyLoading.dismiss();
-                            EasyLoading.showToast(res);
+
+                            if (res is Failure) {
+                              logger.w(
+                                  'Encountered an error while deleting notebook: ${res.message}');
+
+                              EasyLoading.showError(res.message);
+                              return;
+                            }
+
+                            EasyLoading.showSuccess(res);
                           }
 
                           if (isEdit && context.mounted) {

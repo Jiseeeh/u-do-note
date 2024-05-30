@@ -41,7 +41,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: LoginRoute.page, path: '/login'),
         AutoRoute(page: HomepageRoute.page, path: '/home', children: [
           AutoRoute(page: NotebooksRoute.page, path: ''),
-          AutoRoute(page: ReviewRoute.page, path: 'review'),
+          AutoRoute(page: ReviewRoute.page, path: 'review', maintainState: false),
           AutoRoute(
               page: AnalyticsRoute.page,
               path: 'analytics',

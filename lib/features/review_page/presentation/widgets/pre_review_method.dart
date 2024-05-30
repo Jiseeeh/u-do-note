@@ -449,6 +449,10 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         actions: [
                           TextButton(
                             onPressed: () {
+                              // ! temporary fix for the dialog before this dialog not closing
+                              // ! and thus will show again on the next open of this tab
+                              Navigator.of(context).pop(false);
+
                               Navigator.of(dialogContext).pop(false);
                             },
                             child: const Text('No'),

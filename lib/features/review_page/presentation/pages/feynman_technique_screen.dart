@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/dart_openai.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
@@ -41,6 +44,7 @@ class _FeynmanTechniqueScreenState
   var newSessionNameController = TextEditingController();
   String? docId; // ? to track if the user is re-saving the session
   FeynmanModel? feynmanModel;
+  Timer? _messagesTimer;
 
   // ? hard coded ids since only user and robot are the only users in the chat
   final _robot = const types.User(
@@ -61,7 +65,27 @@ class _FeynmanTechniqueScreenState
       return;
     }
 
+    _messagesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      logger.d('Checking messages length: ${_messages.length}');
+
+      if (isRobotThinking) return;
+
+      if (_messages.length > 5) {
+        _saveChat(isFromFloatingButton: false);
+        _handleSendPressed(
+            context, const types.PartialText(text: 'quiz'), true);
+        timer.cancel();
+        return;
+      }
+    });
+
     callRobotResponse();
+  }
+
+  @override
+  void dispose() {
+    _messagesTimer?.cancel();
+    super.dispose();
   }
 
   void _initOldSession() {
@@ -99,36 +123,13 @@ class _FeynmanTechniqueScreenState
     });
   }
 
-  void _handleSendPressed(
-      BuildContext context, types.PartialText message) async {
+  void _handleSendPressed(BuildContext context, types.PartialText message,
+      bool isFromPeriodicTimer) async {
     FocusScope.of(context).requestFocus(FocusNode());
 
     if (message.text.toLowerCase() == "quiz") {
       if (widget.feynmanEntity != null) {
-        var willTakeNewQuiz = await showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (dialogContext) {
-              return AlertDialog(
-                title: const Text('Quiz'),
-                content: const Text(
-                    'Do you want to check the results of the previous quiz in this session or start a new quiz?'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop(false);
-                    },
-                    child: const Text('Check old results'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop(true);
-                    },
-                    child: const Text('Start a quiz'),
-                  ),
-                ],
-              );
-            });
+        var willTakeNewQuiz = await _willTakeNewQuizDialog();
 
         if (!context.mounted) return;
 
@@ -152,36 +153,7 @@ class _FeynmanTechniqueScreenState
 
       if (!context.mounted) return;
 
-      var willTakeQuiz = await showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (dialogContext) {
-            return AlertDialog(
-              title: const Text('Quiz'),
-              content: widget.feynmanEntity == null
-                  ? const Text(
-                      'Are you ready to take a quiz? You can take a quiz after you finish the chat.')
-                  : widget.feynmanEntity!.questions!.isEmpty
-                      ? const Text(
-                          'Are you ready to start a quiz in this session?')
-                      : const Text(
-                          'Starting a new quiz will make a new session. Do you want to proceed?'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop(false);
-                  },
-                  child: const Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop(true);
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            );
-          });
+      var willTakeQuiz = await _willTakeQuizDialog(isFromPeriodicTimer);
 
       if (!willTakeQuiz || !context.mounted) return;
 
@@ -222,51 +194,7 @@ class _FeynmanTechniqueScreenState
           return;
         }
 
-        var newSessionName = await showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (dialogContext) {
-              return AlertDialog(
-                title: const Text('Quiz'),
-                content: Form(
-                  key: formKey,
-                  child: TextFormField(
-                    controller: newSessionNameController,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Please enter a session name.";
-                      }
-
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      labelText: "Session Name",
-                      hintText: 'planets-retake',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop(null);
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      if (!formKey.currentState!.validate()) {
-                        return;
-                      }
-
-                      Navigator.of(dialogContext)
-                          .pop(newSessionNameController.text);
-                    },
-                    child: const Text('Continue'),
-                  ),
-                ],
-              );
-            });
+        var newSessionName = await _newSessionNameDialog();
 
         if (newSessionName == null) return;
         if (!context.mounted) return;
@@ -295,14 +223,131 @@ class _FeynmanTechniqueScreenState
       text: message.text,
     );
 
-    _history.add(ChatMessage(
-        content: message.text, role: OpenAIChatMessageRole.user));
+    _history.add(
+        ChatMessage(content: message.text, role: OpenAIChatMessageRole.user));
 
     recentUserMessages.add(message.text);
 
     _addMessage(textMessage);
 
     await callRobotResponse();
+  }
+
+  Future<bool> _willTakeNewQuizDialog() async {
+    return await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text('Quiz'),
+            content: const Text(
+                'Do you want to check the results of the previous quiz in this session or start a new quiz?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(false);
+                },
+                child: const Text('Check old results'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(true);
+                },
+                child: const Text('Start a quiz'),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<bool> _willTakeQuizDialog(bool isFromPeriodicTimer) async {
+    String getDialogContent() {
+      if (isFromPeriodicTimer) {
+        return 'Just a reminder, do you want to start the quiz?';
+      }
+
+      if (widget.feynmanEntity == null) {
+        return 'Are you ready to start a quiz in this session?';
+      }
+
+      if (widget.feynmanEntity!.questions!.isEmpty) {
+        return 'Are you ready to start a quiz in this session?';
+      }
+
+      return 'Starting a new quiz will make a new session. Do you want to proceed?';
+    }
+
+    return await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text('Quiz'),
+            content: Text(getDialogContent()),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(false);
+                },
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(true);
+                },
+                child: const Text('Yes'),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<String?> _newSessionNameDialog() async {
+    return await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text('Quiz'),
+            content: Form(
+              key: formKey,
+              child: TextFormField(
+                controller: newSessionNameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter a session name.";
+                  }
+
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  labelText: "Session Name",
+                  hintText: 'planets-retake',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(null);
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (!formKey.currentState!.validate()) {
+                    return;
+                  }
+
+                  Navigator.of(dialogContext)
+                      .pop(newSessionNameController.text);
+                },
+                child: const Text('Continue'),
+              ),
+            ],
+          );
+        });
   }
 
   Future<void> callRobotResponse() async {
@@ -313,8 +358,7 @@ class _FeynmanTechniqueScreenState
     var robotRes = await ref
         .read(feynmanTechniqueProvider.notifier)
         .getChatResponse(
-            contentFromPages: widget.contentFromPages,
-            history: _history);
+            contentFromPages: widget.contentFromPages, history: _history);
 
     _history.add(
         ChatMessage(content: robotRes, role: OpenAIChatMessageRole.assistant));
@@ -324,6 +368,41 @@ class _FeynmanTechniqueScreenState
     });
 
     _handleRobotChat(robotRes);
+  }
+
+  Future<void> _saveChat({required bool isFromFloatingButton}) async {
+    if (isFromFloatingButton) {
+      EasyLoading.show(
+          status: 'Saving session...',
+          maskType: EasyLoadingMaskType.black,
+          dismissOnTap: false);
+    }
+
+    feynmanModel = FeynmanModel(
+        createdAt: Timestamp.now(),
+        sessionName: widget.sessionName,
+        contentFromPagesUsed: widget.contentFromPages,
+        messages: _messages,
+        recentRobotMessages: recentRobotMessages,
+        recentUserMessages: recentUserMessages);
+
+    var reviewState = ref.watch(reviewScreenProvider);
+
+    var res = await ref.read(feynmanTechniqueProvider.notifier).saveSession(
+        feynmanModel: feynmanModel!,
+        notebookId: reviewState.notebookId!,
+        docId: docId);
+
+    if (isFromFloatingButton) EasyLoading.dismiss();
+
+    if (res is Failure) {
+      EasyLoading.showError(res.message);
+      return;
+    }
+
+    docId = res;
+
+    feynmanModel = feynmanModel!.copyWith(id: res);
   }
 
   @override
@@ -354,38 +433,7 @@ class _FeynmanTechniqueScreenState
           padding: const EdgeInsets.only(bottom: 50.0),
           child: FloatingActionButton(
             onPressed: () async {
-              EasyLoading.show(
-                  status: 'Saving session...',
-                  maskType: EasyLoadingMaskType.black,
-                  dismissOnTap: false);
-
-              feynmanModel = FeynmanModel(
-                  createdAt: Timestamp.now(),
-                  sessionName: widget.sessionName,
-                  contentFromPagesUsed: widget.contentFromPages,
-                  messages: _messages,
-                  recentRobotMessages: recentRobotMessages,
-                  recentUserMessages: recentUserMessages);
-
-              var reviewState = ref.watch(reviewScreenProvider);
-
-              var res = await ref
-                  .read(feynmanTechniqueProvider.notifier)
-                  .saveSession(
-                      feynmanModel: feynmanModel!,
-                      notebookId: reviewState.notebookId!,
-                      docId: docId);
-
-              EasyLoading.dismiss();
-
-              if (res is Failure) {
-                EasyLoading.showError(res.message);
-                return;
-              }
-
-              docId = res;
-
-              feynmanModel = feynmanModel!.copyWith(id: res);
+              await _saveChat(isFromFloatingButton: true);
             },
             child: const Icon(Icons.save_rounded),
           ),
@@ -393,7 +441,7 @@ class _FeynmanTechniqueScreenState
         body: Chat(
           messages: _messages,
           onSendPressed: (types.PartialText message) {
-            _handleSendPressed(context, message);
+            _handleSendPressed(context, message, false);
           },
           user: _user,
           theme: DefaultChatTheme(

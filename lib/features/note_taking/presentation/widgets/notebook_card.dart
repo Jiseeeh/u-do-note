@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -35,6 +36,8 @@ class NotebookCard extends ConsumerWidget {
           child: InkWell(
             // ? InkWell is for the ripple effect
             onTap: () {
+              ref.read(appStateProvider.notifier).setCurrentNotebookId(notebook.id);
+              
               context.router.pushNamed('/notebook/pages/${notebook.id}');
             },
           ),

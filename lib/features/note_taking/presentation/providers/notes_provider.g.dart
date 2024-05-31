@@ -202,6 +202,21 @@ final analyzeNoteProvider = AutoDisposeProvider<AnalyzeNote>.internal(
 );
 
 typedef AnalyzeNoteRef = AutoDisposeProviderRef<AnalyzeNote>;
+String _$summarizeNoteHash() => r'd127b9d823a2fa10d16fe24371f9055bab395d1e';
+
+/// See also [summarizeNote].
+@ProviderFor(summarizeNote)
+final summarizeNoteProvider = AutoDisposeProvider<SummarizeNote>.internal(
+  summarizeNote,
+  name: r'summarizeNoteProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$summarizeNoteHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SummarizeNoteRef = AutoDisposeProviderRef<SummarizeNote>;
 String _$notebooksStreamHash() => r'4c5c6f1fa58c73ef7b83ed72e4c3c75a3bda2ec1';
 
 /// See also [notebooksStream].
@@ -218,7 +233,7 @@ final notebooksStreamProvider =
 );
 
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'a2f5e98abbea9afc9f699676e7557a3263c7987e';
+String _$notebooksHash() => r'34c6ed91cfa74f551b196c5e25cec914314eab36';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

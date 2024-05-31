@@ -21,6 +21,7 @@ import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.d
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/summarize_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_multiple_notes.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_notebook.dart';
@@ -55,7 +56,7 @@ GetNotebooks getNotebooks(GetNotebooksRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return GetNotebooks(repository);
-  }
+}
 
 @riverpod
 UpdateNote updateNote(UpdateNoteRef ref) {
@@ -118,6 +119,13 @@ AnalyzeNote analyzeNote(AnalyzeNoteRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return AnalyzeNote(repository);
+}
+
+@riverpod
+SummarizeNote summarizeNote(SummarizeNoteRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return SummarizeNote(repository);
 }
 
 @riverpod
@@ -223,7 +231,8 @@ class Notebooks extends _$Notebooks {
   }
 
   /// Creates a notebook from the given [name]
-  Future<dynamic> createNotebook({required String name, XFile? coverImg}) async {
+  Future<dynamic> createNotebook(
+      {required String name, XFile? coverImg}) async {
     var createNotebook = ref.read(createNotebookProvider);
 
     var failureOrString = await createNotebook(name, coverImg);
@@ -262,7 +271,6 @@ class Notebooks extends _$Notebooks {
     return failureOrString.fold((failure) => failure, (res) => res);
   }
 
-
   Future<dynamic> analyzeImageText(ImageSource imgSource) async {
     final analyzeImageText = ref.read(analyzeImageTextProvider);
 
@@ -277,5 +285,13 @@ class Notebooks extends _$Notebooks {
     var failureOrText = await analyzeNote(content);
 
     return failureOrText.fold((failure) => failure, (text) => text);
+  }
+
+  Future<dynamic> summarizeNote({required String content}) async {
+    final summarizeNote = ref.read(summarizeNoteProvider);
+
+    var failureOrJsonStr = await summarizeNote(content);
+
+    return failureOrJsonStr.fold((failure) => failure, (jsonStr) => jsonStr);
   }
 }

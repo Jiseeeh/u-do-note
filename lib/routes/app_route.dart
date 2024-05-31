@@ -10,6 +10,7 @@ import 'package:u_do_note/features/authentication/presentation/pages/sign_up_scr
 import 'package:u_do_note/features/note_taking/presentation/pages/note_taking_screen.dart';
 import 'package:u_do_note/features/note_taking/presentation/pages/notebook_pages_screen.dart';
 import 'package:u_do_note/features/note_taking/presentation/pages/notebooks_screen.dart';
+import 'package:u_do_note/features/note_taking/presentation/pages/summary_screen.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
@@ -41,7 +42,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: LoginRoute.page, path: '/login'),
         AutoRoute(page: HomepageRoute.page, path: '/home', children: [
           AutoRoute(page: NotebooksRoute.page, path: ''),
-          AutoRoute(page: ReviewRoute.page, path: 'review', maintainState: false),
+          AutoRoute(
+              page: ReviewRoute.page, path: 'review', maintainState: false),
           AutoRoute(
               page: AnalyticsRoute.page,
               path: 'analytics',
@@ -54,6 +56,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
         AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note'),
+        AutoRoute(page: SummaryRoute.page, path: '/summary'),
         AutoRoute(page: QuizRoute.page, path: '/quiz'),
         AutoRoute(page: QuizResultsRoute.page, path: '/quiz-results'),
         AutoRoute(page: LeitnerSystemRoute.page, path: '/leitner-system'),

@@ -368,6 +368,44 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     }
   }
 
+  VoidCallback onSummarizeNote(BuildContext context) {
+    return () async {
+      EasyLoading.show(
+          status: 'Summarizing your note...',
+          maskType: EasyLoadingMaskType.black,
+          dismissOnTap: false);
+
+      var jsonRes = await ref
+          .read(notebooksProvider.notifier)
+          .summarizeNote(content: _controller.document.toPlainText());
+
+      EasyLoading.dismiss();
+
+      if (jsonRes is Failure) {
+        logger.w("Encountered an error: ${jsonRes.message}");
+
+        EasyLoading.showError('Something went wrong. Please try again later.');
+        return;
+      }
+
+      var decodedJson = json.decode(jsonRes);
+
+      if (decodedJson['isValid'] == false) {
+        EasyLoading.showError(
+            'U Do Note could not summarize the note. Please try again later.');
+        return;
+      }
+
+      if (!context.mounted) return;
+
+      // ? autosave still runs on summary page
+      _autoSaveTimer?.cancel();
+
+      context.router.push(SummaryRoute(
+          topic: decodedJson['topic'], summary: decodedJson['summary']));
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -398,7 +436,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             elevation: 0,
                             child: const Icon(Icons.summarize_rounded),
                             labelWidget: const Text('Summarize'),
-                            onTap: () {}),
+                            onTap: onSummarizeNote(context)),
                         SpeedDialChild(
                             elevation: 0,
                             child: const Icon(Icons.mic_rounded),

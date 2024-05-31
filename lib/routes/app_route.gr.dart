@@ -134,6 +134,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SignUpScreen(),
       );
     },
+    SummaryRoute.name: (routeData) {
+      final args = routeData.argsAs<SummaryRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SummaryScreen(
+          topic: args.topic,
+          summary: args.summary,
+          key: args.key,
+        ),
+      );
+    },
   };
 }
 
@@ -515,4 +526,47 @@ class SignUpRoute extends PageRouteInfo<void> {
   static const String name = 'SignUpRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SummaryScreen]
+class SummaryRoute extends PageRouteInfo<SummaryRouteArgs> {
+  SummaryRoute({
+    required String topic,
+    required String summary,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SummaryRoute.name,
+          args: SummaryRouteArgs(
+            topic: topic,
+            summary: summary,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SummaryRoute';
+
+  static const PageInfo<SummaryRouteArgs> page =
+      PageInfo<SummaryRouteArgs>(name);
+}
+
+class SummaryRouteArgs {
+  const SummaryRouteArgs({
+    required this.topic,
+    required this.summary,
+    this.key,
+  });
+
+  final String topic;
+
+  final String summary;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'SummaryRouteArgs{topic: $topic, summary: $summary, key: $key}';
+  }
 }

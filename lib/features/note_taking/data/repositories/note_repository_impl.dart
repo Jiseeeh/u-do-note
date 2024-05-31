@@ -166,4 +166,15 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+  
+  @override
+  Future<Either<Failure, String>> summarizeNote(String content) async{
+    try {
+      var summarizedText = await _noteRemoteDataSource.summarizeNote(content);
+
+      return Right(summarizedText);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

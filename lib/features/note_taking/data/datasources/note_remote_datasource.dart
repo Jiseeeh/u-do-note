@@ -497,4 +497,46 @@ class NoteRemoteDataSource {
 
     return response;
   }
+
+  Future<String> summarizeNote(String content) async {
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+        role: OpenAIChatMessageRole.system,
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text("""
+            You are a helpful assistant that will help students to summarize their notes. Follow these guidelines:
+
+            1. Your response should be in JSON format with the following keys: "summary",topic, and "isValid".
+            2. The summary should be concise and limit prose.
+            3. If the note is gibberish or not understandable, please let the user know and return isValid as false.
+            """),
+        ]);
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+        role: OpenAIChatMessageRole.user,
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(
+            """
+            Here is the note I want to summarize: $content
+            """,
+          ),
+        ]);
+
+    final requestMessages = [
+      systemMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-3.5-turbo-0125",
+      responseFormat: {"type": "json_object"},
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 600,
+    );
+
+    String? jsonRes = chatCompletion.choices.first.message.content!.first.text;
+
+    return jsonRes!;
+  }
 }

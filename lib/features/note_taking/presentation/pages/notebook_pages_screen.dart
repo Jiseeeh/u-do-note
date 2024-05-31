@@ -18,6 +18,7 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
+import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
@@ -38,6 +39,18 @@ class NotebookPagesScreen extends ConsumerStatefulWidget {
 class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
   var gridCols = 2;
   var notebookIdsToPasteExtractedContent = [];
+  String notebookId = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    initNotebookId();
+  }
+
+  void initNotebookId() {
+    notebookId = ref.read(appStateProvider).currentNotebookId;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +66,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         title: Text(
-          notebooks!.firstWhere((nb) => nb.id == widget.notebookId).subject,
+          notebooks!.firstWhere((nb) => nb.id == notebookId).subject,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -71,7 +84,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                 showDialog(
                     context: context,
                     builder: ((dialogContext) =>
-                        AddNoteDialog(notebookId: widget.notebookId)));
+                        AddNoteDialog(notebookId: notebookId)));
               }),
           SpeedDialChild(
               elevation: 0,
@@ -158,8 +171,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                       dismissOnTap: false);
 
                                   var notebookPages = notebooks
-                                      .firstWhere(
-                                          (nb) => nb.id == widget.notebookId)
+                                      .firstWhere((nb) => nb.id == notebookId)
                                       .notes;
 
                                   var updatedNoteEntities =
@@ -189,7 +201,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                   var res = await ref
                                       .read(notebooksProvider.notifier)
                                       .updateMultipleNotes(
-                                          notebookId: widget.notebookId,
+                                          notebookId: notebookId,
                                           notesEntity: updatedNoteEntities);
 
                                   EasyLoading.dismiss();
@@ -213,8 +225,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                 MultiSelectDialogField(
                                   listType: MultiSelectListType.CHIP,
                                   items: notebooks
-                                      .firstWhere(
-                                          (nb) => nb.id == widget.notebookId)
+                                      .firstWhere((nb) => nb.id == notebookId)
                                       .notes
                                       .map((note) => MultiSelectItem<String>(
                                           note.id, note.title))
@@ -248,7 +259,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                         context: context,
                                         builder: ((dialogContext) =>
                                             AddNoteDialog(
-                                              notebookId: widget.notebookId,
+                                              notebookId: notebookId,
                                               initialContent: extractedText,
                                             )));
                                   },
@@ -290,7 +301,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
   // and if applicable, also allow changing of background image
   Widget _buildBody(
       BuildContext context, WidgetRef ref, List<NotebookEntity>? notebooks) {
-    var notebook = notebooks!.firstWhere((nb) => nb.id == widget.notebookId);
+    var notebook = notebooks!.firstWhere((nb) => nb.id == notebookId);
 
     if (notebook.notes.isEmpty) {
       return const Center(
@@ -343,8 +354,12 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
             children: [
               IconButton(
                   onPressed: () {
-                    context.router.push(NoteTakingRoute(
-                        notebookId: widget.notebookId, note: note));
+                    ref
+                        .read(appStateProvider.notifier)
+                        .setCurrentNoteId(note.id);
+
+                    context.router.push(
+                        NoteTakingRoute(notebookId: notebookId, note: note));
                   },
                   icon: const Icon(Icons.edit)),
               IconButton(
@@ -383,8 +398,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                     var res = await ref
                         .read(notebooksProvider.notifier)
-                        .deleteNote(
-                            notebookId: widget.notebookId, noteId: note.id);
+                        .deleteNote(notebookId: notebookId, noteId: note.id);
 
                     EasyLoading.dismiss();
 

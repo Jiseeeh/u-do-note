@@ -18,6 +18,7 @@ import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
+import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/analyze_image_text_dialog.dart';
@@ -52,6 +53,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   String? _topicAnalyzed;
   Timer? _timer;
   Timer? _noteLenTimer;
+  Timer? _autoSaveTimer;
 
   @override
   void initState() {
@@ -60,6 +62,12 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     final json = jsonDecode(widget.note.content);
 
     _controller.document = Document.fromJson(json);
+
+    _autoSaveTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      logger.d('Auto saving note...');
+
+      onSave(showLoading: false);
+    });
 
     checkIfAnalyzed(context);
   }
@@ -70,6 +78,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
     _timer?.cancel();
     _noteLenTimer?.cancel();
+    _autoSaveTimer?.cancel();
     super.dispose();
   }
 
@@ -190,38 +199,43 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     });
   }
 
-  VoidCallback onSave(WidgetRef ref) {
-    return () async {
+  void onSave({required bool showLoading}) async {
+    if (showLoading) {
       EasyLoading.show(
           status: 'loading...',
           maskType: EasyLoadingMaskType.black,
           dismissOnTap: false);
+    }
 
-      final json = jsonEncode(_controller.document.toDelta().toJson());
-      var noteModel = NoteModel.fromEntity(widget.note);
+    final json = jsonEncode(_controller.document.toDelta().toJson());
+    var noteModel = NoteModel.fromEntity(widget.note);
 
-      var newNoteEntity = noteModel
-          .copyWith(
-              content: json,
-              plainTextContent: _controller.document.toPlainText(),
-              updatedAt: Timestamp.now())
-          .toEntity();
+    var newNoteEntity = noteModel
+        .copyWith(
+            content: json,
+            plainTextContent: _controller.document.toPlainText(),
+            updatedAt: Timestamp.now())
+        .toEntity();
 
-      var res = await ref
-          .read(notebooksProvider.notifier)
-          .updateNote(widget.notebookId, newNoteEntity);
+    var res = await ref
+        .read(notebooksProvider.notifier)
+        .updateNote(widget.notebookId, newNoteEntity);
 
-      EasyLoading.dismiss();
+    if (showLoading) EasyLoading.dismiss();
 
-      if (res is Failure) {
-        logger.w("Encountered an error: ${res.message}");
+    if (res is Failure) {
+      logger.w("Encountered an error: ${res.message}");
+
+      if (showLoading) {
         EasyLoading.showError(
             'U Do Note could not save the note. Please try again later.');
-        return;
       }
+      return;
+    }
 
-      EasyLoading.showSuccess(res);
-    };
+    logger.i(res);
+
+    if (showLoading) EasyLoading.showSuccess(res);
   }
 
   void showAnalysisDialog(BuildContext context) async {
@@ -356,129 +370,142 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            appBar: _buildAppBar(),
-            body: _buildBody(),
-            floatingActionButton: _speechToText.isListening
-                ? FloatingActionButton(
-                    child: const Icon(Icons.mic_off_rounded),
-                    onPressed: () {
-                      _stopListening();
-                    })
-                : SpeedDial(
-                    activeIcon: Icons.close,
-                    buttonSize: const Size(50, 50),
-                    curve: Curves.bounceIn,
-                    children: [
-                      SpeedDialChild(
-                          elevation: 0,
-                          child: const Icon(Icons.save_rounded),
-                          labelWidget: const Text('Save Note'),
-                          onTap: onSave(ref)),
-                      SpeedDialChild(
-                          elevation: 0,
-                          child: const Icon(Icons.mic_rounded),
-                          labelWidget: _speechEnabled
-                              ? const Text('Tap here to start listening')
-                              : const Text('Tap to allow speech to text'),
-                          onTap: () async {
-                            await _initSpeech();
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) {
+        onSave(showLoading: false);
 
-                            if (_speechEnabled) {
-                              _startListening();
-                              return;
-                            }
+        var lastNoteId = ref.read(appStateProvider).currentNoteId;
 
-                            EasyLoading.showError(
-                                'Speech to text is not enabled. Please try again later.');
-                          }),
-                      SpeedDialChild(
-                          elevation: 0,
-                          child: const Icon(Icons.preview_rounded),
-                          labelWidget: const Text('Read only'),
-                          onTap: () {
-                            setState(() {
-                              readOnly = !readOnly;
-                            });
-                          }),
-                      SpeedDialChild(
-                          elevation: 0,
-                          child: const Icon(Icons.camera_alt_rounded),
-                          labelWidget: const Text('Scan text'),
-                          onTap: () async {
-                            var text = await ref
-                                .read(notebooksProvider.notifier)
-                                .analyzeImageText(ImageSource.camera);
+        context.router.replace(NotebookPagesRoute(notebookId: lastNoteId));
+      },
+      child: SafeArea(
+          child: Scaffold(
+              appBar: _buildAppBar(),
+              body: _buildBody(),
+              floatingActionButton: _speechToText.isListening
+                  ? FloatingActionButton(
+                      child: const Icon(Icons.mic_off_rounded),
+                      onPressed: () {
+                        _stopListening();
+                      })
+                  : SpeedDial(
+                      activeIcon: Icons.close,
+                      buttonSize: const Size(50, 50),
+                      curve: Curves.bounceIn,
+                      children: [
+                        SpeedDialChild(
+                            elevation: 0,
+                            child: const Icon(Icons.summarize_rounded),
+                            labelWidget: const Text('Summarize'),
+                            onTap: () {}),
+                        SpeedDialChild(
+                            elevation: 0,
+                            child: const Icon(Icons.mic_rounded),
+                            labelWidget: _speechEnabled
+                                ? const Text('Tap here to start listening')
+                                : const Text('Tap to allow speech to text'),
+                            onTap: () async {
+                              await _initSpeech();
 
-                            // ? dismiss the loading in analyzeImageText
-                            EasyLoading.dismiss();
+                              if (_speechEnabled) {
+                                _startListening();
+                                return;
+                              }
 
-                            if (!context.mounted) return;
+                              EasyLoading.showError(
+                                  'Speech to text is not enabled. Please try again later.');
+                            }),
+                        SpeedDialChild(
+                            elevation: 0,
+                            child: const Icon(Icons.preview_rounded),
+                            labelWidget: const Text('Read only'),
+                            onTap: () {
+                              setState(() {
+                                readOnly = !readOnly;
+                              });
+                            }),
+                        SpeedDialChild(
+                            elevation: 0,
+                            child: const Icon(Icons.camera_alt_rounded),
+                            labelWidget: const Text('Scan text'),
+                            onTap: () async {
+                              var text = await ref
+                                  .read(notebooksProvider.notifier)
+                                  .analyzeImageText(ImageSource.camera);
 
-                            if (text is Failure) {
-                              logger.w("Encountered an error: ${text.message}");
-                              return;
-                            }
+                              // ? dismiss the loading in analyzeImageText
+                              EasyLoading.dismiss();
 
-                            textFieldController.text = text;
+                              if (!context.mounted) return;
 
-                            var willContinue = await showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (dialogContext) =>
-                                    AnalyzeTextImageDialog(
+                              if (text is Failure) {
+                                logger
+                                    .w("Encountered an error: ${text.message}");
+                                return;
+                              }
+
+                              textFieldController.text = text;
+
+                              var willContinue = await showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (dialogContext) =>
+                                      AnalyzeTextImageDialog(
+                                          textFieldController:
+                                              textFieldController));
+
+                              if (willContinue) {
+                                _controller.document.insert(
+                                    _controller.document.length - 1, text);
+
+                                // ?refresh ui
+                                setState(() {});
+                              }
+                            }),
+                        SpeedDialChild(
+                            elevation: 0,
+                            child: const Icon(Icons.photo_rounded),
+                            labelWidget: const Text('Scan text from image'),
+                            onTap: () async {
+                              var text = await ref
+                                  .read(notebooksProvider.notifier)
+                                  .analyzeImageText(ImageSource.gallery);
+
+                              // ? dismiss the loading in analyzeImageText
+                              EasyLoading.dismiss();
+
+                              if (!context.mounted) return;
+
+                              if (text is Failure) {
+                                logger
+                                    .w("Encountered an error: ${text.message}");
+                                return;
+                              }
+
+                              textFieldController.text = text;
+
+                              var willContinue = await showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (dialogContext) =>
+                                      AnalyzeTextImageDialog(
                                         textFieldController:
-                                            textFieldController));
+                                            textFieldController,
+                                      ));
 
-                            if (willContinue) {
-                              _controller.document.insert(
-                                  _controller.document.length - 1, text);
+                              if (willContinue) {
+                                _controller.document.insert(
+                                    _controller.document.length - 1, text);
 
-                              // ?refresh ui
-                              setState(() {});
-                            }
-                          }),
-                      SpeedDialChild(
-                          elevation: 0,
-                          child: const Icon(Icons.photo_rounded),
-                          labelWidget: const Text('Scan text from image'),
-                          onTap: () async {
-                            var text = await ref
-                                .read(notebooksProvider.notifier)
-                                .analyzeImageText(ImageSource.gallery);
-
-                            // ? dismiss the loading in analyzeImageText
-                            EasyLoading.dismiss();
-
-                            if (!context.mounted) return;
-
-                            if (text is Failure) {
-                              logger.w("Encountered an error: ${text.message}");
-                              return;
-                            }
-
-                            textFieldController.text = text;
-
-                            var willContinue = await showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (dialogContext) =>
-                                    AnalyzeTextImageDialog(
-                                      textFieldController: textFieldController,
-                                    ));
-
-                            if (willContinue) {
-                              _controller.document.insert(
-                                  _controller.document.length - 1, text);
-
-                              // ?refresh ui
-                              setState(() {});
-                            }
-                          }),
-                    ],
-                    child: const Icon(Icons.add_rounded),
-                  )));
+                                // ?refresh ui
+                                setState(() {});
+                              }
+                            }),
+                      ],
+                      child: const Icon(Icons.add_rounded),
+                    ))),
+    );
   }
 
   Widget _buildBody() {

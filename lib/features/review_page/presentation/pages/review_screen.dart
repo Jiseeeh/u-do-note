@@ -14,6 +14,8 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_met
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/feynman_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro_notice.dart';
+
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
 
@@ -84,6 +86,29 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       // ? pre-fill the notebook and pages when coming from the analyze notes
       showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
           reviewState.getNotebookId, reviewState.getNoteId);
+    }
+  }
+
+  void _pomodoroOnPressed(BuildContext context) async {
+    var reviewState = ref.watch(reviewScreenProvider);
+
+    var willContinue = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const PomodoroNotice());
+
+    if (!willContinue) return;
+
+    // ? pomodoro technique without pre filled notebook and pages
+    if (reviewState.reviewMethod == null && context.mounted) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return const PreReviewMethod(ReviewMethods.pomodoroTechnique);
+          });
+
+      return;
     }
   }
 
@@ -307,7 +332,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                           'Use a timer to break down work into intervals.',
                       imagePath: 'assets/images/pomodoro.png',
                       buttonKey: pomodoroBtnGlobalKey,
-                      onPressed: () {}),
+                      onPressed: () {
+                        _pomodoroOnPressed(context);
+                      }),
                 ])),
               )
             ],

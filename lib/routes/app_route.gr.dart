@@ -92,18 +92,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotebooksScreen(),
       );
     },
-    PomodoroTechniqueRoute.name: (routeData) {
-      final args = routeData.argsAs<PomodoroTechniqueRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: PomodoroTechniqueScreen(
-          key: args.key,
-          breakTime: args.breakTime,
-          studyTime: args.studyTime,
-          pomodoroSession: args.pomodoroSession,
-        ),
-      );
-    },
     QuizResultsRoute.name: (routeData) {
       final args = routeData.argsAs<QuizResultsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -401,54 +389,6 @@ class NotebooksRoute extends PageRouteInfo<void> {
   static const String name = 'NotebooksRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [PomodoroTechniqueScreen]
-class PomodoroTechniqueRoute extends PageRouteInfo<PomodoroTechniqueRouteArgs> {
-  PomodoroTechniqueRoute({
-    Key? key,
-    required String breakTime,
-    required String studyTime,
-    required String pomodoroSession,
-    List<PageRouteInfo>? children,
-  }) : super(
-          PomodoroTechniqueRoute.name,
-          args: PomodoroTechniqueRouteArgs(
-            key: key,
-            breakTime: breakTime,
-            studyTime: studyTime,
-            pomodoroSession: pomodoroSession,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'PomodoroTechniqueRoute';
-
-  static const PageInfo<PomodoroTechniqueRouteArgs> page =
-      PageInfo<PomodoroTechniqueRouteArgs>(name);
-}
-
-class PomodoroTechniqueRouteArgs {
-  const PomodoroTechniqueRouteArgs({
-    this.key,
-    required this.breakTime,
-    required this.studyTime,
-    required this.pomodoroSession,
-  });
-
-  final Key? key;
-
-  final String breakTime;
-
-  final String studyTime;
-
-  final String pomodoroSession;
-
-  @override
-  String toString() {
-    return 'PomodoroTechniqueRouteArgs{key: $key, breakTime: $breakTime, studyTime: $studyTime, pomodoroSession: $pomodoroSession}';
-  }
 }
 
 /// generated route for

@@ -50,14 +50,4 @@ class AppTextStyles {
     fontSize: 16,
     fontWeight: FontWeight.w600,
   );
-
-  static const TextStyle h6 = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-  );
-
-  static const TextStyle h7 = TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.w600,
-  );
 }

@@ -111,7 +111,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         return false;
       }
     } else {
-      lastAnalysisAgo = timeago.format(now);
+      setState(() {
+        lastAnalysisAgo = timeago.format(now);
+      });
 
       await prefs.set('last_analysis', now);
       await prefs.set('next_analysis', now.add(const Duration(days: 1)));
@@ -308,6 +310,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       child: GridView.count(
                         crossAxisCount: 2,
                         shrinkWrap: true,
+                        primary: false,
                         crossAxisSpacing: 10,
                         childAspectRatio: (100.w / 100.h) / 0.4,
                         children: [
@@ -448,28 +451,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         decoration: BoxDecoration(
             color: AppColors.white, borderRadius: BorderRadius.circular(8)),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.lightbulb),
-            SizedBox(width: 5.w),
             Expanded(
-              child:
-                  Text(analysis, style: Theme.of(context).textTheme.bodyMedium),
+              child: Text(analysis,
+                  textAlign: TextAlign.justify,
+                  style: Theme.of(context).textTheme.bodyMedium),
             ),
-            SizedBox(
-              height: 10.h,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.close_rounded),
-                    onPressed: () {
-                      setState(() {
-                        isAnalysisVisible = false;
-                      });
-                    },
-                  ),
-                ],
-              ),
+            IconButton(
+              icon: const Icon(Icons.close_rounded),
+              onPressed: () {
+                setState(() {
+                  isAnalysisVisible = false;
+                });
+              },
             )
           ],
         ),

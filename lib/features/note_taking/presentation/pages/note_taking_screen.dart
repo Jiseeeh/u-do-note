@@ -18,7 +18,6 @@ import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
-import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/analyze_image_text_dialog.dart';
@@ -43,6 +42,7 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
 
 class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   final _controller = QuillController.basic();
+  var _lastSavedContent = "";
   final _speechToText = SpeechToText();
   var textFieldController = TextEditingController();
   var readOnly = false;
@@ -62,6 +62,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     final json = jsonDecode(widget.note.content);
 
     _controller.document = Document.fromJson(json);
+    _lastSavedContent = _controller.document.toPlainText();
 
     _autoSaveTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
       logger.d('Auto saving note...');
@@ -121,13 +122,15 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             nextAnalysis: now.add(const Duration(days: 1)), lastAnalysis: now);
 
         _analyzeNote(updatedNoteData);
+        return;
       }
+
+      logger.d('Analysis not due yet...');
     } else {
       logger.d('Note has not been analyzed yet, analyzing now...');
 
       var noteData = _NoteData(
           nextAnalysis: now.add(const Duration(days: 1)), lastAnalysis: now);
-
       _analyzeNote(noteData);
     }
   }
@@ -207,6 +210,12 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
           dismissOnTap: false);
     }
 
+    if (_controller.document.toPlainText() == _lastSavedContent) {
+      logger.d('Note has not been modified, skipping save...');
+
+      return;
+    }
+
     final json = jsonEncode(_controller.document.toDelta().toJson());
     var noteModel = NoteModel.fromEntity(widget.note);
 
@@ -216,6 +225,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             plainTextContent: _controller.document.toPlainText(),
             updatedAt: Timestamp.now())
         .toEntity();
+
+    _lastSavedContent = _controller.document.toPlainText();
 
     var res = await ref
         .read(notebooksProvider.notifier)
@@ -413,9 +424,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
       onPopInvoked: (_) {
         onSave(showLoading: false);
 
-        var lastNoteId = ref.read(appStateProvider).currentNoteId;
-
-        context.router.replace(NotebookPagesRoute(notebookId: lastNoteId));
+        Navigator.pop(context);
       },
       child: SafeArea(
           child: Scaffold(

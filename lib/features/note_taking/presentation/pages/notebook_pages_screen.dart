@@ -39,18 +39,6 @@ class NotebookPagesScreen extends ConsumerStatefulWidget {
 class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
   var gridCols = 2;
   var notebookIdsToPasteExtractedContent = [];
-  String notebookId = '';
-
-  @override
-  void initState() {
-    super.initState();
-
-    initNotebookId();
-  }
-
-  void initNotebookId() {
-    notebookId = ref.read(appStateProvider).currentNotebookId;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +54,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         title: Text(
-          notebooks!.firstWhere((nb) => nb.id == notebookId).subject,
+          notebooks!.firstWhere((nb) => nb.id == widget.notebookId).subject,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -84,7 +72,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                 showDialog(
                     context: context,
                     builder: ((dialogContext) =>
-                        AddNoteDialog(notebookId: notebookId)));
+                        AddNoteDialog(notebookId: widget.notebookId)));
               }),
           SpeedDialChild(
               elevation: 0,
@@ -171,7 +159,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                       dismissOnTap: false);
 
                                   var notebookPages = notebooks
-                                      .firstWhere((nb) => nb.id == notebookId)
+                                      .firstWhere(
+                                          (nb) => nb.id == widget.notebookId)
                                       .notes;
 
                                   var updatedNoteEntities =
@@ -201,7 +190,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                   var res = await ref
                                       .read(notebooksProvider.notifier)
                                       .updateMultipleNotes(
-                                          notebookId: notebookId,
+                                          notebookId: widget.notebookId,
                                           notesEntity: updatedNoteEntities);
 
                                   EasyLoading.dismiss();
@@ -225,7 +214,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                 MultiSelectDialogField(
                                   listType: MultiSelectListType.CHIP,
                                   items: notebooks
-                                      .firstWhere((nb) => nb.id == notebookId)
+                                      .firstWhere(
+                                          (nb) => nb.id == widget.notebookId)
                                       .notes
                                       .map((note) => MultiSelectItem<String>(
                                           note.id, note.title))
@@ -259,7 +249,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                         context: context,
                                         builder: ((dialogContext) =>
                                             AddNoteDialog(
-                                              notebookId: notebookId,
+                                              notebookId: widget.notebookId,
                                               initialContent: extractedText,
                                             )));
                                   },
@@ -301,7 +291,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
   // and if applicable, also allow changing of background image
   Widget _buildBody(
       BuildContext context, WidgetRef ref, List<NotebookEntity>? notebooks) {
-    var notebook = notebooks!.firstWhere((nb) => nb.id == notebookId);
+    var notebook = notebooks!.firstWhere((nb) => nb.id == widget.notebookId);
 
     if (notebook.notes.isEmpty) {
       return const Center(
@@ -354,12 +344,13 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
             children: [
               IconButton(
                   onPressed: () {
+                    // TODO: pending for deletion (unused)
                     ref
                         .read(appStateProvider.notifier)
                         .setCurrentNoteId(note.id);
 
-                    context.router.push(
-                        NoteTakingRoute(notebookId: notebookId, note: note));
+                    context.router.push(NoteTakingRoute(
+                        notebookId: widget.notebookId, note: note));
                   },
                   icon: const Icon(Icons.edit)),
               IconButton(
@@ -398,7 +389,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                     var res = await ref
                         .read(notebooksProvider.notifier)
-                        .deleteNote(notebookId: notebookId, noteId: note.id);
+                        .deleteNote(
+                            notebookId: widget.notebookId, noteId: note.id);
 
                     EasyLoading.dismiss();
 

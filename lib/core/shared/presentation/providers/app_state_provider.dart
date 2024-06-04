@@ -4,6 +4,7 @@ import 'package:u_do_note/core/shared/domain/entities/app_state.dart';
 
 part 'app_state_provider.g.dart';
 
+// TODO: pending for deletion (unused)
 @Riverpod(keepAlive: true)
 class AppState extends _$AppState {
   @override

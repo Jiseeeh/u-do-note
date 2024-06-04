@@ -1,3 +1,4 @@
+// TODO: pending for deletion (unused)
 class AppStateEntity {
   String currentNotebookId;
   String currentNoteId;

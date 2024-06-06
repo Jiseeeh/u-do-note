@@ -92,6 +92,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotebooksScreen(),
       );
     },
+    PomodoroRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PomodoroScreen(),
+      );
+    },
     QuizResultsRoute.name: (routeData) {
       final args = routeData.argsAs<QuizResultsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -387,6 +393,20 @@ class NotebooksRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'NotebooksRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PomodoroScreen]
+class PomodoroRoute extends PageRouteInfo<void> {
+  const PomodoroRoute({List<PageRouteInfo>? children})
+      : super(
+          PomodoroRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PomodoroRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

@@ -15,6 +15,7 @@ import 'package:u_do_note/features/note_taking/presentation/providers/notes_prov
 import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/leitner_system_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_form_dialog.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 class PreReviewMethod extends ConsumerStatefulWidget {
@@ -267,6 +268,12 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               }
             });
 
+            var reviewScreenState = ref.read(reviewScreenProvider.notifier);
+
+            reviewScreenState.setReviewMethod(widget.reviewMethod);
+            reviewScreenState.setNotebookId(notebookId);
+            reviewScreenState.setNotebookPagesIds(pages);
+
             switch (widget.reviewMethod) {
               case ReviewMethods.leitnerSystem:
                 EasyLoading.show(
@@ -420,12 +427,6 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 });
                 break;
               case ReviewMethods.feynmanTechnique:
-                var reviewScreenState = ref.read(reviewScreenProvider.notifier);
-
-                reviewScreenState.setReviewMethod(widget.reviewMethod);
-                reviewScreenState.setNotebookId(notebookId);
-                reviewScreenState.setNotebookPagesIds(pages);
-
                 var oldFeynmanSessions = await ref
                     .read(feynmanTechniqueProvider.notifier)
                     .getOldSessions(notebookId);
@@ -562,6 +563,12 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         .toEntity()));
                 break;
               case ReviewMethods.pomodoroTechnique:
+                context.router.pop();
+
+                await showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (dialogContext) => const PomodoroFormDialog());
                 break;
               case ReviewMethods.acronymMnemonics:
                 break;

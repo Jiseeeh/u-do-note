@@ -21,6 +21,14 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var notebooks = ref.watch(notebooksStreamProvider).value;
+
+    if (notebooks != null && notebooks.isEmpty) {
+      const Center(
+        child: Text('No Notebooks yet.'),
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(),
@@ -89,14 +97,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
           mainAxisSpacing: 10,
           childAspectRatio: (1 / 1.5),
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
-          children: [
-            if (value.isEmpty)
-              const Center(
-                child: Text('No Notebooks yet.'),
-              )
-            else
-              for (var notebook in value) NotebookCard(notebook)
-          ],
+          children: [for (var notebook in value) NotebookCard(notebook)],
         ),
       AsyncError(:final error) => Center(child: Text(error.toString())),
       _ => const Center(

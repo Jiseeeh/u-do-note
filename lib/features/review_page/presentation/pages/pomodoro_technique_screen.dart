@@ -96,6 +96,15 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
         body: Column(
           children: [
             SizedBox(height: 5.h),
+            Column(
+              children: [
+                Text(
+                    "Pomodoro ${pomodoro.completedPomodoros + 1}/${pomodoro.pomodoroInSet}"),
+                Text(
+                    "Set ${pomodoro.completedSets + 1}/${pomodoro.numberOfSets}"),
+              ],
+            ),
+            SizedBox(height: 2.h),
             SizedBox(
               height: 30.h,
               width: 30.h,

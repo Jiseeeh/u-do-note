@@ -111,6 +111,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       enabled: isLoading,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: SizedBox(
               width: 100.w,
               child: Text('Settings',

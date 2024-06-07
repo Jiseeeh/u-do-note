@@ -21,6 +21,8 @@ class PomodoroScreen extends ConsumerStatefulWidget {
 
 class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
   Timer? pomodoroCheckTimer;
+  final TextEditingController _todoController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -31,6 +33,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
   @override
   void dispose() {
     pomodoroCheckTimer?.cancel();
+    _todoController.dispose();
     super.dispose();
   }
 
@@ -48,6 +51,21 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
       pomodoro.pomodoroTimer!.cancel();
       return;
     }
+  }
+
+  void addTodo() {
+    var pomodoro = ref.read(pomodoroProvider);
+
+    if (_formKey.currentState!.validate()) {
+      pomodoro.todos.add(_todoController.text);
+      _todoController.clear();
+    }
+  }
+
+  void removeTodoAt(int index) {
+    var pomodoro = ref.read(pomodoroProvider);
+
+    pomodoro.todos.removeAt(index);
   }
 
   Widget _buildControlButtons(PomodoroState pomodoro) {
@@ -75,6 +93,61 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     );
   }
 
+  Widget _buildTodoList() {
+    var pomodoro = ref.watch(pomodoroProvider);
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("TODOs",
+                style: Theme.of(context)
+                    .textTheme
+                    .displayMedium
+                    ?.copyWith(fontSize: 20.sp)),
+            TextFormField(
+              controller: _todoController,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelText: 'New Todo',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: addTodo,
+                ),
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: pomodoro.todos.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(pomodoro.todos[index]),
+                  onTap: () {
+                    // edit
+                    _todoController.text = pomodoro.todos[index];
+                    removeTodoAt(index);
+                  },
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => removeTodoAt(index),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var pomodoro = ref.watch(pomodoroProvider);
@@ -82,9 +155,13 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (_) {
-        // ? This is to prevent the app from assuming that the user
-        // ? has come from the analyze notes
         ref.read(reviewScreenProvider.notifier).resetState();
+
+        var pomodoro = ref.read(pomodoroProvider);
+
+        if (pomodoro.pomodoroTimer == null) {
+          pomodoro.resetState();
+        }
 
         Navigator.pop(context);
       },
@@ -93,54 +170,69 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
           title: const Text("Pomodoro"),
         ),
         backgroundColor: AppColors.extraLightGrey,
-        body: Column(
-          children: [
-            SizedBox(height: 5.h),
-            Column(
-              children: [
-                Text(
-                    "Pomodoro ${pomodoro.completedPomodoros + 1}/${pomodoro.pomodoroInSet}"),
-                Text(
-                    "Set ${pomodoro.completedSets + 1}/${pomodoro.numberOfSets}"),
-              ],
-            ),
-            SizedBox(height: 2.h),
-            SizedBox(
-              height: 30.h,
-              width: 30.h,
-              child: Stack(
-                fit: StackFit.expand,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 5.h),
+              Column(
                 children: [
-                  CircularProgressIndicator(
-                    value: pomodoro.currentSeconds == 0
-                        ? 0
-                        : (1 - pomodoro.currentSeconds / 60),
-                    valueColor: const AlwaysStoppedAnimation(Colors.white),
-                    backgroundColor:
-                        pomodoro.isBreak ? Colors.green : Colors.red,
-                    strokeWidth: 12,
+                  Text(
+                    "Pomodoro ${pomodoro.completedPomodoros + 1}/${pomodoro.pomodoroInSet}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  Center(
-                    child: Text(pomodoro.pomodoroTimeInString),
-                  )
+                  Text(
+                    "Set ${pomodoro.completedSets + 1}/${pomodoro.numberOfSets}",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
                 ],
               ),
-            ),
-            SizedBox(height: 1.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildControlButtons(pomodoro),
-                SizedBox(width: 1.w),
-                ElevatedButton(
-                  onPressed: () {
-                    pomodoro.cancelTimer();
-                  },
-                  child: const Text('Cancel'),
+              SizedBox(height: 2.h),
+              SizedBox(
+                height: 30.h,
+                width: 30.h,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CircularProgressIndicator(
+                      value: pomodoro.currentSeconds == 0
+                          ? 0
+                          : (1 - pomodoro.currentSeconds / 60),
+                      valueColor: const AlwaysStoppedAnimation(Colors.white),
+                      backgroundColor:
+                          pomodoro.isBreak ? Colors.green : Colors.red,
+                      strokeWidth: 12,
+                    ),
+                    Center(
+                      child: Text(pomodoro.pomodoroTimeInString,
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge
+                              ?.copyWith(fontSize: 30.sp)),
+                    )
+                  ],
                 ),
-              ],
-            )
-          ],
+              ),
+              SizedBox(height: 1.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildControlButtons(pomodoro),
+                  SizedBox(width: 1.w),
+                  ElevatedButton(
+                    onPressed: () {
+                      pomodoro.cancelTimer();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+              SizedBox(height: 2.h),
+              _buildTodoList(),
+            ],
+          ),
         ),
       ),
     );

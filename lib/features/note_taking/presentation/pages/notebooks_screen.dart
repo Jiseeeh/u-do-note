@@ -31,7 +31,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: _buildAppBar(),
+      appBar: _buildAppBar(),
         body: _buildBody(),
         floatingActionButton: SpeedDial(
           activeIcon: Icons.close,
@@ -41,7 +41,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
             SpeedDialChild(
                 elevation: 0,
                 child: const Icon(Icons.note_add),
-                labelWidget: const Text('Add Notebook'),
+                labelWidget: const Text('Create Notebook'),
                 onTap: () {
                   showDialog(
                       context: context,

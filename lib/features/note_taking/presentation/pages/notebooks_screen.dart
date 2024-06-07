@@ -21,17 +21,9 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var notebooks = ref.watch(notebooksStreamProvider).value;
-
-    if (notebooks != null && notebooks.isEmpty) {
-      const Center(
-        child: Text('No Notebooks yet.'),
-      );
-    }
-
     return SafeArea(
       child: Scaffold(
-      appBar: _buildAppBar(),
+        appBar: _buildAppBar(),
         body: _buildBody(),
         floatingActionButton: SpeedDial(
           activeIcon: Icons.close,
@@ -88,9 +80,16 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
   }
 
   Widget _buildBody() {
-    var notebooks = ref.watch(notebooksStreamProvider);
+    var notebooksAsync = ref.watch(notebooksStreamProvider);
+    var notebooksSync = notebooksAsync.value;
 
-    return switch (notebooks) {
+    if (notebooksSync != null && notebooksSync.isEmpty) {
+      return const Center(
+        child: Text('No Notebooks yet.'),
+      );
+    }
+
+    return switch (notebooksAsync) {
       AsyncData(:final value) => GridView.count(
           crossAxisCount: gridCols,
           crossAxisSpacing: 10,

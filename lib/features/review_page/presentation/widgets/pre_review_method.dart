@@ -446,6 +446,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 EasyLoading.dismiss();
 
                 failureOrLeitner.fold((failure) {
+                  ref.read(reviewScreenProvider.notifier).resetState();
+
                   EasyLoading.showError(failure.message);
                 }, (leitnerSystem) {
                   if (context.mounted) {
@@ -706,13 +708,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             notebookId.isNotEmpty
                 ? MultiSelectDialogField(
                     key: notebookPagesKey,
-                    title: const Column(
+                    title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Notebook Pages"),
+                        const Text("Notebook Pages"),
                         Text(
-                          "You can select multiple pages.",
-                          style: TextStyle(fontSize: 12),
+                          "You can select multiple pages but take note, they should be in the same topic to get the best results.",
+                          style: Theme.of(context).textTheme.bodySmall,
                         )
                       ],
                     ),

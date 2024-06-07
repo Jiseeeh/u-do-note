@@ -16,7 +16,9 @@ class PomodoroState {
   int numberOfSets;
   Timer? pomodoroTimer;
   int completedPomodoros = 0;
+  int completedSets = 0;
   bool isBreak = false;
+  List<String> todos = [];
 
   PomodoroState({
     this.pomodoroTime = pomodoro_defaults.pomodoroTime * 60,
@@ -41,6 +43,7 @@ class PomodoroState {
     pomodoroInSet = pomodoro_defaults.pomodoroInSet;
     numberOfSets = pomodoro_defaults.numberOfSets;
     completedPomodoros = 0;
+    completedSets = 0;
     isBreak = false;
   }
 
@@ -51,6 +54,7 @@ class PomodoroState {
     currentSeconds = 0;
     pomodoroTimeInString = "${(pomodoroTime / 60).floor()}:00";
     completedPomodoros = 0;
+    completedSets = 0;
     isBreak = false;
   }
 
@@ -84,6 +88,14 @@ class PomodoroState {
   }
 
   void startPomodoro() {
+    logger.w('Pomodoro Technique Started $completedSets/$numberOfSets');
+
+    if (completedSets >= numberOfSets) {
+      logger.w('Pomodoro Technique Completed');
+      cancelTimer();
+      return;
+    }
+
     pomodoroTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
@@ -96,24 +108,32 @@ class PomodoroState {
           currentSeconds = int.parse(seconds);
 
           logger.d('Pomodoro Time: $minutes:$seconds');
-          currentTime--;
+          currentTime -= 10;
         } else {
           timer.cancel();
+
           if (isBreak) {
-            // End of a break period
-            completedPomodoros++;
             isBreak = false;
+            completedPomodoros++;
             currentTime = pomodoroTime;
-          } else {
-            // End of a pomodoro period
-            if (completedPomodoros > 0 && completedPomodoros % pomodoroBeforeLongBreak == 0) {
+          } else if (completedPomodoros + 1 < pomodoroInSet) {
+            if ((completedPomodoros + 1) % pomodoroBeforeLongBreak == 0) {
               currentTime = longBreak;
             } else {
               currentTime = shortBreak;
             }
+
             isBreak = true;
+          } else if (completedSets + 1 < numberOfSets) {
+            completedSets++;
+            completedPomodoros = 0;
+          } else {
+            logger.w('Pomodoro Technique Completed');
+            cancelTimer();
+            return;
           }
-          startPomodoro(); // Restart the timer for the next period
+
+          startPomodoro();
         }
       },
     );

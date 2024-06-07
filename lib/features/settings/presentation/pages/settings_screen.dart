@@ -150,6 +150,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                                   EasyLoading.dismiss();
 
+                                  if (img == null) return;
+
                                   var res = await ref
                                       .read(settingsProvider.notifier)
                                       .uploadProfilePicture(image: img);

@@ -16,6 +16,13 @@ class UserRemoteDataSource {
       password: password,
     );
 
+    // check if user email is verified
+    if (!userCredential.user!.emailVerified) {
+      await userCredential.user!.sendEmailVerification();
+
+      throw "We have sent you an email verification link. Please verify your email and try again.";
+    }
+
     logger.i(
         "Signing in with email and password: \n email: $email \n password: $password");
 

@@ -108,7 +108,7 @@ class PomodoroState {
           currentSeconds = int.parse(seconds);
 
           logger.d('Pomodoro Time: $minutes:$seconds');
-          currentTime -= 10;
+          currentTime--;
         } else {
           timer.cancel();
 

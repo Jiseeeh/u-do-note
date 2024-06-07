@@ -273,14 +273,6 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               )
             ],
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.add,
-              color: Colors.blue,
-              size: 40,
-            ),
-          )
         ],
       ),
     );

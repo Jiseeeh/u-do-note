@@ -15,26 +15,24 @@ class LeitnerRemoteDataSource {
 
   Future<LeitnerSystemModel> generateFlashcards(
       String title, String userNotebookId, String content) async {
-    // feed it to the openai api to get the flashcards
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,
         content: [
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            "You are a helpful assistant that wants to help students to review",
+            """
+            Create 5 flashcards about the content to be given by the student with the following guidelines:
+            1. If the content is gibberish or not understandable set isValid to false.
+            2. Make the flashcards as concise as possible and limit prose to 1-2 sentences.
+            3. The response should be in JSON format containing the properties isValid, and the  flashcards array with each flashcard having the properties question, answer.
+            """,
           ),
         ]);
 
-    final assistantMessage = OpenAIChatCompletionChoiceMessageModel(
-        role: OpenAIChatMessageRole.assistant,
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            "Return the result as JSON with the properties question, and answer",
-          ),
-        ]);
+    String prompt = """
+                    Make 5 flashcards about the content below:
 
-    // get notes contents
-    String prompt =
-        "Create five(5) flashcards using these notes of mine. Take note that this is a rich text content, Here it is: '$content'";
+                    $content
+                    """;
 
     final userMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.user,
@@ -46,7 +44,6 @@ class LeitnerRemoteDataSource {
 
     final requestMessages = [
       systemMessage,
-      assistantMessage,
       userMessage,
     ];
 
@@ -69,6 +66,12 @@ class LeitnerRemoteDataSource {
     logger.i(chatCompletion.usage.promptTokens);
 
     var decodedJson = json.decode(completionContent!);
+
+    var isValid = decodedJson['isValid'];
+
+    if (!isValid) {
+      throw "The content is not understandable.";
+    }
 
     List<FlashcardModel> flashcards = [];
 

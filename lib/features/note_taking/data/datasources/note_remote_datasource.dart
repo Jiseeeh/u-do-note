@@ -110,7 +110,7 @@ class NoteRemoteDataSource {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
       content: defaultContent,
-      plainTextContent: defaultContent,
+      plainTextContent: initialNoteText,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     );

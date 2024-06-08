@@ -381,6 +381,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
   VoidCallback onSummarizeNote(BuildContext context) {
     return () async {
+      if (_controller.document.toPlainText().trim().isEmpty) {
+        EasyLoading.showError('Note is empty. Please write something first.');
+        return;
+      }
+
       EasyLoading.show(
           status: 'Summarizing your note...',
           maskType: EasyLoadingMaskType.black,

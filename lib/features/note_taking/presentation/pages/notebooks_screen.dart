@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
+import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
@@ -19,6 +20,25 @@ class NotebooksScreen extends ConsumerStatefulWidget {
 
 class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
   var gridCols = 2;
+
+  @override
+  void initState() {
+    super.initState();
+
+    initGridCols();
+  }
+
+  void initGridCols() async {
+    var prefs = await ref.read(sharedPreferencesProvider.future);
+
+    var cols = prefs.getInt('nbGridCols');
+
+    if (cols != null) {
+      setState(() {
+        gridCols = cols;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +67,11 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
                 elevation: 0,
                 child: const Icon(Icons.looks_two_rounded),
                 labelWidget: const Text('Two Columns'),
-                onTap: () {
+                onTap: () async {
+                  var prefs = await ref.read(sharedPreferencesProvider.future);
+
+                  prefs.setInt('nbGridCols', 2);
+
                   setState(() {
                     if (gridCols != 2) {
                       gridCols = 2;
@@ -58,7 +82,11 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
                 elevation: 0,
                 child: const Icon(Icons.looks_3_rounded),
                 labelWidget: const Text('Three Columns'),
-                onTap: () {
+                onTap: () async {
+                  var prefs = await ref.read(sharedPreferencesProvider.future);
+
+                  prefs.setInt('nbGridCols', 3);
+
                   setState(() {
                     if (gridCols != 3) {
                       gridCols = 3;

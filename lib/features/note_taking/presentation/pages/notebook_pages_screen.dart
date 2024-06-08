@@ -18,6 +18,7 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
+import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -39,6 +40,25 @@ class NotebookPagesScreen extends ConsumerStatefulWidget {
 class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
   var gridCols = 2;
   var notebookIdsToPasteExtractedContent = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    initGridCols();
+  }
+
+  void initGridCols() async {
+    var prefs = await ref.read(sharedPreferencesProvider.future);
+
+    var cols = prefs.getInt('nbPagesGridCols');
+
+    if (cols != null) {
+      setState(() {
+        gridCols = cols;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +292,11 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               elevation: 0,
               child: const Icon(Icons.looks_two_rounded),
               labelWidget: const Text('Two Columns'),
-              onTap: () {
+              onTap: () async {
+                var prefs = await ref.read(sharedPreferencesProvider.future);
+
+                prefs.setInt('nbPagesGridCols', 2);
+
                 setState(() {
                   if (gridCols != 2) {
                     gridCols = 2;
@@ -283,7 +307,11 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               elevation: 0,
               child: const Icon(Icons.looks_3_rounded),
               labelWidget: const Text('Three Columns'),
-              onTap: () {
+              onTap: () async {
+                var prefs = await ref.read(sharedPreferencesProvider.future);
+
+                prefs.setInt('nbPagesGridCols', 3);
+
                 setState(() {
                   if (gridCols != 3) {
                     gridCols = 3;

@@ -44,8 +44,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   final _controller = QuillController.basic();
   var _lastSavedContent = "";
   final _speechToText = SpeechToText();
-  var textFieldController = TextEditingController();
-  var readOnly = false;
+  final _textFieldController = TextEditingController();
+  var _readOnly = false;
+  var _isToolbarVisible = true;
   var _speechEnabled = false;
   var _wordsSpoken = "";
   String? _learningTechniqueAnalyzed;
@@ -470,11 +471,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             }),
                         SpeedDialChild(
                             elevation: 0,
-                            child: const Icon(Icons.preview_rounded),
-                            labelWidget: const Text('Read only'),
+                            child: const Icon(Icons.view_headline_rounded),
+                            labelWidget: const Text('Toggle Toolbar'),
                             onTap: () {
                               setState(() {
-                                readOnly = !readOnly;
+                                _isToolbarVisible = !_isToolbarVisible;
                               });
                             }),
                         SpeedDialChild(
@@ -497,7 +498,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                                 return;
                               }
 
-                              textFieldController.text = text;
+                              _textFieldController.text = text;
 
                               var willContinue = await showDialog(
                                   barrierDismissible: false,
@@ -505,7 +506,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                                   builder: (dialogContext) =>
                                       AnalyzeTextImageDialog(
                                           textFieldController:
-                                              textFieldController));
+                                              _textFieldController));
 
                               if (willContinue) {
                                 _controller.document.insert(
@@ -535,7 +536,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                                 return;
                               }
 
-                              textFieldController.text = text;
+                              _textFieldController.text = text;
 
                               var willContinue = await showDialog(
                                   barrierDismissible: false,
@@ -543,7 +544,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                                   builder: (dialogContext) =>
                                       AnalyzeTextImageDialog(
                                         textFieldController:
-                                            textFieldController,
+                                            _textFieldController,
                                       ));
 
                               if (willContinue) {
@@ -564,11 +565,23 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        (!readOnly)
+        _isToolbarVisible
             ? QuillToolbar.simple(
                 configurations: QuillSimpleToolbarConfigurations(
                   controller: _controller,
                   multiRowsDisplay: true,
+                  showFontFamily: false,
+                  showFontSize: false,
+                  customButtons: [
+                    QuillToolbarCustomButtonOptions(
+                      icon: Text(_readOnly ? 'Edit Mode' : 'Read Mode'),
+                      onPressed: () {
+                        setState(() {
+                          _readOnly = !_readOnly;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               )
             : const SizedBox(),
@@ -580,7 +593,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             configurations: QuillEditorConfigurations(
               padding: const EdgeInsets.all(8),
               controller: _controller,
-              readOnly: readOnly,
+              readOnly: _readOnly,
             ),
           ),
         ),

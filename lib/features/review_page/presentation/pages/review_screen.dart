@@ -4,18 +4,22 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_method_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/feynman_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class ReviewScreen extends ConsumerStatefulWidget {
@@ -51,7 +55,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       return;
     }
 
-    if (willContinue && context.mounted) {
+    if (context.mounted) {
       // ? pre-fill the notebook and pages when coming from the analyze notes
       showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
           reviewState.getNotebookId, reviewState.getNoteId);
@@ -80,7 +84,42 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       return;
     }
 
-    if (willContinue && context.mounted) {
+    if (context.mounted) {
+      // ? pre-fill the notebook and pages when coming from the analyze notes
+      showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
+          reviewState.getNotebookId, reviewState.getNoteId);
+    }
+  }
+
+  void _pomodoroOnPressed(BuildContext context) async {
+    var reviewState = ref.watch(reviewScreenProvider);
+    var pomodoro = ref.watch(pomodoroProvider);
+
+    if (pomodoro.pomodoroTimer != null) {
+      context.router.push(const PomodoroRoute());
+      return;
+    }
+
+    var willContinue = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => const PomodoroNotice());
+
+    if (!willContinue) return;
+
+    // ? pomodoro technique without pre filled notebook and pages
+    if (reviewState.reviewMethod == null && context.mounted) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) {
+            return const PreReviewMethod(ReviewMethods.pomodoroTechnique);
+          });
+
+      return;
+    }
+
+    if (context.mounted) {
       // ? pre-fill the notebook and pages when coming from the analyze notes
       showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
           reviewState.getNotebookId, reviewState.getNoteId);
@@ -180,12 +219,19 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           TargetContent(
               align: ContentAlign.top,
               builder: (context, controller) {
-                return const Column(
+                return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "Click on on this to get started with the suggested learning technique.")
+                        "Click on on this to get started with the suggested learning technique.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp)),
                   ],
                 );
               })
@@ -235,14 +281,6 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               )
             ],
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.add,
-              color: Colors.blue,
-              size: 40,
-            ),
-          )
         ],
       ),
     );
@@ -307,7 +345,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                           'Use a timer to break down work into intervals.',
                       imagePath: 'assets/images/pomodoro.png',
                       buttonKey: pomodoroBtnGlobalKey,
-                      onPressed: () {}),
+                      onPressed: () {
+                        _pomodoroOnPressed(context);
+                      }),
                 ])),
               )
             ],

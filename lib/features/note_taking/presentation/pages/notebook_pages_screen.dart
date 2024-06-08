@@ -67,7 +67,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           SpeedDialChild(
               elevation: 0,
               child: const Icon(Icons.note_add),
-              labelWidget: const Text('Add Note'),
+              labelWidget: const Text('Create Note'),
               onTap: () {
                 showDialog(
                     context: context,
@@ -253,7 +253,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                               initialContent: extractedText,
                                             )));
                                   },
-                                  child: const Text('Add new page'),
+                                  child: const Text('Create new page'),
                                 )
                               ],
                             ),

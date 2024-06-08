@@ -36,6 +36,8 @@ class UserRepositoryImpl implements UserRepository {
       return Right(userModel);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(code: e.code, message: e.message!));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
     }
   }
 }

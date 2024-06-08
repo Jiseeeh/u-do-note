@@ -563,8 +563,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             ? QuillToolbar.simple(
                 configurations: QuillSimpleToolbarConfigurations(
                   controller: _controller,
-                  multiRowsDisplay: false,
-                  toolbarSize: 40,
+                  multiRowsDisplay: true,
                 ),
               )
             : const SizedBox(),

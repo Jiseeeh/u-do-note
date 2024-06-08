@@ -304,7 +304,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               legendItemText: "Feynman T.",
                               reviewMethod: FeynmanModel.name)
                         ]),
-                    _buildAnalysisBanner(),
+                    // _buildAnalysisBanner(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GridView.count(
@@ -393,7 +393,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     ),
                     SfCircularChart(
                       title: ChartTitle(
-                          text: 'Review Strategies Distribution',
+                          text: 'Learning Methods Usage',
                           textStyle: Theme.of(context)
                               .textTheme
                               .displayMedium
@@ -408,7 +408,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           dataLabelSettings: const DataLabelSettings(
                               isVisible: true,
                               labelPosition: ChartDataLabelPosition.outside),
-                          name: "Review Strategies",
+                          name: "Learning Methods",
                           enableTooltip: true,
                           explode: true,
                           xValueMapper: (_PieChartData data, _) =>
@@ -444,6 +444,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     );
   }
 
+  // ? Removed for now (as per my adviser)
   Widget _buildAnalysisBanner() {
     if (willShowAnalysis && isAnalysisVisible) {
       return Container(

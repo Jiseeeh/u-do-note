@@ -37,8 +37,10 @@ class NotebookCard extends ConsumerWidget {
             // ? InkWell is for the ripple effect
             onTap: () {
               // TODO: pending for deletion (unused)
-              ref.read(appStateProvider.notifier).setCurrentNotebookId(notebook.id);
-              
+              ref
+                  .read(appStateProvider.notifier)
+                  .setCurrentNotebookId(notebook.id);
+
               context.router.pushNamed('/notebook/pages/${notebook.id}');
             },
           ),

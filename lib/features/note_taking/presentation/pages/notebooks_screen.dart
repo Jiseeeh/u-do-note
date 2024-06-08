@@ -33,7 +33,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
             SpeedDialChild(
                 elevation: 0,
                 child: const Icon(Icons.note_add),
-                labelWidget: const Text('Add Notebook'),
+                labelWidget: const Text('Create Notebook'),
                 onTap: () {
                   showDialog(
                       context: context,
@@ -80,23 +80,23 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
   }
 
   Widget _buildBody() {
-    var notebooks = ref.watch(notebooksStreamProvider);
+    var notebooksAsync = ref.watch(notebooksStreamProvider);
+    var notebooksSync = notebooksAsync.value;
 
-    return switch (notebooks) {
+    if (notebooksSync != null && notebooksSync.isEmpty) {
+      return const Center(
+        child: Text('No Notebooks yet.'),
+      );
+    }
+
+    return switch (notebooksAsync) {
       AsyncData(:final value) => GridView.count(
           crossAxisCount: gridCols,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           childAspectRatio: (1 / 1.5),
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
-          children: [
-            if (value.isEmpty)
-              const Center(
-                child: Text('No Notebooks yet.'),
-              )
-            else
-              for (var notebook in value) NotebookCard(notebook)
-          ],
+          children: [for (var notebook in value) NotebookCard(notebook)],
         ),
       AsyncError(:final error) => Center(child: Text(error.toString())),
       _ => const Center(

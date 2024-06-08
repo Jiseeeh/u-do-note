@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
+import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/notebook_card.dart';
@@ -21,10 +22,13 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var notebooksAsync = ref.watch(notebooksStreamProvider);
+    var notebooksSync = notebooksAsync.value;
+
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(),
-        body: _buildBody(),
+        body: _buildBody(notebooksAsync, notebooksSync),
         floatingActionButton: SpeedDial(
           activeIcon: Icons.close,
           buttonSize: const Size(50, 50),
@@ -79,10 +83,8 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
     );
   }
 
-  Widget _buildBody() {
-    var notebooksAsync = ref.watch(notebooksStreamProvider);
-    var notebooksSync = notebooksAsync.value;
-
+  Widget _buildBody(AsyncValue<List<NotebookEntity>> notebooksAsync,
+      List<NotebookEntity>? notebooksSync) {
     if (notebooksSync != null && notebooksSync.isEmpty) {
       return const Center(
         child: Text('No Notebooks yet.'),

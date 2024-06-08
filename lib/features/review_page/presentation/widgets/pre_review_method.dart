@@ -297,6 +297,12 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               }
             });
 
+            if (contentFromPages.trim().isEmpty) {
+              EasyLoading.showError(
+                  "The selected pages have no content. Please select another page or notebook.");
+              return;
+            }
+
             var reviewScreenState = ref.read(reviewScreenProvider.notifier);
 
             reviewScreenState.setReviewMethod(widget.reviewMethod);

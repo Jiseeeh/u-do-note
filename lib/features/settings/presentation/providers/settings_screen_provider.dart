@@ -54,9 +54,8 @@ class Settings extends _$Settings {
     var prefs = await ref.read(sharedPreferencesProvider.future);
 
     // ? can't use clear because it will remove all the data we still need
-    await prefs.remove('analytics_data');
-    await prefs.remove('last_analysis');
-    await prefs.remove('next_analysis');
+    await prefs.remove('nbGridCols');
+    await prefs.remove('nbPagesGridCols');
 
     await signOut();
   }

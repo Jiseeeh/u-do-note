@@ -14,7 +14,7 @@ class PomodoroNotice extends ConsumerWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
-            '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to generate flashcards with.',
+            '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to use for the quiz later after the pomodoro session.',
             style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
@@ -37,6 +37,10 @@ class PomodoroNotice extends ConsumerWidget {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          buildNoticeContent(context,
+              title: "What does the red and green timer means?",
+              content:
+                  "The red timer represents the pomodoro session, while the green timer represents the break session."),
           buildNoticeContent(context,
               title: 'How will I be graded with this?',
               content: 'You will be graded after the session through a quiz.'),

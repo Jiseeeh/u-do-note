@@ -14,7 +14,7 @@ class FeynmanNotice extends ConsumerWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
-            '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to generate flashcards with.',
+            '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to use for the quiz later after the session.',
             style: Theme.of(context).textTheme.bodyMedium,
           )
         ],

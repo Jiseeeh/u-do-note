@@ -131,6 +131,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   if (!context.mounted) return;
 
                   showDialog(
+                      barrierDismissible: false,
                       context: context,
                       builder: (dialogContext) => AlertDialog(
                             scrollable: true,
@@ -153,6 +154,13 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                               ),
                               TextButton(
                                 onPressed: () async {
+                                  if (notebookIdsToPasteExtractedContent
+                                      .isEmpty) {
+                                    EasyLoading.showError(
+                                        'Please select a page to paste the extracted text to.');
+                                    return;
+                                  }
+
                                   EasyLoading.show(
                                       status: 'Adding to pages...',
                                       maskType: EasyLoadingMaskType.black,

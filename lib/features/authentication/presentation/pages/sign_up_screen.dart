@@ -9,8 +9,8 @@ import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/core/shared/widgets/snackbar.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
-import '../widgets/social_icon.dart';
-import '../widgets/auth_field.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/social_icon.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/auth_field.dart';
 
 @RoutePage()
 class SignUpScreen extends ConsumerStatefulWidget {
@@ -176,9 +176,11 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                       ),
                                       const Align(
                                           alignment: Alignment.topLeft,
-                                          child: Text("Email Address",
-                                              textAlign: TextAlign.left,
-                                              style: AppTextStyles.h5)),
+                                          child: Text(
+                                            "Email Address",
+                                            textAlign: TextAlign.left,
+                                            style: AppTextStyles.h5,
+                                          )),
                                       AuthField(
                                         label: 'juandelacruz@example.com',
                                         controller: emailController,
@@ -331,7 +333,9 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Text(
-                                                'Already Have an Account?'),
+                                                'Already Have an Account?',
+                                                style: TextStyle(
+                                                    color: AppColors.grey)),
                                             TextButton(
                                               onPressed: () {
                                                 context.router

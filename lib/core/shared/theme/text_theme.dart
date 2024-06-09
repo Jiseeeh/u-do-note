@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 
@@ -29,7 +30,7 @@ class TextThemes {
       displayMedium: AppTextStyles.h2.copyWith(color: AppColors.white),
       displaySmall: AppTextStyles.h3.copyWith(color: AppColors.white),
       headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.white),
-      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.white),
+      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.primary),
     );
   }
 

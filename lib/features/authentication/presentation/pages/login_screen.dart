@@ -4,11 +4,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../widgets/social_icon.dart';
-import '../widgets/auth_field.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/social_icon.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/auth_field.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {
@@ -260,7 +260,9 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text('Don\'t have an account?'),
+                                    const Text('Don\'t have an account?',
+                                        style:
+                                            TextStyle(color: AppColors.grey)),
                                     TextButton(
                                       onPressed: () {
                                         context.router.replaceNamed('/sign-up');

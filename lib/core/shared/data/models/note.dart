@@ -5,6 +5,7 @@ class NoteModel {
   final String id;
   final String title;
   final String content;
+  final String plainTextContent;
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
@@ -12,6 +13,7 @@ class NoteModel {
     required this.id,
     required this.title,
     required this.content,
+    required this.plainTextContent,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -22,6 +24,7 @@ class NoteModel {
       id: entity.id,
       title: entity.title,
       content: entity.content,
+      plainTextContent: entity.plainTextContent,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     );
@@ -33,6 +36,7 @@ class NoteModel {
       id: id,
       title: title,
       content: content,
+      plainTextContent: plainTextContent,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
@@ -44,6 +48,7 @@ class NoteModel {
         id: json['id'],
         title: json['title'],
         content: json['content'],
+        plainTextContent: json['plain_text_content'],
         createdAt: json['created_at'],
         updatedAt: json['updated_at']);
   }
@@ -54,6 +59,7 @@ class NoteModel {
       'id': id,
       'title': title,
       'content': content,
+      'plain_text_content': plainTextContent,
       'created_at': createdAt,
       'updated_at': updatedAt
     };
@@ -64,6 +70,7 @@ class NoteModel {
     String? id,
     String? title,
     String? content,
+    String? plainTextContent,
     Timestamp? createdAt,
     Timestamp? updatedAt,
   }) {
@@ -71,6 +78,7 @@ class NoteModel {
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
+      plainTextContent: plainTextContent ?? this.plainTextContent,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -78,6 +86,6 @@ class NoteModel {
 
   @override
   String toString() {
-    return 'NoteModel(id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'NoteModel(id: $id, title: $title, content: $plainTextContent, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 
@@ -47,12 +49,14 @@ class NotebookModel {
   factory NotebookModel.fromFirestore(String id, Map<String, dynamic> data) {
     var notes = (data['notes'] as List?) ?? [];
 
+    logger.w('calling fromFirestore');
+
     return NotebookModel(
       id: id,
       subject: data['subject'],
       coverUrl: data['cover_url'],
       coverFileName: data['cover_file_name'],
-      createdAt: data['created_at'],
+      createdAt: data['created_at'] ?? Timestamp.now(),
       notes: notes.map((e) => NoteModel.fromFirestore(e)).toList(),
     );
   }

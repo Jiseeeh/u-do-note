@@ -15,26 +15,24 @@ class LeitnerRemoteDataSource {
 
   Future<LeitnerSystemModel> generateFlashcards(
       String title, String userNotebookId, String content) async {
-    // feed it to the openai api to get the flashcards
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,
         content: [
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            "You are a helpful assistant that wants to help students to review",
+            """
+            Create 5 flashcards about the content to be given by the student with the following guidelines:
+            1. If the content is gibberish or not understandable set isValid to false.
+            2. Make the flashcards as concise as possible and limit prose to 1-2 sentences.
+            3. The response should be in JSON format containing the properties isValid, and the  flashcards array with each flashcard having the properties question, answer.
+            """,
           ),
         ]);
 
-    final assistantMessage = OpenAIChatCompletionChoiceMessageModel(
-        role: OpenAIChatMessageRole.assistant,
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            "Return the result as JSON with the properties question, and answer",
-          ),
-        ]);
+    String prompt = """
+                    Make 5 flashcards about the content below:
 
-    // get notes contents
-    String prompt =
-        "Create five(5) flashcards using these notes of mine. Take note that this is a rich text content, Here it is: '$content'";
+                    $content
+                    """;
 
     final userMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.user,
@@ -46,7 +44,6 @@ class LeitnerRemoteDataSource {
 
     final requestMessages = [
       systemMessage,
-      assistantMessage,
       userMessage,
     ];
 
@@ -70,6 +67,12 @@ class LeitnerRemoteDataSource {
 
     var decodedJson = json.decode(completionContent!);
 
+    var isValid = decodedJson['isValid'];
+
+    if (!isValid) {
+      throw "The content is not understandable.";
+    }
+
     List<FlashcardModel> flashcards = [];
 
     for (var flashcard in decodedJson['flashcards']) {
@@ -77,9 +80,9 @@ class LeitnerRemoteDataSource {
     }
     var userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Save the flashcards to firestore to be updated
-    // after the user has reviewed the flashcards.
-    var nextReview = Timestamp.now();
+    // ? save the flashcards to firestore to be updated
+    // ? after the user has reviewed the flashcards.
+    var now = Timestamp.now();
     var doc = await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
@@ -88,9 +91,10 @@ class LeitnerRemoteDataSource {
         .collection(FirestoreCollection.remarks.name)
         .add(<String, dynamic>{
       'title': title,
+      'created_at': now,
       'review_method': LeitnerSystemModel.name,
       'flashcards': flashcards.map((flashcard) => flashcard.toJson()).toList(),
-      'next_review': nextReview,
+      'next_review': now,
       'score': '',
       'remark': '',
     });
@@ -98,7 +102,8 @@ class LeitnerRemoteDataSource {
     var leitnerSystemModel = LeitnerSystemModel(
       id: doc.id,
       title: title,
-      nextReview: nextReview,
+      createdAt: now,
+      nextReview: now,
       userNotebookId: userNotebookId,
       flashcards: flashcards,
     );

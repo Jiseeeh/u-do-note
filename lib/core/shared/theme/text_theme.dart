@@ -4,7 +4,6 @@ import 'package:u_do_note/core/shared/theme/text_styles.dart';
 
 class TextThemes {
   /// Main text theme
-
   static TextTheme get textTheme {
     return const TextTheme(
       bodyLarge: AppTextStyles.bodyLg,
@@ -20,7 +19,6 @@ class TextThemes {
   }
 
   /// Dark text theme
-
   static TextTheme get darkTextTheme {
     return TextTheme(
       bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.white),
@@ -36,7 +34,6 @@ class TextThemes {
   }
 
   /// Primary text theme
-
   static TextTheme get primaryTextTheme {
     return TextTheme(
       bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.primary),

@@ -4,6 +4,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -26,13 +29,18 @@ class NotebookCard extends ConsumerWidget {
               image: notebook.coverUrl.isNotEmpty
                   ? NetworkImage(notebook.coverUrl) as ImageProvider
                   // TODO: replace with default one
-                  : const AssetImage('lib/assets/chisaki.png'),
+                  : const AssetImage('assets/images/chisaki.png'),
               fit: BoxFit.cover,
             ),
           ),
           child: InkWell(
             // ? InkWell is for the ripple effect
             onTap: () {
+              // TODO: pending for deletion (unused)
+              ref
+                  .read(appStateProvider.notifier)
+                  .setCurrentNotebookId(notebook.id);
+
               context.router.pushNamed('/notebook/pages/${notebook.id}');
             },
           ),
@@ -84,13 +92,22 @@ class NotebookCard extends ConsumerWidget {
                                     coverFileName: notebook.coverFileName);
 
                             EasyLoading.dismiss();
-                            EasyLoading.showToast(res);
+
+                            if (res is Failure) {
+                              logger.w(
+                                  'Encountered an error while deleting notebook: ${res.message}');
+
+                              EasyLoading.showError(res.message);
+                              return;
+                            }
+
+                            EasyLoading.showSuccess(res);
                           }
 
                           if (isEdit && context.mounted) {
                             showDialog(
                                 context: context,
-                                builder: (context) => AddNotebookDialog(
+                                builder: (dialogContext) => AddNotebookDialog(
                                     notebookEntity: notebook));
                           }
                         },
@@ -115,7 +132,7 @@ class NotebookCard extends ConsumerWidget {
   Future<dynamic> getUserConfirmation(BuildContext context) {
     return showDialog(
         context: context,
-        builder: (context) {
+        builder: (dialogContext) {
           return AlertDialog(
             title: const Text('Delete Notebook'),
             content:
@@ -123,12 +140,12 @@ class NotebookCard extends ConsumerWidget {
             actions: [
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, false);
+                    Navigator.pop(dialogContext, false);
                   },
                   child: const Text('No')),
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    Navigator.pop(dialogContext, true);
                   },
                   child: const Text('Yes')),
             ],
@@ -139,19 +156,19 @@ class NotebookCard extends ConsumerWidget {
   Future<dynamic> getIntent(BuildContext context) {
     return showDialog(
         context: context,
-        builder: (context) {
+        builder: (dialogContext) {
           return AlertDialog(
             title: const Text('Delete Note'),
             content: const Text('What do you want to do with this notebook?'),
             actions: [
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, false);
+                    Navigator.pop(dialogContext, false);
                   },
                   child: const Text('Delete')),
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    Navigator.pop(dialogContext, true);
                   },
                   child: const Text('Edit')),
             ],

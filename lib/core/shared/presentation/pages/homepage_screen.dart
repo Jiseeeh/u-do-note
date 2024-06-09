@@ -11,7 +11,12 @@ class HomepageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AutoTabsScaffold(
-      routes: const [NotebooksRoute(), ReviewRoute()],
+      routes: const [
+        NotebooksRoute(),
+        ReviewRoute(),
+        AnalyticsRoute(),
+        SettingsRoute()
+      ],
       extendBody: true,
       bottomNavigationBuilder: (_, tabsRouter) {
         tabsRouter.addListener(() {

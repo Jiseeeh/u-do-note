@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/core/shared/theme/text_theme.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
@@ -20,6 +21,19 @@ class IntroScreen extends ConsumerStatefulWidget {
 
 class _IntroScreenState extends ConsumerState<IntroScreen> {
   @override
+  void initState() {
+    super.initState();
+
+    setHasSeenIntro();
+  }
+
+  void setHasSeenIntro() async {
+    var prefs = await ref.read(sharedPreferencesProvider.future);
+
+    await prefs.setBool('hasSeenIntro', true);
+  }
+
+  @override
   Widget build(
     BuildContext context,
   ) {
@@ -32,7 +46,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       onFinish: () {
         Navigator.push(
           context,
-          CupertinoPageRoute(
+          MaterialPageRoute(
             builder: (context) => const SignUpScreen(),
           ),
         );
@@ -45,7 +59,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       trailingFunction: () {
         Navigator.push(
           context,
-          CupertinoPageRoute(
+          MaterialPageRoute(
             builder: (context) => const LoginScreen(),
           ),
         );
@@ -56,23 +70,23 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       // pageBackgroundColor: AppColors.primary,
       background: [
         Image.asset(
-          'lib/assets/images/onboard/page-1.png',
+          'assets/images/onboard/page-1.png',
           height: imgHeight,
         ),
         Image.asset(
-          'lib/assets/images/onboard/page-2.png',
+          'assets/images/onboard/page-2.png',
           height: imgHeight,
         ),
         Image.asset(
-          'lib/assets/images/onboard/page-3.png',
+          'assets/images/onboard/page-3.png',
           height: imgHeight,
         ),
         Image.asset(
-          'lib/assets/images/onboard/page-4.png',
+          'assets/images/onboard/page-4.png',
           height: imgHeight,
         ),
         Image.asset(
-          'lib/assets/images/onboard/page-5.png',
+          'assets/images/onboard/page-5.png',
           height: imgHeight,
         ),
       ],

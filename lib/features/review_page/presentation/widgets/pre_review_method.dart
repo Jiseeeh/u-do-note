@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
@@ -15,6 +16,7 @@ import 'package:u_do_note/features/note_taking/presentation/providers/notes_prov
 import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/leitner_system_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_form_dialog.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 class PreReviewMethod extends ConsumerStatefulWidget {
@@ -120,12 +122,19 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
           TargetContent(
               align: ContentAlign.top,
               builder: (context, controller) {
-                return const Column(
+                return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "You need to add a title for your review session here.")
+                        "You need to add a title for your review session here.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp))
                   ],
                 );
               })
@@ -141,12 +150,19 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
           TargetContent(
               align: ContentAlign.top,
               builder: (context, controller) {
-                return const Column(
+                return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "Here you can select a notebook to review the notes from. Since you came from analyze note, the notebook of that note will be used. If you want to select another notebook, you can do so.")
+                        "Here you can select a notebook to review the notes from. Since you came from the note-taking page, the notebook of that note will be used. If you want to select another notebook, you can do so.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp))
                   ],
                 );
               })
@@ -162,12 +178,19 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
           TargetContent(
               align: ContentAlign.top,
               builder: (context, controller) {
-                return const Column(
+                return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "Here you can select the pages to review. Since you came from analyze note, that page will be used. If you want to select other pages, you can do so.")
+                        "Here you can select the pages to review. This is also pre-selected based on the note you came from. Note that when choosing multiple pages, make sure they are all in the same topic to get the best results.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp))
                   ],
                 );
               })
@@ -182,12 +205,19 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
           TargetContent(
               align: ContentAlign.top,
               builder: (context, controller) {
-                return const Column(
+                return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "You can then click on this button to continue with the review session after picking choosing a title, notebook, and pages.")
+                        "You can then click on this button to continue with the review session after you are done selecting the notebook and pages.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp))
                   ],
                 );
               })
@@ -202,7 +232,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
   @override
   Widget build(BuildContext context) {
-    var asyncNotebooks = ref.watch(notebooksProvider);
+    var asyncNotebooks = ref.watch(notebooksStreamProvider);
 
     return switch (asyncNotebooks) {
       AsyncData(value: final notebooks) => _buildDialog(context, notebooks),
@@ -263,9 +293,21 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 .notes
                 .forEach((note) {
               if (pages.contains(note.id)) {
-                contentFromPages += note.content;
+                contentFromPages += note.plainTextContent;
               }
             });
+
+            if (contentFromPages.trim().isEmpty) {
+              EasyLoading.showError(
+                  "The selected pages have no content. Please select another page or notebook.");
+              return;
+            }
+
+            var reviewScreenState = ref.read(reviewScreenProvider.notifier);
+
+            reviewScreenState.setReviewMethod(widget.reviewMethod);
+            reviewScreenState.setNotebookId(notebookId);
+            reviewScreenState.setNotebookPagesIds(pages);
 
             switch (widget.reviewMethod) {
               case ReviewMethods.leitnerSystem:
@@ -285,7 +327,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                   var reviewOld = await showDialog(
                       barrierDismissible: false,
                       context: context,
-                      builder: (context) => AlertDialog(
+                      builder: (dialogContext) => AlertDialog(
                             title: const Text('Notice'),
                             scrollable: true,
                             content: const Text(
@@ -293,13 +335,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop(false);
+                                  Navigator.of(dialogContext).pop(false);
                                 },
                                 child: const Text('No'),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop(true);
+                                  Navigator.of(dialogContext).pop(true);
                                 },
                                 child: const Text('Yes'),
                               ),
@@ -316,7 +358,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                     await showDialog(
                         barrierDismissible: false,
                         context: context,
-                        builder: (context) => AlertDialog(
+                        builder: (dialogContext) => AlertDialog(
                               scrollable: true,
                               title: const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,7 +373,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(dialogContext).pop();
                                   },
                                   child: const Text('Cancel'),
                                 ),
@@ -410,6 +452,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 EasyLoading.dismiss();
 
                 failureOrLeitner.fold((failure) {
+                  ref.read(reviewScreenProvider.notifier).resetState();
+
                   EasyLoading.showError(failure.message);
                 }, (leitnerSystem) {
                   if (context.mounted) {
@@ -420,21 +464,22 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 });
                 break;
               case ReviewMethods.feynmanTechnique:
-                var reviewScreenState = ref.read(reviewScreenProvider.notifier);
-
-                reviewScreenState.setReviewMethod(widget.reviewMethod);
-                reviewScreenState.setNotebookId(notebookId);
-                reviewScreenState.setNotebookPagesIds(pages);
-
                 var oldFeynmanSessions = await ref
                     .read(feynmanTechniqueProvider.notifier)
                     .getOldSessions(notebookId);
 
                 if (!context.mounted) return;
 
+                if (oldFeynmanSessions.isEmpty) {
+                  context.router.push(FeynmanTechniqueRoute(
+                      contentFromPages: contentFromPages,
+                      sessionName: titleController.text));
+                  return;
+                }
+
                 var willReviewOldSessions = await showDialog(
                     context: context,
-                    builder: (context) {
+                    builder: (dialogContext) {
                       return AlertDialog(
                         title: const Text('Notice'),
                         content: const Text(
@@ -442,13 +487,17 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         actions: [
                           TextButton(
                             onPressed: () {
+                              // ! temporary fix for the dialog before this dialog not closing
+                              // ! and thus will show again on the next open of this tab
                               Navigator.of(context).pop(false);
+
+                              Navigator.of(dialogContext).pop(false);
                             },
                             child: const Text('No'),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(true);
+                              Navigator.of(dialogContext).pop(true);
                             },
                             child: const Text('Yes'),
                           ),
@@ -468,7 +517,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 var sessionId = await showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) {
+                    builder: (dialogContext) {
                       var sessionId = "";
                       return AlertDialog(
                         scrollable: true,
@@ -485,18 +534,32 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(dialogContext).pop(null);
                             },
                             child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(sessionId);
+                              Navigator.of(dialogContext).pop(sessionId);
                             },
                             child: const Text('Continue'),
                           ),
                         ],
                         content: MultiSelectDialogField(
+                          title: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Notice",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.normal)),
+                              Text(
+                                "Choose an old session to review.",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal),
+                              )
+                            ],
+                          ),
                           listType: MultiSelectListType.CHIP,
                           items: oldFeynmanSessions
                               .map((el) => MultiSelectItem<String>(
@@ -527,6 +590,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                     });
 
                 if (!context.mounted) return;
+                if (sessionId == null || sessionId.isEmpty) return;
 
                 context.router.push(FeynmanTechniqueRoute(
                     contentFromPages: contentFromPages,
@@ -536,6 +600,12 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         .toEntity()));
                 break;
               case ReviewMethods.pomodoroTechnique:
+                context.router.pop();
+
+                await showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (dialogContext) => const PomodoroFormDialog());
                 break;
               case ReviewMethods.acronymMnemonics:
                 break;
@@ -644,13 +714,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             notebookId.isNotEmpty
                 ? MultiSelectDialogField(
                     key: notebookPagesKey,
-                    title: const Column(
+                    title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Notebook Pages"),
+                        const Text("Notebook Pages"),
                         Text(
-                          "You can select multiple pages.",
-                          style: TextStyle(fontSize: 12),
+                          "You can select multiple pages but take note, they should be in the same topic to get the best results.",
+                          style: Theme.of(context).textTheme.bodySmall,
                         )
                       ],
                     ),

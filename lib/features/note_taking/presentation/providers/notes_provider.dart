@@ -1,6 +1,11 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
@@ -10,11 +15,13 @@ import 'package:u_do_note/features/note_taking/data/repositories/note_repository
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/repositories/note_repository.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/analyze_image_text.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/analyze_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/summarize_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_multiple_notes.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_notebook.dart';
@@ -107,198 +114,161 @@ AnalyzeImageText analyzeImageText(AnalyzeImageTextRef ref) {
   return AnalyzeImageText(repository);
 }
 
-// TODO: try using streams to just listen to changes in the database
-// ? only when the project is stable
-@Riverpod(keepAlive: true)
-class Notebooks extends _$Notebooks {
-  @override
-  Future<List<NotebookEntity>> build() {
-    return _getNotebooks();
+@riverpod
+AnalyzeNote analyzeNote(AnalyzeNoteRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return AnalyzeNote(repository);
+}
+
+@riverpod
+SummarizeNote summarizeNote(SummarizeNoteRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return SummarizeNote(repository);
+}
+
+@riverpod
+Stream<List<NotebookEntity>> notebooksStream(NotebooksStreamRef ref) {
+  final FirebaseFirestore firestore = ref.read(firestoreProvider);
+  final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+  final StreamController<List<NotebookEntity>> controller = StreamController();
+
+  StreamSubscription<User?>? authSubscription;
+  StreamSubscription<QuerySnapshot>? firestoreSubscription;
+
+  void disposeSubscriptions() {
+    firestoreSubscription?.cancel();
+    authSubscription?.cancel();
   }
 
-  Future<List<NotebookEntity>> _getNotebooks() async {
-    final getNotebooks = ref.read(getNotebooksProvider);
+  authSubscription = auth.authStateChanges().listen((user) {
+    if (user == null) {
+      if (!controller.isClosed) {
+        controller.add([]);
+        controller.close();
+      }
+      disposeSubscriptions();
+    } else {
+      firestoreSubscription = firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(user.uid)
+          .collection(FirestoreCollection.user_notes.name)
+          .snapshots()
+          .listen(
+        (snapshot) {
+          if (!controller.isClosed) {
+            final notebooks = snapshot.docs.map((doc) {
+              return NotebookModel.fromFirestore(doc.id, doc.data()).toEntity();
+            }).toList();
+            controller.add(notebooks);
+          }
+        },
+        onError: (error) {
+          if (!controller.isClosed) {
+            controller.addError(error);
+          }
+        },
+        onDone: () {
+          if (!controller.isClosed) {
+            controller.close();
+          }
+        },
+      );
+    }
+  });
 
-    state = const AsyncValue.loading();
+  ref.onDispose(() {
+    disposeSubscriptions();
+    if (!controller.isClosed) {
+      controller.close();
+    }
+  });
 
-    var notebooksOrFailure = await getNotebooks();
+  return controller.stream;
+}
 
-    return notebooksOrFailure.fold((failure) async {
-      state = const AsyncValue.error('No notebooks yet', StackTrace.empty);
-      return [];
-    }, (notebookModels) async {
-      var notebookEntities = notebookModels.map((nb) => nb.toEntity()).toList();
-
-      state = await AsyncValue.guard(() async {
-        return notebookEntities;
-      });
-
-      return notebookEntities;
-    });
+@riverpod
+class Notebooks extends _$Notebooks {
+  @override
+  void build() {
+    return;
   }
 
   /// Updates the given note in the given notebook
   Future<dynamic> updateNote(String notebookId, NoteEntity note) async {
-    List<NotebookEntity> notebookEntities = state.value as List<NotebookEntity>;
-
     var updateNote = ref.read(updateNoteProvider);
+    var notebooks = ref.watch(notebooksStreamProvider).value;
 
-    var failureOrBoolean =
+    if (notebooks != null && notebooks.isEmpty) {
+      return false;
+    }
+
+    var failureOrString =
         await updateNote(notebookId, NoteModel.fromEntity(note));
 
-    var notebook = notebookEntities
-        .firstWhere((notebookEntity) => notebookEntity.id == notebookId);
-
-    notebook.notes[notebook.notes
-        .indexWhere((noteEntity) => noteEntity.id == note.id)] = note;
-
-    notebookEntities[notebookEntities.indexWhere(
-        (notebookEntity) => notebookEntity.id == notebookId)] = notebook;
-
-    state = AsyncValue.data(notebookEntities);
-
-    return failureOrBoolean.fold((failure) => failure.message, (res) => res);
+    return failureOrString.fold((failure) => failure, (res) => res);
   }
 
   Future<dynamic> updateMultipleNotes(
       {required String notebookId,
       required List<NoteEntity> notesEntity}) async {
-    List<NotebookEntity> notebookEntities = state.value as List<NotebookEntity>;
-
     var updateMultipleNotes = ref.read(updateMultipleNotesProvider);
 
-    var updatedNotes = notesEntity
-        .map((noteEntity) => NoteModel.fromEntity(noteEntity))
-        .toList();
+    var failureOrString = await updateMultipleNotes(
+        notebookId, notesEntity.map((n) => NoteModel.fromEntity(n)).toList());
 
-    var failureOrBoolean = await updateMultipleNotes(notebookId, updatedNotes);
-
-    var notebook = notebookEntities
-        .firstWhere((notebookEntity) => notebookEntity.id == notebookId);
-
-    //? set the current notebook's notes to the updated notes
-
-    for (var (idx, _) in notebook.notes.indexed) {
-      notebook.notes[idx] = notesEntity[idx];
-    }
-
-    notebookEntities[notebookEntities.indexWhere(
-        (notebookEntity) => notebookEntity.id == notebookId)] = notebook;
-
-    state = AsyncValue.data(notebookEntities);
-
-    return failureOrBoolean.fold((failure) => failure, (res) => res);
+    return failureOrString.fold((failure) => failure, (res) => res);
   }
 
-  Future<bool> updateNotebook(
+  Future<dynamic> updateNotebook(
       {required XFile? coverImg, required NotebookModel notebook}) async {
-    final updateNotebook = ref.read(updateNotebookProvider);
+    var updateNotebook = ref.read(updateNotebookProvider);
 
-    var failureOrNotebookModel = await updateNotebook(coverImg, notebook);
+    var failureOrBool = await updateNotebook(coverImg, notebook);
 
-    return failureOrNotebookModel.fold((failure) => false, (notebookModel) {
-      List<NotebookEntity> notebookEntities =
-          state.value as List<NotebookEntity>;
-
-      notebookEntities[notebookEntities.indexWhere(
-              (notebookEntity) => notebookEntity.id == notebook.id)] =
-          notebookModel.toEntity();
-
-      state = AsyncValue.data(notebookEntities);
-
-      return true;
-    });
+    return failureOrBool.fold((failure) => failure, (res) => res);
   }
 
   /// Creates a notebook from the given [name]
-  Future<String> createNotebook({required String name, XFile? coverImg}) async {
-    final createNotebook = ref.read(createNotebookProvider);
+  Future<dynamic> createNotebook(
+      {required String name, XFile? coverImg}) async {
+    var createNotebook = ref.read(createNotebookProvider);
 
-    var result = await createNotebook(name, coverImg);
+    var failureOrString = await createNotebook(name, coverImg);
 
-    return result.fold((failure) => failure.message, (nbModel) {
-      List<NotebookEntity> notebookEntities =
-          state.value as List<NotebookEntity>;
-
-      notebookEntities.add(nbModel.toEntity());
-
-      state = AsyncValue.data(notebookEntities);
-      return "Notebook created successfully.";
-    });
+    return failureOrString.fold((failure) => failure, (res) => res);
   }
 
   /// Creates a note in the given notebook with the given [title]
-  Future<String> createNote(
+  Future<dynamic> createNote(
       {required String notebookId,
       required String title,
       String? initialContent}) async {
-    final createNote = ref.read(createNoteProvider);
+    var createNote = ref.read(createNoteProvider);
 
-    var result = await createNote(notebookId, title, initialContent);
+    var failureOrString = await createNote(notebookId, title, initialContent);
 
-    return result.fold((failure) => failure.message, (noteModel) {
-      List<NotebookEntity> notebookEntities =
-          state.value as List<NotebookEntity>;
-
-      var notebook = notebookEntities
-          .firstWhere((notebookEntity) => notebookEntity.id == notebookId);
-
-      notebook.notes.add(noteModel.toEntity());
-
-      notebookEntities[notebookEntities.indexOf(notebook)] = notebook;
-
-      state = AsyncValue.data(notebookEntities);
-
-      return 'Note created successfully.';
-    });
+    return failureOrString.fold((failure) => failure, (res) => res);
   }
 
   /// Deletes a specific note from a notebook
-  Future<String> deleteNote(
+  Future<dynamic> deleteNote(
       {required String notebookId, required String noteId}) async {
-    List<NotebookEntity> notebookEntities = state.value as List<NotebookEntity>;
-    final deleteNote = ref.read(deleteNoteProvider);
+    var deleteNote = ref.read(deleteNoteProvider);
 
-    var res = await deleteNote(notebookId, noteId);
+    var failureOrString = await deleteNote(notebookId, noteId);
 
-    var notebook = notebookEntities
-        .firstWhere((notebookEntity) => notebookEntity.id == notebookId);
-
-    notebook.notes.removeWhere((noteEntity) => noteEntity.id == noteId);
-
-    notebookEntities[notebookEntities.indexOf(notebook)] = notebook;
-
-    state = AsyncValue.data(notebookEntities);
-
-    return res.fold((failure) => failure.message, (res) => res);
+    return failureOrString.fold((failure) => failure, (res) => res);
   }
 
-  Future<String> deleteNotebook(
+  Future<dynamic> deleteNotebook(
       {required String notebookId, required String coverFileName}) async {
-    final deleteNotebook = ref.read(deleteNotebookProvider);
+    var deleteNotebook = ref.read(deleteNotebookProvider);
 
-    var res = await deleteNotebook(notebookId, coverFileName);
+    var failureOrString = await deleteNotebook(notebookId, coverFileName);
 
-    return res.fold((failure) => failure.message, (res) {
-      List<NotebookEntity> notebookEntities =
-          state.value as List<NotebookEntity>;
-
-      notebookEntities
-          .removeWhere((notebookEntity) => notebookEntity.id == notebookId);
-
-      state = AsyncValue.data(notebookEntities);
-
-      return res;
-    });
-  }
-
-  Future<List<String>> uploadNotebookCover({required XFile coverImg}) async {
-    final uploadNotebookCover = ref.read(uploadNotebookCoverProvider);
-
-    var failureOrCoverImgUrl = await uploadNotebookCover(coverImg);
-
-    return failureOrCoverImgUrl.fold(
-        (failure) => [failure.message], (coverImgUrl) => coverImgUrl);
+    return failureOrString.fold((failure) => failure, (res) => res);
   }
 
   Future<dynamic> analyzeImageText(ImageSource imgSource) async {
@@ -307,5 +277,21 @@ class Notebooks extends _$Notebooks {
     var failureOrText = await analyzeImageText(imgSource);
 
     return failureOrText.fold((failure) => failure, (text) => text);
+  }
+
+  Future<dynamic> analyzeNote(String content) async {
+    final analyzeNote = ref.read(analyzeNoteProvider);
+
+    var failureOrText = await analyzeNote(content);
+
+    return failureOrText.fold((failure) => failure, (text) => text);
+  }
+
+  Future<dynamic> summarizeNote({required String content}) async {
+    final summarizeNote = ref.read(summarizeNoteProvider);
+
+    var failureOrJsonStr = await summarizeNote(content);
+
+    return failureOrJsonStr.fold((failure) => failure, (jsonStr) => jsonStr);
   }
 }

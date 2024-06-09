@@ -85,12 +85,12 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
           decoration: const BoxDecoration(color: AppColors.primary),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+            children: [
               const SizedBox(height: 50),
               const Align(
                 alignment: Alignment.center,
                 child: Image(
-                  image: AssetImage('lib/assets/images/register-accent.png'),
+                  image: AssetImage('assets/images/register-accent.png'),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -132,13 +132,13 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                         padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
+                          children: [
                             const SizedBox(
                               height: 5,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
+                              children: [
                                 Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 10),
@@ -165,12 +165,12 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                               ],
                             ),
                             Column(
-                              children: <Widget>[
+                              children: [
                                 Form(
                                   key: _formKey,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
+                                    children: [
                                       const SizedBox(
                                         height: 15,
                                       ),

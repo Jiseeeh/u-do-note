@@ -4,11 +4,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../widgets/social_icon.dart';
+import '../widgets/auth_field.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
-import '../widgets/social_icon.dart';
-import '../widgets/auth_field.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {
@@ -58,12 +58,12 @@ class _LoginState extends ConsumerState<LoginScreen> {
           decoration: const BoxDecoration(color: AppColors.primary),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+            children: [
               const SizedBox(height: 70),
               const Align(
                 alignment: Alignment.center,
                 child: Image(
-                  image: AssetImage('lib/assets/images/login-accent.png'),
+                  image: AssetImage('assets/images/login-accent.png'),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -105,13 +105,13 @@ class _LoginState extends ConsumerState<LoginScreen> {
                         padding: const EdgeInsets.all(30),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
+                          children: [
                             const SizedBox(
                               height: 5,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
+                              children: [
                                 Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 10),
@@ -138,12 +138,12 @@ class _LoginState extends ConsumerState<LoginScreen> {
                               ],
                             ),
                             Column(
-                              children: <Widget>[
+                              children: [
                                 Form(
                                   key: _formKey,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
+                                    children: [
                                       const SizedBox(
                                         height: 20,
                                       ),
@@ -203,7 +203,8 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                   child: Text(
                                     "Forgot Password?",
                                     textAlign: TextAlign.end,
-                                    style: TextStyle(color: AppColors.secondary),
+                                    style:
+                                        TextStyle(color: AppColors.secondary),
                                   ),
                                 ),
                                 const SizedBox(
@@ -229,6 +230,8 @@ class _LoginState extends ConsumerState<LoginScreen> {
 
                                       userOrFailure.fold(
                                           (failure) => EasyLoading.showError(
+                                              duration:
+                                                  const Duration(seconds: 2),
                                               failure.message), (userModel) {
                                         EasyLoading.showSuccess(
                                             'Login success!');

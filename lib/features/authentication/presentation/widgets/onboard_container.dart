@@ -24,7 +24,7 @@ class Onboard extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
+        children: [
           SizedBox(
             height: height / 10,
           ),

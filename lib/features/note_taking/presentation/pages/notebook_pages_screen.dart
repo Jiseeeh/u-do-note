@@ -13,11 +13,13 @@ import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
-import 'package:u_do_note/core/error/failures.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
+import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
+import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
@@ -40,8 +42,33 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
   var notebookIdsToPasteExtractedContent = [];
 
   @override
+  void initState() {
+    super.initState();
+
+    initGridCols();
+  }
+
+  void initGridCols() async {
+    var prefs = await ref.read(sharedPreferencesProvider.future);
+
+    var cols = prefs.getInt('nbPagesGridCols');
+
+    if (cols != null) {
+      setState(() {
+        gridCols = cols;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var notebooks = ref.watch(notebooksProvider).value;
+    var notebooks = ref.watch(notebooksStreamProvider).value;
+
+    if (notebooks != null && notebooks.isEmpty) {
+      return const Center(
+        child: Text('No notebooks yet'),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -60,11 +87,11 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           SpeedDialChild(
               elevation: 0,
               child: const Icon(Icons.note_add),
-              labelWidget: const Text('Add Note'),
+              labelWidget: const Text('Create Note'),
               onTap: () {
                 showDialog(
                     context: context,
-                    builder: ((context) =>
+                    builder: ((dialogContext) =>
                         AddNoteDialog(notebookId: widget.notebookId)));
               }),
           SpeedDialChild(
@@ -124,8 +151,9 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   if (!context.mounted) return;
 
                   showDialog(
+                      barrierDismissible: false,
                       context: context,
-                      builder: (context) => AlertDialog(
+                      builder: (dialogContext) => AlertDialog(
                             scrollable: true,
                             title: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,12 +168,19 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  Navigator.of(dialogContext).pop();
                                 },
                                 child: const Text('Cancel'),
                               ),
                               TextButton(
                                 onPressed: () async {
+                                  if (notebookIdsToPasteExtractedContent
+                                      .isEmpty) {
+                                    EasyLoading.showError(
+                                        'Please select a page to paste the extracted text to.');
+                                    return;
+                                  }
+
                                   EasyLoading.show(
                                       status: 'Adding to pages...',
                                       maskType: EasyLoadingMaskType.black,
@@ -193,10 +228,10 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                     return;
                                   }
 
-                                  EasyLoading.showInfo('Updated successfully');
+                                  EasyLoading.showInfo(res);
 
                                   if (context.mounted) {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(dialogContext).pop();
                                   }
                                 },
                                 child: const Text('Confirm'),
@@ -240,12 +275,13 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                                     showDialog(
                                         context: context,
-                                        builder: ((context) => AddNoteDialog(
+                                        builder: ((dialogContext) =>
+                                            AddNoteDialog(
                                               notebookId: widget.notebookId,
                                               initialContent: extractedText,
                                             )));
                                   },
-                                  child: const Text('Add new page'),
+                                  child: const Text('Create new page'),
                                 )
                               ],
                             ),
@@ -256,7 +292,11 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               elevation: 0,
               child: const Icon(Icons.looks_two_rounded),
               labelWidget: const Text('Two Columns'),
-              onTap: () {
+              onTap: () async {
+                var prefs = await ref.read(sharedPreferencesProvider.future);
+
+                prefs.setInt('nbPagesGridCols', 2);
+
                 setState(() {
                   if (gridCols != 2) {
                     gridCols = 2;
@@ -267,7 +307,11 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               elevation: 0,
               child: const Icon(Icons.looks_3_rounded),
               labelWidget: const Text('Three Columns'),
-              onTap: () {
+              onTap: () async {
+                var prefs = await ref.read(sharedPreferencesProvider.future);
+
+                prefs.setInt('nbPagesGridCols', 3);
+
                 setState(() {
                   if (gridCols != 3) {
                     gridCols = 3;
@@ -336,6 +380,11 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
             children: [
               IconButton(
                   onPressed: () {
+                    // TODO: pending for deletion (unused)
+                    ref
+                        .read(appStateProvider.notifier)
+                        .setCurrentNoteId(note.id);
+
                     context.router.push(NoteTakingRoute(
                         notebookId: widget.notebookId, note: note));
                   },
@@ -380,7 +429,14 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                             notebookId: widget.notebookId, noteId: note.id);
 
                     EasyLoading.dismiss();
-                    EasyLoading.showInfo(res);
+
+                    if (res is Failure) {
+                      logger.w('Encountered error: ${res.message}');
+                      EasyLoading.showError(res.message);
+                      return;
+                    }
+
+                    EasyLoading.showSuccess(res);
                   },
                   icon: const Icon(Icons.delete)),
             ],

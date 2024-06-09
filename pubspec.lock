@@ -1149,6 +1149,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      sha256: c37099ad833a883c9d71782321cb65c3a848c21b6939b6185f0ff6640d05814c
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.3"
   petitparser:
     dependency: transitive
     description:
@@ -1237,6 +1245,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  responsive_sizer:
+    dependency: "direct main"
+    description:
+      name: responsive_sizer
+      sha256: "6aefee6065c0883681bc7559147a24d8fa1846d296a216abcda25ff349340712"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.1"
   riverpod:
     dependency: transitive
     description:
@@ -1357,6 +1373,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  skeletonizer:
+    dependency: "direct main"
+    description:
+      name: skeletonizer
+      sha256: "50c3fdf3d1bf6182129c03b53bc7ff6dca10ca0b8e71ccdee148b9322caabdba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2+1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1490,14 +1514,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  syncfusion_flutter_charts:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_charts
+      sha256: "65c7e02d23cc87d4eaee318f5062d78cb711eb7b9d23f3a5fcda62203a771fbe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "25.2.3+1"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "8e19260d292ed77e1cbd4ee1baafb3c9486079cad856e7891478131d25076039"
+      sha256: "6c534bb282e1429ac082354ace1b7c6d4496a258e62c948b7ca2b52acca8a514"
       url: "https://pub.dev"
     source: hosted
-    version: "25.1.40"
+    version: "25.2.3"
   syncfusion_flutter_pdf:
     dependency: "direct main"
     description:

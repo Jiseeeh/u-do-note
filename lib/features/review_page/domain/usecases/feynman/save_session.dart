@@ -9,9 +9,9 @@ class SaveSession {
 
   const SaveSession(this._feynmanTechniqueRepository);
 
-  Future<Either<Failure, void>> call(
-      FeynmanModel feynmanModel, String notebookId) async {
+  Future<Either<Failure, String>> call(
+      FeynmanModel feynmanModel, String notebookId, String? docId) async {
     return await _feynmanTechniqueRepository.saveSession(
-        feynmanModel, notebookId);
+        feynmanModel, notebookId, docId);
   }
 }

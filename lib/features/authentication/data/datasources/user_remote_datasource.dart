@@ -50,4 +50,10 @@ class UserRemoteDataSource {
 
     return UserModel.fromFirebaseUser(userCredential.user);
   }
+
+  Future<String> resetPassword(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
+
+    return "We have sent you an email to reset your password. Please check your email.";
+  }
 }

@@ -74,7 +74,22 @@ final signUpWithEmailAndPasswordProvider =
 
 typedef SignUpWithEmailAndPasswordRef
     = AutoDisposeProviderRef<SignUpWithEmailAndPassword>;
-String _$userNotifierHash() => r'9ee80d3e55fd1ce3fd23c8075da2bfdf0b7c93ac';
+String _$resetPasswordHash() => r'30feb504406a54febe50586108b450edd1f1ce74';
+
+/// See also [resetPassword].
+@ProviderFor(resetPassword)
+final resetPasswordProvider = AutoDisposeProvider<ResetPassword>.internal(
+  resetPassword,
+  name: r'resetPasswordProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$resetPasswordHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ResetPasswordRef = AutoDisposeProviderRef<ResetPassword>;
+String _$userNotifierHash() => r'dc06c5cd2b723779e6b5c4b17e23407c03afcb07';
 
 /// See also [UserNotifier].
 @ProviderFor(UserNotifier)

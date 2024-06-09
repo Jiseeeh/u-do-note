@@ -11,7 +11,7 @@ class AppTheme {
       fontFamily: AppTextStyles.fontFamily,
       primaryColor: AppColors.primary,
       colorScheme: const ColorScheme.dark(
-        primary: AppColors.primary,
+        primary: AppColors.white,
         secondary: AppColors.lightGrey,
         error: AppColors.error,
         background: AppColors.primary,
@@ -35,6 +35,7 @@ class AppTheme {
       primaryColor: AppColors.primary,
       textTheme: TextThemes.textTheme,
       primaryTextTheme: TextThemes.primaryTextTheme,
+      scaffoldBackgroundColor: AppColors.white,
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.secondary,

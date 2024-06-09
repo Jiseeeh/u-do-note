@@ -72,7 +72,7 @@ final uploadProfilePictureProvider =
 );
 
 typedef UploadProfilePictureRef = AutoDisposeProviderRef<UploadProfilePicture>;
-String _$settingsHash() => r'3cd5b7ff43701e313a5d2a8440e840f75fca3c94';
+String _$settingsHash() => r'1cb8f4be983245b1a331b00f51ab5adcb2ed753d';
 
 /// See also [Settings].
 @ProviderFor(Settings)

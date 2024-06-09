@@ -6,7 +6,7 @@ part of 'pomodoro_technique_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pomodoroHash() => r'0f1fabf67ebba2cab89b031cd533874d0c790ee4';
+String _$pomodoroHash() => r'432a463d3ef08344bf0f55a6fcd6a6169d84f7de';
 
 /// See also [Pomodoro].
 @ProviderFor(Pomodoro)

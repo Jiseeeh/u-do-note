@@ -156,6 +156,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         _reasonAnalyzed = decodedJson['reason'];
         _topicAnalyzed = decodedJson['topic'];
 
+        ref.read(reviewScreenProvider).setIsFromAutoAnalysis(true);
+
         prefs.setString(
             'note_${widget.note.id}', jsonEncode(noteData.toJson()));
 

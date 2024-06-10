@@ -4,6 +4,8 @@ class ReviewScreenState {
   ReviewMethods? reviewMethod;
   String? notebookId;
   String? contentFromPages;
+  String? sessionTitle;
+  bool isFromAutoAnalysis;
   List<String>? notebookPagesIds;
 
   /// Specific for analyze notes because that feature only uses one note at a time
@@ -13,6 +15,8 @@ class ReviewScreenState {
     this.reviewMethod,
     this.notebookId,
     this.contentFromPages,
+    this.sessionTitle,
+    this.isFromAutoAnalysis = false,
     this.notebookPagesIds,
     this.noteId,
   });
@@ -20,6 +24,8 @@ class ReviewScreenState {
   get getReviewMethod => reviewMethod;
   get getNotebookId => notebookId;
   get getContentFromPages => contentFromPages;
+  get getSessionTitle => sessionTitle;
+  get getIsFromAutoAnalysis => isFromAutoAnalysis;
   get getNoteId => noteId;
   get getNotebookPages => notebookPagesIds;
 
@@ -35,6 +41,14 @@ class ReviewScreenState {
     this.contentFromPages = contentFromPages;
   }
 
+  void setSessionTitle(String sessionTitle) {
+    this.sessionTitle = sessionTitle;
+  }
+
+  void setIsFromAutoAnalysis(bool isFromAutoAnalysis) {
+    this.isFromAutoAnalysis = isFromAutoAnalysis;
+  }
+
   void setNotebookPagesIds(List<String> notebookPagesIds) {
     this.notebookPagesIds = notebookPagesIds;
   }
@@ -47,11 +61,14 @@ class ReviewScreenState {
     reviewMethod = null;
     notebookId = null;
     notebookPagesIds = null;
+    contentFromPages = null;
+    sessionTitle = null;
+    isFromAutoAnalysis = false;
     noteId = null;
   }
 
   @override
   String toString() {
-    return 'ReviewScreenState{reviewMethod: $reviewMethod, notebookId: $notebookId, contentFromPages: $contentFromPages , notebookPages: $notebookPagesIds, noteId: $noteId}';
+    return 'ReviewScreenState{reviewMethod: $reviewMethod, notebookId: $notebookId, contentFromPages: $contentFromPages , sessionTitle: $sessionTitle, notebookPages: $notebookPagesIds, noteId: $noteId, isFromAutoAnalysis: $isFromAutoAnalysis}';
   }
 }

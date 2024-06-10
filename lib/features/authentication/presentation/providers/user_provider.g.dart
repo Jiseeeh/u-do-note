@@ -89,7 +89,7 @@ final resetPasswordProvider = AutoDisposeProvider<ResetPassword>.internal(
 );
 
 typedef ResetPasswordRef = AutoDisposeProviderRef<ResetPassword>;
-String _$userNotifierHash() => r'dc06c5cd2b723779e6b5c4b17e23407c03afcb07';
+String _$userNotifierHash() => r'2f24c9f2dbe51e37b6f8fd1ba680b9ef117ae12c';
 
 /// See also [UserNotifier].
 @ProviderFor(UserNotifier)

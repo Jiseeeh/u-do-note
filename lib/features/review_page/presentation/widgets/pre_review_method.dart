@@ -309,6 +309,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             reviewScreenState.setNotebookId(notebookId);
             reviewScreenState.setNotebookPagesIds(pages);
             reviewScreenState.setContentFromPages(contentFromPages);
+            reviewScreenState.setSessionTitle(titleController.text);
 
             switch (widget.reviewMethod) {
               case ReviewMethods.leitnerSystem:

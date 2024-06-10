@@ -1,31 +1,35 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 import 'package:u_do_note/features/review_page/data/models/question.dart';
 import 'package:u_do_note/features/review_page/domain/entities/question.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
-class QuizScreen extends ConsumerStatefulWidget {
+class PomodoroQuizScreen extends ConsumerStatefulWidget {
   final List<QuestionModel> questions;
-  final Future<void> Function(List<int> selectedAnswersIndex, int score)
-      onQuizFinish;
-  const QuizScreen(
-      {required this.onQuizFinish, required this.questions, Key? key})
+
+  const PomodoroQuizScreen({required this.questions, Key? key})
       : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _QuizScreenState();
 }
 
-class _QuizScreenState extends ConsumerState<QuizScreen> {
+class _QuizScreenState extends ConsumerState<PomodoroQuizScreen> {
   var currentQuestionIndex = 0;
   var score = 0;
   late Timer timer;
@@ -108,7 +112,36 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
       timer.cancel();
 
-      widget.onQuizFinish(selectedAnswersIndex, score);
+      // TODO: fiix
+
+      var reviewScreenState = ref.read(reviewScreenProvider);
+      var pomodoro = ref.read(pomodoroProvider);
+
+      var pomodoroModel = PomodoroModel(
+          title: reviewScreenState.sessionTitle!,
+          focusedMinutes: (pomodoro.pomodoroTime ~/ 60) *
+              (pomodoro.pomodoroInSet) *
+              (pomodoro.numberOfSets),
+          score: score,
+          questions: widget.questions,
+          selectedAnswersIndex: selectedAnswersIndex,
+          createdAt: Timestamp.now());
+
+      EasyLoading.show(
+          status: 'Saving quiz results...',
+          maskType: EasyLoadingMaskType.black,
+          dismissOnTap: false);
+
+      var res = await ref
+          .read(pomodoroProvider.notifier)
+          .saveQuizResults(reviewScreenState.notebookId!, pomodoroModel);
+
+      EasyLoading.dismiss();
+
+      if (res is Failure) {
+        EasyLoading.showError("Something went wrong. Please try again later.");
+        return;
+      }
 
       if (!context.mounted) return;
 

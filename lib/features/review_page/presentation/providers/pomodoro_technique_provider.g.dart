@@ -6,6 +6,57 @@ part of 'pomodoro_technique_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$pomodoroTechniqueDataSourceHash() =>
+    r'cddbddf1812e2e5ee288cd0e4f5b9339b1b44aa8';
+
+/// See also [pomodoroTechniqueDataSource].
+@ProviderFor(pomodoroTechniqueDataSource)
+final pomodoroTechniqueDataSourceProvider =
+    AutoDisposeProvider<PomodoroRemoteDataSource>.internal(
+  pomodoroTechniqueDataSource,
+  name: r'pomodoroTechniqueDataSourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pomodoroTechniqueDataSourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef PomodoroTechniqueDataSourceRef
+    = AutoDisposeProviderRef<PomodoroRemoteDataSource>;
+String _$pomodoroTechniqueRepositoryHash() =>
+    r'bcc98341d1bafbbaf72bad5cc4b3a1e3eda6a442';
+
+/// See also [pomodoroTechniqueRepository].
+@ProviderFor(pomodoroTechniqueRepository)
+final pomodoroTechniqueRepositoryProvider =
+    AutoDisposeProvider<PomodoroTechniqueRepository>.internal(
+  pomodoroTechniqueRepository,
+  name: r'pomodoroTechniqueRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pomodoroTechniqueRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef PomodoroTechniqueRepositoryRef
+    = AutoDisposeProviderRef<PomodoroTechniqueRepository>;
+String _$saveQuizResultsHash() => r'02e9cbd10c99ddca395b2b8a855169262ff3cc6e';
+
+/// See also [saveQuizResults].
+@ProviderFor(saveQuizResults)
+final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
+  saveQuizResults,
+  name: r'saveQuizResultsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$saveQuizResultsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$pomodoroHash() => r'432a463d3ef08344bf0f55a6fcd6a6169d84f7de';
 
 /// See also [Pomodoro].

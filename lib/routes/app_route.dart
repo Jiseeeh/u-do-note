@@ -17,6 +17,7 @@ import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 import 'package:u_do_note/features/review_page/domain/entities/question.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman_technique_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/leitner_system_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/pomodoro_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/pomodoro_technique_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_screen.dart';
@@ -63,5 +64,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: LeitnerSystemRoute.page, path: '/leitner-system'),
         AutoRoute(page: FeynmanTechniqueRoute.page, path: '/feynman-technique'),
         AutoRoute(page: PomodoroRoute.page, path: '/pomodoro', maintainState: false),
+        // ? temporary route
+        AutoRoute(page: PomodoroQuizRoute.page, path: '/pomodoro-quiz'),
       ];
 }

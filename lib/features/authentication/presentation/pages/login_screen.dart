@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../widgets/social_icon.dart';
 import '../widgets/auth_field.dart';
@@ -113,28 +114,42 @@ class _LoginState extends ConsumerState<LoginScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1,
-                                          color: AppColors.lightShadow),
-                                      shape: BoxShape.circle),
-                                  child: SvgPicture.asset(
-                                    "assets/f.svg",
-                                    height: 30,
-                                    width: 30,
-                                    // ignore: deprecated_member_use
-                                    color: AppColors.secondary,
+                                TextButton(
+                                  onPressed: () async {
+                                    try {
+                                      final GoogleSignIn googleSignIn =
+                                          GoogleSignIn();
+
+                                      final GoogleSignInAccount? googleUser =
+                                          await googleSignIn.signIn();
+
+                                      final GoogleSignInAuthentication?
+                                          googleAuth =
+                                          await googleUser?.authentication;
+
+                                      final AuthCredential credential =
+                                          GoogleAuthProvider.credential(
+                                        accessToken: googleAuth!.accessToken,
+                                        idToken: googleAuth.idToken,
+                                      );
+
+                                      await FirebaseAuth.instance
+                                          .signInWithCredential(credential);
+
+                                      if (!context.mounted) return;
+
+                                      context.router.replaceNamed('/home');
+                                    } catch (e) {
+                                      EasyLoading.showToast(
+                                          "Error signing in with Google, please try again later",
+                                          duration: const Duration(seconds: 2),
+                                          toastPosition:
+                                              EasyLoadingToastPosition.bottom);
+                                    }
+                                  },
+                                  child: const SocialIcon(
+                                    src: "assets/google.svg",
                                   ),
-                                ),
-                                const SocialIcon(
-                                  src: "assets/google.svg",
-                                ),
-                                const SocialIcon(
-                                  src: "assets/twitter.svg",
                                 ),
                               ],
                             ),

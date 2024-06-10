@@ -10,6 +10,7 @@ import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/data/models/remark_data.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 
 class RemarkRemoteDataSource {
   final FirebaseFirestore _firestore;
@@ -37,24 +38,37 @@ class RemarkRemoteDataSource {
       var feynmanRemarkSnaps = await _getRemarkSnapshots(
           noteId: userNote.id, reviewMethod: FeynmanModel.name);
 
+      var pomodoroRemarkSnaps = await _getRemarkSnapshots(
+          noteId: userNote.id, reviewMethod: PomodoroModel.name);
+
       var leitnerRemarksData =
           _getRemarkModels(remarkSnapshot: leitnerRemarkSnaps);
 
       var feynmanRemarksData =
           _getRemarkModels(remarkSnapshot: feynmanRemarkSnaps);
 
-      var length = max(leitnerRemarksData.length, feynmanRemarksData.length);
+      var pomodoroRemarksData =
+          _getRemarkModels(remarkSnapshot: pomodoroRemarkSnaps);
+
+      var length = [
+        leitnerRemarksData.length,
+        feynmanRemarksData.length,
+        pomodoroRemarksData.length
+      ].reduce(max);
 
       for (var i = 0; i < length; i++) {
         RemarkDataModel? leitnerRemarkData =
             i < leitnerRemarksData.length ? leitnerRemarksData[i] : null;
         RemarkDataModel? feynmanRemarkData =
             i < feynmanRemarksData.length ? feynmanRemarksData[i] : null;
+        RemarkDataModel? pomodoroRemarkData =
+            i < pomodoroRemarksData.length ? pomodoroRemarksData[i] : null;
 
         var remarkModel = RemarkModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           leitnerRemark: leitnerRemarkData,
           feynmanRemark: feynmanRemarkData,
+          pomodoroRemark: pomodoroRemarkData,
         );
 
         remarkModels.add(remarkModel);

@@ -11,6 +11,7 @@ import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/presentation/providers/analytics_screen_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 
 @RoutePage()
 class AnalyticsScreen extends ConsumerStatefulWidget {
@@ -83,6 +84,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           (reviewMethods[remark.leitnerRemark?.reviewMethod] ?? 0) + 1;
       reviewMethods[remark.feynmanRemark?.reviewMethod] =
           (reviewMethods[remark.feynmanRemark?.reviewMethod] ?? 0) + 1;
+      reviewMethods[remark.pomodoroRemark?.reviewMethod] =
+          (reviewMethods[remark.pomodoroRemark?.reviewMethod] ?? 0) + 1;
     }
 
     return reviewMethods.entries
@@ -190,6 +193,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           legendItemText: "Feynman T.",
                           reviewMethod: FeynmanModel.name,
                         ),
+                        _buildLineSeries(
+                            remarks: _lineChartRemarks,
+                            legendItemText: "Pomodoro T.",
+                            reviewMethod: PomodoroModel.name)
                       ],
                     ),
                     Padding(

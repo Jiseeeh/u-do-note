@@ -15,14 +15,10 @@ import 'package:u_do_note/routes/app_route.dart';
 @RoutePage()
 class QuizScreen extends ConsumerStatefulWidget {
   final List<QuestionModel> questions;
-  final Future<void> Function(
-          List<int> selectedAnswersIndex, int score)
+  final Future<void> Function(List<int> selectedAnswersIndex, int score)
       onQuizFinish;
   const QuizScreen(
-      {
-      required this.onQuizFinish,
-      required this.questions,
-      Key? key})
+      {required this.onQuizFinish, required this.questions, Key? key})
       : super(key: key);
 
   @override

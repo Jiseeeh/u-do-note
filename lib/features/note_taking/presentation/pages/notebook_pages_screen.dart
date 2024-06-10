@@ -20,7 +20,6 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
@@ -83,7 +82,9 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
         scrolledUnderElevation: 0,
         title: Text(
           notebooks!.firstWhere((nb) => nb.id == widget.notebookId).subject,
-          style: const TextStyle(fontWeight: FontWeight.bold, ),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           PopupMenuButton<String>(

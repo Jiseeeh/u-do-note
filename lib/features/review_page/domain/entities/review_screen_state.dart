@@ -3,6 +3,7 @@ import 'package:u_do_note/core/review_methods.dart';
 class ReviewScreenState {
   ReviewMethods? reviewMethod;
   String? notebookId;
+  String? contentFromPages;
   List<String>? notebookPagesIds;
 
   /// Specific for analyze notes because that feature only uses one note at a time
@@ -11,12 +12,14 @@ class ReviewScreenState {
   ReviewScreenState({
     this.reviewMethod,
     this.notebookId,
+    this.contentFromPages,
     this.notebookPagesIds,
     this.noteId,
   });
 
   get getReviewMethod => reviewMethod;
   get getNotebookId => notebookId;
+  get getContentFromPages => contentFromPages;
   get getNoteId => noteId;
   get getNotebookPages => notebookPagesIds;
 
@@ -26,6 +29,10 @@ class ReviewScreenState {
 
   void setNotebookId(String notebookId) {
     this.notebookId = notebookId;
+  }
+
+  void setContentFromPages(String contentFromPages) {
+    this.contentFromPages = contentFromPages;
   }
 
   void setNotebookPagesIds(List<String> notebookPagesIds) {
@@ -45,6 +52,6 @@ class ReviewScreenState {
 
   @override
   String toString() {
-    return 'ReviewScreenState{reviewMethod: $reviewMethod, notebookId: $notebookId, notebookPages: $notebookPagesIds, noteId: $noteId}';
+    return 'ReviewScreenState{reviewMethod: $reviewMethod, notebookId: $notebookId, contentFromPages: $contentFromPages , notebookPages: $notebookPagesIds, noteId: $noteId}';
   }
 }

@@ -91,11 +91,8 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
         if (!context.mounted) return;
 
-        context.router.replace(QuizRoute(
-            onQuizFinish: (selectedAnswersIndex, score) async {
-              logger.d("Quiz finished with score: $score");
-            },
-            questions: quizQuestions));
+        // ? Temporary route
+        context.router.replace(PomodoroQuizRoute(questions: quizQuestions));
 
         EasyLoading.dismiss();
       }
@@ -237,11 +234,10 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (_) {
-        ref.read(reviewScreenProvider).resetState();
-
-        var pomodoro = ref.read(pomodoroProvider);
+        var pomodoro = ref.watch(pomodoroProvider);
 
         if (pomodoro.pomodoroTimer == null) {
+          ref.read(reviewScreenProvider).resetState();
           pomodoro.resetState();
         }
 

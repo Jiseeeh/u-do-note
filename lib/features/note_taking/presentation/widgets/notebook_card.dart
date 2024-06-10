@@ -29,7 +29,7 @@ class NotebookCard extends ConsumerWidget {
               image: notebook.coverUrl.isNotEmpty
                   ? NetworkImage(notebook.coverUrl) as ImageProvider
                   // TODO: replace with default one
-                  : const AssetImage('assets/images/chisaki.png'),
+                  : const AssetImage('assets/images/default.png'),
               fit: BoxFit.cover,
             ),
           ),

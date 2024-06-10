@@ -372,9 +372,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
       // ? set the review method and note id for the review screen to use
 
-      ref.read(reviewScreenProvider.notifier).setReviewMethod(reviewMethod);
-      ref.read(reviewScreenProvider.notifier).setNotebookId(widget.notebookId);
-      ref.read(reviewScreenProvider.notifier).setNoteId(widget.note.id);
+      ref.read(reviewScreenProvider).setReviewMethod(reviewMethod);
+      ref.read(reviewScreenProvider).setNotebookId(widget.notebookId);
+      ref.read(reviewScreenProvider).setNoteId(widget.note.id);
 
       context.router.push(const ReviewRoute());
     }

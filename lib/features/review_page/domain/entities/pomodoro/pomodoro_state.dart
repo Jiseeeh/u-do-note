@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/datasources/pomodoro/pomodoro_defaults.dart'
@@ -18,6 +19,7 @@ class PomodoroState {
   int completedPomodoros = 0;
   int completedSets = 0;
   bool isBreak = false;
+  bool hasFinishedSession = false;
   List<String> todos = [];
 
   PomodoroState({
@@ -45,6 +47,7 @@ class PomodoroState {
     completedPomodoros = 0;
     completedSets = 0;
     isBreak = false;
+    hasFinishedSession = false;
   }
 
   void cancelTimer() {
@@ -56,6 +59,7 @@ class PomodoroState {
     completedPomodoros = 0;
     completedSets = 0;
     isBreak = false;
+    // hasFinishedSession = false;
   }
 
   setPomodoroTime(int time) {
@@ -87,10 +91,21 @@ class PomodoroState {
     pomodoroTimeInString = time;
   }
 
+  void showToastOnFinish() {
+    EasyLoading.showToast(
+        "You've completed all the sets! Please go back to the pomodoro page to take a quiz!",
+        duration: const Duration(seconds: 3),
+        toastPosition: EasyLoadingToastPosition.bottom);
+
+    hasFinishedSession = true;
+  }
+
   void startPomodoro() {
     logger.w('Pomodoro Technique Started $completedSets/$numberOfSets');
 
     if (completedSets >= numberOfSets) {
+      showToastOnFinish();
+
       logger.w('Pomodoro Technique Completed');
       cancelTimer();
       return;
@@ -113,6 +128,10 @@ class PomodoroState {
           timer.cancel();
 
           if (isBreak) {
+            EasyLoading.showToast("Back to Work!",
+                duration: const Duration(seconds: 3),
+                toastPosition: EasyLoadingToastPosition.bottom);
+
             isBreak = false;
             completedPomodoros++;
             currentTime = pomodoroTime;
@@ -124,10 +143,15 @@ class PomodoroState {
             }
 
             isBreak = true;
+            EasyLoading.showToast("Break Time!",
+                duration: const Duration(seconds: 3),
+                toastPosition: EasyLoadingToastPosition.bottom);
           } else if (completedSets + 1 < numberOfSets) {
             completedSets++;
             completedPomodoros = 0;
           } else {
+            showToastOnFinish();
+
             logger.w('Pomodoro Technique Completed');
             cancelTimer();
             return;

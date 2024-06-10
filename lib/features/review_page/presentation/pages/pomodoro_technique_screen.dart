@@ -2,14 +2,18 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/domain/entities/pomodoro/pomodoro_state.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class PomodoroScreen extends ConsumerStatefulWidget {
@@ -20,29 +24,107 @@ class PomodoroScreen extends ConsumerStatefulWidget {
 }
 
 class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
-  Timer? pomodoroCheckTimer;
+  Timer? _pomodoroCheckTimer;
   final TextEditingController _todoController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  var _isDialogOpen = false;
 
   @override
   void initState() {
     initPomodoroCheck();
+
+    SchedulerBinding.instance
+        .addPostFrameCallback((_) => checkIfTimeToQuiz(context));
+
     super.initState();
+  }
+
+  void checkIfTimeToQuiz(BuildContext context) async {
+    if (_isDialogOpen) return;
+
+    var pomodoro = ref.read(pomodoroProvider);
+
+    if (pomodoro.hasFinishedSession) {
+      _isDialogOpen = true;
+      var willTakeQuiz = await showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (dialogContext) {
+            return AlertDialog(
+              title: const Text('Quiz'),
+              content: const Text(
+                  "Do you want to start the quiz? If you tap no, you will be asked to take a quiz again after another pomodoro session."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(false);
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(true);
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            );
+          });
+
+      if (willTakeQuiz) {
+        EasyLoading.show(
+            status: 'Generating quiz...',
+            maskType: EasyLoadingMaskType.black,
+            dismissOnTap: false);
+
+        var contentFromPages = ref.read(reviewScreenProvider).contentFromPages;
+
+        var quizQuestions = await ref
+            .read(feynmanTechniqueProvider.notifier)
+            .generateQuizQuestions(contentFromPages!);
+
+        if (quizQuestions.isEmpty) {
+          EasyLoading.showError(
+              "Something went wrong while generating quiz. Please try again later.");
+          return;
+        }
+
+        if (!context.mounted) return;
+
+        context.router.replace(QuizRoute(
+            onQuizFinish: (selectedAnswersIndex, score) async {
+              logger.d("Quiz finished with score: $score");
+            },
+            questions: quizQuestions));
+
+        EasyLoading.dismiss();
+      }
+    }
+  }
+
+  void initPomodoroCheck() {
+    _pomodoroCheckTimer =
+        Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      logger.d("Refreshing state");
+
+      checkIfTimeToQuiz(context);
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    pomodoroCheckTimer?.cancel();
+    _pomodoroCheckTimer?.cancel();
     _todoController.dispose();
     super.dispose();
   }
 
-  void initPomodoroCheck() {
-    pomodoroCheckTimer =
-        Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      logger.d("Refreshing state");
-      setState(() {});
-    });
+  void showPomodoroToast(PomodoroState pomodoro) {
+    if (pomodoro.pomodoroTimer != null && pomodoro.pomodoroTimer!.isActive) {
+      EasyLoading.showToast('Your Pomodoro is still running!',
+          duration: const Duration(seconds: 2),
+          toastPosition: EasyLoadingToastPosition.bottom);
+    }
   }
 
   void pausePomodoro(PomodoroState pomodoro) {
@@ -155,13 +237,15 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (_) {
-        ref.read(reviewScreenProvider.notifier).resetState();
+        ref.read(reviewScreenProvider).resetState();
 
         var pomodoro = ref.read(pomodoroProvider);
 
         if (pomodoro.pomodoroTimer == null) {
           pomodoro.resetState();
         }
+
+        showPomodoroToast(pomodoro);
 
         Navigator.pop(context);
       },

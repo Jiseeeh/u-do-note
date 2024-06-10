@@ -22,7 +22,7 @@ class HomepageScreen extends ConsumerWidget {
         tabsRouter.addListener(() {
           // ? if not the review route
           if (tabsRouter.activeIndex != 1) {
-            ref.read(reviewScreenProvider.notifier).resetState();
+            ref.read(reviewScreenProvider).resetState();
           }
         });
         // TODO: make this sht look like the bottom nav bar in the figma

@@ -66,4 +66,27 @@ class PomodoroModel {
       'review_method': name,
     };
   }
+
+  /// Copy with new values
+  PomodoroModel copyWith({
+    String? title,
+    int? focusedMinutes,
+    Timestamp? createdAt,
+    String? id,
+    String? remark,
+    int? score,
+    List<QuestionModel>? questions,
+    List<int>? selectedAnswersIndex,
+  }) {
+    return PomodoroModel(
+      title: title ?? this.title,
+      focusedMinutes: focusedMinutes ?? this.focusedMinutes,
+      createdAt: createdAt ?? this.createdAt,
+      id: id ?? this.id,
+      remark: remark ?? this.remark,
+      score: score ?? this.score,
+      questions: questions ?? this.questions,
+      selectedAnswersIndex: selectedAnswersIndex ?? this.selectedAnswersIndex,
+    );
+  }
 }

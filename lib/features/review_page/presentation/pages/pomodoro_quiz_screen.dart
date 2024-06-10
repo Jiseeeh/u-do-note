@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
@@ -132,15 +132,16 @@ class _QuizScreenState extends ConsumerState<PomodoroQuizScreen> {
           maskType: EasyLoadingMaskType.black,
           dismissOnTap: false);
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection('user_notes')
-          .doc(reviewScreenState.notebookId)
-          .collection('remarks')
-          .add(pomodoroModel.toFirestore());
+      var res = await ref
+          .read(pomodoroProvider.notifier)
+          .saveQuizResults(reviewScreenState.notebookId!, pomodoroModel);
 
       EasyLoading.dismiss();
+
+      if (res is Failure) {
+        EasyLoading.showError("Something went wrong. Please try again later.");
+        return;
+      }
 
       if (!context.mounted) return;
 

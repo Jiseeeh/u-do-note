@@ -128,6 +128,10 @@ class PomodoroState {
           timer.cancel();
 
           if (isBreak) {
+            EasyLoading.showToast("Back to Work!",
+                duration: const Duration(seconds: 3),
+                toastPosition: EasyLoadingToastPosition.bottom);
+
             isBreak = false;
             completedPomodoros++;
             currentTime = pomodoroTime;
@@ -139,6 +143,9 @@ class PomodoroState {
             }
 
             isBreak = true;
+            EasyLoading.showToast("Break Time!",
+                duration: const Duration(seconds: 3),
+                toastPosition: EasyLoadingToastPosition.bottom);
           } else if (completedSets + 1 < numberOfSets) {
             completedSets++;
             completedPomodoros = 0;

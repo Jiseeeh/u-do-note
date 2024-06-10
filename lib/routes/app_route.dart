@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/pages/homepage_screen.dart';
 import 'package:u_do_note/features/analytics/presentation/pages/analytics_screen.dart';
+import 'package:u_do_note/features/authentication/presentation/pages/splash_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/intro_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/sign_up_screen.dart';
@@ -35,10 +36,11 @@ class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
         // add routes here
+        AutoRoute(page: SplashRoute.page, path: '/splash', initial: true),
         AutoRoute(
             page: IntroRoute.page,
             path: '/intro',
-            initial: true,
+            // initial: true,
             guards: [IntroScreenGuard()]),
         AutoRoute(page: SignUpRoute.page, path: '/sign-up'),
         AutoRoute(page: LoginRoute.page, path: '/login'),

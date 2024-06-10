@@ -150,9 +150,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           Container(
               height: 80.0.h,
               width: 100.w,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                 ),
@@ -211,7 +211,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                                color: AppColors.lightGrey,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +228,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .textTheme
                                               .displayLarge
                                               ?.copyWith(
-                                                color: AppColors.black,
+                                                color: Theme.of(context).colorScheme.primary,
                                                 fontSize: 25.sp,
                                               )),
                                       const SizedBox(height: 5),
@@ -248,7 +248,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                                color: AppColors.lightGrey,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +265,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .textTheme
                                               .displayLarge
                                               ?.copyWith(
-                                                color: AppColors.black,
+                                                color: Theme.of(context).colorScheme.primary,
                                                 fontSize: 25.sp,
                                               )),
                                       const SizedBox(height: 5),

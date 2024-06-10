@@ -149,7 +149,7 @@ class LeitnerSystemScreenState extends ConsumerState<LeitnerSystemScreen> {
                             .analyzeFlashcardsResult(
                                 widget.notebookId, newLeitnerSystemModel);
 
-                        ref.read(reviewScreenProvider.notifier).resetState();
+                        ref.read(reviewScreenProvider).resetState();
                         
                         EasyLoading.dismiss();
 

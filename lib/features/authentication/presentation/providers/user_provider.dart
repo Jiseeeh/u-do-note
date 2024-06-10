@@ -7,6 +7,7 @@ import 'package:u_do_note/features/authentication/data/datasources/user_remote_d
 import 'package:u_do_note/features/authentication/data/models/user_model.dart';
 import 'package:u_do_note/features/authentication/data/repositories/user_repository_impl.dart';
 import 'package:u_do_note/features/authentication/domain/repositories/user_repository.dart';
+import 'package:u_do_note/features/authentication/domain/usecases/reset_password.dart';
 import 'package:u_do_note/features/authentication/domain/usecases/sign_in_with_email_and_password.dart';
 import 'package:u_do_note/features/authentication/domain/usecases/sign_up_with_email_and_password.dart';
 
@@ -42,6 +43,13 @@ SignUpWithEmailAndPassword signUpWithEmailAndPassword(
   return SignUpWithEmailAndPassword(repository);
 }
 
+@riverpod
+ResetPassword resetPassword(ResetPasswordRef ref) {
+  final repository = ref.read(userRepositoryProvider);
+
+  return ResetPassword(repository);
+}
+
 @Riverpod(keepAlive: true)
 class UserNotifier extends _$UserNotifier {
   @override
@@ -63,5 +71,18 @@ class UserNotifier extends _$UserNotifier {
         ref.read(signUpWithEmailAndPasswordProvider);
 
     return signUpWithEmailAndPassword(email, displayName, password);
+  }
+
+  /// Reset password
+  /// Returns a [Failure] if there is an error with the [email]
+  Future<dynamic> resetPassword(String email) async {
+    final resetPassword = ref.read(resetPasswordProvider);
+
+    var failureOrString = await resetPassword(email);
+
+    return failureOrString.fold(
+      (failure) => failure,
+      (res) => res,
+    );
   }
 }

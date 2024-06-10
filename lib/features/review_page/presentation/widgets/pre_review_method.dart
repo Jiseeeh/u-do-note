@@ -303,11 +303,12 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               return;
             }
 
-            var reviewScreenState = ref.read(reviewScreenProvider.notifier);
+            var reviewScreenState = ref.read(reviewScreenProvider);
 
             reviewScreenState.setReviewMethod(widget.reviewMethod);
             reviewScreenState.setNotebookId(notebookId);
             reviewScreenState.setNotebookPagesIds(pages);
+            reviewScreenState.setContentFromPages(contentFromPages);
 
             switch (widget.reviewMethod) {
               case ReviewMethods.leitnerSystem:
@@ -452,7 +453,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 EasyLoading.dismiss();
 
                 failureOrLeitner.fold((failure) {
-                  ref.read(reviewScreenProvider.notifier).resetState();
+                  ref.read(reviewScreenProvider).resetState();
 
                   EasyLoading.showError(failure.message);
                 }, (leitnerSystem) {

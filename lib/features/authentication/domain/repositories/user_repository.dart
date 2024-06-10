@@ -9,4 +9,5 @@ abstract class UserRepository {
       {required String email,
       required String displayName,
       required String password});
+  Future<Either<Failure, String>> resetPassword(String email);
 }

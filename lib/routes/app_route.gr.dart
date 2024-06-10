@@ -115,9 +115,8 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: QuizScreen(
-          newSessionName: args.newSessionName,
-          feynmanModel: args.feynmanModel,
-          isFromSessionWithoutQuiz: args.isFromSessionWithoutQuiz,
+          onQuizFinish: args.onQuizFinish,
+          questions: args.questions,
           key: args.key,
         ),
       );
@@ -463,17 +462,18 @@ class QuizResultsRouteArgs {
 /// [QuizScreen]
 class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
   QuizRoute({
-    String? newSessionName,
-    required FeynmanModel feynmanModel,
-    bool? isFromSessionWithoutQuiz = false,
+    required Future<void> Function(
+      List<int>,
+      int,
+    ) onQuizFinish,
+    required List<QuestionModel> questions,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           QuizRoute.name,
           args: QuizRouteArgs(
-            newSessionName: newSessionName,
-            feynmanModel: feynmanModel,
-            isFromSessionWithoutQuiz: isFromSessionWithoutQuiz,
+            onQuizFinish: onQuizFinish,
+            questions: questions,
             key: key,
           ),
           initialChildren: children,
@@ -486,23 +486,23 @@ class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
 
 class QuizRouteArgs {
   const QuizRouteArgs({
-    this.newSessionName,
-    required this.feynmanModel,
-    this.isFromSessionWithoutQuiz = false,
+    required this.onQuizFinish,
+    required this.questions,
     this.key,
   });
 
-  final String? newSessionName;
+  final Future<void> Function(
+    List<int>,
+    int,
+  ) onQuizFinish;
 
-  final FeynmanModel feynmanModel;
-
-  final bool? isFromSessionWithoutQuiz;
+  final List<QuestionModel> questions;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'QuizRouteArgs{newSessionName: $newSessionName, feynmanModel: $feynmanModel, isFromSessionWithoutQuiz: $isFromSessionWithoutQuiz, key: $key}';
+    return 'QuizRouteArgs{onQuizFinish: $onQuizFinish, questions: $questions, key: $key}';
   }
 }
 

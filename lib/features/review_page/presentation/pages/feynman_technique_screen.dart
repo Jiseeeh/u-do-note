@@ -123,6 +123,35 @@ class _FeynmanTechniqueScreenState
     });
   }
 
+  void _onFeynmanFinish(
+      FeynmanModel feynmanModel,
+      List<int> selectedAnswersIndex,
+      int score,
+      bool isFromOldSessionWithoutQuiz,
+      String? newSessionName) async {
+    // ? save the quiz results
+    EasyLoading.show(
+        status: 'Saving quiz results...',
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false);
+
+    var updatedFeynmanModel = feynmanModel.copyWith(
+        score: score, selectedAnswersIndex: selectedAnswersIndex);
+
+    var res = await ref.read(feynmanTechniqueProvider.notifier).saveQuizResults(
+        feynmanModel: updatedFeynmanModel,
+        notebookId: ref.read(reviewScreenProvider).notebookId!,
+        isFromOldSessionWithoutQuiz: isFromOldSessionWithoutQuiz,
+        newSessionName: newSessionName);
+
+    EasyLoading.dismiss();
+
+    if (res is Failure) {
+      EasyLoading.showError(res.message);
+      return;
+    }
+  }
+
   void _handleSendPressed(BuildContext context, types.PartialText message,
       bool isFromPeriodicTimer) async {
     FocusScope.of(context).requestFocus(FocusNode());
@@ -190,7 +219,11 @@ class _FeynmanTechniqueScreenState
                   recentUserMessages: recentUserMessages);
 
           context.router.push(QuizRoute(
-              feynmanModel: feynmanModel, isFromSessionWithoutQuiz: true));
+              questions: feynmanModel.questions!,
+              onQuizFinish: (selectedAnswersIndex, score) async {
+                _onFeynmanFinish(
+                    feynmanModel, selectedAnswersIndex, score, true, null);
+              }));
           return;
         }
 
@@ -206,13 +239,22 @@ class _FeynmanTechniqueScreenState
                 recentUserMessages: recentUserMessages);
 
         context.router.push(QuizRoute(
-            feynmanModel: feynmanModel, newSessionName: newSessionName));
+            questions: feynmanModel.questions!,
+            onQuizFinish: (selectedAnswersIndex, score) async {
+              _onFeynmanFinish(feynmanModel, selectedAnswersIndex, score, false,
+                  newSessionName);
+            }));
         return;
       }
 
       feynmanModel = feynmanModel!.copyWith(questions: quizQuestions);
 
-      context.router.push(QuizRoute(feynmanModel: feynmanModel!));
+      context.router.push(QuizRoute(
+          questions: feynmanModel!.questions!,
+          onQuizFinish: (selectedAnswersIndex, score) async {
+            _onFeynmanFinish(
+                feynmanModel!, selectedAnswersIndex, score, false, null);
+          }));
       return;
     }
 
@@ -412,7 +454,7 @@ class _FeynmanTechniqueScreenState
       onPopInvoked: (_) {
         // ? This is to prevent the app from assuming that the user
         // ? has come from the analyze notes
-        ref.read(reviewScreenProvider.notifier).resetState();
+        ref.read(reviewScreenProvider).resetState();
 
         context.router.replace(const ReviewRoute());
       },

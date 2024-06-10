@@ -128,7 +128,7 @@ class _PomodoroFormDialogState extends ConsumerState<PomodoroFormDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            ref.read(reviewScreenProvider.notifier).resetState();
+            ref.read(reviewScreenProvider).resetState();
 
             Navigator.of(context).pop();
           },

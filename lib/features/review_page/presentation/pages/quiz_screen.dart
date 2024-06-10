@@ -2,32 +2,26 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
-import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/question.dart';
 import 'package:u_do_note/features/review_page/domain/entities/question.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class QuizScreen extends ConsumerStatefulWidget {
-  final FeynmanModel feynmanModel;
-  // ? used when the user reviews an old session and started a new quiz
-  final String? newSessionName;
-  // ? used when the user opens an old session that on quiz has been taken
-  final bool? isFromSessionWithoutQuiz;
+  final List<QuestionModel> questions;
+  final Future<void> Function(
+          List<int> selectedAnswersIndex, int score)
+      onQuizFinish;
   const QuizScreen(
-      {this.newSessionName,
-      required this.feynmanModel,
-      this.isFromSessionWithoutQuiz = false,
+      {
+      required this.onQuizFinish,
+      required this.questions,
       Key? key})
       : super(key: key);
 
@@ -42,13 +36,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   int startTime = 30;
   int? selectedAnswerIndex;
   List<int> selectedAnswersIndex = [];
-  late List<QuestionModel> questions;
+  // late List<QuestionModel> questions;
 
   @override
   void initState() {
     super.initState();
-
-    questions = widget.feynmanModel.questions!;
 
     startTimer();
   }
@@ -85,7 +77,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       return;
     }
 
-    if (questions[currentQuestionIndex].correctAnswerIndex ==
+    if (widget.questions[currentQuestionIndex].correctAnswerIndex ==
         selectedAnswerIndex) {
       logger.d('Correct Answer');
 
@@ -96,7 +88,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
     logger.d('Incorrect Answer');
 
-    if (currentQuestionIndex < questions.length - 1) {
+    if (currentQuestionIndex < widget.questions.length - 1) {
       currentQuestionIndex++;
     }
 
@@ -112,7 +104,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       if (selectedAnswerIndex != null) {
         selectedAnswersIndex.add(selectedAnswerIndex!);
 
-        if (questions[currentQuestionIndex].correctAnswerIndex ==
+        if (widget.questions[currentQuestionIndex].correctAnswerIndex ==
             selectedAnswerIndex) {
           score++;
         }
@@ -120,36 +112,16 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
       timer.cancel();
 
-      // ? save the quiz results
-      EasyLoading.show(
-          status: 'Saving quiz results...',
-          maskType: EasyLoadingMaskType.black,
-          dismissOnTap: false);
-
-      var updatedFeynmanModel = widget.feynmanModel
-          .copyWith(score: score, selectedAnswersIndex: selectedAnswersIndex);
-
-      var res = await ref
-          .read(feynmanTechniqueProvider.notifier)
-          .saveQuizResults(
-              feynmanModel: updatedFeynmanModel,
-              notebookId: ref.read(reviewScreenProvider).notebookId!,
-              isFromOldSessionWithoutQuiz: widget.isFromSessionWithoutQuiz!,
-              newSessionName: widget.newSessionName);
-
-      EasyLoading.dismiss();
-
-      if (res is Failure) {
-        EasyLoading.showError(res.message);
-        return;
-      }
+      widget.onQuizFinish(selectedAnswersIndex, score);
 
       if (!context.mounted) return;
 
       context.router.replace(QuizResultsRoute(
-          questions: questions.map((question) => question.toEntity()).toList(),
-          correctAnswersIndex:
-              questions.map((question) => question.correctAnswerIndex).toList(),
+          questions:
+              widget.questions.map((question) => question.toEntity()).toList(),
+          correctAnswersIndex: widget.questions
+              .map((question) => question.correctAnswerIndex)
+              .toList(),
           selectedAnswersIndex: selectedAnswersIndex));
 
       logger.d('Score: $score');
@@ -172,7 +144,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             child: Column(
               children: [
                 Text(
-                  'Question ${currentQuestionIndex + 1} of ${questions.length}',
+                  'Question ${currentQuestionIndex + 1} of ${widget.questions.length}',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: AppColors.grey,
                       ),
@@ -205,7 +177,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             ),
             child: Center(
               child: Text(
-                questions[currentQuestionIndex].question,
+                widget.questions[currentQuestionIndex].question,
                 style: Theme.of(context)
                     .textTheme
                     .headlineMedium
@@ -228,13 +200,14 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                 children: [
                   ListView.builder(
                       shrinkWrap: true,
-                      itemCount: questions[currentQuestionIndex].choices.length,
+                      itemCount:
+                          widget.questions[currentQuestionIndex].choices.length,
                       itemBuilder: (context, index) {
                         return AnswerContainer(
                             currentIndex: index,
                             selectedAnswerIndex: selectedAnswerIndex,
-                            question:
-                                questions[currentQuestionIndex].toEntity(),
+                            question: widget.questions[currentQuestionIndex]
+                                .toEntity(),
                             onSelectAnswer: _onSelectAnswer);
                       }),
                   SizedBox(
@@ -246,12 +219,12 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed:
-                              currentQuestionIndex == questions.length - 1
-                                  ? _onFinish(context)
-                                  : _onNext,
+                          onPressed: currentQuestionIndex ==
+                                  widget.questions.length - 1
+                              ? _onFinish(context)
+                              : _onNext,
                           child: Text(
-                            currentQuestionIndex == questions.length - 1
+                            currentQuestionIndex == widget.questions.length - 1
                                 ? 'Finish'
                                 : 'Next',
                             style: Theme.of(context)

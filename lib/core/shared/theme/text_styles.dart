@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
 
 class AppTextStyles {
   static const String fontFamily = 'Inter';
@@ -48,13 +47,7 @@ class AppTextStyles {
   );
 
   static const TextStyle h5 = TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary);
-
-  /// Text style for others
-
-  static const TextStyle authFieldHintStyle = TextStyle(
-      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grey);
-
-  static const TextStyle authFieldTextStyle = TextStyle(
-      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.black);
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
 }

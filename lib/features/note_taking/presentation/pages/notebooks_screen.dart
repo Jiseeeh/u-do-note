@@ -110,7 +110,6 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
     return AppBar(
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Text(
         'U Do Note',
         style: Theme.of(context).textTheme.displayLarge,

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
+import 'package:u_do_note/core/shared/theme/text_theme.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/sign_up_screen.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
@@ -39,8 +40,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
     var size = MediaQuery.of(context).size,
         width = size.width,
         imgHeight = width * 1.65;
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    
+
     return OnBoardingSlider(
       finishButtonText: 'Register',
       onFinish: () {
@@ -52,8 +52,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         );
       },
       finishButtonStyle: const FinishButtonStyle(
-        backgroundColor: AppColors.btnOnBoard,
-        foregroundColor: AppColors.black
+        backgroundColor: AppColors.primary,
       ),
       skipTextButton: const Text('Skip', style: AppTextStyles.body),
       trailing: const Text('Login', style: AppTextStyles.body),
@@ -65,10 +64,10 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           ),
         );
       },
-      controllerColor: colorScheme.primary,
+      controllerColor: TextThemes.primaryTextTheme.bodyLarge?.color,
       totalPage: 5,
       headerBackgroundColor: const Color.fromARGB(0, 0, 0, 0),
-      // pageBackgroundColor: AppTheme.colorScheme.pr,
+      // pageBackgroundColor: AppColors.primary,
       background: [
         Image.asset(
           'assets/images/onboard/page-1.png',

@@ -17,6 +17,9 @@ class AppTheme {
         background: AppColors.primary,
       ),
       scaffoldBackgroundColor: AppColors.primary,
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: AppColors.darkBottomNavBar
+      ),
       textTheme: TextThemes.darkTextTheme,
       primaryTextTheme: TextThemes.primaryTextTheme,
       appBarTheme: const AppBarTheme(
@@ -36,6 +39,9 @@ class AppTheme {
       textTheme: TextThemes.textTheme,
       primaryTextTheme: TextThemes.primaryTextTheme,
       scaffoldBackgroundColor: AppColors.white,
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: AppColors.primary
+      ),
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.secondary,

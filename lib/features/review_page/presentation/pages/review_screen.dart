@@ -264,6 +264,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     return AppBar(
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

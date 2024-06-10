@@ -38,4 +38,7 @@ class AppColors {
   static const jetBlack = Color(0xff343434);
 
   static const btnOnBoard = Color(0xFF053149);
+  
+  /// Lighter primary color
+  static const darkBottomNavBar = Color(0xff082543);
 }

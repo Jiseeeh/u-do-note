@@ -4,9 +4,7 @@ import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
-import 'package:u_do_note/core/shared/theme/app_theme.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
-import 'package:u_do_note/core/shared/theme/text_theme.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/sign_up_screen.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';

@@ -327,7 +327,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                       ),
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(bottom: 10),
+                                            const EdgeInsets.only(bottom: 20),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,

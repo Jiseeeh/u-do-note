@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -34,7 +35,24 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final feynmanBtnGlobalKey = GlobalKey();
   final pomodoroBtnGlobalKey = GlobalKey();
 
+  bool isPomodoroActive() {
+    var pomodoro = ref.watch(pomodoroProvider);
+
+    if (pomodoro.pomodoroTimer != null) {
+      EasyLoading.showToast(
+          'Please finish the current pomodoro session first or cancel if you want to switch to another review method.',
+          duration: const Duration(seconds: 3),
+          toastPosition: EasyLoadingToastPosition.bottom);
+
+      return true;
+    }
+
+    return false;
+  }
+
   void _leitnerOnPressed(BuildContext context) async {
+    if (isPomodoroActive()) return;
+
     var reviewState = ref.watch(reviewScreenProvider);
 
     var willContinue = await showDialog(
@@ -63,6 +81,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   }
 
   void _feynmanOnPressed(BuildContext context) async {
+    if (isPomodoroActive()) return;
+
     var reviewState = ref.watch(reviewScreenProvider);
 
     var willContinue = await showDialog(
@@ -143,7 +163,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   void initState() {
     var reviewState = ref.read(reviewScreenProvider);
 
-    if (reviewState.getReviewMethod != null) {
+    if (reviewState.isFromAutoAnalysis) {
       // TODO: check if the tutorial has been shown once, if yes do not show it again
       createTutorial();
       Future.delayed(Duration.zero, showTutorial);

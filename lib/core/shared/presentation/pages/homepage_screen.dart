@@ -24,7 +24,7 @@ class HomepageScreen extends ConsumerWidget {
         tabsRouter.addListener(() {
           // ? if not the review route
           if (tabsRouter.activeIndex != 1) {
-            ref.read(reviewScreenProvider.notifier).resetState();
+            ref.read(reviewScreenProvider).resetState();
           }
         });
         return BottomAppBar(

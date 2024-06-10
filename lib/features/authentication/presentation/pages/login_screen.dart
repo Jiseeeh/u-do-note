@@ -4,6 +4,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../widgets/social_icon.dart';
+import '../widgets/auth_field.dart';
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
@@ -198,13 +201,39 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                const Align(
+                                Align(
                                   alignment: Alignment.topRight,
-                                  child: Text(
-                                    "Forgot Password?",
-                                    textAlign: TextAlign.end,
-                                    style:
-                                        TextStyle(color: AppColors.secondary),
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      if (emailController.text.trim().isEmpty) {
+                                        EasyLoading.showError(
+                                            'Please enter your email address');
+                                        return;
+                                      }
+
+                                      EasyLoading.show(
+                                          status: 'Sending email...',
+                                          maskType: EasyLoadingMaskType.black,
+                                          dismissOnTap: false);
+
+                                      var res = await ref
+                                          .read(userNotifierProvider.notifier)
+                                          .resetPassword(emailController.text);
+
+                                      EasyLoading.dismiss();
+
+                                      if (res is Failure) {
+                                        EasyLoading.showError(res.message);
+                                      } else {
+                                        EasyLoading.showSuccess(res);
+                                      }
+                                    },
+                                    child: const Text(
+                                      "Forgot Password?",
+                                      textAlign: TextAlign.end,
+                                      style:
+                                          TextStyle(color: AppColors.secondary),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(

@@ -232,20 +232,17 @@ class FeynmanRemoteDataSource {
       responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,
-      maxTokens: 600,
+      maxTokens: 1000,
     );
 
     String? completionContent =
         chatCompletion.choices.first.message.content!.first.text;
 
-    logger.i('content: $completionContent');
-    logger.i('finish reason: ${chatCompletion.choices.first.finishReason}');
-    logger.i(chatCompletion.systemFingerprint);
-    logger.i(chatCompletion.usage.promptTokens);
-
     var decodedJson = json.decode(completionContent!);
 
     List<QuestionModel> questions = [];
+
+    logger.d("questions: ${decodedJson['questions']}");
 
     for (var question in decodedJson['questions']) {
       questions.add(QuestionModel.fromJson(question));

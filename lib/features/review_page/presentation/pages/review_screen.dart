@@ -95,7 +95,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     var reviewState = ref.watch(reviewScreenProvider);
     var pomodoro = ref.watch(pomodoroProvider);
 
-    if (pomodoro.pomodoroTimer != null) {
+    if (pomodoro.hasFinishedSession || pomodoro.pomodoroTimer != null) {
       context.router.push(const PomodoroRoute());
       return;
     }

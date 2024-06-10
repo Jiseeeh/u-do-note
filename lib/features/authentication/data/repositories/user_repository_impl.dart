@@ -7,7 +7,6 @@ import 'package:u_do_note/features/authentication/data/models/user_model.dart';
 import 'package:u_do_note/features/authentication/domain/repositories/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  // Data sources
   final UserRemoteDataSource userRemoteDataSource;
 
   UserRepositoryImpl(this.userRemoteDataSource);
@@ -34,6 +33,19 @@ class UserRepositoryImpl implements UserRepository {
       final userModel = await userRemoteDataSource.signInWithEmailAndPassword(
           email, password);
       return Right(userModel);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(code: e.code, message: e.message!));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> resetPassword(String email) async {
+    try {
+      final res = await userRemoteDataSource.resetPassword(email);
+
+      return Right(res);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(code: e.code, message: e.message!));
     } catch (e) {

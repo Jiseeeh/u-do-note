@@ -20,19 +20,17 @@ class NotebooksScreen extends ConsumerStatefulWidget {
 
 class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
   var gridCols = 2;
+  var sortBy = 'name'; // Default sorting criteria
 
   @override
   void initState() {
     super.initState();
-
     initGridCols();
   }
 
   void initGridCols() async {
     var prefs = await ref.read(sharedPreferencesProvider.future);
-
     var cols = prefs.getInt('nbGridCols');
-
     if (cols != null) {
       setState(() {
         gridCols = cols;
@@ -40,10 +38,22 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
     }
   }
 
+  void sortNotebooks(List<NotebookEntity>? notebooks) {
+    if (notebooks == null) return;
+    if (sortBy == 'name') {
+      notebooks.sort((a, b) => a.subject.compareTo(b.subject));
+    } else if (sortBy == 'date') {
+      notebooks.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var notebooksAsync = ref.watch(notebooksStreamProvider);
     var notebooksSync = notebooksAsync.value;
+    if (notebooksSync != null) {
+      sortNotebooks(notebooksSync);
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -69,9 +79,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
                 labelWidget: const Text('Two Columns'),
                 onTap: () async {
                   var prefs = await ref.read(sharedPreferencesProvider.future);
-
                   prefs.setInt('nbGridCols', 2);
-
                   setState(() {
                     if (gridCols != 2) {
                       gridCols = 2;
@@ -84,9 +92,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
                 labelWidget: const Text('Three Columns'),
                 onTap: () async {
                   var prefs = await ref.read(sharedPreferencesProvider.future);
-
                   prefs.setInt('nbGridCols', 3);
-
                   setState(() {
                     if (gridCols != 3) {
                       gridCols = 3;
@@ -109,6 +115,26 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
         'U Do Note',
         style: Theme.of(context).textTheme.displayLarge,
       ),
+      actions: [
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            setState(() {
+              sortBy = value;
+            });
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'name',
+              child: Text('Sort by Name'),
+            ),
+            const PopupMenuItem(
+              value: 'date',
+              child: Text('Sort by Date'),
+            ),
+          ],
+          icon: const Icon(Icons.sort),
+        ),
+      ],
     );
   }
 

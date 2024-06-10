@@ -41,23 +41,29 @@ class NotebookPagesScreen extends ConsumerStatefulWidget {
 class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
   var gridCols = 2;
   var notebookIdsToPasteExtractedContent = [];
+  var sortBy = 'title'; // Default sorting criteria
 
   @override
   void initState() {
     super.initState();
-
     initGridCols();
   }
 
   void initGridCols() async {
     var prefs = await ref.read(sharedPreferencesProvider.future);
-
     var cols = prefs.getInt('nbPagesGridCols');
-
     if (cols != null) {
       setState(() {
         gridCols = cols;
       });
+    }
+  }
+
+  void sortNotes(List<NoteEntity> notes) {
+    if (sortBy == 'title') {
+      notes.sort((a, b) => a.title.compareTo(b.title));
+    } else if (sortBy == 'date') {
+      notes.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     }
   }
 
@@ -79,6 +85,26 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           notebooks!.firstWhere((nb) => nb.id == widget.notebookId).subject,
           style: const TextStyle(fontWeight: FontWeight.bold, ),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              setState(() {
+                sortBy = value;
+              });
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'title',
+                child: Text('Sort by Title'),
+              ),
+              const PopupMenuItem(
+                value: 'date',
+                child: Text('Sort by Date'),
+              ),
+            ],
+            icon: const Icon(Icons.sort),
+          ),
+        ],
       ),
       body: _buildBody(context, ref, notebooks),
       floatingActionButton: SpeedDial(
@@ -296,9 +322,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               labelWidget: const Text('Two Columns'),
               onTap: () async {
                 var prefs = await ref.read(sharedPreferencesProvider.future);
-
                 prefs.setInt('nbPagesGridCols', 2);
-
                 setState(() {
                   if (gridCols != 2) {
                     gridCols = 2;
@@ -311,9 +335,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               labelWidget: const Text('Three Columns'),
               onTap: () async {
                 var prefs = await ref.read(sharedPreferencesProvider.future);
-
                 prefs.setInt('nbPagesGridCols', 3);
-
                 setState(() {
                   if (gridCols != 3) {
                     gridCols = 3;
@@ -336,6 +358,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
         child: Text('No notes yet'),
       );
     }
+
+    sortNotes(notebook.notes);
 
     return GridView.count(
       crossAxisCount: gridCols,

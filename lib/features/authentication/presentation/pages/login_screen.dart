@@ -11,6 +11,8 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/social_icon.dart';
+import 'package:u_do_note/features/authentication/presentation/widgets/auth_field.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {
@@ -302,7 +304,9 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text('Don\'t have an account?'),
+                                    const Text('Don\'t have an account?',
+                                        style:
+                                            TextStyle(color: AppColors.grey)),
                                     TextButton(
                                       onPressed: () {
                                         context.router.replaceNamed('/sign-up');
@@ -315,6 +319,9 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                       ),
                                     ),
                                   ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
                                 ),
                               ],
                             ),

@@ -92,6 +92,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotebooksScreen(),
       );
     },
+    PomodoroQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<PomodoroQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PomodoroQuizScreen(
+          questions: args.questions,
+          key: args.key,
+        ),
+      );
+    },
     PomodoroRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -394,6 +404,44 @@ class NotebooksRoute extends PageRouteInfo<void> {
   static const String name = 'NotebooksRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PomodoroQuizScreen]
+class PomodoroQuizRoute extends PageRouteInfo<PomodoroQuizRouteArgs> {
+  PomodoroQuizRoute({
+    required List<QuestionModel> questions,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PomodoroQuizRoute.name,
+          args: PomodoroQuizRouteArgs(
+            questions: questions,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PomodoroQuizRoute';
+
+  static const PageInfo<PomodoroQuizRouteArgs> page =
+      PageInfo<PomodoroQuizRouteArgs>(name);
+}
+
+class PomodoroQuizRouteArgs {
+  const PomodoroQuizRouteArgs({
+    required this.questions,
+    this.key,
+  });
+
+  final List<QuestionModel> questions;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'PomodoroQuizRouteArgs{questions: $questions, key: $key}';
+  }
 }
 
 /// generated route for

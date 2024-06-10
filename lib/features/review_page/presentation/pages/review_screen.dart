@@ -284,7 +284,6 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     return AppBar(
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -318,7 +317,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 builder: (context, controller) {
                   return SearchBar(
                     hintText: 'Search',
-                    backgroundColor: Theme.of(context).searchBarTheme.backgroundColor,
+                    backgroundColor: MaterialStateColor.resolveWith((_) {
+                      return const Color(0xffececec);
+                    }),
                     shadowColor: MaterialStateColor.resolveWith((_) {
                       return Colors.transparent;
                     }),

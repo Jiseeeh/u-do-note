@@ -38,15 +38,4 @@ class AppColors {
   static const jetBlack = Color(0xff343434);
 
   static const btnOnBoard = Color(0xFF053149);
-  
-  /// For Dark Mode Theme
-
-  /// Lighter primary color
-  static const darkBottomNavBar = Color(0xff082543);
-
-  /// Lighter++ primary color
-  static const darkSearchBar = Color(0xff162d45);
-
-
-
 }

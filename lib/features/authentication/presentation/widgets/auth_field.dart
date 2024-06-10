@@ -27,7 +27,6 @@ class AuthField extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
-        style: AppTextStyles.authFieldTextStyle,
         controller: controller,
         obscureText: isObscuredText,
         keyboardType: keyboardType,
@@ -38,9 +37,8 @@ class AuthField extends ConsumerWidget {
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           suffixIcon: suffixIcon,
-          suffixIconColor: AppColors.black,
           hintText: label,
-          hintStyle: AppTextStyles.authFieldHintStyle,
+          hintStyle: AppTextStyles.body,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: const BorderSide(color: AppColors.shadow, width: 2.0),

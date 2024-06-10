@@ -43,7 +43,7 @@ class MainApp extends ConsumerWidget {
     return ResponsiveSizer(
         builder: (context, orientation, screenType) => MaterialApp.router(
               title: 'U Do Note',
-              theme: AppTheme.darkTheme,
+              theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
               themeMode: themeMode,
               routerConfig: appRouter.config(),

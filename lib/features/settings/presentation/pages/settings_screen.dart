@@ -69,7 +69,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (user.photoURL != null) {
       profile = Image.network(user.photoURL!);
     } else {
-      profile = Image.asset('assets/images/chisaki.png');
+      profile = Image.asset('assets/images/default_avatar.png');
     }
 
     Future.delayed(const Duration(seconds: 1), () {

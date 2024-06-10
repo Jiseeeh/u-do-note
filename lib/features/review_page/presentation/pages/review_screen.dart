@@ -298,9 +298,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 builder: (context, controller) {
                   return SearchBar(
                     hintText: 'Search',
-                    backgroundColor: MaterialStateColor.resolveWith((_) {
-                      return const Color(0xffececec);
-                    }),
+                    backgroundColor: Theme.of(context).searchBarTheme.backgroundColor,
                     shadowColor: MaterialStateColor.resolveWith((_) {
                       return Colors.transparent;
                     }),

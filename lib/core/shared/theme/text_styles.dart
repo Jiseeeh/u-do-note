@@ -48,22 +48,13 @@ class AppTextStyles {
   );
 
   static const TextStyle h5 = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    color: AppColors.primary
-  );
+      fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary);
 
   /// Text style for others
 
-   static const TextStyle authFieldHintStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.grey
-  );
+  static const TextStyle authFieldHintStyle = TextStyle(
+      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grey);
 
-     static const TextStyle authFieldTextStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.black
-  );
+  static const TextStyle authFieldTextStyle = TextStyle(
+      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.black);
 }

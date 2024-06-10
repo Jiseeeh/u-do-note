@@ -25,7 +25,7 @@ class ReviewMethod extends ConsumerWidget {
     return Container(
       height: containerHeight,
       decoration: BoxDecoration(
-        color: const Color(0xffeaf2ff),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -47,7 +47,7 @@ class ReviewMethod extends ConsumerWidget {
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
-                            ?.copyWith(color: AppColors.grey),
+                            ?.copyWith(color: AppColors.darkGrey),
                       ),
                     ],
                   )),

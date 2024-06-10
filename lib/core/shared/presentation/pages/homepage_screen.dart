@@ -39,16 +39,16 @@ class HomepageScreen extends ConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.home_outlined),
                   onPressed: () {
-                    tabsRouter.setActiveIndex(0);
+                    tabsRouter.setActiveIndex(1);
                   },
-                  color: tabsRouter.activeIndex == 0 ? AppColors.white : null,
+                  color: tabsRouter.activeIndex == 1 ? AppColors.white : null,
                 ),
                 IconButton(
                   icon: const Icon(Icons.folder_outlined),
                   onPressed: () {
-                    tabsRouter.setActiveIndex(1);
+                    tabsRouter.setActiveIndex(0);
                   },
-                  color: tabsRouter.activeIndex == 1 ? AppColors.white : null,
+                  color: tabsRouter.activeIndex == 0 ? AppColors.white : null,
                 ),
                 IconButton(
                   icon: const Icon(Icons.bar_chart_rounded),

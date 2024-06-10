@@ -30,7 +30,7 @@ class TextThemes {
       displayMedium: AppTextStyles.h2.copyWith(color: AppColors.white),
       displaySmall: AppTextStyles.h3.copyWith(color: AppColors.white),
       headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.white),
-      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.primary),
+      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.white),
     );
   }
 

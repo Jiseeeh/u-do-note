@@ -26,16 +26,18 @@ class SettingsRemoteDataSource {
     var downloadUrl = "";
 
     if (image != null && user.photoURL != null) {
-      var profileFileName = await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .get()
-          .then((value) => value['profile_file_name']);
+      var documentSnapshot =
+          await _firestore.collection('users').doc(user.uid).get();
 
-      var ref = _firebaseStorage.ref().child('profiles/$profileFileName');
+      if (documentSnapshot.exists &&
+          documentSnapshot.data()!.containsKey('profile_file_name')) {
+        var profileFileName = documentSnapshot['profile_file_name'];
 
-      await user.updatePhotoURL(null);
-      await ref.delete();
+        var ref = _firebaseStorage.ref().child('profiles/$profileFileName');
+
+        await user.updatePhotoURL(null);
+        await ref.delete();
+      }
     }
 
     if (image != null) {

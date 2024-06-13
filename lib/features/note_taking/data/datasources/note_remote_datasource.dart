@@ -505,9 +505,8 @@ class NoteRemoteDataSource {
           OpenAIChatCompletionChoiceMessageContentItemModel.text("""
             You are a helpful assistant that will help students to summarize their notes. Follow these guidelines:
 
-            1. Your response should be in JSON format with the following keys: "summary",topic, and "isValid".
-            2. The summary should be concise and limit prose.
-            3. If the note is gibberish or not understandable, please let the user know and return isValid as false.
+            1. Your response should be in JSON format with the following keys: "summary","topic", and "isValid".
+            2. If the note is gibberish or not understandable, please let the user know and return isValid as false.
             """),
         ]);
 
@@ -532,7 +531,6 @@ class NoteRemoteDataSource {
       responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,
-      maxTokens: 600,
     );
 
     String? jsonRes = chatCompletion.choices.first.message.content!.first.text;

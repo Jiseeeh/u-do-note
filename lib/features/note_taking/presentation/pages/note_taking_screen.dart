@@ -60,6 +60,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   void initState() {
     super.initState();
 
+    // ? to update the character count on ui
+    _controller.addListener(() {
+      setState(() {});
+    });
+
     final json = jsonDecode(widget.note.content);
 
     _controller.document = Document.fromJson(json);
@@ -590,6 +595,16 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         const Divider(
           color: Colors.grey,
         ),
+        SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                _controller.document.toPlainText().length.toString(),
+                textAlign: TextAlign.right,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            )),
         Expanded(
           child: QuillEditor.basic(
             configurations: QuillEditorConfigurations(
@@ -628,6 +643,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     return AppBar(
       title: Text(widget.note.title),
       scrolledUnderElevation: 0,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 }

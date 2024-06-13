@@ -104,7 +104,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    // wait until the data is fetched
     return Container(
       color: AppColors.secondary,
       child: Column(
@@ -228,7 +227,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .textTheme
                                               .displayLarge
                                               ?.copyWith(
-                                                color: Theme.of(context).colorScheme.primary,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
                                                 fontSize: 25.sp,
                                               )),
                                       const SizedBox(height: 5),
@@ -265,7 +266,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .textTheme
                                               .displayLarge
                                               ?.copyWith(
-                                                color: Theme.of(context).colorScheme.primary,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
                                                 fontSize: 25.sp,
                                               )),
                                       const SizedBox(height: 5),
@@ -359,6 +362,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             case FeynmanModel.name:
               return _normalizeTimestamp(
                   model.feynmanRemark?.timestamp.toDate());
+            case PomodoroModel.name:
+              return _normalizeTimestamp(
+                  model.pomodoroRemark?.timestamp.toDate());
             default:
               return _normalizeTimestamp(DateTime.now());
           }
@@ -369,6 +375,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               return model.leitnerRemark?.score;
             case FeynmanModel.name:
               return model.feynmanRemark?.score;
+            case PomodoroModel.name:
+              return model.pomodoroRemark?.score;
             default:
               return 0;
           }

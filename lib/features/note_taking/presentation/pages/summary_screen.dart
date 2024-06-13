@@ -17,6 +17,7 @@ class SummaryScreen extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Summary'),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {

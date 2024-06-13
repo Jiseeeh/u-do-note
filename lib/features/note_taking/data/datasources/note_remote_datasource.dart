@@ -426,36 +426,15 @@ class NoteRemoteDataSource {
         role: OpenAIChatMessageRole.system,
         content: [
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            "You are a helpful assistant that wants to help students to analyze their notes and determine what learning technique is best for their notes. Respond in JSON format with the properties learningTechnique, and reason. The reason should be in 2nd person perspective.",
-          ),
-        ]);
-
-    final sampleUserMessage = OpenAIChatCompletionChoiceMessageModel(
-        role: OpenAIChatMessageRole.user,
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
             """
-              Given my note below, identify which learning technique suits it, the available techniques are, Leitner System, Feynman Technique, Acronym Mnemonics, and Pomodoro Technique. Your response should be in json format, with the props learningTechnique, reason, and topic.
+            You are a helpful assistant that wants to help students to analyze their notes and determine what learning technique is best for their notes.
+            Use these guidelines to help the user:
 
-              By all means, marry. If you get a good wife, you'll become happy; if you get a bad one, you'll become a philosopher.
-              This quote playfully explores the dual nature of marriage and its potential outcomes. It suggests that embarking on marriage can lead to two distinct paths. Firstly, if one is fortunate enough to marry a good spouse, their life is likely to be filled with happiness and contentment. A loving and supportive partner can bring immense joy and fulfillment, enriching every aspect of life. However, the quote also humorously acknowledges the possibility of marrying a less-than-ideal spouse. In such a scenario, the challenges and difficulties of the relationship may compel one to introspect deeply, pondering the complexities of human nature and the intricacies of relationships. This reflective process, born out of adversity, can lead to a philosophical outlook on life, prompting the individual to seek wisdom and understanding amidst the trials of marriage. Thus, whether one's marriage brings happiness or adversity, the quote suggests that it has the potential to profoundly shape one's perspective and journey through life.
-
-              He is richest who is content with the least, for content is the wealth of nature.
-              This quote attributed to Socrates underscores the notion that true wealth lies not in material possessions, but in the state of contentment. It suggests that the person who finds contentment with the simplest aspects of life is, in fact, the wealthiest. In this view, material wealth and possessions are secondary to the inner satisfaction derived from being content with what one has. Contentment is depicted as a natural form of wealth, inherent to human existence. By emphasizing the value of contentment, the quote encourages a shift in perspective away from the pursuit of material accumulation towards finding fulfillment in the present moment and in the simple pleasures of life. It reflects Socrates' philosophical emphasis on virtues such as moderation, self-awareness, and inner harmony as essential components of a fulfilling life.
-              """,
+            1. Respond in JSON format with the properties learningTechnique, isValid, topic, and reason. The reason should be in 2nd person perspective.
+            2. isValid will be true if the note is understandable and false if it is gibberish or the note does not make sense.
+            3. For now, the available learning techniques are Leitner System, Feynman Technique, and Pomodoro Technique. It is up to you to determine which technique suits the note.
+            """,
           ),
-        ]);
-
-    final assistantMessage = OpenAIChatCompletionChoiceMessageModel(
-        role: OpenAIChatMessageRole.assistant,
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text("""
-            {
-              "learningTechnique": "Feynman Technique",
-              "reason": "Your note has an extensive explanation of two quotes, demonstrating understanding by breaking down complex concepts into simpler terms. The Feynman Technique involves explaining concepts in simple terms as if teaching them to someone else.",
-              "topic": "Philosophy" 
-            },
-            """),
         ]);
 
     final userMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -463,7 +442,7 @@ class NoteRemoteDataSource {
         content: [
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
             """
-              Given my note below, identify which learning technique suits it, the available techniques are, Leitner System, Feynman Technique, and Pomodoro Technique. Your response should be in json format, with the props learningTechnique, reason, and topic.
+              Please analyze my note below and determine the best learning technique for it:
               
               $content
               """,
@@ -472,24 +451,26 @@ class NoteRemoteDataSource {
 
     final requestMessages = [
       systemMessage,
-      sampleUserMessage,
-      assistantMessage,
       userMessage,
     ];
 
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-3.5-turbo-0125", // gpt-4o much better here
       responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,
-      maxTokens: 600,
     );
 
     String? response =
         chatCompletion.choices.first.message.content!.first.text!;
 
     var decodedJson = json.decode(response);
+    var isValid = decodedJson['isValid'];
+
+    if (!isValid) {
+      throw "U Do Note could not understand the note. Please try again later.";
+    }
 
     logger.d('learning technique: ${decodedJson['learningTechnique']}');
     logger.d('reason: ${decodedJson['reason']}');

@@ -210,6 +210,8 @@ class _FeynmanTechniqueScreenState
 
       if (!context.mounted) return;
 
+      _messagesTimer?.cancel();
+
       if (widget.feynmanEntity != null) {
         if (widget.feynmanEntity!.questions!.isEmpty) {
           var feynmanModel = FeynmanModel.fromEntity(widget.feynmanEntity!)

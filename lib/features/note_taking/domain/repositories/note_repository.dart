@@ -14,6 +14,8 @@ abstract class NoteRepository {
   Future<Either<Failure, List<String>>> uploadNotebookCover(XFile coverImg);
   Future<Either<Failure, String>> updateNote(
       {required String notebookId, required NoteModel note});
+  Future<Either<Failure, String>> updateNoteTitle(
+      String notebookId, String noteId, String newTitle);
   Future<Either<Failure, String>> updateMultipleNotes(
       {required String notebookId, required List<NoteModel> notesModel});
   Future<Either<Failure, bool>> updateNotebook(

@@ -198,6 +198,54 @@ class NoteRemoteDataSource {
     return response;
   }
 
+  Future<String> updateNoteTitle(
+      String notebookId, String noteId, String newTitle) async {
+    var userId = _auth.currentUser!.uid;
+
+    logger.i('Updating note title...');
+
+    var notebookSnapshot = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .get();
+
+    if (notebookSnapshot.data() != null) {
+      var notes = notebookSnapshot.data()!['notes'];
+      List<NoteModel> notesModel = [];
+
+      for (var note in notes) {
+        notesModel.add(NoteModel.fromFirestore(note));
+      }
+
+      var note = notesModel.firstWhere((n) => n.id == noteId);
+
+      notesModel[notesModel.indexWhere((n) => n.id == noteId)] =
+          note.copyWith(title: newTitle);
+
+      var updatedNotes = notesModel.map((note) => note.toJson()).toList();
+
+      await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(notebookId)
+          .update({
+        'notes': updatedNotes,
+        'updated_at': FieldValue.serverTimestamp()
+      });
+
+      const response = 'Note title updated successfully.';
+
+      logger.i(response);
+
+      return response;
+    }
+
+    throw "Notebook not found.";
+  }
+
   Future<String> updateMultipleNotes(
       {required String notebookId, required List<NoteModel> notesModel}) async {
     var userId = _auth.currentUser!.uid;

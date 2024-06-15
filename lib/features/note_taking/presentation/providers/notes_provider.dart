@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
@@ -24,6 +25,7 @@ import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dar
 import 'package:u_do_note/features/note_taking/domain/usecases/summarize_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_multiple_notes.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/update_note_title.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/upload_notebook_cover.dart';
 
@@ -129,6 +131,13 @@ SummarizeNote summarizeNote(SummarizeNoteRef ref) {
 }
 
 @riverpod
+UpdateNoteTitle updateNoteTitle(UpdateNoteTitleRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return UpdateNoteTitle(repository);
+}
+
+@riverpod
 Stream<List<NotebookEntity>> notebooksStream(NotebooksStreamRef ref) {
   final FirebaseFirestore firestore = ref.read(firestoreProvider);
   final FirebaseAuth auth = ref.read(firebaseAuthProvider);
@@ -206,6 +215,20 @@ class Notebooks extends _$Notebooks {
 
     var failureOrString =
         await updateNote(notebookId, NoteModel.fromEntity(note));
+
+    return failureOrString.fold((failure) => failure, (res) => res);
+  }
+
+  /// Updates the title of the given note in the given notebook
+  /// with the given [newTitle]
+  /// Returns a [String] if successful, [Failure] otherwise
+  Future<dynamic> updateNoteTitle(
+      {required String notebookId,
+      required String noteId,
+      required String newTitle}) async {
+    var updateNoteTitle = ref.read(updateNoteTitleProvider);
+
+    var failureOrString = await updateNoteTitle(notebookId, noteId, newTitle);
 
     return failureOrString.fold((failure) => failure, (res) => res);
   }

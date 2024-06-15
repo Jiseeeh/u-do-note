@@ -71,6 +71,21 @@ class NoteRepositoryImpl implements NoteRepository {
   }
 
   @override
+  Future<Either<Failure, String>> updateNoteTitle(
+      String notebookId, String noteId, String newTitle) async {
+    try {
+      var res = await _noteRemoteDataSource.updateNoteTitle(
+          notebookId, noteId, newTitle);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, String>> updateMultipleNotes(
       {required String notebookId, required List<NoteModel> notesModel}) async {
     try {
@@ -132,8 +147,7 @@ class NoteRepositoryImpl implements NoteRepository {
   Future<Either<Failure, bool>> updateNotebook(
       XFile? coverImg, NotebookModel notebook) async {
     try {
-      var res =
-          await _noteRemoteDataSource.updateNotebook(coverImg, notebook);
+      var res = await _noteRemoteDataSource.updateNotebook(coverImg, notebook);
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
@@ -166,9 +180,9 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
-  
+
   @override
-  Future<Either<Failure, String>> summarizeNote(String content) async{
+  Future<Either<Failure, String>> summarizeNote(String content) async {
     try {
       var summarizedText = await _noteRemoteDataSource.summarizeNote(content);
 

@@ -45,6 +45,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   var _lastSavedContent = "";
   final _speechToText = SpeechToText();
   final _textFieldController = TextEditingController();
+  final _noteTitleController = TextEditingController();
+  final _noteTitleFocusNode = FocusNode();
   var _readOnly = false;
   var _isToolbarVisible = true;
   var _speechEnabled = false;
@@ -59,6 +61,28 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   @override
   void initState() {
     super.initState();
+
+    _noteTitleController.text = widget.note.title;
+
+    _noteTitleFocusNode.addListener(() async {
+      if (!_noteTitleFocusNode.hasFocus) {
+        var text = _noteTitleController.text.trim();
+
+        if (text.isEmpty) return;
+
+        var res = await ref.read(notebooksProvider.notifier).updateNoteTitle(
+            notebookId: widget.notebookId,
+            noteId: widget.note.id,
+            newTitle: text);
+
+        if (res is Failure) {
+          logger.w("Encountered an error: ${res.message}");
+          return;
+        }
+
+        logger.i(res);
+      }
+    });
 
     // ? to update the character count on ui
     _controller.addListener(() {
@@ -641,7 +665,15 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: Text(widget.note.title),
+      title: TextField(
+        controller: _noteTitleController,
+        focusNode: _noteTitleFocusNode,
+        decoration: const InputDecoration(
+          hintText: 'Your note title.',
+          border: InputBorder.none,
+        ),
+        style: const TextStyle(color: AppColors.jetBlack),
+      ),
       scrolledUnderElevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );

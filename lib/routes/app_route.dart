@@ -21,7 +21,7 @@ import 'package:u_do_note/features/review_page/presentation/pages/leitner_system
 import 'package:u_do_note/features/review_page/presentation/pages/pomodoro_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/pomodoro_technique_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/quiz_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/feynman_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
@@ -61,12 +61,12 @@ class AppRouter extends _$AppRouter {
             page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
         AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note'),
         AutoRoute(page: SummaryRoute.page, path: '/summary'),
-        AutoRoute(page: QuizRoute.page, path: '/quiz'),
+        AutoRoute(page: FeynmanQuizRoute.page, path: '/feynman-quiz'),
         AutoRoute(page: QuizResultsRoute.page, path: '/quiz-results'),
         AutoRoute(page: LeitnerSystemRoute.page, path: '/leitner-system'),
         AutoRoute(page: FeynmanTechniqueRoute.page, path: '/feynman-technique'),
-        AutoRoute(page: PomodoroRoute.page, path: '/pomodoro', maintainState: false),
-        // ? temporary route
+        AutoRoute(
+            page: PomodoroRoute.page, path: '/pomodoro', maintainState: false),
         AutoRoute(page: PomodoroQuizRoute.page, path: '/pomodoro-quiz'),
       ];
 }

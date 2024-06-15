@@ -21,6 +21,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AnalyticsScreen(),
       );
     },
+    FeynmanQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<FeynmanQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: FeynmanQuizScreen(
+          onQuizFinish: args.onQuizFinish,
+          questions: args.questions,
+          key: args.key,
+        ),
+      );
+    },
     FeynmanTechniqueRoute.name: (routeData) {
       final args = routeData.argsAs<FeynmanTechniqueRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -120,17 +131,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    QuizRoute.name: (routeData) {
-      final args = routeData.argsAs<QuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: QuizScreen(
-          onQuizFinish: args.onQuizFinish,
-          questions: args.questions,
-          key: args.key,
-        ),
-      );
-    },
     ReviewRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -181,6 +181,55 @@ class AnalyticsRoute extends PageRouteInfo<void> {
   static const String name = 'AnalyticsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [FeynmanQuizScreen]
+class FeynmanQuizRoute extends PageRouteInfo<FeynmanQuizRouteArgs> {
+  FeynmanQuizRoute({
+    required Future<void> Function(
+      List<int>,
+      int,
+    ) onQuizFinish,
+    required List<QuestionModel> questions,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          FeynmanQuizRoute.name,
+          args: FeynmanQuizRouteArgs(
+            onQuizFinish: onQuizFinish,
+            questions: questions,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'FeynmanQuizRoute';
+
+  static const PageInfo<FeynmanQuizRouteArgs> page =
+      PageInfo<FeynmanQuizRouteArgs>(name);
+}
+
+class FeynmanQuizRouteArgs {
+  const FeynmanQuizRouteArgs({
+    required this.onQuizFinish,
+    required this.questions,
+    this.key,
+  });
+
+  final Future<void> Function(
+    List<int>,
+    int,
+  ) onQuizFinish;
+
+  final List<QuestionModel> questions;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'FeynmanQuizRouteArgs{onQuizFinish: $onQuizFinish, questions: $questions, key: $key}';
+  }
 }
 
 /// generated route for
@@ -509,54 +558,6 @@ class QuizResultsRouteArgs {
   @override
   String toString() {
     return 'QuizResultsRouteArgs{questions: $questions, correctAnswersIndex: $correctAnswersIndex, selectedAnswersIndex: $selectedAnswersIndex, key: $key}';
-  }
-}
-
-/// generated route for
-/// [QuizScreen]
-class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
-  QuizRoute({
-    required Future<void> Function(
-      List<int>,
-      int,
-    ) onQuizFinish,
-    required List<QuestionModel> questions,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          QuizRoute.name,
-          args: QuizRouteArgs(
-            onQuizFinish: onQuizFinish,
-            questions: questions,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'QuizRoute';
-
-  static const PageInfo<QuizRouteArgs> page = PageInfo<QuizRouteArgs>(name);
-}
-
-class QuizRouteArgs {
-  const QuizRouteArgs({
-    required this.onQuizFinish,
-    required this.questions,
-    this.key,
-  });
-
-  final Future<void> Function(
-    List<int>,
-    int,
-  ) onQuizFinish;
-
-  final List<QuestionModel> questions;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'QuizRouteArgs{onQuizFinish: $onQuizFinish, questions: $questions, key: $key}';
   }
 }
 

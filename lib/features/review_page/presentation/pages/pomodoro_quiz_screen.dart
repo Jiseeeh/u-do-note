@@ -5,17 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 import 'package:u_do_note/features/review_page/data/models/question.dart';
-import 'package:u_do_note/features/review_page/domain/entities/question.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/quiz_body.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
@@ -36,7 +33,6 @@ class _QuizScreenState extends ConsumerState<PomodoroQuizScreen> {
   int startTime = 30;
   int? selectedAnswerIndex;
   List<int> selectedAnswersIndex = [];
-  // late List<QuestionModel> questions;
 
   @override
   void initState() {
@@ -166,106 +162,14 @@ class _QuizScreenState extends ConsumerState<PomodoroQuizScreen> {
   _buildBody() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 10.h,
-            child: Column(
-              children: [
-                Text(
-                  'Question ${currentQuestionIndex + 1} of ${widget.questions.length}',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: AppColors.grey,
-                      ),
-                ),
-                Text('Time: $startTime seconds left',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: AppColors.grey,
-                        )),
-                LinearPercentIndicator(
-                  lineHeight: 8,
-                  percent: startTime / 30,
-                  barRadius: const Radius.circular(8),
-                  leading: const Icon(Icons.timer, color: AppColors.grey),
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  backgroundColor: AppColors.lightShadow,
-                  progressColor: AppColors.secondary,
-                ),
-                const Divider(
-                    height: 1, color: AppColors.lightShadow, thickness: 1),
-                const SizedBox(height: 16),
-              ],
-            ),
-          ),
-          Container(
-            height: 20.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.extraLightGrey,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text(
-                widget.questions[currentQuestionIndex].question,
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: Ink(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.extraLightGrey,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount:
-                          widget.questions[currentQuestionIndex].choices.length,
-                      itemBuilder: (context, index) {
-                        return AnswerContainer(
-                            currentIndex: index,
-                            selectedAnswerIndex: selectedAnswerIndex,
-                            question: widget.questions[currentQuestionIndex]
-                                .toEntity(),
-                            onSelectAnswer: _onSelectAnswer);
-                      }),
-                  SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.secondary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          onPressed: currentQuestionIndex ==
-                                  widget.questions.length - 1
-                              ? _onFinish(context)
-                              : _onNext,
-                          child: Text(
-                            currentQuestionIndex == widget.questions.length - 1
-                                ? 'Finish'
-                                : 'Next',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(color: AppColors.white),
-                          )))
-                ],
-              ),
-            ),
-          )
-        ],
+      child: QuizBody(
+        questions: widget.questions,
+        currentQuestionIndex: currentQuestionIndex,
+        startTime: startTime,
+        selectedAnswerIndex: selectedAnswerIndex,
+        onSelectAnswer: _onSelectAnswer,
+        onNext: _onNext,
+        onFinish: _onFinish,
       ),
     );
   }
@@ -275,54 +179,9 @@ class _QuizScreenState extends ConsumerState<PomodoroQuizScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quiz'),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: _buildBody(),
-    );
-  }
-}
-
-class AnswerContainer extends ConsumerWidget {
-  final int currentIndex;
-  final int? selectedAnswerIndex;
-  final QuestionEntity question;
-  final Function(int index) onSelectAnswer;
-
-  const AnswerContainer(
-      {required this.currentIndex,
-      required this.selectedAnswerIndex,
-      required this.question,
-      required this.onSelectAnswer,
-      Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            onSelectAnswer(currentIndex);
-          },
-          customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: selectedAnswerIndex == currentIndex
-                    ? AppColors.jetBlack
-                    : AppColors.lightShadow,
-              ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(question.choices[currentIndex],
-                style: Theme.of(context).textTheme.bodyMedium),
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
     );
   }
 }

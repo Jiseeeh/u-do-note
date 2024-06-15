@@ -218,7 +218,7 @@ class _FeynmanTechniqueScreenState
                   recentRobotMessages: recentRobotMessages,
                   recentUserMessages: recentUserMessages);
 
-          context.router.push(QuizRoute(
+          context.router.push(FeynmanQuizRoute(
               questions: feynmanModel.questions!,
               onQuizFinish: (selectedAnswersIndex, score) async {
                 _onFeynmanFinish(
@@ -238,7 +238,7 @@ class _FeynmanTechniqueScreenState
                 recentRobotMessages: recentRobotMessages,
                 recentUserMessages: recentUserMessages);
 
-        context.router.push(QuizRoute(
+        context.router.push(FeynmanQuizRoute(
             questions: feynmanModel.questions!,
             onQuizFinish: (selectedAnswersIndex, score) async {
               _onFeynmanFinish(feynmanModel, selectedAnswersIndex, score, false,
@@ -249,7 +249,7 @@ class _FeynmanTechniqueScreenState
 
       feynmanModel = feynmanModel!.copyWith(questions: quizQuestions);
 
-      context.router.push(QuizRoute(
+      context.router.push(FeynmanQuizRoute(
           questions: feynmanModel!.questions!,
           onQuizFinish: (selectedAnswersIndex, score) async {
             _onFeynmanFinish(

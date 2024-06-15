@@ -45,6 +45,8 @@ class QuizResultsScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Quiz Results'),
+          automaticallyImplyLeading: false,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {

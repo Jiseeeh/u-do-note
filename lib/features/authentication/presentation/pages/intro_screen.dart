@@ -5,10 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
-import 'package:u_do_note/features/authentication/presentation/pages/login_screen.dart';
-import 'package:u_do_note/features/authentication/presentation/pages/sign_up_screen.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/authentication/presentation/widgets/onboard_container.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class IntroScreen extends ConsumerStatefulWidget {
@@ -40,35 +39,23 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         width = size.width,
         imgHeight = width * 1.65;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    
+
     return OnBoardingSlider(
       finishButtonText: 'Register',
       onFinish: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SignUpScreen(),
-          ),
-        );
+        context.router.push(const SignUpRoute());
       },
       finishButtonStyle: const FinishButtonStyle(
-        backgroundColor: AppColors.btnOnBoard,
-        foregroundColor: AppColors.black
-      ),
+          backgroundColor: AppColors.btnOnBoard,
+          foregroundColor: AppColors.black),
       skipTextButton: const Text('Skip', style: AppTextStyles.body),
       trailing: const Text('Login', style: AppTextStyles.body),
       trailingFunction: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoginScreen(),
-          ),
-        );
+        context.router.push(const LoginRoute());
       },
       controllerColor: colorScheme.primary,
       totalPage: 5,
       headerBackgroundColor: const Color.fromARGB(0, 0, 0, 0),
-      // pageBackgroundColor: AppTheme.colorScheme.pr,
       background: [
         Image.asset(
           'assets/images/onboard/page-1.png',

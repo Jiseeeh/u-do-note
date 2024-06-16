@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
@@ -15,7 +16,10 @@ class SettingsRemoteDataSource {
   SettingsRemoteDataSource(this._auth, this._firestore, this._firebaseStorage);
 
   Future<void> signOut() async {
+    GoogleSignIn googleSignIn = GoogleSignIn();
     var userId = _auth.currentUser!.uid;
+
+    await googleSignIn.disconnect();
 
     logger.d("User $userId is signing out.");
     await _auth.signOut();

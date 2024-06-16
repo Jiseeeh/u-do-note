@@ -33,6 +33,7 @@ class QuizBody extends ConsumerWidget {
         SizedBox(
           height: 10.h,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
                 'Question ${currentQuestionIndex + 1} of ${questions.length}',
@@ -40,10 +41,6 @@ class QuizBody extends ConsumerWidget {
                       color: AppColors.grey,
                     ),
               ),
-              Text('Time: $startTime seconds left',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: AppColors.grey,
-                      )),
               LinearPercentIndicator(
                 lineHeight: 8,
                 percent: startTime / 30,
@@ -55,7 +52,6 @@ class QuizBody extends ConsumerWidget {
               ),
               const Divider(
                   height: 1, color: AppColors.lightShadow, thickness: 1),
-              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -85,42 +81,47 @@ class QuizBody extends ConsumerWidget {
               color: AppColors.extraLightGrey,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: questions[currentQuestionIndex].choices.length,
-                    itemBuilder: (context, index) {
-                      return AnswerContainer(
-                          currentIndex: index,
-                          selectedAnswerIndex: selectedAnswerIndex,
-                          question: questions[currentQuestionIndex].toEntity(),
-                          onSelectAnswer: onSelectAnswer);
-                    }),
-                SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.secondary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ListView.builder(
+                      shrinkWrap: true,
+                      primary: false,
+                      itemCount: questions[currentQuestionIndex].choices.length,
+                      itemBuilder: (context, index) {
+                        return AnswerContainer(
+                            currentIndex: index,
+                            selectedAnswerIndex: selectedAnswerIndex,
+                            question:
+                                questions[currentQuestionIndex].toEntity(),
+                            onSelectAnswer: onSelectAnswer);
+                      }),
+                  SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.secondary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
-                        ),
-                        onPressed: currentQuestionIndex == questions.length - 1
-                            ? onFinish(context)
-                            : onNext,
-                        child: Text(
-                          currentQuestionIndex == questions.length - 1
-                              ? 'Finish'
-                              : 'Next',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(color: AppColors.white),
-                        )))
-              ],
+                          onPressed:
+                              currentQuestionIndex == questions.length - 1
+                                  ? onFinish(context)
+                                  : onNext,
+                          child: Text(
+                            currentQuestionIndex == questions.length - 1
+                                ? 'Finish'
+                                : 'Next',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(color: AppColors.white),
+                          )))
+                ],
+              ),
             ),
           ),
         )

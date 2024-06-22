@@ -91,7 +91,6 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
         if (!context.mounted) return;
 
-        // ? Temporary route
         context.router.replace(PomodoroQuizRoute(questions: quizQuestions));
 
         EasyLoading.dismiss();

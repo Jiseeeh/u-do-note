@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Jiseeeh/u-do-note/compare/v1.0.0...v1.0.1) (2024-06-22)
+
+
+### Bug Fixes
+
+* review state not being reset on pomodoro quiz back ([#69](https://github.com/Jiseeeh/u-do-note/issues/69)) ([1913841](https://github.com/Jiseeeh/u-do-note/commit/1913841030c4adcbe817b40abaccef510f8e490e))
+
 # 1.0.0 (2024-06-21)
 
 

@@ -176,12 +176,22 @@ class _QuizScreenState extends ConsumerState<PomodoroQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Quiz'),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) {
+        timer.cancel();
+
+        ref.read(reviewScreenProvider).resetState();
+
+        context.router.replace(const ReviewRoute());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Quiz'),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        body: _buildBody(),
       ),
-      body: _buildBody(),
     );
   }
 }

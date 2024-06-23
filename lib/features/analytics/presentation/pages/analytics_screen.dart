@@ -120,31 +120,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 bottomRight: Radius.circular(30),
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Your performance',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayLarge
-                              ?.copyWith(
-                                color: AppColors.white,
-                              )),
-                      const SizedBox(height: 5),
-                      Text('This is up-to-date.',
-                          style:
-                              Theme.of(context).textTheme.labelLarge?.copyWith(
-                                    color: AppColors.white,
-                                  )),
-                    ]),
-                Icon(Icons.analytics_rounded,
-                    color: AppColors.white, size: 20.0.w),
-              ],
-            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Your performance',
+                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                            color: AppColors.white,
+                          )),
+                  const SizedBox(height: 5),
+                  Text('This is up-to-date.',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: AppColors.white,
+                          )),
+                ]),
           ),
           Container(
               height: 80.0.h,

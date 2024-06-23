@@ -1,3 +1,11 @@
+## [1.0.2](https://github.com/Jiseeeh/u-do-note/compare/v1.0.1...v1.0.2) (2024-06-23)
+
+
+### Bug Fixes
+
+* remove unnecessary icon (from revision) ([c3688eb](https://github.com/Jiseeeh/u-do-note/commit/c3688ebe7069c68fc81507688e72ae0bd4e45a6d))
+* timer too distracting (from revision) ([b17a57a](https://github.com/Jiseeeh/u-do-note/commit/b17a57aaf9e8753b4bb3ec404dc349811bff1c82))
+
 ## [1.0.1](https://github.com/Jiseeeh/u-do-note/compare/v1.0.0...v1.0.1) (2024-06-22)
 
 

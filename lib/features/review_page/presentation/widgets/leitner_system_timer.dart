@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import 'package:u_do_note/core/shared/theme/colors.dart';
 
@@ -15,6 +16,7 @@ class TimerWidget extends ConsumerStatefulWidget {
 
 class _TimerWidgetState extends ConsumerState<TimerWidget> {
   String time = '0.00';
+  double percent = 0.0;
   late Timer timer;
 
   @override
@@ -24,8 +26,14 @@ class _TimerWidgetState extends ConsumerState<TimerWidget> {
     timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (widget.stopwatch.isRunning) {
         setState(() {
-          time =
-              (widget.stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(2);
+          int elapsedMilliseconds = widget.stopwatch.elapsedMilliseconds;
+          time = (elapsedMilliseconds ~/ 1000).toString();
+
+          if (elapsedMilliseconds ~/ 1000 < 60) {
+            percent = elapsedMilliseconds / 1000 / 60;
+          } else {
+            percent = 1;
+          }
         });
       }
     });
@@ -39,9 +47,25 @@ class _TimerWidgetState extends ConsumerState<TimerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      time,
-      style: const TextStyle(color: AppColors.jetBlack, fontSize: 35),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Text(
+            time,
+            style: const TextStyle(color: AppColors.jetBlack, fontSize: 35),
+          ),
+          LinearPercentIndicator(
+            lineHeight: 8,
+            percent: percent,
+            barRadius: const Radius.circular(8),
+            leading: const Icon(Icons.timer, color: AppColors.grey),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            backgroundColor: AppColors.lightShadow,
+            progressColor: AppColors.secondary,
+          ),
+        ],
+      ),
     );
   }
 }

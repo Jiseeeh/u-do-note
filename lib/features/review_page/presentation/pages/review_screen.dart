@@ -163,7 +163,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   void initState() {
     var reviewState = ref.read(reviewScreenProvider);
 
-    if (reviewState.isFromAutoAnalysis) {
+    if (reviewState.isFromAutoAnalysis && reviewState.getReviewMethod != null) {
       // TODO: check if the tutorial has been shown once, if yes do not show it again
       createTutorial();
       Future.delayed(Duration.zero, showTutorial);
@@ -318,7 +318,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 builder: (context, controller) {
                   return SearchBar(
                     hintText: 'Search',
-                    backgroundColor: Theme.of(context).searchBarTheme.backgroundColor,
+                    backgroundColor:
+                        Theme.of(context).searchBarTheme.backgroundColor,
                     shadowColor: MaterialStateColor.resolveWith((_) {
                       return Colors.transparent;
                     }),

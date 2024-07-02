@@ -376,6 +376,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(dialogContext).pop();
+
+                                    ref.read(reviewScreenProvider).resetState();
                                   },
                                   child: const Text('Cancel'),
                                 ),

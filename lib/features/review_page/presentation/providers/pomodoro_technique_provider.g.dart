@@ -57,7 +57,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$pomodoroHash() => r'432a463d3ef08344bf0f55a6fcd6a6169d84f7de';
+String _$pomodoroHash() => r'e139406d95aba70798af6af4ce24114647077937';
 
 /// See also [Pomodoro].
 @ProviderFor(Pomodoro)

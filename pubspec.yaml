@@ -66,6 +66,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/images/onboard/
+    - assets/translations/
   uses-material-design: true
 
   fonts:

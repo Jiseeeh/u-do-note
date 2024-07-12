@@ -634,7 +634,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             configurations: QuillEditorConfigurations(
               padding: const EdgeInsets.all(8),
               controller: _controller,
-              readOnly: _readOnly,
+              // readOnly: _readOnly,
             ),
           ),
         ),

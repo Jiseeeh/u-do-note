@@ -404,7 +404,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               configurations: QuillEditorConfigurations(
                 padding: const EdgeInsets.all(8),
                 controller: controller,
-                readOnly: true,
+                // readOnly: true,
                 showCursor: false,
               ),
             ),

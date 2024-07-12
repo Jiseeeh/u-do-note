@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,7 +15,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
-            '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to generate flashcards with.',
+            '\u2022 ${context.tr('leitner_desc')}',
             style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
@@ -38,7 +39,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'How will I be graded with this?',
+            context.tr('review_grading'),
             style: Theme.of(context)
                 .textTheme
                 .labelLarge
@@ -46,12 +47,12 @@ class LeitnerSystemNotice extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            '\u2022 You will be graded based on your response time for every flashcards.Note that the moment the app finished generating flashcards, the timer will start.',
+            '\u2022 ${context.tr('leitner_grading')}',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 10),
           Text(
-            'What will happen to the flashcards when I start a new session?',
+            context.tr('leitner_new_session_q'),
             style: Theme.of(context)
                 .textTheme
                 .labelLarge
@@ -59,7 +60,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            '\u2022 U Do Note will generate flashcards again only if you don\'t have any flashcards that needs to be reviewed again.',
+            '\u2022 ${context.tr('leitner_new_session')}',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],

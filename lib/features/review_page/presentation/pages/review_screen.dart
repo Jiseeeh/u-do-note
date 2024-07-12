@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -342,7 +343,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                     child: Column(children: [
                   ReviewMethod(
                       title: 'Leitner System',
-                      description: 'Use flashcards as a tool for learning.',
+                      description: context.tr('leitner_desc'),
                       imagePath: 'assets/images/flashcard.png',
                       buttonKey: leitnerBtnGlobalKey,
                       onPressed: () {
@@ -351,8 +352,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   const SizedBox(height: 16),
                   ReviewMethod(
                       title: 'Feynman Technique',
-                      description:
-                          'Explain a topic that a five (5) year old child can understand.',
+                      description: context.tr('feynman_desc'),
                       imagePath: 'assets/images/feynman.png',
                       buttonKey: feynmanBtnGlobalKey,
                       onPressed: () {
@@ -361,8 +361,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   const SizedBox(height: 16),
                   ReviewMethod(
                       title: 'Pomodoro Technique',
-                      description:
-                          'Use a timer to break down work into intervals.',
+                      description: context.tr('pomodoro_desc'),
                       imagePath: 'assets/images/pomodoro.png',
                       buttonKey: pomodoroBtnGlobalKey,
                       onPressed: () {

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,7 +15,7 @@ class PomodoroNotice extends ConsumerWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
-            '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to use for the quiz later after the pomodoro session.',
+            '\u2022 ${context.tr("review_desc")}',
             style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
@@ -38,16 +39,14 @@ class PomodoroNotice extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildNoticeContent(context,
-              title: "What does the red and green timer means?",
-              content:
-                  "The red timer represents the pomodoro session, while the green timer represents the break session."),
+              title: context.tr("pomodoro_timer_desc_q"),
+              content: context.tr("pomodoro_timer_desc")),
           buildNoticeContent(context,
-              title: 'How will I be graded with this?',
-              content: 'You will be graded after the session through a quiz.'),
+              title: context.tr("review_grading"),
+              content: context.tr("pomodoro_grading")),
           buildNoticeContent(context,
-              title: 'How to start the quiz?',
-              content:
-                  'You will be asked if you want to start the quiz after you finish a pomodoro session.'),
+              title: context.tr("review_quiz_q"),
+              content: context.tr("pomodoro_quiz")),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,8 +81,10 @@ class NotebookCard extends ConsumerWidget {
                               return;
                             }
 
+                            if (!context.mounted) return;
+
                             EasyLoading.show(
-                                status: 'Deleting your notebook...',
+                                status: context.tr("delete_notebook_loading"),
                                 maskType: EasyLoadingMaskType.black,
                                 dismissOnTap: false);
 
@@ -135,8 +138,7 @@ class NotebookCard extends ConsumerWidget {
         builder: (dialogContext) {
           return AlertDialog(
             title: const Text('Delete Notebook'),
-            content:
-                const Text('Are you sure you want to delete this notebook?'),
+            content: Text(context.tr("delete_notebook_confirm")),
             actions: [
               TextButton(
                   onPressed: () {
@@ -159,18 +161,18 @@ class NotebookCard extends ConsumerWidget {
         builder: (dialogContext) {
           return AlertDialog(
             title: const Text('Delete Note'),
-            content: const Text('What do you want to do with this notebook?'),
+            content: Text(context.tr("notebook_action")),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.pop(dialogContext, false);
                   },
-                  child: const Text('Delete')),
+                  child: Text(context.tr("delete_action"))),
               TextButton(
                   onPressed: () {
                     Navigator.pop(dialogContext, true);
                   },
-                  child: const Text('Edit')),
+                  child: Text(context.tr("edit_action"))),
             ],
           );
         });

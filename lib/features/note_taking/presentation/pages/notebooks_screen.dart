@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -67,7 +68,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
             SpeedDialChild(
                 elevation: 0,
                 child: const Icon(Icons.note_add),
-                labelWidget: const Text('Create Notebook'),
+                labelWidget: Text(context.tr("create_notebook")),
                 onTap: () {
                   showDialog(
                       context: context,
@@ -76,7 +77,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
             SpeedDialChild(
                 elevation: 0,
                 child: const Icon(Icons.looks_two_rounded),
-                labelWidget: const Text('Two Columns'),
+                labelWidget: Text(context.tr("two_col")),
                 onTap: () async {
                   var prefs = await ref.read(sharedPreferencesProvider.future);
                   prefs.setInt('nbGridCols', 2);
@@ -89,7 +90,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
             SpeedDialChild(
                 elevation: 0,
                 child: const Icon(Icons.looks_3_rounded),
-                labelWidget: const Text('Three Columns'),
+                labelWidget: Text(context.tr("three_col")),
                 onTap: () async {
                   var prefs = await ref.read(sharedPreferencesProvider.future);
                   prefs.setInt('nbGridCols', 3);
@@ -123,13 +124,13 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
             });
           },
           itemBuilder: (context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'name',
-              child: Text('Sort by Name'),
+              child: Text(context.tr("sort_title")),
             ),
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'date',
-              child: Text('Sort by Date'),
+              child: Text(context.tr("sort_date")),
             ),
           ],
           icon: const Icon(Icons.sort),
@@ -141,8 +142,8 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
   Widget _buildBody(AsyncValue<List<NotebookEntity>> notebooksAsync,
       List<NotebookEntity>? notebooksSync) {
     if (notebooksSync != null && notebooksSync.isEmpty) {
-      return const Center(
-        child: Text('No Notebooks yet.'),
+      return Center(
+        child: Text(context.tr("no_notebook")),
       );
     }
 

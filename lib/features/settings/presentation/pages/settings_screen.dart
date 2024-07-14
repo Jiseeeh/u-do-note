@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -7,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:u_do_note/core/constant.dart' as constants;
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/domain/providers/app_theme_provider.dart';
@@ -212,7 +214,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         children: [
                           const Icon(Icons.visibility_rounded),
                           SizedBox(width: 1.w),
-                          const Text('Appearance'),
+                          Text(context.tr('theme')),
                         ],
                       ),
                       children: [
@@ -225,7 +227,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Current Theme: ',
+                                  Text(context.tr('current_theme'),
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelLarge
@@ -268,7 +270,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         children: [
                           const Icon(Icons.language_rounded),
                           SizedBox(width: 1.w),
-                          const Text('Language'),
+                          Text(context.tr("language")),
                         ],
                       ),
                       children: [
@@ -281,14 +283,27 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Current Language: ',
+                                  Text(context.tr("current_language"),
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelLarge
                                           ?.copyWith(fontSize: 14.sp)),
                                   DropdownButton<String>(
-                                    value: 'English',
-                                    onChanged: (String? newValue) {},
+                                    value: context.locale.toString() == 'en'
+                                        ? 'English'
+                                        : 'Filipino',
+                                    onChanged: (String? newValue) {
+                                      switch (newValue) {
+                                        case 'English':
+                                          context.setLocale(
+                                              constants.defaultLocale);
+                                          break;
+                                        case 'Filipino':
+                                          context
+                                              .setLocale(constants.filLocale);
+                                          break;
+                                      }
+                                    },
                                     items: <String>['English', 'Filipino']
                                         .map<DropdownMenuItem<String>>(
                                             (String value) {

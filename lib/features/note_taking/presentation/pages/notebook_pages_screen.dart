@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -71,8 +72,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
     var notebooks = ref.watch(notebooksStreamProvider).value;
 
     if (notebooks != null && notebooks.isEmpty) {
-      return const Center(
-        child: Text('No notebooks yet'),
+      return Center(
+        child: Text(context.tr("no_notebook")),
       );
     }
 
@@ -94,13 +95,13 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               });
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'title',
-                child: Text('Sort by Title'),
+                child: Text(context.tr("sort_title")),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'date',
-                child: Text('Sort by Date'),
+                child: Text(context.tr("sort_date")),
               ),
             ],
             icon: const Icon(Icons.sort),
@@ -116,7 +117,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           SpeedDialChild(
               elevation: 0,
               child: const Icon(Icons.note_add),
-              labelWidget: const Text('Create Note'),
+              labelWidget: Text(context.tr("create_note")),
               onTap: () {
                 showDialog(
                     context: context,
@@ -144,19 +145,20 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                 EasyLoading.dismiss();
 
+                if (!context.mounted) return;
+
                 if (result != null) {
                   var first = result.files.first;
 
                   if (first.size > 4 * 1024 * 1024) {
-                    EasyLoading.showError(
-                        'File size exceeds the limit. Please select a file smaller than 4MB.',
+                    EasyLoading.showError(context.tr("file_size_e"),
                         duration: const Duration(seconds: 2));
                     return;
                   }
 
                   if (!extensions.contains(first.extension)) {
                     EasyLoading.showError(
-                        'Only PDF files are allowed. Please select a PDF file.',
+                        context.tr("allowed_files"),
                         duration: const Duration(seconds: 2));
                     return;
                   }
@@ -167,10 +169,10 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   EasyLoading.show(
                       status: 'Please wait...',
                       maskType: EasyLoadingMaskType.black,
-                      indicator: const Text(
+                      indicator: Text(
                           textAlign: TextAlign.center,
-                          "We are extracting the text from your PDF file.",
-                          style: TextStyle(color: Colors.white, fontSize: 16)),
+                          context.tr("file_extraction"),
+                          style: const TextStyle(color: Colors.white, fontSize: 16)),
                       dismissOnTap: false);
 
                   var inputBytes = await File(first.path!).readAsBytes();
@@ -191,13 +193,13 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                       context: context,
                       builder: (dialogContext) => AlertDialog(
                             scrollable: true,
-                            title: const Column(
+                            title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Notebook pages"),
+                                const Text("Notebook pages"),
                                 Text(
-                                  "Choose the pages you want your extracted text to be saved in.",
-                                  style: TextStyle(fontSize: 12),
+                                  context.tr("file_extracted_dest_new"),
+                                  style: const TextStyle(fontSize: 12),
                                 )
                               ],
                             ),
@@ -213,7 +215,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                   if (notebookIdsToPasteExtractedContent
                                       .isEmpty) {
                                     EasyLoading.showError(
-                                        'Please select a page to paste the extracted text to.');
+                                        context.tr("file_extracted_dest_existing"));
                                     return;
                                   }
 
@@ -317,7 +319,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                               initialContent: extractedText,
                                             )));
                                   },
-                                  child: const Text('Create new page'),
+                                  child: Text(context.tr("create_note_from_extract")),
                                 )
                               ],
                             ),
@@ -327,7 +329,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           SpeedDialChild(
               elevation: 0,
               child: const Icon(Icons.looks_two_rounded),
-              labelWidget: const Text('Two Columns'),
+              labelWidget:  Text(context.tr("two_col")),
               onTap: () async {
                 var prefs = await ref.read(sharedPreferencesProvider.future);
                 prefs.setInt('nbPagesGridCols', 2);
@@ -340,7 +342,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           SpeedDialChild(
               elevation: 0,
               child: const Icon(Icons.looks_3_rounded),
-              labelWidget: const Text('Three Columns'),
+              labelWidget: Text(context.tr("three_col")),
               onTap: () async {
                 var prefs = await ref.read(sharedPreferencesProvider.future);
                 prefs.setInt('nbPagesGridCols', 3);
@@ -431,8 +433,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                         builder: (context) {
                           return AlertDialog(
                             title: const Text('Delete Note'),
-                            content: const Text(
-                                'Are you sure you want to delete this note?'),
+                            content: Text(
+                                context.tr("delete_note_confirm")),
                             actions: [
                               TextButton(
                                   onPressed: () {

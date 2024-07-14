@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,11 +11,11 @@ class FeynmanNotice extends ConsumerWidget {
       title: Column(
         children: [
           Text(
-            'Quick Notice for Feynman Technique',
+            context.tr("feynman_notice"),
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
-            '\u2022 You will be asked to choose what notebook do you want to use, and what pages of that notebook you want to use for the quiz later after the session.',
+            '\u2022 ${context.tr("review_desc")}',
             style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
@@ -38,17 +39,14 @@ class FeynmanNotice extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildNoticeContent(context,
-              title: 'How will I be graded with this?',
-              content: 'You will be graded after the session through a quiz.'),
+              title: context.tr("review_grading"),
+              content: context.tr("feynman_grading")),
           buildNoticeContent(context,
-              title: 'How to start the quiz?',
-              content:
-                  'If you think you are ready, you can start the quiz by typing "Quiz" in the chat box and send it.'),
+              title: context.tr("review_quiz_q"),
+              content: context.tr("feynman_quiz")),
           buildNoticeContent(context,
-              title:
-                  'What will happen to the sessions when I start a new session?',
-              content:
-                  'The previous session will be saved and you can review it anytime you want and continue where you left off.')
+              title: context.tr("feynman_new_session_q"),
+              content: context.tr("feynman_new_session")),
         ],
       ),
     );

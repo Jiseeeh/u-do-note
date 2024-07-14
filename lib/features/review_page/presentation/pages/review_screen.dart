@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -258,28 +259,28 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         ]);
   }
 
-  String _getGreeting() {
+  String _getGreeting(BuildContext context) {
     var hour = DateTime.now().hour;
 
     if (hour < 12) {
-      return 'Good Morning,';
+      return '${context.tr("greet_morning")},';
     }
     if (hour < 17) {
-      return 'Good Afternoon,';
+      return '${context.tr("greet_afternoon")},';
     }
 
-    return 'Good Evening,';
+    return '${context.tr("greet_evening")},';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(ref),
+      appBar: _buildAppBar(context, ref),
       body: _buildBody(context, ref),
     );
   }
 
-  AppBar _buildAppBar(WidgetRef ref) {
+  AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
     var username = FirebaseAuth.instance.currentUser!.displayName!;
     return AppBar(
       scrolledUnderElevation: 0,
@@ -291,7 +292,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_getGreeting(),
+              Text(_getGreeting(context),
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge
@@ -342,7 +343,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                     child: Column(children: [
                   ReviewMethod(
                       title: 'Leitner System',
-                      description: 'Use flashcards as a tool for learning.',
+                      description: context.tr('leitner_desc'),
                       imagePath: 'assets/images/flashcard.png',
                       buttonKey: leitnerBtnGlobalKey,
                       onPressed: () {
@@ -351,8 +352,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   const SizedBox(height: 16),
                   ReviewMethod(
                       title: 'Feynman Technique',
-                      description:
-                          'Explain a topic that a five (5) year old child can understand.',
+                      description: context.tr('feynman_desc'),
                       imagePath: 'assets/images/feynman.png',
                       buttonKey: feynmanBtnGlobalKey,
                       onPressed: () {
@@ -361,8 +361,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   const SizedBox(height: 16),
                   ReviewMethod(
                       title: 'Pomodoro Technique',
-                      description:
-                          'Use a timer to break down work into intervals.',
+                      description: context.tr('pomodoro_desc'),
                       imagePath: 'assets/images/pomodoro.png',
                       buttonKey: pomodoroBtnGlobalKey,
                       onPressed: () {

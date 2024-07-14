@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -94,13 +95,13 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               });
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'title',
-                child: Text('Sort by Title'),
+                child: Text(context.tr("sort_title")),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'date',
-                child: Text('Sort by Date'),
+                child: Text(context.tr("sort_date")),
               ),
             ],
             icon: const Icon(Icons.sort),

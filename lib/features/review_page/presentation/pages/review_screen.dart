@@ -259,28 +259,28 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         ]);
   }
 
-  String _getGreeting() {
+  String _getGreeting(BuildContext context) {
     var hour = DateTime.now().hour;
 
     if (hour < 12) {
-      return 'Good Morning,';
+      return '${context.tr("greet_morning")},';
     }
     if (hour < 17) {
-      return 'Good Afternoon,';
+      return '${context.tr("greet_afternoon")},';
     }
 
-    return 'Good Evening,';
+    return '${context.tr("greet_evening")},';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(ref),
+      appBar: _buildAppBar(context, ref),
       body: _buildBody(context, ref),
     );
   }
 
-  AppBar _buildAppBar(WidgetRef ref) {
+  AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
     var username = FirebaseAuth.instance.currentUser!.displayName!;
     return AppBar(
       scrolledUnderElevation: 0,
@@ -292,7 +292,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_getGreeting(),
+              Text(_getGreeting(context),
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge

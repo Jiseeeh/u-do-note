@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,17 +64,6 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
     logger.d('Review Method: ${widget.reviewMethod}');
 
-    switch (widget.reviewMethod) {
-      case ReviewMethods.leitnerSystem:
-        titleFieldPlaceholder = "Enter a title for your flashcards";
-        break;
-      case ReviewMethods.feynmanTechnique:
-        titleFieldPlaceholder = "Enter a title for your notes";
-        break;
-      default:
-        titleFieldPlaceholder = "";
-    }
-
     if (widget.notebookId != null && widget.pages != null) {
       notebookId = widget.notebookId!;
       pages = widget.pages!;
@@ -126,8 +116,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        "You need to add a title for your review session here.",
+                    Text(context.tr("leitner_tutorial_title"),
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge
@@ -154,8 +143,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        "Here you can select a notebook to review the notes from. Since you came from the note-taking page, the notebook of that note will be used. If you want to select another notebook, you can do so.",
+                    Text(context.tr("leitner_tutorial_notebook"),
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge
@@ -182,8 +170,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        "Here you can select the pages to review. This is also pre-selected based on the note you came from. Note that when choosing multiple pages, make sure they are all in the same topic to get the best results.",
+                    Text(context.tr("leitner_tutorial_page"),
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge
@@ -209,8 +196,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        "You can then click on this button to continue with the review session after you are done selecting the notebook and pages.",
+                    Text(context.tr("leitner_tutorial_confirm"),
                         style: Theme.of(context)
                             .textTheme
                             .displayLarge
@@ -232,6 +218,17 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
   @override
   Widget build(BuildContext context) {
+    switch (widget.reviewMethod) {
+      case ReviewMethods.leitnerSystem:
+        titleFieldPlaceholder = context.tr("flashcard_session_title");
+        break;
+      case ReviewMethods.feynmanTechnique:
+        titleFieldPlaceholder = context.tr("feynman_session_title");
+        break;
+      default:
+        titleFieldPlaceholder = "";
+    }
+
     var asyncNotebooks = ref.watch(notebooksStreamProvider);
 
     return switch (asyncNotebooks) {
@@ -245,8 +242,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
       BuildContext context, List<NotebookEntity> notebooks) {
     if (notebooks.isEmpty) {
       return AlertDialog(
-        title: const Text('No notebooks found.'),
-        content: const Text('Please create a notebook to get started.'),
+        title: Text(context.tr("no_notebook")),
+        content: Text(context.tr("create_notebook_e")),
         actions: [
           TextButton(
             onPressed: () {
@@ -259,7 +256,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               Navigator.of(context).pop();
               context.router.push(const NotebooksRoute());
             },
-            child: const Text('Create Notebook'),
+            child: Text(context.tr("create_notebook")),
           ),
         ],
       );
@@ -267,7 +264,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
     return AlertDialog(
       scrollable: true,
-      title: const Text('Choose a notebook to get started.'),
+      title: Text(context.tr("choose_notebook")),
       actions: [
         TextButton(
           onPressed: () {
@@ -283,7 +280,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             }
 
             if (notebookId.isEmpty || pages.isEmpty) {
-              EasyLoading.showError("Please select a notebook and pages.");
+              EasyLoading.showError(context.tr("no_notebook_and_page"));
               return;
             }
 
@@ -298,8 +295,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             });
 
             if (contentFromPages.trim().isEmpty) {
-              EasyLoading.showError(
-                  "The selected pages have no content. Please select another page or notebook.");
+              EasyLoading.showError(context.tr("select_pages_e"));
               return;
             }
 
@@ -314,7 +310,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             switch (widget.reviewMethod) {
               case ReviewMethods.leitnerSystem:
                 EasyLoading.show(
-                    status: 'Checking if you have old flashcards to review...',
+                    status: context.tr("flashcard_notice"),
                     maskType: EasyLoadingMaskType.black,
                     dismissOnTap: false);
 
@@ -332,8 +328,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                       builder: (dialogContext) => AlertDialog(
                             title: const Text('Notice'),
                             scrollable: true,
-                            content: const Text(
-                                'You have old flashcards to review. Do you want to review them first?'),
+                            content: Text(context.tr("flashcard_review")),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -362,13 +357,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         context: context,
                         builder: (dialogContext) => AlertDialog(
                               scrollable: true,
-                              title: const Column(
+                              title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Flashcards to review"),
+                                  const Text("Flashcards to review"),
                                   Text(
-                                    "The last selected session will be used.",
-                                    style: TextStyle(fontSize: 12),
+                                    context.tr("last_session"),
+                                    style: const TextStyle(fontSize: 12),
                                   )
                                 ],
                               ),
@@ -385,7 +380,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                                   onPressed: () {
                                     if (oldFlashcardId.isEmpty) {
                                       EasyLoading.showError(
-                                          "Please select an old session to review.");
+                                          context.tr("last_session_notice"));
                                       return;
                                     }
 
@@ -402,6 +397,9 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                               content: MultiSelectDialogField(
                                 listType: MultiSelectListType.CHIP,
                                 items: selectItems,
+                                selectedItemsTextStyle:
+                                    const TextStyle(color: AppColors.white),
+                                selectedColor: AppColors.secondary,
                                 decoration: BoxDecoration(
                                   color: Colors.blue.withOpacity(0.1),
                                   borderRadius: const BorderRadius.all(
@@ -444,7 +442,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 }
 
                 EasyLoading.show(
-                    status: 'Generating Flashcards...',
+                    status: context.tr("flashcard_generate_notice"),
                     maskType: EasyLoadingMaskType.black,
                     dismissOnTap: false);
 
@@ -485,9 +483,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                     context: context,
                     builder: (dialogContext) {
                       return AlertDialog(
-                        title: const Text('Notice'),
-                        content: const Text(
-                            'Do you want to review your old Feynman Sessions with this notebook?'),
+                        title: Text(context.tr("notice")),
+                        content: Text(context.tr("feynman_old_session")),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -525,13 +522,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                       var sessionId = "";
                       return AlertDialog(
                         scrollable: true,
-                        title: const Column(
+                        title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Old Feynman Sessions"),
+                            Text(context.tr("feynman_old_session_label")),
                             Text(
-                              "The last selected session will be used.",
-                              style: TextStyle(fontSize: 12),
+                              context.tr("feynman_old_session_notice"),
+                              style: const TextStyle(fontSize: 12),
                             )
                           ],
                         ),
@@ -550,15 +547,15 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                           ),
                         ],
                         content: MultiSelectDialogField(
-                          title: const Column(
+                          title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Notice",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.normal)),
+                              Text(context.tr("notice"),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.normal)),
                               Text(
-                                "Choose an old session to review.",
-                                style: TextStyle(
+                                context.tr("old_session_notice"),
+                                style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.normal),
                               )
@@ -631,21 +628,23 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               controller: titleController,
               validator: (value) {
                 if (value!.isEmpty) {
-                  return "Please enter a title.";
+                  return context.tr("title_field_notice");
                 }
 
                 if (value.length < minTitleName) {
-                  return "Title must be at least $minTitleName characters.";
+                  return context.tr("title_length_min",
+                      namedArgs: {"min": minTitleName.toString()});
                 }
 
                 if (value.length > maxTitleName) {
-                  return "Title must be at most $maxTitleName characters.";
+                  return context.tr("title_length_max",
+                      namedArgs: {"max": maxTitleName.toString()});
                 }
 
                 return null;
               },
               decoration: InputDecoration(
-                labelText: "Title",
+                labelText: context.tr("title"),
                 hintText: titleFieldPlaceholder,
                 border: InputBorder.none,
               ),
@@ -654,25 +653,25 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             MultiSelectDialogField(
               key: notebooksKey,
               initialValue: [notebookId],
-              title: const Column(
+              title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Notebooks"),
+                  const Text("Notebooks"),
                   Text(
-                    "The last selected notebook will be used.",
-                    style: TextStyle(fontSize: 12),
+                    context.tr("select_notebook"),
+                    style: const TextStyle(fontSize: 12),
                   )
                 ],
               ),
-
               items: notebooks
                   .map((notebook) =>
                       MultiSelectItem(notebook.id, notebook.subject))
                   .toList(),
-              // selectedColor: Colors.blue,
+              selectedItemsTextStyle: const TextStyle(color: AppColors.white),
+              selectedColor: AppColors.secondary,
               listType: MultiSelectListType.CHIP,
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: AppColors.secondary.withOpacity(0.1),
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
               ),
               onSelectionChanged: (values) {
@@ -698,8 +697,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         .firstWhere((notebook) => notebook.id == notebookId)
                         .notes
                         .isEmpty) {
-                      EasyLoading.showError(
-                          "This notebook has no notes, please select another one or create a note.");
+                      EasyLoading.showError(context.tr("no_page"));
 
                       // ? resets the notebookId to hide the pages dropdown again
                       notebookId = "";
@@ -709,7 +707,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               },
               buttonIcon: const Icon(
                 Icons.book,
-                color: Colors.blue,
+                color: AppColors.secondary,
               ),
               buttonText: const Text(
                 "Notebooks",
@@ -723,7 +721,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                       children: [
                         const Text("Notebook Pages"),
                         Text(
-                          "You can select multiple pages but take note, they should be in the same topic to get the best results.",
+                          context.tr("select_pages"),
                           style: Theme.of(context).textTheme.bodySmall,
                         )
                       ],
@@ -734,10 +732,12 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                         .notes
                         .map((note) => MultiSelectItem(note.id, note.title))
                         .toList(),
-                    // selectedColor: Colors.blue,
+                    selectedItemsTextStyle:
+                        const TextStyle(color: AppColors.white),
+                    selectedColor: AppColors.secondary,
                     listType: MultiSelectListType.CHIP,
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: AppColors.secondary.withOpacity(0.1),
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
                     ),
                     onConfirm: (results) async {
@@ -747,7 +747,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                     },
                     buttonIcon: const Icon(
                       Icons.pages,
-                      color: Colors.blue,
+                      color: AppColors.secondary,
                     ),
                     buttonText: const Text(
                       "Notebook Pages",

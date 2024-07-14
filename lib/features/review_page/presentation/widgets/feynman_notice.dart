@@ -11,7 +11,7 @@ class FeynmanNotice extends ConsumerWidget {
       title: Column(
         children: [
           Text(
-            'Quick Notice for Feynman Technique',
+            context.tr("feynman_notice"),
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(

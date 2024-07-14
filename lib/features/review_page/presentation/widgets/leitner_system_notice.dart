@@ -11,7 +11,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
       title: Column(
         children: [
           Text(
-            'Quick Notice for Leitner System',
+            context.tr("leitner_notice"),
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(

@@ -11,7 +11,7 @@ class PomodoroNotice extends ConsumerWidget {
       title: Column(
         children: [
           Text(
-            'Quick Notice for the Pomodoro Technique',
+            context.tr("pomodoro_notice"),
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(

@@ -270,7 +270,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         children: [
                           const Icon(Icons.language_rounded),
                           SizedBox(width: 1.w),
-                          const Text('Language'),
+                          Text(context.tr("language")),
                         ],
                       ),
                       children: [

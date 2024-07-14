@@ -1,3 +1,17 @@
+# [1.1.0](https://github.com/Jiseeeh/u-do-note/compare/v1.0.2...v1.1.0) (2024-07-14)
+
+
+### Bug Fixes
+
+* fix app assuming the user is from analyze note on leitner cancel ([96a298b](https://github.com/Jiseeeh/u-do-note/commit/96a298bb64f42c7fb14994c3be9da8170f74e1e4))
+* tutorial showing on auto analyze back ([c71708d](https://github.com/Jiseeeh/u-do-note/commit/c71708d4a610f528e76344adf11a01f8cd7782fa))
+
+
+### Features
+
+* add localization ([#82](https://github.com/Jiseeeh/u-do-note/issues/82)) ([01fb909](https://github.com/Jiseeeh/u-do-note/commit/01fb909220bb3267c307f1e7c80a565cd9a345db))
+* comment read only deprecated ([9bbb24e](https://github.com/Jiseeeh/u-do-note/commit/9bbb24e1366336ba1bb9546bbb43ea47c9d5062f))
+
 ## [1.0.2](https://github.com/Jiseeeh/u-do-note/compare/v1.0.1...v1.0.2) (2024-06-23)
 
 

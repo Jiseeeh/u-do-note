@@ -55,5 +55,7 @@
     "leitner_tutorial_title": "Kailangan mong maglagay ng pamagat para sa iyong sesyon ng pagsusuri dito.",
     "leitner_tutorial_notebook": "Dito maaari kang pumili ng notebook upang aralin. Dahil ikaw ay dinala rito ng app, ang notebook na iyong pinanggalingan ang gagamitin. Kung nais mong pumili ng ibang notebook, maaari mo itong gawin.",
     "leitner_tutorial_page": "Dito maaari mong piliin ang mga pahina upang aralin. Ito rin ay naka-select na batay sa iyong pinaggalingan. Tandaan na kapag pumipili ng maraming pahina, tiyakin na ang mga ito ay nasa parehong paksa para sa magandang na resulta.",
-    "leitner_tutorial_confirm": "Pagkatapos mong piliin ang notebook at mga pahina, maaari mo nang i-click ang button na ito upang ipagpatuloy ang sesyon."
+    "leitner_tutorial_confirm": "Pagkatapos mong piliin ang notebook at mga pahina, maaari mo nang i-click ang button na ito upang ipagpatuloy ang sesyon.",
+    "sort_title": "Ayusin ayon sa Pamagat",
+    "sort_date": "Ayusin ayon sa Petsa"
 }

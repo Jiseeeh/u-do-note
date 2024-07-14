@@ -55,5 +55,7 @@
     "leitner_tutorial_title": "You need to add a title for your review session here.",
     "leitner_tutorial_notebook": "Here you can select a notebook to review the notes from. Since you came from the note-taking page, the notebook of that note will be used. If you want to select another notebook, you can do so.",
     "leitner_tutorial_page": "Here you can select the pages to review. This is also pre-selected based on the note you came from. Note that when choosing multiple pages, make sure they are all in the same topic to get the best results.",
-    "leitner_tutorial_confirm": "You can then click on this button to continue with the review session after you are done selecting the notebook and pages."
+    "leitner_tutorial_confirm": "You can then click on this button to continue with the review session after you are done selecting the notebook and pages.",
+    "sort_title": "Sort by Title",
+    "sort_date": "Sort by Date"
 }

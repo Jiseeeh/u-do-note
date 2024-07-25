@@ -5,9 +5,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
@@ -157,8 +157,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   }
 
                   if (!extensions.contains(first.extension)) {
-                    EasyLoading.showError(
-                        context.tr("allowed_files"),
+                    EasyLoading.showError(context.tr("allowed_files"),
                         duration: const Duration(seconds: 2));
                     return;
                   }
@@ -172,7 +171,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                       indicator: Text(
                           textAlign: TextAlign.center,
                           context.tr("file_extraction"),
-                          style: const TextStyle(color: Colors.white, fontSize: 16)),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16)),
                       dismissOnTap: false);
 
                   var inputBytes = await File(first.path!).readAsBytes();
@@ -214,8 +214,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                 onPressed: () async {
                                   if (notebookIdsToPasteExtractedContent
                                       .isEmpty) {
-                                    EasyLoading.showError(
-                                        context.tr("file_extracted_dest_existing"));
+                                    EasyLoading.showError(context
+                                        .tr("file_extracted_dest_existing"));
                                     return;
                                   }
 
@@ -240,8 +240,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                     var pageContentJson =
                                         jsonDecode(noteModel.content);
 
-                                    var doc =
-                                        Document.fromJson(pageContentJson);
+                                    var doc = ParchmentDocument.fromJson(
+                                        pageContentJson);
 
                                     doc.insert(doc.length - 1, extractedText);
 
@@ -319,7 +319,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                               initialContent: extractedText,
                                             )));
                                   },
-                                  child: Text(context.tr("create_note_from_extract")),
+                                  child: Text(
+                                      context.tr("create_note_from_extract")),
                                 )
                               ],
                             ),
@@ -329,7 +330,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           SpeedDialChild(
               elevation: 0,
               child: const Icon(Icons.looks_two_rounded),
-              labelWidget:  Text(context.tr("two_col")),
+              labelWidget: Text(context.tr("two_col")),
               onTap: () async {
                 var prefs = await ref.read(sharedPreferencesProvider.future);
                 prefs.setInt('nbPagesGridCols', 2);
@@ -384,14 +385,15 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
   }
 
   Widget _buildNoteCard(BuildContext context, WidgetRef ref, NoteEntity note) {
-    final controller = QuillController.basic();
+    ParchmentDocument document =
+        ParchmentDocument.fromJson(jsonDecode(note.content));
 
     if (note.content.trim().isEmpty) {
-      controller.document =
-          Document.fromJson(jsonDecode(r'[{"insert":"Empty Page\n"}]'));
-    } else {
-      controller.document = Document.fromJson(jsonDecode(note.content));
+      document = ParchmentDocument.fromJson(
+          jsonDecode(r'[{"insert":"Empty Page\n"}]'));
     }
+
+    var fleatherController = FleatherController(document: document);
 
     return Container(
       decoration: BoxDecoration(
@@ -402,81 +404,71 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
         children: [
           // position icon on the bottom right
           Expanded(
-            child: QuillEditor.basic(
-              configurations: QuillEditorConfigurations(
-                padding: const EdgeInsets.all(8),
-                controller: controller,
-                // readOnly: true,
-                showCursor: false,
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    // TODO: pending for deletion (unused)
-                    ref
-                        .read(appStateProvider.notifier)
-                        .setCurrentNoteId(note.id);
+              child: FleatherEditor(
+            controller: fleatherController,
+            padding: const EdgeInsets.all(10),
+            readOnly: true,
+          )),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            IconButton(
+                onPressed: () {
+                  // TODO: pending for deletion (unused)
+                  ref.read(appStateProvider.notifier).setCurrentNoteId(note.id);
 
-                    context.router.push(NoteTakingRoute(
-                        notebookId: widget.notebookId, note: note));
-                  },
-                  icon: const Icon(Icons.edit)),
-              IconButton(
-                  onPressed: () async {
-                    // show dialog to confirm delete
-                    var userChoice = await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Delete Note'),
-                            content: Text(
-                                context.tr("delete_note_confirm")),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, false);
-                                  },
-                                  child: const Text('No')),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: const Text('Yes')),
-                            ],
-                          );
-                        });
+                  context.router.push(NoteTakingRoute(
+                      notebookId: widget.notebookId, note: note));
+                },
+                icon: const Icon(Icons.edit)),
+            IconButton(
+                onPressed: () async {
+                  // show dialog to confirm delete
+                  var userChoice = await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Delete Note'),
+                          content: Text(context.tr("delete_note_confirm")),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, false);
+                                },
+                                child: const Text('No')),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                },
+                                child: const Text('Yes')),
+                          ],
+                        );
+                      });
 
-                    if (userChoice == null || userChoice == false) {
-                      return;
-                    }
+                  if (userChoice == null || userChoice == false) {
+                    return;
+                  }
 
-                    EasyLoading.show(
-                        status: 'loading...',
-                        maskType: EasyLoadingMaskType.black,
-                        dismissOnTap: false);
+                  EasyLoading.show(
+                      status: 'loading...',
+                      maskType: EasyLoadingMaskType.black,
+                      dismissOnTap: false);
 
-                    var res = await ref
-                        .read(notebooksProvider.notifier)
-                        .deleteNote(
-                            notebookId: widget.notebookId, noteId: note.id);
+                  var res = await ref
+                      .read(notebooksProvider.notifier)
+                      .deleteNote(
+                          notebookId: widget.notebookId, noteId: note.id);
 
-                    EasyLoading.dismiss();
+                  EasyLoading.dismiss();
 
-                    if (res is Failure) {
-                      logger.w('Encountered error: ${res.message}');
-                      EasyLoading.showError(res.message);
-                      return;
-                    }
+                  if (res is Failure) {
+                    logger.w('Encountered error: ${res.message}');
+                    EasyLoading.showError(res.message);
+                    return;
+                  }
 
-                    EasyLoading.showSuccess(res);
-                  },
-                  icon: const Icon(Icons.delete)),
-            ],
-          )
+                  EasyLoading.showSuccess(res);
+                },
+                icon: const Icon(Icons.delete)),
+          ]),
         ],
       ),
     );

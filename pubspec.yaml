@@ -16,12 +16,12 @@ dependencies:
   firebase_auth: ^4.17.3
   firebase_core: ^2.25.3
   firebase_storage: ^11.6.10
+  fleather: ^1.17.0
   flutter:
     sdk: flutter
   flutter_chat_ui: ^1.6.12
   flutter_chat_types: ^3.6.2
   flutter_easyloading: ^3.0.5
-  flutter_quill: ^9.3.1
   flutter_riverpod: ^2.4.10
   flutter_speed_dial: ^7.0.0
   hive: ^2.2.3
@@ -50,6 +50,7 @@ dependencies:
   page_transition: ^2.1.0
   google_sign_in: ^6.2.1
   easy_localization: ^3.0.7
+  parchment_delta: ^1.0.0
 
 dev_dependencies:
   flutter_test:

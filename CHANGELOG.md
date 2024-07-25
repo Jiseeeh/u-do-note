@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/Jiseeeh/u-do-note/compare/v1.1.0...v1.2.0) (2024-07-25)
+
+
+### Features
+
+* replace flutter quill ([#83](https://github.com/Jiseeeh/u-do-note/issues/83)) ([ee38524](https://github.com/Jiseeeh/u-do-note/commit/ee38524ccd3ed421bdb43b4b9fb59f074bd1b46a))
+
 # [1.1.0](https://github.com/Jiseeeh/u-do-note/compare/v1.0.2...v1.1.0) (2024-07-14)
 
 

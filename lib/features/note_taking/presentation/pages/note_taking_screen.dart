@@ -5,9 +5,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:fleather/fleather.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -41,7 +41,9 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
 }
 
 class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
-  final _controller = QuillController.basic();
+  FleatherController? _fleatherController;
+  final GlobalKey<EditorState> _editorKey = GlobalKey();
+  late FocusNode _focusNode;
   var _lastSavedContent = "";
   final _speechToText = SpeechToText();
   final _textFieldController = TextEditingController();
@@ -61,6 +63,10 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   @override
   void initState() {
     super.initState();
+
+    final document = _loadDocument();
+    _fleatherController = FleatherController(document: document);
+    _focusNode = FocusNode();
 
     _noteTitleController.text = widget.note.title;
 
@@ -85,14 +91,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     });
 
     // ? to update the character count on ui
-    _controller.addListener(() {
+    _fleatherController!.addListener(() {
       setState(() {});
     });
 
-    final json = jsonDecode(widget.note.content);
-
-    _controller.document = Document.fromJson(json);
-    _lastSavedContent = _controller.document.toPlainText();
+    _lastSavedContent = _fleatherController!.document.toPlainText();
 
     _autoSaveTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
       logger.d('Auto saving note...');
@@ -101,6 +104,12 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     });
 
     checkIfAnalyzed(context);
+  }
+
+  ParchmentDocument _loadDocument() {
+    final json = jsonDecode(widget.note.content);
+
+    return ParchmentDocument.fromJson(json);
   }
 
   @override
@@ -124,14 +133,14 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     // ? check initial note content if at least 1000 characters
     // ? can add future feature to check for the length of the note
     // ? and analyze it if it's more than 1000 characters
-    if (_controller.document.toPlainText().length < 1000) {
+    if (_fleatherController!.document.toPlainText().length < 1000) {
       logger.d('Note has less than 1000 characters, skipping analysis...');
 
       _noteLenTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
         logger.d(
-            'Note len currently at ${_controller.document.toPlainText().length}');
+            'Note len currently at ${_fleatherController!.document.toPlainText().length}');
 
-        if (_controller.document.toPlainText().length >= 1000) {
+        if (_fleatherController!.document.toPlainText().length >= 1000) {
           timer.cancel();
           checkIfAnalyzed(context);
         }
@@ -171,7 +180,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     _timer = Timer(const Duration(seconds: 5), () {
       ref
           .read(notebooksProvider.notifier)
-          .analyzeNote(_controller.document.toPlainText())
+          .analyzeNote(_fleatherController!.document.toPlainText())
           .then((value) {
         if (value is Failure) {
           logger.w("Encountered an error: ${value.message}");
@@ -223,8 +232,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
       _wordsSpoken = result.recognizedWords;
 
       if (result.finalResult) {
-        _controller.document
-            .insert(_controller.document.length - 1, _wordsSpoken);
+        _fleatherController!.document
+            .insert(_fleatherController!.document.length - 1, _wordsSpoken);
 
         // ? inserting text to the document will open the keyboard
         FocusScope.of(context).requestFocus(FocusNode());
@@ -242,23 +251,23 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
           dismissOnTap: false);
     }
 
-    if (_controller.document.toPlainText() == _lastSavedContent) {
+    if (_fleatherController!.document.toPlainText() == _lastSavedContent) {
       logger.d('Note has not been modified, skipping save...');
 
       return;
     }
 
-    final json = jsonEncode(_controller.document.toDelta().toJson());
+    final json = jsonEncode(_fleatherController!.document.toDelta().toJson());
     var noteModel = NoteModel.fromEntity(widget.note);
 
     var newNoteEntity = noteModel
         .copyWith(
             content: json,
-            plainTextContent: _controller.document.toPlainText(),
+            plainTextContent: _fleatherController!.document.toPlainText(),
             updatedAt: Timestamp.now())
         .toEntity();
 
-    _lastSavedContent = _controller.document.toPlainText();
+    _lastSavedContent = _fleatherController!.document.toPlainText();
 
     var res = await ref
         .read(notebooksProvider.notifier)
@@ -413,7 +422,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
   VoidCallback onSummarizeNote(BuildContext context) {
     return () async {
-      if (_controller.document.toPlainText().trim().isEmpty) {
+      if (_fleatherController!.document.toPlainText().trim().isEmpty) {
         EasyLoading.showError('Note is empty. Please write something first.');
         return;
       }
@@ -425,7 +434,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
       var jsonRes = await ref
           .read(notebooksProvider.notifier)
-          .summarizeNote(content: _controller.document.toPlainText());
+          .summarizeNote(content: _fleatherController!.document.toPlainText());
 
       EasyLoading.dismiss();
 
@@ -540,8 +549,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                                               _textFieldController));
 
                               if (willContinue) {
-                                _controller.document.insert(
-                                    _controller.document.length - 1, text);
+                                _fleatherController!.document.insert(
+                                    _fleatherController!.document.length - 1,
+                                    text);
 
                                 // ?refresh ui
                                 setState(() {});
@@ -579,8 +589,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                                       ));
 
                               if (willContinue) {
-                                _controller.document.insert(
-                                    _controller.document.length - 1, text);
+                                _fleatherController!.document.insert(
+                                    _fleatherController!.document.length - 1,
+                                    text);
 
                                 // ?refresh ui
                                 setState(() {});
@@ -597,24 +608,29 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _isToolbarVisible
-            ? QuillToolbar.simple(
-                configurations: QuillSimpleToolbarConfigurations(
-                  controller: _controller,
-                  multiRowsDisplay: true,
-                  showFontFamily: false,
-                  showFontSize: false,
-                  customButtons: [
-                    QuillToolbarCustomButtonOptions(
-                      icon: Text(_readOnly ? 'Edit Mode' : 'Read Mode'),
-                      onPressed: () {
-                        setState(() {
-                          _readOnly = !_readOnly;
-                        });
-                      },
-                    ),
+            ? FleatherToolbar.basic(
+                trailing: [
+                    _readOnly
+                        ? IconButton(
+                            icon: const Icon(Icons.visibility_rounded),
+                            onPressed: () {
+                              setState(() {
+                                _readOnly = false;
+                              });
+                            },
+                          )
+                        : IconButton(
+                            icon: const Icon(Icons.visibility_off_rounded),
+                            onPressed: () {
+                              setState(() {
+                                _readOnly = true;
+                              });
+                            },
+                          )
                   ],
-                ),
-              )
+                editorKey: _editorKey,
+                controller: _fleatherController!,
+                padding: EdgeInsets.zero)
             : const SizedBox(),
         const Divider(
           color: Colors.grey,
@@ -624,20 +640,18 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
-                _controller.document.toPlainText().length.toString(),
+                _fleatherController!.document.toPlainText().length.toString(),
                 textAlign: TextAlign.right,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             )),
         Expanded(
-          child: QuillEditor.basic(
-            configurations: QuillEditorConfigurations(
-              padding: const EdgeInsets.all(8),
-              controller: _controller,
-              // readOnly: _readOnly,
-            ),
-          ),
-        ),
+            child: FleatherEditor(
+                readOnly: _readOnly,
+                editorKey: _editorKey,
+                padding: const EdgeInsets.all(16),
+                focusNode: _focusNode,
+                controller: _fleatherController!)),
         _speechToText.isListening
             ? Column(
                 children: [

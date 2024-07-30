@@ -19,13 +19,15 @@ class AddNoteDialog extends ConsumerStatefulWidget {
 class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
   final _titleController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _maxTitleLength = 18;
+  final _minTitleLength = 1;
 
   // TODO: add choosing of color of note
   // if we add this, we also need to add functionality to change it.
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add Note'),
+      title: const Text('Add Page'),
       content: Form(
         key: _formKey,
         child: Column(
@@ -33,26 +35,26 @@ class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
           children: [
             TextFormField(
               controller: _titleController,
+              maxLength: _maxTitleLength,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter a note title';
+                  return 'Please enter a page title';
                 }
 
-                const min = 5;
-                const max = 18;
-                if (value.length < min) {
-                  return 'Title must be at least $min characters';
+                if (value.length < _minTitleLength) {
+                  return 'Title must be at least $_minTitleLength characters';
                 }
 
-                if (value.length > max) {
-                  return 'Title must be at most $max characters';
+                if (value.length > _maxTitleLength) {
+                  return 'Title must be at most $_maxTitleLength characters';
                 }
 
                 return null;
               },
               decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: 'Title',
-                hintText: 'Enter note title',
+                hintText: 'Enter page title',
               ),
             ),
             const SizedBox(height: 10),
@@ -69,7 +71,7 @@ class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       EasyLoading.show(
-                          status: 'Creating Note...',
+                          status: 'Creating Page...',
                           maskType: EasyLoadingMaskType.black,
                           dismissOnTap: false);
 

@@ -24,6 +24,8 @@ class AddNotebookDialog extends ConsumerStatefulWidget {
 class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _maxNotebookNameLength = 13;
+  final _minNotebookNameLength = 1;
   var _notebookCoverLocalPath = "";
   // var _notebookCoverFileName = "";
   var _notebookCoverUrl = "";
@@ -135,7 +137,9 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add Notebook'),
+      title: Text(widget.notebookEntity == null
+          ? 'Create New Notebook'
+          : 'Update Notebook'),
       content: Form(
         key: _formKey,
         child: Column(
@@ -143,25 +147,25 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
+              maxLength: _maxNotebookNameLength,
               controller: _nameController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter notebook name';
                 }
 
-                const min = 5;
-                const max = 13;
-                if (value.length < min) {
-                  return 'Name must be at least $min characters';
+                if (value.length < _minNotebookNameLength) {
+                  return 'Name must be at least $_minNotebookNameLength characters';
                 }
 
-                if (value.length > max) {
-                  return 'Name must be at most $max characters';
+                if (value.length > _maxNotebookNameLength) {
+                  return 'Name must be at most $_maxNotebookNameLength characters';
                 }
 
                 return null;
               },
               decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: 'Notebook Name',
                 hintText: 'Enter Notebook Name',
               ),

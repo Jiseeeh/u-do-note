@@ -137,7 +137,7 @@ class NotebookCard extends ConsumerWidget {
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            title: const Text('Delete Notebook'),
+            title: const Text('Notebook deletion'),
             content: Text(context.tr("delete_notebook_confirm")),
             actions: [
               TextButton(
@@ -160,7 +160,7 @@ class NotebookCard extends ConsumerWidget {
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            title: const Text('Actions'),
+            title: const Text('Notebook Actions'),
             content: Text(context.tr("notebook_action")),
             actions: [
               TextButton(

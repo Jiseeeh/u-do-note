@@ -56,7 +56,7 @@ class NoteRemoteDataSource {
         .doc(userId)
         .collection(FirestoreCollection.user_notes.name)
         .add({
-      'subject': name.toLowerCase(),
+      'subject': name,
       'cover_url': coverImgUrl.isEmpty ? '' : coverImgUrl,
       'cover_file_name': coverImgFileName,
       'created_at': FieldValue.serverTimestamp(),

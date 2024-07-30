@@ -304,14 +304,14 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                         style: Theme.of(dialogContext)
                             .textTheme
                             .headlineMedium
-                            ?.copyWith(fontSize: 16.sp)),
+                            ?.copyWith(fontSize: 18.sp)),
                     TextSpan(
                         text: _topicAnalyzed,
                         style: Theme.of(dialogContext)
                             .textTheme
                             .headlineMedium
                             ?.copyWith(
-                                fontSize: 16.sp, fontWeight: FontWeight.bold))
+                                fontSize: 18.sp, fontWeight: FontWeight.bold))
                   ],
                 ),
               ),
@@ -321,15 +321,16 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                   RichText(
                     text: TextSpan(
                       children: [
-                        const TextSpan(
+                        TextSpan(
                             text: 'Learning Technique Suggested: ',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.jetBlack,
-                                fontSize: 20)),
+                                fontSize: 16.sp)),
                         TextSpan(
                             text: _learningTechniqueAnalyzed,
-                            style: const TextStyle(color: AppColors.jetBlack)),
+                            style: TextStyle(
+                                color: AppColors.jetBlack, fontSize: 16.sp)),
                       ],
                     ),
                   ),
@@ -337,37 +338,40 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                   RichText(
                     text: TextSpan(
                       children: [
-                        const TextSpan(
+                        TextSpan(
                             text: 'Reason: ',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.jetBlack,
-                                fontSize: 20)),
+                                fontSize: 16.sp)),
                         TextSpan(
                             text: _reasonAnalyzed,
-                            style: const TextStyle(color: AppColors.jetBlack)),
+                            style: TextStyle(
+                                color: AppColors.jetBlack, fontSize: 16.sp)),
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
                   RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
                         TextSpan(
                             text: 'Notice: ',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.jetBlack,
-                                fontSize: 20)),
+                                fontSize: 16.sp)),
                         TextSpan(
                             text:
                                 'If you want to get started with the suggested learning technique, click ',
-                            style: TextStyle(color: AppColors.jetBlack)),
+                            style: TextStyle(
+                                color: AppColors.jetBlack, fontSize: 16.sp)),
                         TextSpan(
                             text: 'Go button below',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.jetBlack)),
+                                color: AppColors.jetBlack,
+                                fontSize: 16.sp)),
                       ],
                     ),
                   ),

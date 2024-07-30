@@ -9,13 +9,14 @@ class LeitnerSystemNotice extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             context.tr("leitner_notice"),
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
-            '\u2022 ${context.tr('leitner_desc')}',
+            context.tr('leitner_desc'),
             style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
@@ -47,7 +48,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            '\u2022 ${context.tr('leitner_grading')}',
+            context.tr('leitner_grading'),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 10),
@@ -60,7 +61,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            '\u2022 ${context.tr('leitner_new_session')}',
+            context.tr('leitner_new_session'),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],

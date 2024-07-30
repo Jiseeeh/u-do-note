@@ -15,7 +15,7 @@ class FeynmanNotice extends ConsumerWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
-            '\u2022 ${context.tr("review_desc")}',
+            context.tr("review_desc"),
             style: Theme.of(context).textTheme.bodyMedium,
           )
         ],
@@ -66,7 +66,7 @@ class FeynmanNotice extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          '\u2022 $content',
+          content,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 8),

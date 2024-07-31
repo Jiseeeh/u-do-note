@@ -105,6 +105,7 @@ class FeynmanRemoteDataSource {
       'content_from_pages': feynmanModel.contentFromPagesUsed,
       'messages':
           feynmanModel.messages.map((message) => message.toJson()).toList(),
+      'notebook_id': notebookId,
       'recent_robot_messages': feynmanModel.recentRobotMessages,
       'recent_user_messages': feynmanModel.recentUserMessages,
       'score': '',
@@ -358,6 +359,7 @@ class FeynmanRemoteDataSource {
         'content_from_pages': feynmanModel.contentFromPagesUsed,
         'messages':
             feynmanModel.messages.map((message) => message.toJson()).toList(),
+        'notebook_id': notebookId,
         'questions': feynmanModel.questions!
             .map((question) => question.toJson())
             .toList(),

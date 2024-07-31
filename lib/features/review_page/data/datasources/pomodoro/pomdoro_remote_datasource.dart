@@ -83,7 +83,10 @@ class PomodoroRemoteDataSource {
         .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .collection(FirestoreCollection.remarks.name)
-        .add(updatedPomodoroModel.toFirestore());
+        .add({
+      ...updatedPomodoroModel.toFirestore(),
+      'notebook_id': notebookId,
+    });
 
     return "Quiz results saved successfully";
   }

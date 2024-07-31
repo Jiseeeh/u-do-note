@@ -95,6 +95,7 @@ class LeitnerRemoteDataSource {
       'review_method': LeitnerSystemModel.name,
       'flashcards': flashcards.map((flashcard) => flashcard.toJson()).toList(),
       'next_review': now,
+      'notebook_id': userNotebookId,
       'score': '',
       'remark': '',
     });

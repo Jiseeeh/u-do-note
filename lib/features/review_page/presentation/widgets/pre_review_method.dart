@@ -625,6 +625,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
           children: [
             TextFormField(
               key: titleKey,
+              maxLength: maxTitleName,
               controller: titleController,
               validator: (value) {
                 if (value!.isEmpty) {
@@ -646,7 +647,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               decoration: InputDecoration(
                 labelText: context.tr("title"),
                 hintText: titleFieldPlaceholder,
-                border: InputBorder.none,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 10),

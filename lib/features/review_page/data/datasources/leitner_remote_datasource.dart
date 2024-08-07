@@ -5,6 +5,7 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
+import 'package:u_do_note/core/helper.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 
@@ -108,6 +109,9 @@ class LeitnerRemoteDataSource {
       userNotebookId: userNotebookId,
       flashcards: flashcards,
     );
+
+    Helper.updateTechniqueUsage(
+        _firestore, userId, userNotebookId, LeitnerSystemModel.name);
 
     return leitnerSystemModel;
   }

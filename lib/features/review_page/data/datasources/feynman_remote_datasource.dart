@@ -5,6 +5,7 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
+import 'package:u_do_note/core/helper.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/question.dart';
@@ -341,12 +342,11 @@ class FeynmanRemoteDataSource {
         'score': feynmanModel.score,
         'remark': remark,
       });
-      return;
     }
 
-    // ? if from old session, then make a new remark since
+    // ? if from old session (starting a quiz again), then make a new remark since
     // ? updating the old will overwrite the old remark
-    if (newSessionName != null) {
+    else if (newSessionName != null) {
       await _firestore
           .collection(FirestoreCollection.users.name)
           .doc(userId)
@@ -355,6 +355,7 @@ class FeynmanRemoteDataSource {
           .collection(FirestoreCollection.remarks.name)
           .add(<String, dynamic>{
         'title': newSessionName,
+        'created_at': Timestamp.now(),
         'review_method': FeynmanModel.name,
         'content_from_pages': feynmanModel.contentFromPagesUsed,
         'messages':
@@ -369,23 +370,25 @@ class FeynmanRemoteDataSource {
         'score': feynmanModel.score,
         'remark': remark,
       });
-
-      return;
+    } else {
+      await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(notebookId)
+          .collection(FirestoreCollection.remarks.name)
+          .doc(feynmanModel.id)
+          .update({
+        'questions': feynmanModel.questions!
+            .map((question) => question.toJson())
+            .toList(),
+        'selected_answers_index': feynmanModel.selectedAnswersIndex,
+        'score': feynmanModel.score,
+        'remark': remark,
+      });
     }
 
-    await _firestore
-        .collection(FirestoreCollection.users.name)
-        .doc(userId)
-        .collection(FirestoreCollection.user_notes.name)
-        .doc(notebookId)
-        .collection(FirestoreCollection.remarks.name)
-        .doc(feynmanModel.id)
-        .update({
-      'questions':
-          feynmanModel.questions!.map((question) => question.toJson()).toList(),
-      'selected_answers_index': feynmanModel.selectedAnswersIndex,
-      'score': feynmanModel.score,
-      'remark': remark,
-    });
+    Helper.updateTechniqueUsage(
+        _firestore, userId, notebookId, FeynmanModel.name);
   }
 }

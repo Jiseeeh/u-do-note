@@ -9,6 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:u_do_note/core/constant.dart' as constant;
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
@@ -59,6 +60,7 @@ class NoteRemoteDataSource {
       'subject': name,
       'cover_url': coverImgUrl.isEmpty ? '' : coverImgUrl,
       'cover_file_name': coverImgFileName,
+      'techniques_usage': constant.defaultTechniquesUsage,
       'created_at': FieldValue.serverTimestamp(),
     });
 

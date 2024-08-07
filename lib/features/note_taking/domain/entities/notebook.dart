@@ -7,6 +7,7 @@ class NotebookEntity {
   final String coverUrl;
   final String coverFileName;
   final Timestamp createdAt;
+  final Map<String, dynamic> techniquesUsage;
   final List<NoteEntity> notes;
 
   NotebookEntity({
@@ -15,6 +16,7 @@ class NotebookEntity {
     required this.coverUrl,
     required this.coverFileName,
     required this.createdAt,
+    required this.techniquesUsage,
     required this.notes,
   });
 

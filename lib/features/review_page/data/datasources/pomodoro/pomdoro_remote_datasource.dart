@@ -5,6 +5,7 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
+import 'package:u_do_note/core/helper.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 
 class PomodoroRemoteDataSource {
@@ -87,6 +88,9 @@ class PomodoroRemoteDataSource {
       ...updatedPomodoroModel.toFirestore(),
       'notebook_id': notebookId,
     });
+
+    Helper.updateTechniqueUsage(
+        _firestore, userId, notebookId, PomodoroModel.name);
 
     return "Quiz results saved successfully";
   }

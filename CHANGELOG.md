@@ -1,3 +1,23 @@
+# [1.3.0](https://github.com/Jiseeeh/u-do-note/compare/v1.2.0...v1.3.0) (2024-08-07)
+
+
+### Bug Fixes
+
+* fix typos ([20de698](https://github.com/Jiseeeh/u-do-note/commit/20de698dda747c9370e0b186e01d7a20be6e4cd2))
+
+
+### Features
+
+* add constant variables ([5ac5d05](https://github.com/Jiseeeh/u-do-note/commit/5ac5d05144a7b1879c25f1a8c37202f210a108ea))
+* add global helper file ([4e7355c](https://github.com/Jiseeeh/u-do-note/commit/4e7355c19347374fd02be54664362cdd10c8c43f))
+* add notebook id at remarks ([e4415e3](https://github.com/Jiseeeh/u-do-note/commit/e4415e39753ccae74b93de74302b314654a077b6))
+* add techniques usage ([0815691](https://github.com/Jiseeeh/u-do-note/commit/081569124cc1df189ead6a683b29782dc4085e6b))
+* extract min and max fields length ([d739b09](https://github.com/Jiseeeh/u-do-note/commit/d739b09521a7cdf4fa959a428f4576b66be42c3a))
+* improve heading clarity ([ff770aa](https://github.com/Jiseeeh/u-do-note/commit/ff770aab9e2203229a2187cf03d6efb3d1a3a9f8))
+* maintain text casing on save ([6f5183d](https://github.com/Jiseeeh/u-do-note/commit/6f5183d624b7653b8a0456b6d6ed9cb40ca6ca00))
+* remove bullet points ([3f130f7](https://github.com/Jiseeeh/u-do-note/commit/3f130f7877735bde19580cd7dfceb9d8e1482d7e))
+* update text sizing ([30fb738](https://github.com/Jiseeeh/u-do-note/commit/30fb738a447a572c08a3afe430943961f5443499))
+
 # [1.2.0](https://github.com/Jiseeeh/u-do-note/compare/v1.1.0...v1.2.0) (2024-07-25)
 
 

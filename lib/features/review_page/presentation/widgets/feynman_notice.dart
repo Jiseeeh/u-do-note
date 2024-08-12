@@ -39,8 +39,8 @@ class FeynmanNotice extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildNoticeContent(context,
-              title: context.tr("review_grading"),
-              content: context.tr("feynman_grading")),
+              title: context.tr("review_grading_q"),
+              content: context.tr("review_grading")),
           buildNoticeContent(context,
               title: context.tr("review_quiz_q"),
               content: context.tr("feynman_quiz")),

@@ -1,1 +1,7 @@
-enum ReviewMethods { leitnerSystem, feynmanTechnique, pomodoroTechnique, acronymMnemonics }
+enum ReviewMethods {
+  leitnerSystem,
+  feynmanTechnique,
+  pomodoroTechnique,
+  elaboration,
+  acronymMnemonics
+}

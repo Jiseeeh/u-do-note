@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:u_do_note/features/review_page/domain/entities/leitner.dart';
 
 class LeitnerSystemModel {
@@ -7,7 +8,8 @@ class LeitnerSystemModel {
   final String? remark;
   final int? score;
   final String? userNotebookId;
-  final String title;
+  final String
+      title; // TODO: pending to rename this to sessionName for consistency
   final Timestamp createdAt;
   final Timestamp nextReview;
   final List<FlashcardModel> flashcards;
@@ -23,7 +25,7 @@ class LeitnerSystemModel {
       required this.nextReview,
       required this.flashcards});
 
-  /// converts from model to json
+  /// Converts from model to json
   Map<String, dynamic> toJson() => {
         'id': id,
         'user_notebook_id': userNotebookId,
@@ -40,7 +42,7 @@ class LeitnerSystemModel {
             .toList()
       };
 
-  /// converts from entity to model
+  /// Converts from entity to model
   factory LeitnerSystemModel.fromEntity(LeitnerSystemEntity leitnerSystem) =>
       LeitnerSystemModel(
           id: leitnerSystem.id,
@@ -59,7 +61,7 @@ class LeitnerSystemModel {
                   ))
               .toList());
 
-  /// converts from model to entity
+  /// Converts from model to entity
   LeitnerSystemEntity toEntity() => LeitnerSystemEntity(
       id: id,
       remark: remark,
@@ -77,7 +79,7 @@ class LeitnerSystemModel {
               ))
           .toList());
 
-  /// converts from firestore to model
+  /// Converts from firestore to model
   factory LeitnerSystemModel.fromFirestore(
       String id, Map<String, dynamic> data) {
     var remark = data['remark'] ?? "";
@@ -138,7 +140,7 @@ class FlashcardModel {
     required this.elapsedSecBeforeAnswer,
   });
 
-  /// converts from json to model
+  /// Converts from json to model
   factory FlashcardModel.fromJson(Map<String, dynamic> json) {
     final String id =
         json['id'] ?? DateTime.now().millisecondsSinceEpoch.toString();
@@ -152,7 +154,7 @@ class FlashcardModel {
     );
   }
 
-  /// converts from firestore to model
+  /// Converts from firestore to model
   factory FlashcardModel.fromFirestore(String id, Map<String, dynamic> data) =>
       FlashcardModel(
         id: id,
@@ -179,7 +181,7 @@ class FlashcardModel {
     );
   }
 
-  /// converts from model to entity
+  /// Converts from model to entity
   FlashcardEntity toEntity() => FlashcardEntity(
         id: id,
         question: question,
@@ -187,7 +189,7 @@ class FlashcardModel {
         elapsedSecBeforeAnswer: elapsedSecBeforeAnswer,
       );
 
-  /// converts from model to json
+  /// Converts from model to json
   Map<String, dynamic> toJson() => {
         'id': id,
         'question': question,

@@ -3,12 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:u_do_note/features/review_page/data/models/question.dart';
 
 class PomodoroModel {
-  final String title;
+  final String
+      title; // TODO: pending to rename this to sessionName for consistency
   final int focusedMinutes;
   final Timestamp createdAt;
   final String? id;
   final String? remark;
   final int? score;
+
   // ? might be needed if users are allowed to review all quizzes
   final List<QuestionModel>? questions;
   final List<int>? selectedAnswersIndex;

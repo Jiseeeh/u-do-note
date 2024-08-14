@@ -21,6 +21,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AnalyticsScreen(),
       );
     },
+    ElaborationRoute.name: (routeData) {
+      final args = routeData.argsAs<ElaborationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ElaborationScreen(
+          content: args.content,
+          sessionName: args.sessionName,
+          key: args.key,
+        ),
+      );
+    },
     FeynmanQuizRoute.name: (routeData) {
       final args = routeData.argsAs<FeynmanQuizRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -181,6 +192,49 @@ class AnalyticsRoute extends PageRouteInfo<void> {
   static const String name = 'AnalyticsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ElaborationScreen]
+class ElaborationRoute extends PageRouteInfo<ElaborationRouteArgs> {
+  ElaborationRoute({
+    required String content,
+    required String sessionName,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ElaborationRoute.name,
+          args: ElaborationRouteArgs(
+            content: content,
+            sessionName: sessionName,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ElaborationRoute';
+
+  static const PageInfo<ElaborationRouteArgs> page =
+      PageInfo<ElaborationRouteArgs>(name);
+}
+
+class ElaborationRouteArgs {
+  const ElaborationRouteArgs({
+    required this.content,
+    required this.sessionName,
+    this.key,
+  });
+
+  final String content;
+
+  final String sessionName;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ElaborationRouteArgs{content: $content, sessionName: $sessionName, key: $key}';
+  }
 }
 
 /// generated route for

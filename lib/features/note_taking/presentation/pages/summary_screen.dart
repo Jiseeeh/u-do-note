@@ -28,23 +28,25 @@ class SummaryScreen extends ConsumerWidget {
           child: const Icon(Icons.copy),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(
-                topic,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  summary,
-                  textAlign: TextAlign.justify,
-                  style: Theme.of(context).textTheme.bodyLarge,
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              children: [
+                Text(
+                  topic,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.displayLarge,
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    summary,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              ],
+            ),
           ),
         ));
   }

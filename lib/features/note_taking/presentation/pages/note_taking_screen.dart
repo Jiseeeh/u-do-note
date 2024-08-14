@@ -469,12 +469,14 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (_) {
+    // TODO deprecated but this sht works not PopScope
+    return WillPopScope(
+      onWillPop: () async {
         onSave(showLoading: false);
 
         Navigator.pop(context);
+
+        return true;
       },
       child: SafeArea(
           child: Scaffold(

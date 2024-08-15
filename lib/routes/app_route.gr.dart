@@ -21,6 +21,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AnalyticsScreen(),
       );
     },
+    ElaborationQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<ElaborationQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ElaborationQuizScreen(
+          questions: args.questions,
+          key: args.key,
+        ),
+      );
+    },
     ElaborationRoute.name: (routeData) {
       final args = routeData.argsAs<ElaborationRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -192,6 +202,44 @@ class AnalyticsRoute extends PageRouteInfo<void> {
   static const String name = 'AnalyticsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ElaborationQuizScreen]
+class ElaborationQuizRoute extends PageRouteInfo<ElaborationQuizRouteArgs> {
+  ElaborationQuizRoute({
+    required List<QuestionModel> questions,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ElaborationQuizRoute.name,
+          args: ElaborationQuizRouteArgs(
+            questions: questions,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ElaborationQuizRoute';
+
+  static const PageInfo<ElaborationQuizRouteArgs> page =
+      PageInfo<ElaborationQuizRouteArgs>(name);
+}
+
+class ElaborationQuizRouteArgs {
+  const ElaborationQuizRouteArgs({
+    required this.questions,
+    this.key,
+  });
+
+  final List<QuestionModel> questions;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ElaborationQuizRouteArgs{questions: $questions, key: $key}';
+  }
 }
 
 /// generated route for

@@ -5,6 +5,8 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
+import 'package:u_do_note/core/helper.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 
 class ElaborationRemoteDataSource {
@@ -17,7 +19,8 @@ class ElaborationRemoteDataSource {
       String notebookId, ElaborationModel elaborationModel) async {
     var userId = _auth.currentUser!.uid;
 
-    if (elaborationModel.remark == null) {
+    // ? user did not take the quiz after reviewing
+    if (elaborationModel.selectedAnswersIndex == null) {
       await _firestore
           .collection(FirestoreCollection.users.name)
           .doc(userId)
@@ -26,7 +29,7 @@ class ElaborationRemoteDataSource {
           .collection(FirestoreCollection.remarks.name)
           .add(elaborationModel.toFirestore());
 
-      return "Successfully saved the quiz results";
+      return "Successfully saved empty quiz";
     }
 
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -73,6 +76,21 @@ class ElaborationRemoteDataSource {
 
     var remark = decodedJson['remark'];
 
-    return '';
+    logger.i("Remark is $remark");
+
+    var updatedElaborationModel = elaborationModel.copyWith(remark: remark);
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .collection(FirestoreCollection.remarks.name)
+        .add(updatedElaborationModel.toFirestore());
+
+    Helper.updateTechniqueUsage(
+        _firestore, userId, notebookId, ElaborationModel.name);
+
+    return 'Successfully saved the quiz results';
   }
 }

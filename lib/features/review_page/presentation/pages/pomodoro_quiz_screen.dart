@@ -108,7 +108,8 @@ class _QuizScreenState extends ConsumerState<PomodoroQuizScreen> {
 
       timer.cancel();
 
-      // TODO: fiix
+      // TODO: I tried to extract this function only so that this can be reusable
+      // but i had problems with ref, it cannot be passed ig. try to do this later
 
       var reviewScreenState = ref.read(reviewScreenProvider);
       var pomodoro = ref.read(pomodoroProvider);

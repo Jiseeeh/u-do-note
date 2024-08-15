@@ -9,7 +9,7 @@ class GenerateQuizQuestions {
 
   const GenerateQuizQuestions(this._feynmanTechniqueRepository);
 
-  Future<Either<Failure, List<QuestionModel>>> call(String notebookId) async {
-    return await _feynmanTechniqueRepository.generateQuizQuestions(notebookId);
+  Future<Either<Failure, List<QuestionModel>>> call(String content) async {
+    return await _feynmanTechniqueRepository.generateQuizQuestions(content);
   }
 }

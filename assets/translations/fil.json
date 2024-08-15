@@ -77,5 +77,8 @@
   "edit_action": "Baguhin",
   "delete_notebook_loading": "Kasalukuyang binubura ang iyong notebook...",
   "delete_notebook_confirm": "Sigurado ka bang nais mong burahin ang notebook na ito?",
-  "general_error": "May naganap na error. Mangyaring subukan ulit mamaya."
+  "general_e": "May naganap na error. Mangyaring subukan ulit mamaya.",
+  "generate_quiz": "Gumagawa ng iyong pagsusulit...",
+  "generate_quiz_e": "May naganap na error habang ginagawa ang pagsusulit. Mangyaring subukan ulit mamaya.",
+  "save_quiz_e": "May naganap na error habang ini-save ang iyong pagsusulit. Mangyaring subukan ulit mamaya."
 }

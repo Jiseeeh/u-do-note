@@ -47,4 +47,25 @@ class ElaborationModel extends QuizModel {
       'review_method': name,
     };
   }
+
+  /// Copy with new values
+  ElaborationModel copyWith({
+    String? id,
+    String? sessionName,
+    Timestamp? createdAt,
+    List<QuestionModel>? questions,
+    List<int>? selectedAnswersIndex,
+    int? score,
+    String? remark,
+  }) {
+    return ElaborationModel(
+      id: id,
+      sessionName: sessionName ?? this.sessionName,
+      createdAt: createdAt ?? this.createdAt,
+      questions: questions ?? this.questions,
+      selectedAnswersIndex: selectedAnswersIndex ?? this.selectedAnswersIndex,
+      score: score ?? this.score,
+      remark: remark ?? this.remark,
+    );
+  }
 }

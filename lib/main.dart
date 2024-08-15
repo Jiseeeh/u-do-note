@@ -8,7 +8,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'firebase_options.dart';
 import 'package:u_do_note/core/constant.dart' as constants;
-import 'package:u_do_note/core/shared/domain/providers/app_theme_provider.dart';
+import 'package:u_do_note/core/shared/presentation/providers/app_theme_provider.dart';
 import 'package:u_do_note/core/shared/theme/app_theme.dart';
 import 'package:u_do_note/observers.dart';
 import 'package:u_do_note/routes/app_route.dart';

@@ -21,6 +21,8 @@ import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/elaboration_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/leitner_system_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
@@ -654,7 +656,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
         builder: (dialogContext) {
           return AlertDialog(
             title: Text(context.tr("notice")),
-            content: Text(context.tr("feynman_old_session")),
+            content: Text(context.tr("old_session_notice_q",
+                namedArgs: {"reviewMethod": "Feynman"})),
             actions: [
               TextButton(
                 onPressed: () {
@@ -697,7 +700,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               children: [
                 Text(context.tr("feynman_old_session_label")),
                 Text(
-                  context.tr("feynman_old_session_notice"),
+                  context.tr("old_session_notice"),
                   style: const TextStyle(fontSize: 12),
                 )
               ],
@@ -723,7 +726,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                   Text(context.tr("notice"),
                       style: const TextStyle(fontWeight: FontWeight.normal)),
                   Text(
-                    context.tr("old_session_notice"),
+                    context.tr("old_session_title"),
                     style: const TextStyle(
                         fontSize: 12, fontWeight: FontWeight.normal),
                   )
@@ -769,21 +772,139 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
   Future<void> handleElaboration(BuildContext context, String contentFromPages,
       List<NotebookEntity> notebooks) async {
-    /* Steps for elaboration old session
-                *  1. Check if user has empty remarks
-                *  if yes, show a dialog to choose the session to quiz from
-                *  otherwise continue with the flow
-                * */
+    EasyLoading.show(
+        status: context.tr("old_session_check"),
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false);
 
-    /* Steps for elaboration new session
-                *  1. get the selected contents
-                *  2. pass it to openai to elaborate the content
-                *  3. return the content and tell to read it and understand it
-                *  4. give options to the user to save the elaborated content
-                *  to a new or existing page
-                *  5. then ask to take a quiz if yes, gen quiz and add remark
-                *  otherwise make an empty remark
-                * */
+    var res = await ref
+        .read(elaborationProvider.notifier)
+        .getOldSessions(notebookId: notebookId);
+
+    EasyLoading.dismiss();
+
+    if (!context.mounted) return;
+
+    if (res is Failure) {
+      EasyLoading.showError(context.tr("general_e"));
+      logger.e(res.message);
+    }
+
+    logger.i("sessions len : ${res.length}");
+
+    if ((res as List<ElaborationModel>).isNotEmpty) {
+      var willReviewOldSessions = await showDialog(
+          context: context,
+          builder: (dialogContext) {
+            return AlertDialog(
+              title: Text(context.tr("notice")),
+              content: Text(context.tr("old_session_notice_q",
+                  namedArgs: {"reviewMethod": "Elaboration"})),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    // ! temporary fix for the dialog before this dialog not closing
+                    // ! and thus will show again on the next open of this tab
+                    Navigator.of(context).pop(false);
+
+                    Navigator.of(dialogContext).pop(false);
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(true);
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            );
+          });
+
+      if (willReviewOldSessions && context.mounted) {
+        var sessionId = await showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (dialogContext) {
+              var sessionId = "";
+              return AlertDialog(
+                scrollable: true,
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Old elaboration sessions"),
+                    Text(
+                      context.tr("old_session_notice"),
+                      style: const TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop(null);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop(sessionId);
+                    },
+                    child: const Text('Continue'),
+                  ),
+                ],
+                content: MultiSelectDialogField(
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(context.tr("notice"),
+                          style:
+                              const TextStyle(fontWeight: FontWeight.normal)),
+                      Text(
+                        context.tr("old_session_title"),
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.normal),
+                      )
+                    ],
+                  ),
+                  listType: MultiSelectListType.CHIP,
+                  items: (res)
+                      .map((el) =>
+                          MultiSelectItem<String>(el.id!, el.sessionName))
+                      .toList(),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  ),
+                  onSelectionChanged: (values) {
+                    if (values.length > 1) {
+                      values.removeAt(0);
+                    }
+                  },
+                  onConfirm: (results) {
+                    sessionId = results.first;
+                  },
+                  buttonIcon: const Icon(
+                    Icons.arrow_drop_down_circle_outlined,
+                    color: Colors.blue,
+                  ),
+                  buttonText: const Text(
+                    "Sessions",
+                  ),
+                ),
+              );
+            });
+
+        if (!context.mounted) return;
+
+        var elaborationModel =
+            (res).firstWhere((model) => model.id == sessionId);
+
+        context.router
+            .push(ElaborationRoute(elaborationModel: elaborationModel));
+        return;
+      }
+    }
 
     EasyLoading.show(
         status: "Please wait...",
@@ -883,8 +1004,13 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
     if (!context.mounted) return;
 
     if (!willSaveContent) {
-      context.router.push(ElaborationRoute(
-          content: elaboratedContent, sessionName: titleController.text));
+      var elaborationModel = ElaborationModel(
+        createdAt: Timestamp.now(),
+        sessionName: titleController.text,
+        content: elaboratedContent,
+      );
+
+      context.router.push(ElaborationRoute(elaborationModel: elaborationModel));
       return;
     }
 

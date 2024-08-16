@@ -15,12 +15,9 @@ import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class ElaborationScreen extends ConsumerWidget {
-  final String content;
-  final String sessionName;
+  final ElaborationModel _elaborationModel;
 
-  const ElaborationScreen(
-      {required this.content, required this.sessionName, Key? key})
-      : super(key: key);
+  const ElaborationScreen(this._elaborationModel, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,26 +27,34 @@ class ElaborationScreen extends ConsumerWidget {
         if (didPop) return;
 
         if (context.mounted) {
-          logger.i('Saving empty quiz');
-
           var reviewState = ref.read(reviewScreenProvider);
 
-          var elaborationModel = ElaborationModel(
-              sessionName: sessionName, createdAt: Timestamp.now());
+          if (_elaborationModel.id == null) {
+            logger.i('Saving empty quiz');
 
-          var res = await ref
-              .read(elaborationProvider.notifier)
-              .saveQuizResults(reviewState.notebookId!, elaborationModel);
+            var elaborationModel = ElaborationModel(
+                sessionName: reviewState.getSessionTitle,
+                createdAt: Timestamp.now(),
+                content: _elaborationModel.content);
 
-          if (res is Failure) {
-            logger.e('Failed to save quiz results: $res');
+            var res = await ref
+                .read(elaborationProvider.notifier)
+                .saveQuizResults(reviewState.notebookId!, elaborationModel);
+
+            if (res is Failure) {
+              logger.e('Failed to save quiz results: $res');
+            }
+
+            logger.i(res);
+
+            reviewState.resetState();
+
+            if (context.mounted) Navigator.of(context).pop();
+          } else {
+            reviewState.resetState();
+
+            Navigator.of(context).pop();
           }
-
-          logger.i(res);
-
-          reviewState.resetState();
-
-          if (context.mounted) Navigator.of(context).pop();
         }
       },
       child: Scaffold(
@@ -86,7 +91,7 @@ class ElaborationScreen extends ConsumerWidget {
                             dismissOnTap: false);
 
                         var res = await sharedRepository.generateQuizQuestions(
-                            content: content);
+                            content: _elaborationModel.content);
 
                         EasyLoading.dismiss();
 
@@ -98,9 +103,13 @@ class ElaborationScreen extends ConsumerWidget {
 
                           Navigator.of(dialogContext).pop();
                         } else {
-                          context.router.replace(ElaborationQuizRoute(
+                          var updatedElaborationModel =
+                              _elaborationModel.copyWith(
                             questions: res,
-                          ));
+                          );
+
+                          context.router.replace(ElaborationQuizRoute(
+                              elaborationModel: updatedElaborationModel));
                         }
                       },
                       child: const Text('Yes'),
@@ -117,7 +126,8 @@ class ElaborationScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Text(content, style: Theme.of(context).textTheme.bodyLarge),
+                Text(_elaborationModel.content,
+                    style: Theme.of(context).textTheme.bodyLarge),
               ],
             ),
           ),

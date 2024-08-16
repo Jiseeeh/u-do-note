@@ -26,7 +26,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ElaborationQuizScreen(
-          questions: args.questions,
+          elaborationModel: args.elaborationModel,
           key: args.key,
         ),
       );
@@ -36,8 +36,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ElaborationScreen(
-          content: args.content,
-          sessionName: args.sessionName,
+          args.elaborationModel,
           key: args.key,
         ),
       );
@@ -208,13 +207,13 @@ class AnalyticsRoute extends PageRouteInfo<void> {
 /// [ElaborationQuizScreen]
 class ElaborationQuizRoute extends PageRouteInfo<ElaborationQuizRouteArgs> {
   ElaborationQuizRoute({
-    required List<QuestionModel> questions,
+    required ElaborationModel elaborationModel,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           ElaborationQuizRoute.name,
           args: ElaborationQuizRouteArgs(
-            questions: questions,
+            elaborationModel: elaborationModel,
             key: key,
           ),
           initialChildren: children,
@@ -228,17 +227,17 @@ class ElaborationQuizRoute extends PageRouteInfo<ElaborationQuizRouteArgs> {
 
 class ElaborationQuizRouteArgs {
   const ElaborationQuizRouteArgs({
-    required this.questions,
+    required this.elaborationModel,
     this.key,
   });
 
-  final List<QuestionModel> questions;
+  final ElaborationModel elaborationModel;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'ElaborationQuizRouteArgs{questions: $questions, key: $key}';
+    return 'ElaborationQuizRouteArgs{elaborationModel: $elaborationModel, key: $key}';
   }
 }
 
@@ -246,15 +245,13 @@ class ElaborationQuizRouteArgs {
 /// [ElaborationScreen]
 class ElaborationRoute extends PageRouteInfo<ElaborationRouteArgs> {
   ElaborationRoute({
-    required String content,
-    required String sessionName,
+    required ElaborationModel elaborationModel,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           ElaborationRoute.name,
           args: ElaborationRouteArgs(
-            content: content,
-            sessionName: sessionName,
+            elaborationModel: elaborationModel,
             key: key,
           ),
           initialChildren: children,
@@ -268,20 +265,17 @@ class ElaborationRoute extends PageRouteInfo<ElaborationRouteArgs> {
 
 class ElaborationRouteArgs {
   const ElaborationRouteArgs({
-    required this.content,
-    required this.sessionName,
+    required this.elaborationModel,
     this.key,
   });
 
-  final String content;
-
-  final String sessionName;
+  final ElaborationModel elaborationModel;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'ElaborationRouteArgs{content: $content, sessionName: $sessionName, key: $key}';
+    return 'ElaborationRouteArgs{elaborationModel: $elaborationModel, key: $key}';
   }
 }
 

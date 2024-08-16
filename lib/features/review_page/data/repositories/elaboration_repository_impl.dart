@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/elaboration_remote_datasource.dart';
@@ -18,6 +19,20 @@ class ElaborationImpl implements ElaborationRepository {
           notebookId, elaborationModel);
 
       return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ElaborationModel>>> getOldSessions(
+      String notebookId) async {
+    try {
+      var res = await _elaborationRemoteDataSource.getOldSessions(notebookId);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: ''));
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

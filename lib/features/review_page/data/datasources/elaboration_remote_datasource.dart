@@ -80,17 +80,52 @@ class ElaborationRemoteDataSource {
 
     var updatedElaborationModel = elaborationModel.copyWith(remark: remark);
 
-    await _firestore
+    // ? having no id means it is new
+    // ? models fetched from firestore has id
+    if (elaborationModel.id == null) {
+      await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(notebookId)
+          .collection(FirestoreCollection.remarks.name)
+          .add(updatedElaborationModel.toFirestore());
+
+      Helper.updateTechniqueUsage(
+          _firestore, userId, notebookId, ElaborationModel.name);
+    } else {
+      await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(notebookId)
+          .collection(FirestoreCollection.remarks.name)
+          .doc(updatedElaborationModel.id)
+          .update(updatedElaborationModel.toFirestore());
+    }
+
+    return 'Successfully saved the quiz results';
+  }
+
+  Future<List<ElaborationModel>> getOldSessions(String notebookId) async {
+    var userId = _auth.currentUser!.uid;
+
+    var oldSessionsDocs = await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
         .collection(FirestoreCollection.user_notes.name)
         .doc(notebookId)
         .collection(FirestoreCollection.remarks.name)
-        .add(updatedElaborationModel.toFirestore());
+        .where("review_method", isEqualTo: ElaborationModel.name)
+        .where("remark", isNull: true)
+        .get();
 
-    Helper.updateTechniqueUsage(
-        _firestore, userId, notebookId, ElaborationModel.name);
+    List<ElaborationModel> oldSessions = [];
 
-    return 'Successfully saved the quiz results';
+    for (var doc in oldSessionsDocs.docs) {
+      oldSessions.add(ElaborationModel.fromFirestore(doc.id, doc.data()));
+    }
+
+    return oldSessions;
   }
 }

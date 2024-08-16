@@ -6,4 +6,7 @@ import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 abstract class ElaborationRepository {
   Future<Either<Failure, String>> saveQuizResults(
       String notebookId, ElaborationModel elaborationModel);
+
+  Future<Either<Failure, List<ElaborationModel>>> getOldSessions(
+      String notebookId);
 }

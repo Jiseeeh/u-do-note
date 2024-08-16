@@ -57,7 +57,22 @@ final eSaveQuizResultsProvider = AutoDisposeProvider<ESaveQuizResults>.internal(
 );
 
 typedef ESaveQuizResultsRef = AutoDisposeProviderRef<ESaveQuizResults>;
-String _$elaborationHash() => r'6180b1fb37705cd4430845738f1140a210fde328';
+String _$eGetOldSessionsHash() => r'496245a2134c81154cb82d163b254a1442db2cb6';
+
+/// See also [eGetOldSessions].
+@ProviderFor(eGetOldSessions)
+final eGetOldSessionsProvider = AutoDisposeProvider<EGetOldSessions>.internal(
+  eGetOldSessions,
+  name: r'eGetOldSessionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$eGetOldSessionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef EGetOldSessionsRef = AutoDisposeProviderRef<EGetOldSessions>;
+String _$elaborationHash() => r'51566dd2b0df77be6f2dae49120f6b60b4248f19';
 
 /// See also [Elaboration].
 @ProviderFor(Elaboration)

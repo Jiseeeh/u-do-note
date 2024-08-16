@@ -10,7 +10,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
-import 'package:u_do_note/features/review_page/data/models/question.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/elaboration_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/quiz_body.dart';
@@ -18,9 +17,9 @@ import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class ElaborationQuizScreen extends ConsumerStatefulWidget {
-  final List<QuestionModel> questions;
+  final ElaborationModel elaborationModel;
 
-  const ElaborationQuizScreen({required this.questions, Key? key})
+  const ElaborationQuizScreen({required this.elaborationModel, Key? key})
       : super(key: key);
 
   @override
@@ -75,7 +74,8 @@ class _ElaborationQuizScreenState extends ConsumerState<ElaborationQuizScreen> {
       return;
     }
 
-    if (widget.questions[currentQuestionIndex].correctAnswerIndex ==
+    if (widget.elaborationModel.questions![currentQuestionIndex]
+            .correctAnswerIndex ==
         selectedAnswerIndex) {
       logger.d('Correct Answer');
 
@@ -86,7 +86,7 @@ class _ElaborationQuizScreenState extends ConsumerState<ElaborationQuizScreen> {
 
     logger.d('Incorrect Answer');
 
-    if (currentQuestionIndex < widget.questions.length - 1) {
+    if (currentQuestionIndex < widget.elaborationModel.questions!.length - 1) {
       currentQuestionIndex++;
     }
 
@@ -102,7 +102,8 @@ class _ElaborationQuizScreenState extends ConsumerState<ElaborationQuizScreen> {
       if (selectedAnswerIndex != null) {
         selectedAnswersIndex.add(selectedAnswerIndex!);
 
-        if (widget.questions[currentQuestionIndex].correctAnswerIndex ==
+        if (widget.elaborationModel.questions![currentQuestionIndex]
+                .correctAnswerIndex ==
             selectedAnswerIndex) {
           score++;
         }
@@ -112,13 +113,11 @@ class _ElaborationQuizScreenState extends ConsumerState<ElaborationQuizScreen> {
 
       var reviewState = ref.read(reviewScreenProvider);
 
-      var elaborationModel = ElaborationModel(
-        sessionName: reviewState.getSessionTitle,
-        createdAt: Timestamp.now(),
-        questions: widget.questions,
-        score: score,
-        selectedAnswersIndex: selectedAnswersIndex,
-      );
+      var elaborationModel = widget.elaborationModel.copyWith(
+          sessionName: reviewState.getSessionTitle,
+          createdAt: Timestamp.now(),
+          score: score,
+          selectedAnswersIndex: selectedAnswersIndex);
 
       EasyLoading.show(
           status: 'Saving quiz results...',
@@ -139,9 +138,10 @@ class _ElaborationQuizScreenState extends ConsumerState<ElaborationQuizScreen> {
       }
 
       context.router.replace(QuizResultsRoute(
-          questions:
-              widget.questions.map((question) => question.toEntity()).toList(),
-          correctAnswersIndex: widget.questions
+          questions: widget.elaborationModel.questions!
+              .map((question) => question.toEntity())
+              .toList(),
+          correctAnswersIndex: widget.elaborationModel.questions!
               .map((question) => question.correctAnswerIndex)
               .toList(),
           selectedAnswersIndex: selectedAnswersIndex));
@@ -160,7 +160,7 @@ class _ElaborationQuizScreenState extends ConsumerState<ElaborationQuizScreen> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: QuizBody(
-        questions: widget.questions,
+        questions: widget.elaborationModel.questions!,
         currentQuestionIndex: currentQuestionIndex,
         startTime: startTime,
         selectedAnswerIndex: selectedAnswerIndex,

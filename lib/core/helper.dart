@@ -16,8 +16,12 @@ class Helper {
     var notebookModel =
         NotebookModel.fromFirestore(notebookDoc.id, notebookDoc.data()!);
 
-    notebookModel.techniquesUsage[techniqueName] =
+    if (notebookModel.techniquesUsage[techniqueName] == null) {
+      notebookModel.techniquesUsage[techniqueName] = 1;
+    } else {
+      notebookModel.techniquesUsage[techniqueName] =
         notebookModel.techniquesUsage[techniqueName]! + 1;
+    }
 
     logger.i("Updating notebook's technique usage of Leitner System...");
 

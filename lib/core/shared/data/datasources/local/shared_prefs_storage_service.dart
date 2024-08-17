@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:u_do_note/core/shared/data/local/storage_service.dart';
+import 'package:u_do_note/core/shared/data/datasources/local/storage_service.dart';
 
 class SharedPrefsService implements StorageService {
   SharedPreferences? sharedPreferences;

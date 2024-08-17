@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:u_do_note/core/shared/provider/inherited_data_provider.dart';
+import 'package:u_do_note/core/shared/presentation/providers/inherited_data_provider.dart';
 
 class BottomBar extends StatefulWidget {
   final Widget child;

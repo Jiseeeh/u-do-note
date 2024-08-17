@@ -12,10 +12,13 @@ import 'package:u_do_note/features/note_taking/presentation/pages/note_taking_sc
 import 'package:u_do_note/features/note_taking/presentation/pages/notebook_pages_screen.dart';
 import 'package:u_do_note/features/note_taking/presentation/pages/notebooks_screen.dart';
 import 'package:u_do_note/features/note_taking/presentation/pages/summary_screen.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/models/question.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 import 'package:u_do_note/features/review_page/domain/entities/question.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/elaboration/elaboration_quiz_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/elaboration/elaboration_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman_technique_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/leitner_system_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/pomodoro_quiz_screen.dart';
@@ -68,5 +71,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: PomodoroRoute.page, path: '/pomodoro', maintainState: false),
         AutoRoute(page: PomodoroQuizRoute.page, path: '/pomodoro-quiz'),
+        AutoRoute(page: ElaborationRoute.page, path: '/elaboration'),
+        AutoRoute(page: ElaborationQuizRoute.page, path: '/elaboration-quiz'),
       ];
 }

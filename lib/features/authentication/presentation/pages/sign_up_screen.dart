@@ -8,7 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
-import 'package:u_do_note/core/shared/widgets/snackbar.dart';
+import 'package:u_do_note/core/shared/presentation/widgets/snackbar.dart';
 import 'package:u_do_note/features/authentication/presentation/providers/user_provider.dart';
 import 'package:u_do_note/features/authentication/presentation/widgets/social_icon.dart';
 import 'package:u_do_note/features/authentication/presentation/widgets/auth_field.dart';

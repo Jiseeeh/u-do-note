@@ -19,7 +19,7 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
-import 'package:u_do_note/core/shared/domain/providers/shared_preferences_provider.dart';
+import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -29,6 +29,7 @@ import 'package:u_do_note/routes/app_route.dart';
 @RoutePage()
 class NotebookPagesScreen extends ConsumerStatefulWidget {
   final String notebookId;
+
   const NotebookPagesScreen(@PathParam('notebookId') this.notebookId,
       {Key? key})
       : super(key: key);
@@ -319,8 +320,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                               initialContent: extractedText,
                                             )));
                                   },
-                                  child: Text(
-                                      context.tr("create_note_from_extract")),
+                                  child: Text(context.tr("new_page_notice")),
                                 )
                               ],
                             ),
@@ -366,7 +366,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
     if (notebook.notes.isEmpty) {
       return const Center(
-        child: Text('No notes yet'),
+        child: Text('No pages yet.'),
       );
     }
 

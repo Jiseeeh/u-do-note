@@ -16,6 +16,7 @@ import 'package:u_do_note/features/review_page/domain/entities/review_method.dar
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_method_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/elaboration_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/feynman_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
@@ -35,6 +36,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final leitnerBtnGlobalKey = GlobalKey();
   final feynmanBtnGlobalKey = GlobalKey();
   final pomodoroBtnGlobalKey = GlobalKey();
+  final elaborationBtnGlobalKey = GlobalKey();
 
   bool isPomodoroActive() {
     var pomodoro = ref.watch(pomodoroProvider);
@@ -147,6 +149,31 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     }
   }
 
+  // ? technique that will not be included in the suggested techniques.
+  void _elaborationOnPressed(BuildContext context) async {
+    if (isPomodoroActive()) return;
+
+    var reviewState = ref.watch(reviewScreenProvider);
+
+    var willContinue = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => const ElaborationNotice());
+
+    if (!willContinue) return;
+
+    if (reviewState.reviewMethod == null && context.mounted) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) {
+            return const PreReviewMethod(ReviewMethods.elaboration);
+          });
+
+      return;
+    }
+  }
+
   void showPreFilledPreReviewMethodDialog(BuildContext context,
       dynamic reviewMethod, dynamic notebookId, dynamic noteId) {
     showDialog(
@@ -223,6 +250,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         break;
       case ReviewMethods.pomodoroTechnique:
         key = pomodoroBtnGlobalKey;
+        break;
+      case ReviewMethods.elaboration:
+        key = elaborationBtnGlobalKey;
         break;
       case ReviewMethods.acronymMnemonics:
         // TODO: Handle this case.
@@ -366,6 +396,15 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       buttonKey: pomodoroBtnGlobalKey,
                       onPressed: () {
                         _pomodoroOnPressed(context);
+                      }),
+                  const SizedBox(height: 16),
+                  ReviewMethod(
+                      title: 'Elaboration',
+                      description: context.tr('elaboration_desc'),
+                      imagePath: 'assets/images/elaboration.webp',
+                      buttonKey: elaborationBtnGlobalKey,
+                      onPressed: () {
+                        _elaborationOnPressed(context);
                       }),
                 ])),
               )

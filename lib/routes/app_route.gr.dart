@@ -21,6 +21,26 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AnalyticsScreen(),
       );
     },
+    ElaborationQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<ElaborationQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ElaborationQuizScreen(
+          elaborationModel: args.elaborationModel,
+          key: args.key,
+        ),
+      );
+    },
+    ElaborationRoute.name: (routeData) {
+      final args = routeData.argsAs<ElaborationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ElaborationScreen(
+          args.elaborationModel,
+          key: args.key,
+        ),
+      );
+    },
     FeynmanQuizRoute.name: (routeData) {
       final args = routeData.argsAs<FeynmanQuizRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -181,6 +201,82 @@ class AnalyticsRoute extends PageRouteInfo<void> {
   static const String name = 'AnalyticsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ElaborationQuizScreen]
+class ElaborationQuizRoute extends PageRouteInfo<ElaborationQuizRouteArgs> {
+  ElaborationQuizRoute({
+    required ElaborationModel elaborationModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ElaborationQuizRoute.name,
+          args: ElaborationQuizRouteArgs(
+            elaborationModel: elaborationModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ElaborationQuizRoute';
+
+  static const PageInfo<ElaborationQuizRouteArgs> page =
+      PageInfo<ElaborationQuizRouteArgs>(name);
+}
+
+class ElaborationQuizRouteArgs {
+  const ElaborationQuizRouteArgs({
+    required this.elaborationModel,
+    this.key,
+  });
+
+  final ElaborationModel elaborationModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ElaborationQuizRouteArgs{elaborationModel: $elaborationModel, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ElaborationScreen]
+class ElaborationRoute extends PageRouteInfo<ElaborationRouteArgs> {
+  ElaborationRoute({
+    required ElaborationModel elaborationModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ElaborationRoute.name,
+          args: ElaborationRouteArgs(
+            elaborationModel: elaborationModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ElaborationRoute';
+
+  static const PageInfo<ElaborationRouteArgs> page =
+      PageInfo<ElaborationRouteArgs>(name);
+}
+
+class ElaborationRouteArgs {
+  const ElaborationRouteArgs({
+    required this.elaborationModel,
+    this.key,
+  });
+
+  final ElaborationModel elaborationModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ElaborationRouteArgs{elaborationModel: $elaborationModel, key: $key}';
+  }
 }
 
 /// generated route for

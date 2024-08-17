@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
@@ -13,5 +14,6 @@ const List<Locale> supportedLocales = [defaultLocale, filLocale];
 const defaultTechniquesUsage = {
   LeitnerSystemModel.name: 0,
   FeynmanModel.name: 0,
-  PomodoroModel.name: 0
+  PomodoroModel.name: 0,
+  ElaborationModel.name: 0,
 };

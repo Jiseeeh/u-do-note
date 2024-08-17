@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FeynmanNotice extends ConsumerWidget {
-  const FeynmanNotice({super.key});
+class ElaborationNotice extends ConsumerWidget {
+  const ElaborationNotice({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -11,7 +11,7 @@ class FeynmanNotice extends ConsumerWidget {
       title: Column(
         children: [
           Text(
-            context.tr("feynman_notice"),
+            context.tr("elaboration_notice"),
             style: Theme.of(context).textTheme.displaySmall,
           ),
           Text(
@@ -43,10 +43,10 @@ class FeynmanNotice extends ConsumerWidget {
               content: context.tr("review_grading")),
           buildNoticeContent(context,
               title: context.tr("review_quiz_q"),
-              content: context.tr("feynman_quiz")),
+              content: context.tr("elaboration_quiz")),
           buildNoticeContent(context,
-              title: context.tr("feynman_new_session_q"),
-              content: context.tr("feynman_new_session")),
+              title: context.tr("elaboration_new_session_q"),
+              content: context.tr("elaboration_new_session")),
         ],
       ),
     );

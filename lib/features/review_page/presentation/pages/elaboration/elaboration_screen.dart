@@ -21,6 +21,24 @@ class ElaborationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Future.delayed(
+        Duration.zero,
+        () => showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                title: Text(context.tr('notice')),
+                content: Text(context.tr('elaboration_review')),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text("Okay"))
+                ],
+              );
+            }));
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {

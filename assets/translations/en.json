@@ -20,6 +20,7 @@
   "pomodoro_timer_desc": "The red timer represents the pomodoro session, while the green timer represents the break session.",
   "pomodoro_quiz": "You will be asked if you want to start the quiz after you finish a pomodoro session.",
   "elaboration_notice": "Quick Notice for Elaboration Technique",
+  "elaboration_review": "Remember to review the content before taking a quiz!",
   "elaboration_desc": "Elaborate on the topic you are studying.",
   "elaboration_quiz": "You can start the quiz after you have reviewed the elaborated topic.",
   "elaboration_new_session_q": "What will happen to the elaborated topics when I start a new session?",

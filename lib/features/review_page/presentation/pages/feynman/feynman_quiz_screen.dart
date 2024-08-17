@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
-import 'package:u_do_note/features/review_page/data/models/question.dart';
+import 'package:u_do_note/core/shared/data/models/question.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/quiz_body.dart';
 import 'package:u_do_note/routes/app_route.dart';
 

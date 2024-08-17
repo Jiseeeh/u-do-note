@@ -14,7 +14,7 @@ import 'package:u_do_note/features/note_taking/presentation/pages/notebooks_scre
 import 'package:u_do_note/features/note_taking/presentation/pages/summary_screen.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
-import 'package:u_do_note/features/review_page/data/models/question.dart';
+import 'package:u_do_note/core/shared/data/models/question.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman/feynman.dart';
 import 'package:u_do_note/core/shared/domain/entities/question.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/elaboration/elaboration_quiz_screen.dart';

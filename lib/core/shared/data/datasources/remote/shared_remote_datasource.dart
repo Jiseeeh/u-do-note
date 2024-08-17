@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dart_openai/dart_openai.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
-import 'package:u_do_note/features/review_page/data/models/question.dart';
+import 'package:u_do_note/core/shared/data/models/question.dart';
 
 class SharedRemoteDataSource {
   SharedRemoteDataSource();

@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/data/datasources/remote/shared_remote_datasource.dart';
 import 'package:u_do_note/core/shared/domain/repositories/shared_repository.dart';
-import 'package:u_do_note/features/review_page/data/models/question.dart';
+import 'package:u_do_note/core/shared/data/models/question.dart';
 
 class SharedImpl extends SharedRepository {
   final SharedRemoteDataSource _sharedRemoteDataSource;

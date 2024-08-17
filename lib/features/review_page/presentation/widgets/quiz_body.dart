@@ -4,7 +4,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/shared/theme/colors.dart';
-import 'package:u_do_note/features/review_page/data/models/question.dart';
+import 'package:u_do_note/core/shared/data/models/question.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/answer_container.dart';
 
 class QuizBody extends ConsumerWidget {

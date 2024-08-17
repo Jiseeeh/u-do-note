@@ -55,19 +55,6 @@ class FeynmanTechniqueImpl implements FeynmanTechniqueRepository {
   }
 
   @override
-  Future<Either<Failure, List<QuestionModel>>> generateQuizQuestions(
-      String content) async {
-    try {
-      var res = await _feynmanRemoteDataSource.generateQuizQuestions(content);
-
-      return Right(res);
-    } catch (e) {
-      logger.w("generateQuizQuestions error: $e");
-      return Left(GenericFailure(message: e.toString()));
-    }
-  }
-
-  @override
   Future<Either<Failure, void>> saveQuizResults(
       FeynmanModel feynmanModel,
       String notebookId,

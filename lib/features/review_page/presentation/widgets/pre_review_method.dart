@@ -1,19 +1,18 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_openai/dart_openai.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:u_do_note/core/error/failures.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
@@ -911,67 +910,11 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
         maskType: EasyLoadingMaskType.black,
         dismissOnTap: false);
 
-    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
-        role: OpenAIChatMessageRole.system,
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            """
-            Elaborate the student's note for them to understand it better
-                                                
-            Follow these important guidelines when elaborating their notes:
-            1. Do not start with "The note is about" or anything similar.
-            2. Explain the content in a way that is easy to understand.
-            3. Response should be in JSON format, with the property "content" containing the elaborated content and isValid.
-            4. If the content is gibberish or doesn't make sense, make isValid to false.
-                        """,
-          ),
-        ]);
-
-    String prompt = """
-                Elaborate the student's note below using the guidelines provided.
-                
-                $contentFromPages
-                """;
-
-    final userMessage = OpenAIChatCompletionChoiceMessageModel(
-        role: OpenAIChatMessageRole.user,
-        content: [
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(
-            prompt,
-          ),
-        ]);
-
-    final requestMessages = [
-      systemMessage,
-      userMessage,
-    ];
-
-    OpenAIChatCompletionModel chatCompletion =
-        await OpenAI.instance.chat.create(
-      model: "gpt-4o-mini",
-      responseFormat: {"type": "json_object"},
-      // seed: 6,
-      messages: requestMessages,
-      temperature: 0.2,
-      maxTokens: 850,
-    );
+    var elaboratedContent = await ref
+        .read(elaborationProvider.notifier)
+        .getElaboratedContent(content: contentFromPages);
 
     EasyLoading.dismiss();
-
-    String? completionContent =
-        chatCompletion.choices.first.message.content!.first.text;
-
-    logger.i('content: $completionContent');
-    logger.i('token usage: ${chatCompletion.usage.promptTokens}');
-
-    var decodedJson = json.decode(completionContent!);
-
-    if (!decodedJson['isValid']) {
-      EasyLoading.showError("The content is not understandable.");
-      return;
-    }
-
-    var elaboratedContent = decodedJson['content'];
 
     if (!context.mounted) return;
 

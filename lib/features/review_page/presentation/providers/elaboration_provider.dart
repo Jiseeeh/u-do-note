@@ -5,6 +5,7 @@ import 'package:u_do_note/features/review_page/data/datasources/elaboration_remo
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/repositories/elaboration_repository_impl.dart';
 import 'package:u_do_note/features/review_page/domain/repositories/elaboration_repository.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_get_elaborated_content.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_get_old_sessions.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_save_quiz_results.dart';
 
@@ -41,6 +42,13 @@ EGetOldSessions eGetOldSessions(EGetOldSessionsRef ref) {
 }
 
 @riverpod
+EGetElaboratedContent eGetElaboratedContent(EGetElaboratedContentRef ref) {
+  final repository = ref.read(elaborationRepositoryProvider);
+
+  return EGetElaboratedContent(repository);
+}
+
+@riverpod
 class Elaboration extends _$Elaboration {
   @override
   void build() {
@@ -67,5 +75,14 @@ class Elaboration extends _$Elaboration {
     var failureOrOldSessions = await getOldSessions(notebookId);
 
     return failureOrOldSessions.fold((failure) => failure, (res) => res);
+  }
+
+  /// Elaborates the given [content]
+  Future<dynamic> getElaboratedContent({required String content}) async {
+    var getElaboratedContent = ref.read(eGetElaboratedContentProvider);
+
+    var failureOrContent = await getElaboratedContent(content);
+
+    return failureOrContent.fold((failure) => failure, (content) => content);
   }
 }

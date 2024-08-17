@@ -1,3 +1,4 @@
+import 'package:dart_openai/dart_openai.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -33,6 +34,21 @@ class ElaborationImpl implements ElaborationRepository {
       return Right(res);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: ''));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> getElaboratedContent(String content) async {
+    try {
+      var res =
+          await _elaborationRemoteDataSource.getElaboratedContent(content);
+
+      return Right(res);
+    } on RequestFailedException catch (e) {
+      return Left(
+          OpenAIException(message: e.toString(), statusCode: e.statusCode));
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

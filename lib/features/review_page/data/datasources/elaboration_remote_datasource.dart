@@ -128,4 +128,65 @@ class ElaborationRemoteDataSource {
 
     return oldSessions;
   }
+
+  Future<String> getElaboratedContent(String content) async {
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+        role: OpenAIChatMessageRole.system,
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(
+            """
+            Elaborate the student's note for them to understand it better
+                                                
+            Follow these important guidelines when elaborating their notes:
+            1. Do not start with "The note is about" or anything similar.
+            2. Explain the content in a way that is easy to understand.
+            3. Response should be in JSON format, with the property "content" containing the elaborated content and isValid.
+            4. If the content is gibberish or doesn't make sense, make isValid to false.
+                        """,
+          ),
+        ]);
+
+    String prompt = """
+                Elaborate the student's note below using the guidelines provided.
+                
+                $content
+                """;
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+        role: OpenAIChatMessageRole.user,
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(
+            prompt,
+          ),
+        ]);
+
+    final requestMessages = [
+      systemMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-4o-mini",
+      responseFormat: {"type": "json_object"},
+      // seed: 6,
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 850,
+    );
+
+    String? completionContent =
+        chatCompletion.choices.first.message.content!.first.text;
+
+    logger.i('content: $completionContent');
+    logger.i('token usage: ${chatCompletion.usage.promptTokens}');
+
+    var decodedJson = json.decode(completionContent!);
+
+    if (!decodedJson['isValid']) {
+      throw "The content is not valid.";
+    }
+
+    return decodedJson['content'];
+  }
 }

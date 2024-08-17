@@ -72,7 +72,25 @@ final eGetOldSessionsProvider = AutoDisposeProvider<EGetOldSessions>.internal(
 );
 
 typedef EGetOldSessionsRef = AutoDisposeProviderRef<EGetOldSessions>;
-String _$elaborationHash() => r'51566dd2b0df77be6f2dae49120f6b60b4248f19';
+String _$eGetElaboratedContentHash() =>
+    r'648662efeb78e25f7eebc2f6a3f726353973a02f';
+
+/// See also [eGetElaboratedContent].
+@ProviderFor(eGetElaboratedContent)
+final eGetElaboratedContentProvider =
+    AutoDisposeProvider<EGetElaboratedContent>.internal(
+  eGetElaboratedContent,
+  name: r'eGetElaboratedContentProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$eGetElaboratedContentHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef EGetElaboratedContentRef
+    = AutoDisposeProviderRef<EGetElaboratedContent>;
+String _$elaborationHash() => r'cf226781c2f2cc077964e2c0f8d48ae7a5256b5b';
 
 /// See also [Elaboration].
 @ProviderFor(Elaboration)

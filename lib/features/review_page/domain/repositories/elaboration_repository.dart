@@ -9,4 +9,6 @@ abstract class ElaborationRepository {
 
   Future<Either<Failure, List<ElaborationModel>>> getOldSessions(
       String notebookId);
+
+  Future<Either<Failure, String>> getElaboratedContent(String content);
 }

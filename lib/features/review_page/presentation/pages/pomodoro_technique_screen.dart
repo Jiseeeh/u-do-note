@@ -8,9 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/domain/entities/pomodoro/pomodoro_state.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
@@ -80,8 +80,8 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
         var contentFromPages = ref.read(reviewScreenProvider).contentFromPages;
 
         var quizQuestions = await ref
-            .read(feynmanTechniqueProvider.notifier)
-            .generateQuizQuestions(contentFromPages!);
+            .read(sharedProvider.notifier)
+            .generateQuizQuestions(content: contentFromPages!);
 
         if (quizQuestions.isEmpty) {
           EasyLoading.showError(

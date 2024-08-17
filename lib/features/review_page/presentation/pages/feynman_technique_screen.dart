@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
@@ -197,8 +198,8 @@ class _FeynmanTechniqueScreenState
           dismissOnTap: false);
 
       var quizQuestions = await ref
-          .read(feynmanTechniqueProvider.notifier)
-          .generateQuizQuestions(widget.contentFromPages);
+          .read(sharedProvider.notifier)
+          .generateQuizQuestions(content: widget.contentFromPages);
 
       EasyLoading.dismiss();
 

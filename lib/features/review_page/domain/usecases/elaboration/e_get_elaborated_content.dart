@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
-import 'package:u_do_note/features/review_page/domain/repositories/elaboration_repository.dart';
+import 'package:u_do_note/features/review_page/domain/repositories/elaboration/elaboration_repository.dart';
 
 class EGetElaboratedContent {
   final ElaborationRepository _elaborationRepository;

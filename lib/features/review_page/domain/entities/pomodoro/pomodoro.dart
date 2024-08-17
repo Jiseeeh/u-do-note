@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:u_do_note/features/review_page/domain/entities/question.dart';
+import 'package:u_do_note/core/shared/domain/entities/question.dart';
 
 class PomodoroEntity {
   final String title;

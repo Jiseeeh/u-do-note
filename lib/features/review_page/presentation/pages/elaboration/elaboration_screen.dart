@@ -9,7 +9,7 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/elaboration_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/elaboration/elaboration_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 

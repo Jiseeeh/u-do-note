@@ -1,4 +1,4 @@
-import 'package:u_do_note/features/review_page/domain/entities/question.dart';
+import 'package:u_do_note/core/shared/domain/entities/question.dart';
 
 class QuestionModel {
   final String? id;

@@ -12,13 +12,16 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/review_method_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
-import 'package:u_do_note/features/review_page/presentation/widgets/elaboration_notice.dart';
-import 'package:u_do_note/features/review_page/presentation/widgets/feynman_notice.dart';
-import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/feynman/feynman_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
@@ -364,7 +367,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   );
                 },
                 suggestionsBuilder: (context, controller) {
-                  return _buildReviewMethodTiles(context, ref, controller.text);
+                  return _buildReviewMethodTiles(context, controller.text);
                 },
               ),
               const SizedBox(height: 16),
@@ -372,7 +375,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 child: SingleChildScrollView(
                     child: Column(children: [
                   ReviewMethod(
-                      title: 'Leitner System',
+                      title: LeitnerSystemModel.name,
                       description: context.tr('leitner_desc'),
                       imagePath: 'assets/images/flashcard.png',
                       buttonKey: leitnerBtnGlobalKey,
@@ -381,7 +384,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       }),
                   const SizedBox(height: 16),
                   ReviewMethod(
-                      title: 'Feynman Technique',
+                      title: FeynmanModel.name,
                       description: context.tr('feynman_desc'),
                       imagePath: 'assets/images/feynman.png',
                       buttonKey: feynmanBtnGlobalKey,
@@ -390,7 +393,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       }),
                   const SizedBox(height: 16),
                   ReviewMethod(
-                      title: 'Pomodoro Technique',
+                      title: PomodoroModel.name,
                       description: context.tr('pomodoro_desc'),
                       imagePath: 'assets/images/pomodoro.png',
                       buttonKey: pomodoroBtnGlobalKey,
@@ -399,7 +402,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       }),
                   const SizedBox(height: 16),
                   ReviewMethod(
-                      title: 'Elaboration',
+                      title: ElaborationModel.name,
                       description: context.tr('elaboration_desc'),
                       imagePath: 'assets/images/elaboration.webp',
                       buttonKey: elaborationBtnGlobalKey,
@@ -413,25 +416,56 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     );
   }
 
-  List<ListTile> _buildReviewMethodTiles(
-      BuildContext context, WidgetRef ref, String currentText) {
-    List<ReviewMethodEntity> reviewMethods = ref
-        .read(reviewMethodNotifierProvider.notifier)
-        .getReviewMethods(context);
+  List<ListTile> _buildReviewMethodTiles(BuildContext context,
+      String currentText) {
     List<ListTile> reviewMethodTiles = [];
-    var reviewMethodsHandlers = [_leitnerOnPressed];
+    // ? use a provider to serve review methods entities to also be able
+    // to use with the widgets at the top
+    List<ReviewMethodEntity> reviewMethodEntities = [
+      ReviewMethodEntity(
+          title: LeitnerSystemModel.name,
+          description: context.tr('leitner_desc'),
+          imagePath: 'assets/images/flashcard.png',
+          onPressed: () {
+            _leitnerOnPressed(context);
+          }),
+      ReviewMethodEntity(
+          title: FeynmanModel.name,
+          description: context.tr('feynman_desc'),
+          imagePath: 'assets/images/feynman.png',
+          onPressed: () {
+            _feynmanOnPressed(context);
+          }),
+      ReviewMethodEntity(
+          title: PomodoroModel.name,
+          description: context.tr('pomodoro_desc'),
+          imagePath: 'assets/images/pomodoro.png',
+          onPressed: () {
+            _pomodoroOnPressed(context);
+          }),
+      ReviewMethodEntity(
+          title: ElaborationModel.name,
+          description: context.tr('elaboration_desc'),
+          imagePath: 'assets/images/elaboration.webp',
+          onPressed: () {
+            _elaborationOnPressed(context);
+          }),
+    ];
 
-    for (var (idx, reviewMethod) in reviewMethods.indexed) {
+    for (var method in reviewMethodEntities) {
       reviewMethodTiles.add(ListTile(
-        title: Text(reviewMethod.title),
-        subtitle: Text(reviewMethod.description),
-        leading: Image.asset(reviewMethod.imagePath),
+        title: Text(method.title),
+        subtitle: Text(method.description),
+        leading: Image.asset(
+          method.imagePath,
+          fit: BoxFit.fill,
+          height: 100,
+          width: 50,
+        ),
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
 
-          if (idx < reviewMethodsHandlers.length) {
-            reviewMethodsHandlers[idx](context);
-          }
+          method.onPressed();
         },
       ));
     }

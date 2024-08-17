@@ -3,9 +3,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/datasources/pomodoro/pomdoro_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
-import 'package:u_do_note/features/review_page/data/repositories/pomodoro_technique_repository_impl.dart';
+import 'package:u_do_note/features/review_page/data/repositories/pomodoro/pomodoro_technique_repository_impl.dart';
 import 'package:u_do_note/features/review_page/domain/entities/pomodoro/pomodoro_state.dart';
-import 'package:u_do_note/features/review_page/domain/repositories/pomodoro_technique_repository.dart';
+import 'package:u_do_note/features/review_page/domain/repositories/pomodoro/pomodoro_technique_repository.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/pomodoro/save_quiz_results.dart';
 
 part 'pomodoro_technique_provider.g.dart';

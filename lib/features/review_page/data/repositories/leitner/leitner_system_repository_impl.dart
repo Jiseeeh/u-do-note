@@ -3,9 +3,9 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
-import 'package:u_do_note/features/review_page/data/datasources/leitner_remote_datasource.dart';
+import 'package:u_do_note/features/review_page/data/datasources/leitner/leitner_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
-import 'package:u_do_note/features/review_page/domain/repositories/leitner_system_repository.dart';
+import 'package:u_do_note/features/review_page/domain/repositories/leitner/leitner_system_repository.dart';
 
 class LeitnerSystemImpl implements LeitnerSystemRepository {
   final LeitnerRemoteDataSource _leitnerRemoteDataSource;

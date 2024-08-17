@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-import 'package:u_do_note/features/review_page/domain/entities/question.dart';
+import 'package:u_do_note/core/shared/domain/entities/question.dart';
 
 class FeynmanEntity {
   final String? id;

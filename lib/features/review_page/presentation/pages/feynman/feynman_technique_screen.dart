@@ -13,8 +13,8 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
-import 'package:u_do_note/features/review_page/domain/entities/feynman.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/feynman_technique_provider.dart';
+import 'package:u_do_note/features/review_page/domain/entities/feynman/feynman.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/feynman/feynman_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 

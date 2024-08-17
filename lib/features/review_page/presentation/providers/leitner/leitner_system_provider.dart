@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:u_do_note/core/error/failures.dart';
-import 'package:u_do_note/features/review_page/data/datasources/leitner_remote_datasource.dart';
+import 'package:u_do_note/features/review_page/data/datasources/leitner/leitner_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
-import 'package:u_do_note/features/review_page/data/repositories/leitner_system_repository_impl.dart';
-import 'package:u_do_note/features/review_page/domain/repositories/leitner_system_repository.dart';
-import 'package:u_do_note/features/review_page/domain/usecases/analyze_flashcards_result.dart';
-import 'package:u_do_note/features/review_page/domain/usecases/generate_flashcards.dart';
-import 'package:u_do_note/features/review_page/domain/usecases/get_old_flashcards.dart';
+import 'package:u_do_note/features/review_page/data/repositories/leitner/leitner_system_repository_impl.dart';
+import 'package:u_do_note/features/review_page/domain/repositories/leitner/leitner_system_repository.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/leitner/analyze_flashcards_result.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/leitner/generate_flashcards.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/leitner/get_old_flashcards.dart';
 
 part 'leitner_system_provider.g.dart';
 

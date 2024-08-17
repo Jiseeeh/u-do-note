@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
-import 'package:u_do_note/features/review_page/data/datasources/feynman_remote_datasource.dart';
+import 'package:u_do_note/features/review_page/data/datasources/feynman/feynman_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
-import 'package:u_do_note/features/review_page/data/repositories/feynman_technique_repository_impl.dart';
-import 'package:u_do_note/features/review_page/domain/repositories/feynman_technique_repository.dart';
+import 'package:u_do_note/features/review_page/data/repositories/feynman/feynman_technique_repository_impl.dart';
+import 'package:u_do_note/features/review_page/domain/repositories/feynman/feynman_technique_repository.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/get_chat_response.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/get_old_sessions.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/save_quiz_results.dart';

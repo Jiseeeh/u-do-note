@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
-import 'package:u_do_note/features/review_page/data/datasources/elaboration_remote_datasource.dart';
+import 'package:u_do_note/features/review_page/data/datasources/elaboration/elaboration_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
-import 'package:u_do_note/features/review_page/data/repositories/elaboration_repository_impl.dart';
-import 'package:u_do_note/features/review_page/domain/repositories/elaboration_repository.dart';
+import 'package:u_do_note/features/review_page/data/repositories/elaboration/elaboration_repository_impl.dart';
+import 'package:u_do_note/features/review_page/domain/repositories/elaboration/elaboration_repository.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_get_elaborated_content.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_get_old_sessions.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_save_quiz_results.dart';

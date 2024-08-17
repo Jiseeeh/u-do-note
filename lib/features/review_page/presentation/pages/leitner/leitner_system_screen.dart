@@ -9,10 +9,10 @@ import 'package:swipable_stack/swipable_stack.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/leitner_system_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/leitner/leitner_system_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
-import 'package:u_do_note/features/review_page/presentation/widgets/leitner_system_timer.dart';
-import 'package:u_do_note/features/review_page/presentation/widgets/remaining_cards.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_system_timer.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/leitner/remaining_cards.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 typedef OnFlipCallBack = void Function(int index);

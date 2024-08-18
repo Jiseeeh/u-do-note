@@ -309,10 +309,10 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
 
             switch (widget.reviewMethod) {
               case ReviewMethods.leitnerSystem:
-                handleLeitnerSystem(context, contentFromPages);
+                await handleLeitnerSystem(context, contentFromPages);
                 break;
               case ReviewMethods.feynmanTechnique:
-                handleFeynmanTechnique(context, contentFromPages);
+                await handleFeynmanTechnique(context, contentFromPages);
                 break;
               case ReviewMethods.pomodoroTechnique:
                 context.router.pop();
@@ -480,7 +480,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
     );
   }
 
-  void handleLeitnerSystem(
+  Future<void> handleLeitnerSystem(
       BuildContext context, String contentFromPages) async {
     EasyLoading.show(
         status: context.tr("flashcard_notice"),
@@ -635,7 +635,7 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
     });
   }
 
-  void handleFeynmanTechnique(
+  Future<void> handleFeynmanTechnique(
       BuildContext context, String contentFromPages) async {
     var oldFeynmanSessions = await ref
         .read(feynmanTechniqueProvider.notifier)

@@ -42,55 +42,54 @@ final elaborationRepositoryProvider =
 
 typedef ElaborationRepositoryRef
     = AutoDisposeProviderRef<ElaborationRepository>;
-String _$eSaveQuizResultsHash() => r'330f277f2e5f9295d98d7b8d348f429a11b15a1b';
+String _$saveQuizResultsHash() => r'c8939482e07f726b7f555b48aff57dffa6f4a1a3';
 
-/// See also [eSaveQuizResults].
-@ProviderFor(eSaveQuizResults)
-final eSaveQuizResultsProvider = AutoDisposeProvider<ESaveQuizResults>.internal(
-  eSaveQuizResults,
-  name: r'eSaveQuizResultsProvider',
+/// See also [saveQuizResults].
+@ProviderFor(saveQuizResults)
+final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
+  saveQuizResults,
+  name: r'saveQuizResultsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$eSaveQuizResultsHash,
+      : _$saveQuizResultsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ESaveQuizResultsRef = AutoDisposeProviderRef<ESaveQuizResults>;
-String _$eGetOldSessionsHash() => r'496245a2134c81154cb82d163b254a1442db2cb6';
+typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
+String _$getOldSessionsHash() => r'77f5640ba52ab910ac282d4024fe05be259e4370';
 
-/// See also [eGetOldSessions].
-@ProviderFor(eGetOldSessions)
-final eGetOldSessionsProvider = AutoDisposeProvider<EGetOldSessions>.internal(
-  eGetOldSessions,
-  name: r'eGetOldSessionsProvider',
+/// See also [getOldSessions].
+@ProviderFor(getOldSessions)
+final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
+  getOldSessions,
+  name: r'getOldSessionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$eGetOldSessionsHash,
+      : _$getOldSessionsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef EGetOldSessionsRef = AutoDisposeProviderRef<EGetOldSessions>;
-String _$eGetElaboratedContentHash() =>
-    r'648662efeb78e25f7eebc2f6a3f726353973a02f';
+typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
+String _$getElaboratedContentHash() =>
+    r'b737b75a1fdc838cb7e53612a4654deadeb578d4';
 
-/// See also [eGetElaboratedContent].
-@ProviderFor(eGetElaboratedContent)
-final eGetElaboratedContentProvider =
-    AutoDisposeProvider<EGetElaboratedContent>.internal(
-  eGetElaboratedContent,
-  name: r'eGetElaboratedContentProvider',
+/// See also [getElaboratedContent].
+@ProviderFor(getElaboratedContent)
+final getElaboratedContentProvider =
+    AutoDisposeProvider<GetElaboratedContent>.internal(
+  getElaboratedContent,
+  name: r'getElaboratedContentProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$eGetElaboratedContentHash,
+      : _$getElaboratedContentHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef EGetElaboratedContentRef
-    = AutoDisposeProviderRef<EGetElaboratedContent>;
-String _$elaborationHash() => r'cf226781c2f2cc077964e2c0f8d48ae7a5256b5b';
+typedef GetElaboratedContentRef = AutoDisposeProviderRef<GetElaboratedContent>;
+String _$elaborationHash() => r'704e0f09e8d80bd501b97855922d12fda0335eba';
 
 /// See also [Elaboration].
 @ProviderFor(Elaboration)

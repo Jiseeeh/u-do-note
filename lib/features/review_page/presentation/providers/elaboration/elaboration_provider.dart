@@ -5,9 +5,9 @@ import 'package:u_do_note/features/review_page/data/datasources/elaboration/elab
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/repositories/elaboration/elaboration_repository_impl.dart';
 import 'package:u_do_note/features/review_page/domain/repositories/elaboration/elaboration_repository.dart';
-import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_get_elaborated_content.dart';
-import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_get_old_sessions.dart';
-import 'package:u_do_note/features/review_page/domain/usecases/elaboration/e_save_quiz_results.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/elaboration/get_elaborated_content.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/elaboration/get_old_sessions.dart';
+import 'package:u_do_note/features/review_page/domain/usecases/elaboration/save_quiz_results.dart';
 
 part 'elaboration_provider.g.dart';
 
@@ -28,24 +28,24 @@ ElaborationRepository elaborationRepository(ElaborationRepositoryRef ref) {
 }
 
 @riverpod
-ESaveQuizResults eSaveQuizResults(ESaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
   final repository = ref.read(elaborationRepositoryProvider);
 
-  return ESaveQuizResults(repository);
+  return SaveQuizResults(repository);
 }
 
 @riverpod
-EGetOldSessions eGetOldSessions(EGetOldSessionsRef ref) {
+GetOldSessions getOldSessions(GetOldSessionsRef ref) {
   final repository = ref.read(elaborationRepositoryProvider);
 
-  return EGetOldSessions(repository);
+  return GetOldSessions(repository);
 }
 
 @riverpod
-EGetElaboratedContent eGetElaboratedContent(EGetElaboratedContentRef ref) {
+GetElaboratedContent getElaboratedContent(GetElaboratedContentRef ref) {
   final repository = ref.read(elaborationRepositoryProvider);
 
-  return EGetElaboratedContent(repository);
+  return GetElaboratedContent(repository);
 }
 
 @riverpod
@@ -61,7 +61,7 @@ class Elaboration extends _$Elaboration {
   Future<dynamic> saveQuizResults(String notebookId,
       ElaborationModel elaborationModel,
       {bool isOldSession = false}) async {
-    var saveQuizResults = ref.read(eSaveQuizResultsProvider);
+    var saveQuizResults = ref.read(saveQuizResultsProvider);
 
     var failureOrString = await saveQuizResults(notebookId, elaborationModel);
 
@@ -70,7 +70,7 @@ class Elaboration extends _$Elaboration {
 
   /// Gets the old sessions of [notebookId]
   Future<dynamic> getOldSessions({required String notebookId}) async {
-    var getOldSessions = ref.read(eGetOldSessionsProvider);
+    var getOldSessions = ref.read(getOldSessionsProvider);
 
     var failureOrOldSessions = await getOldSessions(notebookId);
 
@@ -79,7 +79,7 @@ class Elaboration extends _$Elaboration {
 
   /// Elaborates the given [content]
   Future<dynamic> getElaboratedContent({required String content}) async {
-    var getElaboratedContent = ref.read(eGetElaboratedContentProvider);
+    var getElaboratedContent = ref.read(getElaboratedContentProvider);
 
     var failureOrContent = await getElaboratedContent(content);
 

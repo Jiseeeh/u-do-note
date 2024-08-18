@@ -4,10 +4,10 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/domain/repositories/elaboration/elaboration_repository.dart';
 
-class EGetOldSessions {
+class GetOldSessions {
   final ElaborationRepository _elaborationRepository;
 
-  EGetOldSessions(this._elaborationRepository);
+  GetOldSessions(this._elaborationRepository);
 
   Future<Either<Failure, List<ElaborationModel>>> call(
       String notebookId) async {

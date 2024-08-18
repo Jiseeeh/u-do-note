@@ -4,10 +4,10 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/domain/repositories/elaboration/elaboration_repository.dart';
 
-class ESaveQuizResults {
+class SaveQuizResults {
   final ElaborationRepository _elaborationRepository;
 
-  const ESaveQuizResults(this._elaborationRepository);
+  const SaveQuizResults(this._elaborationRepository);
 
   Future<Either<Failure, void>> call(
       String notebookId, ElaborationModel elaborationModel) async {

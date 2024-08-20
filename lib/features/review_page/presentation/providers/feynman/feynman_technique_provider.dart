@@ -6,7 +6,6 @@ import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/repositories/feynman/feynman_technique_repository_impl.dart';
 import 'package:u_do_note/features/review_page/domain/repositories/feynman/feynman_technique_repository.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/get_chat_response.dart';
-import 'package:u_do_note/features/review_page/domain/usecases/feynman/get_old_sessions.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/save_quiz_results.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/save_session.dart';
 
@@ -41,14 +40,6 @@ SaveSession saveSession(SaveSessionRef ref) {
 
   return SaveSession(repository);
 }
-
-@riverpod
-GetOldSessions getOldSessions(GetOldSessionsRef ref) {
-  final repository = ref.read(feynmanTechniqueRepositoryProvider);
-
-  return GetOldSessions(repository);
-}
-
 
 @riverpod
 SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
@@ -89,15 +80,6 @@ class FeynmanTechnique extends _$FeynmanTechnique {
     var failureOrDocId = await saveSession(feynmanModel, notebookId, docId);
 
     return failureOrDocId.fold((failure) => failure, (docId) => docId);
-  }
-
-  /// Get the old sessions from the database.
-  Future<List<FeynmanModel>> getOldSessions(String notebookId) async {
-    final getOldSessions = ref.read(getOldSessionsProvider);
-
-    var failureOrRes = await getOldSessions(notebookId);
-
-    return failureOrRes.fold((failure) => [], (sessions) => sessions);
   }
 
   /// Save the quiz data [feynmanModel] with the [notebookId] to the database.

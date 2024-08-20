@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,15 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/firestore_filter_enum.dart';
+import 'package:u_do_note/core/helper.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
+import 'package:u_do_note/core/shared/data/models/target.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
@@ -82,153 +82,40 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
       notebookId = widget.notebookId!;
       pages = widget.pages!;
 
-      createTutorial(_createLeitnerTargets);
-      showTutorial();
+      List<TargetModel> tutorialTargets = [
+        TargetModel(
+            identify: 'title',
+            content: 'leitner_tutorial_title',
+            keyTarget: titleKey,
+            alignSkip: Alignment.topRight,
+            shape: ShapeLightFocus.RRect),
+        TargetModel(
+            identify: 'notebook',
+            content: 'leitner_tutorial_notebook',
+            keyTarget: notebooksKey,
+            alignSkip: Alignment.topRight,
+            shape: ShapeLightFocus.RRect,
+            enableOverlayTab: true),
+        TargetModel(
+            identify: 'pages',
+            content: 'leitner_tutorial_page',
+            keyTarget: notebookPagesKey,
+            alignSkip: Alignment.topRight,
+            shape: ShapeLightFocus.RRect,
+            enableOverlayTab: true),
+        TargetModel(
+            identify: 'continue',
+            content: 'leitner_tutorial_confirm',
+            keyTarget: continueBtnKey,
+            alignSkip: Alignment.topRight,
+            enableOverlayTab: true),
+      ];
+
+      tutorialCoachMark = Helper.createTutorialCoachMark(
+          Helper.generateTargets(tutorialTargets));
+
+      tutorialCoachMark.show(context: context);
     }
-  }
-
-  void createTutorial(List<TargetFocus> Function() targetGenerator) {
-    tutorialCoachMark = TutorialCoachMark(
-      targets: targetGenerator(),
-      colorShadow: AppColors.primary,
-      textSkip: "SKIP",
-      paddingFocus: 10,
-      opacityShadow: 0.5,
-      imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-      onFinish: () {
-        logger.d('Tutorial is finished');
-      },
-      onClickTargetWithTapPosition: (target, tapDetails) {
-        logger.d('onClickTargetWithTapPosition: $target');
-        logger.d(
-            "clicked at position local: ${tapDetails.localPosition} - global: ${tapDetails.globalPosition}");
-      },
-      onClickOverlay: (target) {
-        logger.d('onClickOverlay: $target');
-      },
-      onSkip: () {
-        logger.d("skip");
-        return true;
-      },
-    );
-  }
-
-  // TODO optimize this
-  List<TargetFocus> _createLeitnerTargets() {
-    List<TargetFocus> targets = [];
-
-    targets.add(TargetFocus(
-        identify: 'title',
-        keyTarget: titleKey,
-        alignSkip: Alignment.topRight,
-        shape: ShapeLightFocus.RRect,
-        enableOverlayTab: false,
-        contents: [
-          TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(context.tr("leitner_tutorial_title"),
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
-                            ?.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.sp))
-                  ],
-                );
-              })
-        ]));
-
-    targets.add(TargetFocus(
-        identify: 'notebook',
-        keyTarget: notebooksKey,
-        alignSkip: Alignment.topRight,
-        shape: ShapeLightFocus.RRect,
-        enableOverlayTab: true,
-        contents: [
-          TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(context.tr("leitner_tutorial_notebook"),
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
-                            ?.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.sp))
-                  ],
-                );
-              })
-        ]));
-
-    targets.add(TargetFocus(
-        identify: 'pages',
-        keyTarget: notebookPagesKey,
-        alignSkip: Alignment.topRight,
-        shape: ShapeLightFocus.RRect,
-        enableOverlayTab: true,
-        contents: [
-          TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(context.tr("leitner_tutorial_page"),
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
-                            ?.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.sp))
-                  ],
-                );
-              })
-        ]));
-
-    targets.add(TargetFocus(
-        identify: 'continue',
-        keyTarget: continueBtnKey,
-        alignSkip: Alignment.topRight,
-        enableOverlayTab: true,
-        contents: [
-          TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(context.tr("leitner_tutorial_confirm"),
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
-                            ?.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.sp))
-                  ],
-                );
-              })
-        ]));
-
-    return targets;
-  }
-
-  void showTutorial() {
-    tutorialCoachMark.show(context: context);
   }
 
   @override

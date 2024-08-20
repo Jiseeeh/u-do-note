@@ -3,10 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/datasources/remote/shared_remote_datasource.dart';
+import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/data/repositories/shared_repository_impl.dart';
 import 'package:u_do_note/core/shared/domain/repositories/shared_repository.dart';
 import 'package:u_do_note/core/shared/domain/usecases/generate_quiz_questions.dart';
+import 'package:u_do_note/core/shared/domain/usecases/get_old_sessions.dart';
 
 part 'shared_provider.g.dart';
 
@@ -27,7 +30,10 @@ FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
 
 @riverpod
 SharedRemoteDataSource sharedRemoteDataSource(SharedRemoteDataSourceRef ref) {
-  return SharedRemoteDataSource();
+  var firestore = ref.read(firestoreProvider);
+  var firebaseAuth = ref.read(firebaseAuthProvider);
+
+  return SharedRemoteDataSource(firestore, firebaseAuth);
 }
 
 @riverpod
@@ -42,6 +48,13 @@ GenerateQuizQuestions generateQuizQuestions(GenerateQuizQuestionsRef ref) {
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GenerateQuizQuestions(sharedRepository);
+}
+
+@riverpod
+GetOldSessions getOldSessions(GetOldSessionsRef ref) {
+  var sharedRepository = ref.read(sharedRepositoryProvider);
+
+  return GetOldSessions(sharedRepository);
 }
 
 @riverpod
@@ -65,5 +78,27 @@ class Shared extends _$Shared {
         appendPrompt: appendPrompt);
 
     return failureOrQuizQuestions.fold((failure) => failure, (res) => res);
+  }
+
+  /// Gets the old sessions of [notebookId]
+  /// with the appropriate [methodName]
+  ///
+  /// [fromFirestore] is the function to translate firestore data to the respective model
+  ///
+  /// [filters] are for extra filters you want to add to the default query
+  Future<List<T>> getOldSessions<T>(
+      {required String notebookId,
+      required String methodName,
+      required T Function(String, Map<String, dynamic>) fromFirestore,
+      List<QueryFilter>? filters}) async {
+    var getOldSessions = ref.read(getOldSessionsProvider);
+
+    var failureOrOldSession =
+        await getOldSessions(notebookId, methodName, fromFirestore, filters);
+
+    return failureOrOldSession.fold((failure) {
+      logger.e(failure.message);
+      return [];
+    }, (res) => res);
   }
 }

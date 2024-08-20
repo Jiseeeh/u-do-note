@@ -42,18 +42,6 @@ class FeynmanTechniqueImpl implements FeynmanTechniqueRepository {
   }
 
   @override
-  Future<Either<Failure, List<FeynmanModel>>> getOldSessions(
-      String notebookId) async {
-    try {
-      var res = await _feynmanRemoteDataSource.getOldSessions(notebookId);
-
-      return Right(res);
-    } catch (e) {
-      return Left(GenericFailure(message: e.toString()));
-    }
-  }
-
-  @override
   Future<Either<Failure, void>> saveQuizResults(
       FeynmanModel feynmanModel,
       String notebookId,

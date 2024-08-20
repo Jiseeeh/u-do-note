@@ -26,20 +26,6 @@ class ElaborationImpl implements ElaborationRepository {
   }
 
   @override
-  Future<Either<Failure, List<ElaborationModel>>> getOldSessions(
-      String notebookId) async {
-    try {
-      var res = await _elaborationRemoteDataSource.getOldSessions(notebookId);
-
-      return Right(res);
-    } on FirebaseAuthException catch (e) {
-      return Left(AuthenticationException(message: e.message!, code: ''));
-    } catch (e) {
-      return Left(GenericFailure(message: e.toString()));
-    }
-  }
-
-  @override
   Future<Either<Failure, String>> getElaboratedContent(String content) async {
     try {
       var res =

@@ -107,28 +107,6 @@ class ElaborationRemoteDataSource {
     return 'Successfully saved the quiz results';
   }
 
-  Future<List<ElaborationModel>> getOldSessions(String notebookId) async {
-    var userId = _auth.currentUser!.uid;
-
-    var oldSessionsDocs = await _firestore
-        .collection(FirestoreCollection.users.name)
-        .doc(userId)
-        .collection(FirestoreCollection.user_notes.name)
-        .doc(notebookId)
-        .collection(FirestoreCollection.remarks.name)
-        .where("review_method", isEqualTo: ElaborationModel.name)
-        .where("remark", isNull: true)
-        .get();
-
-    List<ElaborationModel> oldSessions = [];
-
-    for (var doc in oldSessionsDocs.docs) {
-      oldSessions.add(ElaborationModel.fromFirestore(doc.id, doc.data()));
-    }
-
-    return oldSessions;
-  }
-
   Future<String> getElaboratedContent(String content) async {
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,

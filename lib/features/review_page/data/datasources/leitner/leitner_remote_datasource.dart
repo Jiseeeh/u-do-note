@@ -170,9 +170,7 @@ class LeitnerRemoteDataSource {
         chatCompletion.choices.first.message.content!.first.text;
 
     logger.i('content: $completionContent');
-    logger.i('finish reason: ${chatCompletion.choices.first.finishReason}');
-    logger.i(chatCompletion.systemFingerprint);
-    logger.i(chatCompletion.usage.promptTokens);
+    logger.i('token usage: ${chatCompletion.usage.promptTokens}');
 
     var decodedJson = json.decode(completionContent!);
     var userId = FirebaseAuth.instance.currentUser!.uid;
@@ -216,26 +214,5 @@ class LeitnerRemoteDataSource {
     logger.i("Remarks saved to firestore.");
 
     return "Your remark is ${decodedJson['remark']} with a score of ${decodedJson['score']}.";
-  }
-
-  Future<List<LeitnerSystemModel>> getOldFlashcards(
-      String userNotebookId) async {
-    var userId = FirebaseAuth.instance.currentUser!.uid;
-
-    var snapshot = await _firestore
-        .collection(FirestoreCollection.users.name)
-        .doc(userId)
-        .collection(FirestoreCollection.user_notes.name)
-        .doc(userNotebookId)
-        .collection(FirestoreCollection.remarks.name)
-        .where('review_method', isEqualTo: LeitnerSystemModel.name)
-        .where('next_review', isLessThanOrEqualTo: Timestamp.now())
-        .get();
-
-    logger.d('snapshot.docs.length: ${snapshot.docs.length}');
-
-    return snapshot.docs
-        .map((doc) => LeitnerSystemModel.fromFirestore(doc.id, doc.data()))
-        .toList();
   }
 }

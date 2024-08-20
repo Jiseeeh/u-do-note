@@ -115,23 +115,6 @@ class FeynmanRemoteDataSource {
     return doc.id;
   }
 
-  Future<List<FeynmanModel>> getOldSessions(String notebookId) async {
-    var userId = _auth.currentUser!.uid;
-
-    var res = await _firestore
-        .collection(FirestoreCollection.users.name)
-        .doc(userId)
-        .collection(FirestoreCollection.user_notes.name)
-        .doc(notebookId)
-        .collection(FirestoreCollection.remarks.name)
-        .where('review_method', isEqualTo: FeynmanModel.name)
-        .get();
-
-    return res.docs
-        .map((model) => FeynmanModel.fromFirestore(model.id, model.data()))
-        .toList();
-  }
-
   Future<void> saveQuizResults(FeynmanModel feynmanModel, String notebookId,
       bool isFromOldSessionWithoutQuiz, String? newSessionName) async {
     var userId = _auth.currentUser!.uid;

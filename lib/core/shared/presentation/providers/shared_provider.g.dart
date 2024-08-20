@@ -50,7 +50,7 @@ final firebaseStorageProvider = AutoDisposeProvider<FirebaseStorage>.internal(
 
 typedef FirebaseStorageRef = AutoDisposeProviderRef<FirebaseStorage>;
 String _$sharedRemoteDataSourceHash() =>
-    r'9a17be975f0c504a35c2d4845f68b954cd4e6b9a';
+    r'8cdac29bcd0b2f34b0e01f1de07ae2869f6484be';
 
 /// See also [sharedRemoteDataSource].
 @ProviderFor(sharedRemoteDataSource)
@@ -100,7 +100,22 @@ final generateQuizQuestionsProvider =
 
 typedef GenerateQuizQuestionsRef
     = AutoDisposeProviderRef<GenerateQuizQuestions>;
-String _$sharedHash() => r'd354499afa8a4b3f3f6498170cba2cc91750b7f9';
+String _$getOldSessionsHash() => r'6d505c8a2f13e730cd7e30c8330706ca8dacee0b';
+
+/// See also [getOldSessions].
+@ProviderFor(getOldSessions)
+final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
+  getOldSessions,
+  name: r'getOldSessionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getOldSessionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
+String _$sharedHash() => r'44abd4a6e09c042047604561de648c29b57e9226';
 
 /// See also [Shared].
 @ProviderFor(Shared)

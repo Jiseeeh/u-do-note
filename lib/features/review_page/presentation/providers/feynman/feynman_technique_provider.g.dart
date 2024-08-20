@@ -71,21 +71,6 @@ final saveSessionProvider = AutoDisposeProvider<SaveSession>.internal(
 );
 
 typedef SaveSessionRef = AutoDisposeProviderRef<SaveSession>;
-String _$getOldSessionsHash() => r'3c9e44cf6e38ce6a6f1058eb184ededab59d8de6';
-
-/// See also [getOldSessions].
-@ProviderFor(getOldSessions)
-final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
-  getOldSessions,
-  name: r'getOldSessionsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getOldSessionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
 String _$saveQuizResultsHash() => r'0f4609705679d52ebeb2c0e39f78915bc46824c0';
 
 /// See also [saveQuizResults].
@@ -101,7 +86,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$feynmanTechniqueHash() => r'7a6a7a550bf86720be251af434b9936a7a4d583b';
+String _$feynmanTechniqueHash() => r'96d92b2e5bf3a698959edcbe61a16e9366e09378';
 
 /// See also [FeynmanTechnique].
 @ProviderFor(FeynmanTechnique)

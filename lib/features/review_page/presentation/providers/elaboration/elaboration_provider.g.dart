@@ -57,21 +57,6 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$getOldSessionsHash() => r'77f5640ba52ab910ac282d4024fe05be259e4370';
-
-/// See also [getOldSessions].
-@ProviderFor(getOldSessions)
-final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
-  getOldSessions,
-  name: r'getOldSessionsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getOldSessionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
 String _$getElaboratedContentHash() =>
     r'b737b75a1fdc838cb7e53612a4654deadeb578d4';
 
@@ -89,7 +74,7 @@ final getElaboratedContentProvider =
 );
 
 typedef GetElaboratedContentRef = AutoDisposeProviderRef<GetElaboratedContent>;
-String _$elaborationHash() => r'704e0f09e8d80bd501b97855922d12fda0335eba';
+String _$elaborationHash() => r'f31fad5f3a6d58dcda491def80f5e76cf7ad7ee6';
 
 /// See also [Elaboration].
 @ProviderFor(Elaboration)

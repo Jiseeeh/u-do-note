@@ -1,6 +1,5 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/elaboration/elaboration_remote_datasource.dart';

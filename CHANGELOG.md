@@ -1,3 +1,12 @@
+# [1.4.0](https://github.com/Jiseeeh/u-do-note/compare/v1.3.0...v1.4.0) (2024-08-21)
+
+
+### Features
+
+* 72/add elaboration ([#84](https://github.com/Jiseeeh/u-do-note/issues/84)) ([95b82d9](https://github.com/Jiseeeh/u-do-note/commit/95b82d9bb960835e33da8d9e4ce6a80dbc1f560c))
+* add elaboration review translations ([31818d2](https://github.com/Jiseeeh/u-do-note/commit/31818d210e9dc1c56aa64e27ab605a8ca7e53d00))
+* add notice to review in elaboration ([62092e6](https://github.com/Jiseeeh/u-do-note/commit/62092e6cc90cbf6ffed03416ad2f0d78b7b6f006))
+
 # [1.3.0](https://github.com/Jiseeeh/u-do-note/compare/v1.2.0...v1.3.0) (2024-08-07)
 
 

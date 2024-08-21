@@ -19,7 +19,7 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/data/models/target.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
@@ -220,9 +220,8 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 break;
             }
 
-            if (context.mounted) {
-              Navigator.of(context).pop();
-            }
+            // ? instance where user canceled a dialog and goes back to the screen
+            reviewScreenState.resetState();
           },
           child: const Text('Continue'),
         ),
@@ -259,109 +258,64 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               ),
             ),
             const SizedBox(height: 10),
-            MultiSelectDialogField(
-              key: notebooksKey,
-              initialValue: [notebookId],
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Notebooks"),
-                  Text(
-                    context.tr("select_notebook"),
-                    style: const TextStyle(fontSize: 12),
-                  )
-                ],
-              ),
-              items: notebooks
-                  .map((notebook) =>
-                      MultiSelectItem(notebook.id, notebook.subject))
-                  .toList(),
-              selectedItemsTextStyle: const TextStyle(color: AppColors.white),
-              selectedColor: AppColors.secondary,
-              listType: MultiSelectListType.CHIP,
-              decoration: BoxDecoration(
-                color: AppColors.secondary.withOpacity(0.1),
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-              ),
-              onSelectionChanged: (values) {
-                FocusScope.of(context).requestFocus(FocusNode());
-                if (values.isEmpty) {
-                  setState(() {
-                    notebookId = "";
-                  });
-                }
-
-                if (values.length > 1) {
-                  // remove the first one
-                  values.removeAt(0);
-                }
-              },
-              onConfirm: (results) {
-                if (results.isNotEmpty) {
-                  setState(() {
-                    notebookId = results.first;
-
-                    // check if this notebook has at least one note
-                    if (notebooks
-                        .firstWhere((notebook) => notebook.id == notebookId)
-                        .notes
-                        .isEmpty) {
-                      EasyLoading.showError(context.tr("no_page"));
-
-                      // ? resets the notebookId to hide the pages dropdown again
+            MultiSelect(
+                customKey: notebooksKey,
+                initialItems: [notebookId],
+                title: "Notebooks",
+                subTitle: "select_notebook",
+                items: notebooks
+                    .map((notebook) =>
+                        MultiSelectItem(notebook.id, notebook.subject))
+                    .toList(),
+                buttonIcon: Icons.book,
+                onSelectionChanged: (values) {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  if (values.isEmpty) {
+                    setState(() {
                       notebookId = "";
-                    }
-                  });
-                }
-              },
-              buttonIcon: const Icon(
-                Icons.book,
-                color: AppColors.secondary,
-              ),
-              buttonText: const Text(
-                "Notebooks",
-              ),
-            ),
+                    });
+                  }
+
+                  if (values.length > 1) {
+                    // remove the first one
+                    values.removeAt(0);
+                  }
+                },
+                onConfirm: (results) {
+                  if (results.isNotEmpty) {
+                    setState(() {
+                      notebookId = results.first;
+
+                      // check if this notebook has at least one note
+                      if (notebooks
+                          .firstWhere((notebook) => notebook.id == notebookId)
+                          .notes
+                          .isEmpty) {
+                        EasyLoading.showError(context.tr("no_page"));
+
+                        // ? resets the notebookId to hide the pages dropdown again
+                        notebookId = "";
+                      }
+                    });
+                  }
+                }),
             notebookId.isNotEmpty
-                ? MultiSelectDialogField(
-                    key: notebookPagesKey,
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Notebook Pages"),
-                        Text(
-                          context.tr("select_pages"),
-                          style: Theme.of(context).textTheme.bodySmall,
-                        )
-                      ],
-                    ),
-                    initialValue: pages,
+                ? MultiSelect(
+                    customKey: notebookPagesKey,
+                    initialItems: pages,
+                    title: "Notebook Pages",
+                    subTitle: "select_pages",
                     items: notebooks
                         .firstWhere((notebook) => notebook.id == notebookId)
                         .notes
                         .map((note) => MultiSelectItem(note.id, note.title))
                         .toList(),
-                    selectedItemsTextStyle:
-                        const TextStyle(color: AppColors.white),
-                    selectedColor: AppColors.secondary,
-                    listType: MultiSelectListType.CHIP,
-                    decoration: BoxDecoration(
-                      color: AppColors.secondary.withOpacity(0.1),
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    ),
-                    onConfirm: (results) async {
+                    buttonIcon: Icons.pages,
+                    onConfirm: (results) {
                       setState(() {
                         pages = results;
                       });
-                    },
-                    buttonIcon: const Icon(
-                      Icons.pages,
-                      color: AppColors.secondary,
-                    ),
-                    buttonText: const Text(
-                      "Notebook Pages",
-                    ),
-                  )
+                    })
                 : const SizedBox(
                     height: 10,
                   )
@@ -430,15 +384,12 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
       return;
     }
 
-    var selectItems = oldLeitnerModels
-        .map((leitnerModel) =>
-            MultiSelectItem(leitnerModel.id, leitnerModel.title))
-        .toList();
-
-    await showDialog(
+    var oldLeitnerSessionId = await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (dialogContext) => AlertDialog(
+        builder: (dialogContext) {
+          var oldLeitnerSessionId = "";
+          return AlertDialog(
               scrollable: true,
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,32 +412,23 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 ),
                 TextButton(
                   onPressed: () {
-                    if (oldFlashcardId.isEmpty) {
-                      EasyLoading.showError(context.tr("last_session_notice"));
-                      return;
-                    }
-
-                    context.router.push(LeitnerSystemRoute(
-                        notebookId: notebookId,
-                        leitnerSystemModel: oldLeitnerModels.firstWhere(
-                            (leitnerModel) =>
-                                leitnerModel.id == oldFlashcardId)));
+                    Navigator.of(context).pop(oldLeitnerSessionId);
                   },
                   child: const Text('Continue'),
                 ),
               ],
-              content: MultiSelectDialogField(
-                listType: MultiSelectListType.CHIP,
-                items: selectItems,
-                selectedItemsTextStyle: const TextStyle(color: AppColors.white),
-                selectedColor: AppColors.secondary,
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                ),
+              content: MultiSelect(
+                initialItems: const [],
+                title: "Sessions",
+                subTitle: "Old leitner sessions",
+                items: oldLeitnerModels
+                    .map((leitnerModel) =>
+                        MultiSelectItem(leitnerModel.id, leitnerModel.title))
+                    .toList(),
+                buttonIcon: Icons.arrow_drop_down_circle_outlined,
                 onSelectionChanged: (values) {
                   if (values.isEmpty) {
-                    oldFlashcardId = "";
+                    oldLeitnerSessionId = "";
                   }
 
                   if (values.length > 1) {
@@ -496,18 +438,20 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 },
                 onConfirm: (results) {
                   setState(() {
-                    oldFlashcardId = results.first!;
+                    oldLeitnerSessionId = results.first;
                   });
                 },
-                buttonIcon: const Icon(
-                  Icons.arrow_drop_down_circle_outlined,
-                  color: Colors.blue,
-                ),
-                buttonText: const Text(
-                  "Sessions",
-                ),
-              ),
-            ));
+              ));
+        });
+
+    if (!context.mounted) return;
+
+    if (oldLeitnerSessionId != null) {
+      context.router.push(LeitnerSystemRoute(
+          notebookId: notebookId,
+          leitnerSystemModel: oldLeitnerModels.firstWhere(
+              (leitnerModel) => leitnerModel.id == oldFlashcardId)));
+    }
   }
 
   Future<void> startNewLeitnerSession(String contentFromPages) async {
@@ -604,69 +548,50 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
         builder: (dialogContext) {
           var sessionId = "";
           return AlertDialog(
-            scrollable: true,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(context.tr("feynman_old_session_label")),
-                Text(
-                  context.tr("old_session_notice"),
-                  style: const TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(null);
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(sessionId);
-                },
-                child: const Text('Continue'),
-              ),
-            ],
-            content: MultiSelectDialogField(
+              scrollable: true,
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(context.tr("notice"),
-                      style: const TextStyle(fontWeight: FontWeight.normal)),
+                  Text(context.tr("feynman_old_session_label")),
                   Text(
-                    context.tr("old_session_title"),
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.normal),
+                    context.tr("old_session_notice"),
+                    style: const TextStyle(fontSize: 12),
                   )
                 ],
               ),
-              listType: MultiSelectListType.CHIP,
-              items: oldFeynmanModels
-                  .map((el) => MultiSelectItem<String>(el.id!, el.sessionName))
-                  .toList(),
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-              ),
-              onSelectionChanged: (values) {
-                if (values.length > 1) {
-                  values.removeAt(0);
-                }
-              },
-              onConfirm: (results) {
-                sessionId = results.first;
-              },
-              buttonIcon: const Icon(
-                Icons.arrow_drop_down_circle_outlined,
-                color: Colors.blue,
-              ),
-              buttonText: const Text(
-                "Sessions",
-              ),
-            ),
-          );
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(null);
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(sessionId);
+                  },
+                  child: const Text('Continue'),
+                ),
+              ],
+              content: MultiSelect(
+                initialItems: const [],
+                title: "notice",
+                subTitle: "old_session_title",
+                buttonText: "Sessions",
+                items: oldFeynmanModels
+                    .map(
+                        (el) => MultiSelectItem<String>(el.id!, el.sessionName))
+                    .toList(),
+                buttonIcon: Icons.arrow_drop_down_circle_outlined,
+                onSelectionChanged: (values) {
+                  if (values.length > 1) {
+                    values.removeAt(0);
+                  }
+                },
+                onConfirm: (results) {
+                  sessionId = results.first;
+                },
+              ));
         });
 
     if (!context.mounted) return;
@@ -767,27 +692,15 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
                 child: const Text('Continue'),
               ),
             ],
-            content: MultiSelectDialogField(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(context.tr("notice"),
-                      style: const TextStyle(fontWeight: FontWeight.normal)),
-                  Text(
-                    context.tr("old_session_title"),
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.normal),
-                  )
-                ],
-              ),
-              listType: MultiSelectListType.CHIP,
+            content: MultiSelect(
+              initialItems: const [],
+              title: "notice",
+              subTitle: "old_session_title",
+              buttonText: "Sessions",
               items: oldElaborationModels
                   .map((el) => MultiSelectItem<String>(el.id!, el.sessionName))
                   .toList(),
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-              ),
+              buttonIcon: Icons.arrow_drop_down_circle_outlined,
               onSelectionChanged: (values) {
                 if (values.length > 1) {
                   values.removeAt(0);
@@ -796,23 +709,19 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
               onConfirm: (results) {
                 sessionId = results.first;
               },
-              buttonIcon: const Icon(
-                Icons.arrow_drop_down_circle_outlined,
-                color: Colors.blue,
-              ),
-              buttonText: const Text(
-                "Sessions",
-              ),
             ),
           );
         });
 
     if (!context.mounted) return;
 
-    var elaborationModel =
-        oldElaborationModels.firstWhere((model) => model.id == sessionId);
+    if (sessionId != null) {
+      var elaborationModel =
+          oldElaborationModels.firstWhere((model) => model.id == sessionId);
 
-    context.router.push(ElaborationRoute(elaborationModel: elaborationModel));
+      context.router.push(ElaborationRoute(elaborationModel: elaborationModel));
+      return;
+    }
   }
 
   Future<void> startNewElaborationSession(BuildContext context,
@@ -954,30 +863,28 @@ class _PreReviewMethodState extends ConsumerState<PreReviewMethod> {
             ],
             content: Column(
               children: [
-                MultiSelectDialogField(
-                  listType: MultiSelectListType.CHIP,
+                MultiSelect<String>(
+                  initialItems: const [],
+                  title: "Pages",
+                  subTitle: "You can select multiple pages if you like.",
+                  buttonText: "Notebook Pages",
                   items: notebooks
                       .firstWhere((nb) => nb.id == notebookId)
                       .notes
                       .map((note) =>
                           MultiSelectItem<String>(note.id, note.title))
                       .toList(),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  ),
+                  buttonIcon: Icons.arrow_drop_down_circle_outlined,
+                  onSelectionChanged: (values) {
+                    if (values.length > 1) {
+                      values.removeAt(0);
+                    }
+                  },
                   onConfirm: (results) {
                     setState(() {
                       notebookIdsToPasteElaboratedContent = results;
                     });
                   },
-                  buttonIcon: const Icon(
-                    Icons.arrow_drop_down_circle_outlined,
-                    color: Colors.blue,
-                  ),
-                  buttonText: const Text(
-                    "Notebook Pages",
-                  ),
                 ),
                 const SizedBox(height: 10),
                 const Text('OR'),

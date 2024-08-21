@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/features/review_page/data/datasources/pomodoro/pomodoro_defaults.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 

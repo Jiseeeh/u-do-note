@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
-import 'package:u_do_note/features/review_page/domain/repositories/feynman_technique_repository.dart';
+import 'package:u_do_note/features/review_page/domain/repositories/feynman/feynman_technique_repository.dart';
 
 class SaveQuizResults {
   final FeynmanTechniqueRepository _feynmanTechniqueRepository;

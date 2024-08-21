@@ -1,12 +1,20 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/dart_openai.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:u_do_note/core/firestore_collection_enum.dart';
+import 'package:u_do_note/core/firestore_filter_enum.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
-import 'package:u_do_note/features/review_page/data/models/question.dart';
+import 'package:u_do_note/core/shared/data/models/query_filter.dart';
+import 'package:u_do_note/core/shared/data/models/question.dart';
 
 class SharedRemoteDataSource {
-  SharedRemoteDataSource();
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+
+  SharedRemoteDataSource(this._firestore, this._auth);
 
   Future<List<QuestionModel>> generateQuizQuestions(
       String content, String? customPrompt,
@@ -117,7 +125,7 @@ class SharedRemoteDataSource {
       responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,
-      maxTokens: 1000,
+      maxTokens: 800,
     );
 
     String? completionContent =
@@ -134,5 +142,67 @@ class SharedRemoteDataSource {
     }
 
     return questions;
+  }
+
+  Future<List<T>> getOldSessions<T>(
+      String notebookId,
+      String methodName,
+      T Function(String, Map<String, dynamic>) fromFirestore,
+      List<QueryFilter>? filters) async {
+    var userId = _auth.currentUser!.uid;
+
+    var query = _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .collection(FirestoreCollection.remarks.name)
+        .where('review_method', isEqualTo: methodName);
+
+    if (filters != null) {
+      for (var filter in filters) {
+        switch (filter.operation) {
+          case FirestoreFilter.isEqualTo:
+            query = query.where(filter.field, isEqualTo: filter.value);
+            break;
+          case FirestoreFilter.isNull:
+            query = query.where(filter.field, isNull: filter.value);
+            break;
+          case FirestoreFilter.arrayContains:
+            query = query.where(filter.field, arrayContains: filter.value);
+            break;
+          case FirestoreFilter.arrayContainsAny:
+            query = query.where(filter.field, arrayContainsAny: filter.value);
+            break;
+          case FirestoreFilter.isGreaterThan:
+            query = query.where(filter.field, isGreaterThan: filter.value);
+            break;
+          case FirestoreFilter.isGreaterThanOrEqualTo:
+            query =
+                query.where(filter.field, isGreaterThanOrEqualTo: filter.value);
+            break;
+          case FirestoreFilter.isLessThan:
+            query = query.where(filter.field, isLessThan: filter.value);
+            break;
+          case FirestoreFilter.isLessThanOrEqualTo:
+            query =
+                query.where(filter.field, isLessThanOrEqualTo: filter.value);
+            break;
+          case FirestoreFilter.isNotEqualTo:
+            query = query.where(filter.field, isNotEqualTo: filter.value);
+            break;
+          case FirestoreFilter.whereIn:
+            query = query.where(filter.field, whereIn: filter.value);
+            break;
+          case FirestoreFilter.whereNotIn:
+            query = query.where(filter.field, whereNotIn: filter.value);
+            break;
+        }
+      }
+    }
+
+    var res = await query.get();
+
+    return res.docs.map((doc) => fromFirestore(doc.id, doc.data())).toList();
   }
 }

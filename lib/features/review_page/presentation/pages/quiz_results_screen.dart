@@ -1,11 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/shared/theme/colors.dart';
-import 'package:u_do_note/features/review_page/domain/entities/question.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/pomodoro_technique_provider.dart';
+import 'package:u_do_note/core/shared/domain/entities/question.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 

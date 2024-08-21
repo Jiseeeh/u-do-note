@@ -1,4 +1,4 @@
-import 'package:u_do_note/features/review_page/data/models/question.dart';
+import 'package:u_do_note/core/shared/data/models/question.dart';
 
 class QuizModel {
   final String? remark;

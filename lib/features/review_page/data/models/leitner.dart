@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:u_do_note/features/review_page/domain/entities/leitner.dart';
+import 'package:u_do_note/features/review_page/domain/entities/leitner/leitner.dart';
 
 class LeitnerSystemModel {
   /// The id of the model, nullable since the id is auto-gen on firestore

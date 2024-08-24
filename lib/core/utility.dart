@@ -6,6 +6,8 @@ class CustomDialog {
     BuildContext context, {
     required String title,
     String? subTitle,
+    Map<String, String>? titleArgs,
+    Map<String, String>? subTitleArgs,
     Widget? content,
     List<CustomDialogButton<T>>? buttons,
   }) async {
@@ -18,7 +20,7 @@ class CustomDialog {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(context.tr(title)),
+              Text(context.tr(title, namedArgs: titleArgs)),
               subTitle != null
                   ? Text(context.tr(subTitle),
                       style: Theme.of(context).textTheme.bodyMedium)

@@ -43,7 +43,8 @@ class Helper {
     });
   }
 
-  static TutorialCoachMark createTutorialCoachMark(List<TargetFocus> targets) {
+  static TutorialCoachMark createTutorialCoachMark(List<TargetFocus> targets,
+      {VoidCallback? onFinish}) {
     return TutorialCoachMark(
       targets: targets,
       colorShadow: AppColors.primary,
@@ -52,6 +53,7 @@ class Helper {
       opacityShadow: 0.5,
       imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
       onFinish: () {
+        onFinish?.call();
         logger.d('Tutorial is finished');
       },
       onClickTargetWithTapPosition: (target, tapDetails) {
@@ -63,6 +65,7 @@ class Helper {
         logger.d('onClickOverlay: $target');
       },
       onSkip: () {
+        onFinish?.call();
         logger.d("skip");
         return true;
       },

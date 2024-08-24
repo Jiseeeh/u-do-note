@@ -79,11 +79,10 @@ class _LeitnerPreReviewState extends ConsumerState<LeitnerPreReview> {
 
     await CustomDialog.show(context,
         title: "Flashcards to review",
-        subTitle: "last_session",
         content: MultiSelect(
           items: oldLeitnerModels
-              .map((note) => DropdownItem(label: note.title, value: note.id))
-              .toList() as List<DropdownItem<String>>,
+              .map((note) => DropdownItem(label: note.title, value: note.id!))
+              .toList(),
           hintText: "Sessions",
           title: "Sessions",
           subTitle: "Old leitner sessions",

@@ -22,7 +22,7 @@ class ElaborationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future.delayed(
-        Duration.zero,
+        const Duration(seconds: 3),
         () => showDialog(
             context: context,
             builder: (dialogContext) {

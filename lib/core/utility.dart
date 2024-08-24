@@ -5,7 +5,7 @@ class CustomDialog {
   static Future<T> show<T>(
     BuildContext context, {
     required String title,
-    required String subTitle,
+    String? subTitle,
     Widget? content,
     List<CustomDialogButton<T>>? buttons,
   }) async {
@@ -19,10 +19,10 @@ class CustomDialog {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(context.tr(title)),
-              Text(
-                context.tr(subTitle),
-                style: const TextStyle(fontSize: 12),
-              )
+              subTitle != null
+                  ? Text(context.tr(subTitle),
+                      style: Theme.of(context).textTheme.bodyMedium)
+                  : const Text("")
             ],
           ),
           content: content,

@@ -182,6 +182,7 @@ class FeynmanRemoteDataSource {
 
     var remark = decodedJson['remark'];
 
+    // TODO: add toFirestore in feynman to use here
     if (isFromOldSessionWithoutQuiz) {
       // ? instance when the user saved a session but did not start a quiz
       // ? making the remark empty and the score 0

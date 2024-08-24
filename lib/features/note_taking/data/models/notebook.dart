@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
@@ -60,8 +59,6 @@ class NotebookModel {
       FeynmanModel.name: 0,
       PomodoroModel.name: 0
     };
-
-    logger.w('calling fromFirestore');
 
     return NotebookModel(
       id: id,

@@ -26,7 +26,7 @@ class ElaborationModel extends QuizModel {
     return ElaborationModel(
       id: id,
       content: data['content'],
-      sessionName: data['sessionName'],
+      sessionName: data['session_name'],
       createdAt: data['created_at'],
       questions: (data['questions'] as List)
           .map((question) => QuestionModel.fromJson(question))
@@ -41,7 +41,7 @@ class ElaborationModel extends QuizModel {
   Map<String, dynamic> toFirestore() {
     return {
       'content': content,
-      'sessionName': sessionName,
+      'session_name': sessionName,
       'created_at': createdAt,
       'questions':
           questions?.map((question) => question.toJson()).toList() ?? [],

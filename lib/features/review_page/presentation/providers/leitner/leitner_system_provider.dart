@@ -56,6 +56,7 @@ class LeitnerSystem extends _$LeitnerSystem {
   }
 
   // TODO: check if we can already fold the result here
+  /// Generate flashcards based on the given [content].
   Future<Either<Failure, LeitnerSystemModel>> generateFlashcards(
       String title, String userNotebookId, String content) async {
     final generateFlashcards = ref.read(generateFlashcardsProvider);
@@ -63,6 +64,8 @@ class LeitnerSystem extends _$LeitnerSystem {
     return await generateFlashcards(title, userNotebookId, content);
   }
 
+  /// Analyzes the results of leitner system based on the response times
+  /// from the flashcards.
   Future<String> analyzeFlashcardsResult(
       String userNotebookId, LeitnerSystemModel leitnerSystemModel) async {
     final analyzeFlashcardsResult = ref.read(analyzeFlashcardsResultProvider);

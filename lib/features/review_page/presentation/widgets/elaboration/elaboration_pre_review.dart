@@ -13,6 +13,7 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
+import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
@@ -32,6 +33,7 @@ class ElaborationPreReview extends ConsumerStatefulWidget {
 
 class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
   List<String> _idsToPasteContentTo = [];
+  String _oldElaborationSessionId = "";
 
   @override
   Widget build(BuildContext context) {
@@ -63,29 +65,16 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
       return;
     }
 
-    var willReviewOldSessions = await showDialog(
-        context: context,
-        builder: (dialogContext) {
-          return AlertDialog(
-            title: Text(context.tr("notice")),
-            content: Text(context.tr("old_session_notice_q",
-                namedArgs: {"reviewMethod": "Elaboration"})),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(false);
-                },
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(true);
-                },
-                child: const Text('Yes'),
-              ),
-            ],
-          );
-        });
+    var willReviewOldSessions = await CustomDialog.show(context,
+        title: "notice",
+        subTitle: "old_session_notice_q",
+        subTitleArgs: {
+          "reviewMethod": "Elaboration"
+        },
+        buttons: [
+          CustomDialogButton(text: "No", value: false),
+          CustomDialogButton(text: "Yes", value: true)
+        ]);
 
     if (!context.mounted) return;
 
@@ -94,60 +83,33 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
       return;
     }
 
-    var sessionId = await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (dialogContext) {
-          var sessionId = "";
-          return AlertDialog(
-            scrollable: true,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Old elaboration sessions"),
-                Text(
-                  context.tr("old_session_notice"),
-                  style: const TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(null);
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(sessionId);
-                },
-                child: const Text('Continue'),
-              ),
-            ],
-            content: MultiSelect(
-              items: oldElaborationModels
-                  .map((el) =>
-                      DropdownItem(label: el.id!, value: el.sessionName))
-                  .toList(),
-              hintText: "Notice",
-              title: "notice",
-              subTitle: "old_session_title",
-              validationText: "Please select one or more page.",
-              prefixIcon: Icons.arrow_drop_down_circle_outlined,
-              singleSelect: true,
-              onSelectionChanged: (items) {
-                sessionId = items.first;
-              },
-            ),
-          );
-        });
+    await CustomDialog.show(context,
+        title: "Old Elaboration Sessions",
+        subTitle: "old_session_notice",
+        buttons: [
+          CustomDialogButton(text: "Cancel"),
+          CustomDialogButton(text: "Continue")
+        ],
+        content: MultiSelect(
+          items: oldElaborationModels
+              .map((el) => DropdownItem(label: el.id!, value: el.sessionName))
+              .toList(),
+          hintText: "Notice",
+          title: "notice",
+          subTitle: "old_session_title",
+          validationText: "Please select one or more page.",
+          prefixIcon: Icons.arrow_drop_down_circle_outlined,
+          singleSelect: true,
+          onSelectionChanged: (items) {
+            _oldElaborationSessionId = items.first;
+          },
+        ));
 
     if (!context.mounted) return;
 
-    if (sessionId != null) {
-      var elaborationModel =
-          oldElaborationModels.firstWhere((model) => model.id == sessionId);
+    if (_oldElaborationSessionId.isNotEmpty) {
+      var elaborationModel = oldElaborationModels
+          .firstWhere((model) => model.id == _oldElaborationSessionId);
 
       context.router.push(ElaborationRoute(elaborationModel: elaborationModel));
       return;
@@ -171,31 +133,14 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
 
     if (!context.mounted) return;
 
-    var willSaveContent = await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) {
-          return AlertDialog(
-            title: const Text("Notice"),
-            scrollable: true,
-            content: const Text(
-                "Before you continue, do you want to save the elaborated content?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(false);
-                },
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(true);
-                },
-                child: const Text('Yes'),
-              ),
-            ],
-          );
-        });
+    var willSaveContent = await CustomDialog.show(context,
+        title: "Notice",
+        subTitle:
+            "Before you continue, do you want to save the elaborated content?",
+        buttons: [
+          CustomDialogButton(text: "No", value: false),
+          CustomDialogButton(text: "Yes", value: true)
+        ]);
 
     if (!context.mounted) return;
 
@@ -210,129 +155,110 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
       return;
     }
 
-    await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (dialogContext) {
-          return AlertDialog(
-            scrollable: true,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Notebook pages"),
-                Text(
-                  context.tr("elaboration_content_dest"),
-                  style: const TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  // TODO: has same code @notebook_pages_screen.dart
-                  if (_idsToPasteContentTo.isEmpty) {
-                    EasyLoading.showError(
-                        context.tr("elaboration_content_dest_e"));
-                    return;
-                  }
+    await CustomDialog.show(
+      context,
+      title: "Notebook Pages",
+      subTitle: "elaboration_content_dest",
+      buttons: [
+        CustomDialogButton(text: "Cancel"),
+        CustomDialogButton(
+            text: "Confirm",
+            onPressed: () async {
+              // TODO: has same code @notebook_pages_screen.dart
+              if (_idsToPasteContentTo.isEmpty) {
+                EasyLoading.showError(context.tr("elaboration_content_dest_e"));
+                return;
+              }
 
-                  EasyLoading.show(
-                      status: 'Adding to pages...',
-                      maskType: EasyLoadingMaskType.black,
-                      dismissOnTap: false);
+              EasyLoading.show(
+                  status: 'Adding to pages...',
+                  maskType: EasyLoadingMaskType.black,
+                  dismissOnTap: false);
 
-                  var notebookPages = notebooks
-                      .firstWhere(
-                          (nb) => nb.id == reviewScreenState.getNotebookId)
-                      .notes;
+              var notebookPages = notebooks
+                  .firstWhere((nb) => nb.id == reviewScreenState.getNotebookId)
+                  .notes;
 
-                  var updatedNoteEntities = notebookPages.map((noteModel) {
-                    if (!_idsToPasteContentTo.contains(noteModel.id)) {
-                      return noteModel;
-                    }
+              var updatedNoteEntities = notebookPages.map((noteModel) {
+                if (!_idsToPasteContentTo.contains(noteModel.id)) {
+                  return noteModel;
+                }
 
-                    // ? append the extracted text to the end of the content
-                    var pageContentJson = jsonDecode(noteModel.content);
+                // ? append the extracted text to the end of the content
+                var pageContentJson = jsonDecode(noteModel.content);
 
-                    var doc = ParchmentDocument.fromJson(pageContentJson);
+                var doc = ParchmentDocument.fromJson(pageContentJson);
 
-                    doc.insert(doc.length - 1, elaboratedContent);
+                doc.insert(doc.length - 1, elaboratedContent);
 
-                    return NoteModel.fromEntity(noteModel)
-                        .copyWith(
-                            content: jsonEncode(doc.toDelta().toJson()),
-                            updatedAt: Timestamp.now())
-                        .toEntity();
-                  }).toList();
+                return NoteModel.fromEntity(noteModel)
+                    .copyWith(
+                        content: jsonEncode(doc.toDelta().toJson()),
+                        updatedAt: Timestamp.now())
+                    .toEntity();
+              }).toList();
 
-                  var res = await ref
-                      .read(notebooksProvider.notifier)
-                      .updateMultipleNotes(
-                          notebookId: reviewScreenState.getNotebookId,
-                          notesEntity: updatedNoteEntities);
+              var res = await ref
+                  .read(notebooksProvider.notifier)
+                  .updateMultipleNotes(
+                      notebookId: reviewScreenState.getNotebookId,
+                      notesEntity: updatedNoteEntities);
 
-                  EasyLoading.dismiss();
+              EasyLoading.dismiss();
 
-                  if (res is Failure) {
-                    EasyLoading.showError(res.message);
-                    return;
-                  }
+              if (res is Failure) {
+                EasyLoading.showError(res.message);
+                return;
+              }
 
-                  EasyLoading.showInfo(res);
+              EasyLoading.showInfo(res);
 
-                  if (context.mounted) {
-                    Navigator.of(dialogContext).pop();
-                  }
-                },
-                child: const Text('Confirm'),
-              )
-            ],
-            content: Column(
-              children: [
-                MultiSelect(
-                  items: notebooks
-                      .firstWhere(
-                          (nb) => nb.id == reviewScreenState.getNotebookId)
-                      .notes
-                      .map((note) =>
-                          DropdownItem(label: note.title, value: note.id))
-                      .toList(),
-                  hintText: "Notebook Pages",
-                  title: "Pages",
-                  subTitle: "You can select multiple pages if you like.",
-                  validationText: "Please select one or more page.",
-                  prefixIcon: Icons.arrow_drop_down_circle_outlined,
-                  singleSelect: true,
-                  onSelectionChanged: (items) {
-                    setState(() {
-                      _idsToPasteContentTo = items;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
-                const Text('OR'),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(dialogContext).pop();
+              if (!context.mounted) return;
 
-                    showDialog(
-                        context: context,
-                        builder: ((dialogContext) => AddNoteDialog(
-                              notebookId: reviewScreenState.getNotebookId,
-                              initialContent: elaboratedContent,
-                            )));
-                  },
-                  child: Text(context.tr("new_page_notice")),
-                )
-              ],
-            ),
-          );
-        });
+              context.router
+                  .push(ElaborationRoute(elaborationModel: elaborationModel));
+            })
+      ],
+      content: Column(
+        children: [
+          MultiSelect(
+            items: notebooks
+                .firstWhere((nb) => nb.id == reviewScreenState.getNotebookId)
+                .notes
+                .map((note) => DropdownItem(label: note.title, value: note.id))
+                .toList(),
+            hintText: "Notebook Pages",
+            title: "Pages",
+            subTitle: "You can select multiple pages if you like.",
+            validationText: "Please select one or more page.",
+            prefixIcon: Icons.arrow_drop_down_circle_outlined,
+            singleSelect: true,
+            onSelectionChanged: (items) {
+              setState(() {
+                _idsToPasteContentTo = items;
+              });
+            },
+          ),
+          const SizedBox(height: 10),
+          const Text('OR'),
+          TextButton(
+            onPressed: () async {
+              await showDialog(
+                  context: context,
+                  builder: ((dialogContext) => AddNoteDialog(
+                        notebookId: reviewScreenState.getNotebookId,
+                        initialContent: elaboratedContent,
+                      )));
+
+              if (!context.mounted) return;
+
+              context.router
+                  .push(ElaborationRoute(elaborationModel: elaborationModel));
+            },
+            child: Text(context.tr("new_page_notice")),
+          )
+        ],
+      ),
+    );
   }
 }

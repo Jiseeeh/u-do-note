@@ -13,8 +13,8 @@ part 'elaboration_provider.g.dart';
 @riverpod
 ElaborationRemoteDataSource elaborationRemoteDataSource(
     ElaborationRemoteDataSourceRef ref) {
-  var firebaseAuth = ref.read(firebaseAuthProvider);
   var firestore = ref.read(firestoreProvider);
+  var firebaseAuth = ref.read(firebaseAuthProvider);
 
   return ElaborationRemoteDataSource(firestore, firebaseAuth);
 }

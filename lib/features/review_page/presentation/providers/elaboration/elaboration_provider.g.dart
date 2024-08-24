@@ -7,7 +7,7 @@ part of 'elaboration_provider.dart';
 // **************************************************************************
 
 String _$elaborationRemoteDataSourceHash() =>
-    r'3427e5554e78210224a1ae1d95e2a1728e8ee9e6';
+    r'c50d35c764063781371dbb062162e6981ca1d84c';
 
 /// See also [elaborationRemoteDataSource].
 @ProviderFor(elaborationRemoteDataSource)

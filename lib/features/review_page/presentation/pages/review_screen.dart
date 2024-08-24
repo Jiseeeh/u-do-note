@@ -20,12 +20,14 @@ import 'package:u_do_note/features/review_page/domain/entities/review_method.dar
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/feynman/feynman_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/feynman/feynman_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
-import 'package:u_do_note/features/review_page/presentation/widgets/pre_review_method.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
-import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class ReviewScreen extends ConsumerStatefulWidget {
@@ -56,136 +58,43 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     return false;
   }
 
-  void _leitnerOnPressed(BuildContext context) async {
-    if (isPomodoroActive()) return;
-
-    var reviewState = ref.watch(reviewScreenProvider);
-
-    var willContinue = await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) => const LeitnerSystemNotice());
-
-    if (!willContinue) return;
-
-    if (reviewState.reviewMethod == null && context.mounted) {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (dialogContext) {
-            return const PreReviewMethod(ReviewMethods.leitnerSystem);
-          });
-
+  void _onPressedHandler(
+      BuildContext context, ReviewMethods reviewMethod) async {
+    if (reviewMethod != ReviewMethods.pomodoroTechnique && isPomodoroActive()) {
       return;
     }
 
-    if (context.mounted) {
-      // ? pre-fill the notebook and pages when coming from the analyze notes
-      showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
-          reviewState.getNotebookId, reviewState.getNoteId);
-    }
-  }
+    Widget notice;
+    Widget preReview;
 
-  void _feynmanOnPressed(BuildContext context) async {
-    if (isPomodoroActive()) return;
-
-    var reviewState = ref.watch(reviewScreenProvider);
-
-    var willContinue = await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) => const FeynmanNotice());
-
-    if (!willContinue) return;
-
-    // ? feynman technique without pre filled notebook and pages
-    if (reviewState.reviewMethod == null && context.mounted) {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (dialogContext) {
-            return const PreReviewMethod(ReviewMethods.feynmanTechnique);
-          });
-
-      return;
-    }
-
-    if (context.mounted) {
-      // ? pre-fill the notebook and pages when coming from the analyze notes
-      showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
-          reviewState.getNotebookId, reviewState.getNoteId);
-    }
-  }
-
-  void _pomodoroOnPressed(BuildContext context) async {
-    var reviewState = ref.watch(reviewScreenProvider);
-    var pomodoro = ref.watch(pomodoroProvider);
-
-    if (pomodoro.hasFinishedSession || pomodoro.pomodoroTimer != null) {
-      context.router.push(const PomodoroRoute());
-      return;
+    switch (reviewMethod) {
+      case ReviewMethods.leitnerSystem:
+        notice = const LeitnerSystemNotice();
+        preReview = const LeitnerPreReview();
+      case ReviewMethods.feynmanTechnique:
+        notice = const FeynmanNotice();
+        preReview = const FeynmanPreReview();
+      case ReviewMethods.pomodoroTechnique:
+        notice = const PomodoroNotice();
+        preReview = const PomodoroPreReview();
+      case ReviewMethods.elaboration:
+        notice = const ElaborationNotice();
+        preReview = const ElaborationPreReview();
+      case ReviewMethods.acronymMnemonics:
+        throw UnsupportedError('Not yet supported');
     }
 
     var willContinue = await showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (dialogContext) => const PomodoroNotice());
+        builder: (dialogContext) => notice);
 
-    if (!willContinue) return;
+    if (!willContinue || !context.mounted) return;
 
-    // ? pomodoro technique without pre filled notebook and pages
-    if (reviewState.reviewMethod == null && context.mounted) {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (dialogContext) {
-            return const PreReviewMethod(ReviewMethods.pomodoroTechnique);
-          });
-
-      return;
-    }
-
-    if (context.mounted) {
-      // ? pre-fill the notebook and pages when coming from the analyze notes
-      showPreFilledPreReviewMethodDialog(context, reviewState.getReviewMethod,
-          reviewState.getNotebookId, reviewState.getNoteId);
-    }
-  }
-
-  // ? technique that will not be included in the suggested techniques.
-  void _elaborationOnPressed(BuildContext context) async {
-    if (isPomodoroActive()) return;
-
-    var reviewState = ref.watch(reviewScreenProvider);
-
-    var willContinue = await showDialog(
+    await showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (dialogContext) => const ElaborationNotice());
-
-    if (!willContinue) return;
-
-    if (reviewState.reviewMethod == null && context.mounted) {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (dialogContext) {
-            return const PreReviewMethod(ReviewMethods.elaboration);
-          });
-
-      return;
-    }
-  }
-
-  void showPreFilledPreReviewMethodDialog(BuildContext context,
-      dynamic reviewMethod, dynamic notebookId, dynamic noteId) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) {
-          return PreReviewMethod(reviewMethod,
-              notebookId: notebookId, pages: [noteId]);
-        });
+        builder: (dialogContext) => preReview);
   }
 
   late TutorialCoachMark tutorialCoachMark;
@@ -380,7 +289,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       imagePath: 'assets/images/flashcard.png',
                       buttonKey: leitnerBtnGlobalKey,
                       onPressed: () {
-                        _leitnerOnPressed(context);
+                        _onPressedHandler(context, ReviewMethods.leitnerSystem);
                       }),
                   const SizedBox(height: 16),
                   ReviewMethod(
@@ -389,7 +298,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       imagePath: 'assets/images/feynman.png',
                       buttonKey: feynmanBtnGlobalKey,
                       onPressed: () {
-                        _feynmanOnPressed(context);
+                        _onPressedHandler(
+                            context, ReviewMethods.feynmanTechnique);
                       }),
                   const SizedBox(height: 16),
                   ReviewMethod(
@@ -398,7 +308,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       imagePath: 'assets/images/pomodoro.png',
                       buttonKey: pomodoroBtnGlobalKey,
                       onPressed: () {
-                        _pomodoroOnPressed(context);
+                        _onPressedHandler(
+                            context, ReviewMethods.pomodoroTechnique);
                       }),
                   const SizedBox(height: 16),
                   ReviewMethod(
@@ -407,7 +318,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       imagePath: 'assets/images/elaboration.webp',
                       buttonKey: elaborationBtnGlobalKey,
                       onPressed: () {
-                        _elaborationOnPressed(context);
+                        _onPressedHandler(context, ReviewMethods.elaboration);
                       }),
                 ])),
               )
@@ -416,8 +327,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     );
   }
 
-  List<ListTile> _buildReviewMethodTiles(BuildContext context,
-      String currentText) {
+  List<ListTile> _buildReviewMethodTiles(
+      BuildContext context, String currentText) {
     List<ListTile> reviewMethodTiles = [];
     // ? use a provider to serve review methods entities to also be able
     // to use with the widgets at the top
@@ -427,28 +338,28 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           description: context.tr('leitner_desc'),
           imagePath: 'assets/images/flashcard.png',
           onPressed: () {
-            _leitnerOnPressed(context);
+            _onPressedHandler(context, ReviewMethods.leitnerSystem);
           }),
       ReviewMethodEntity(
           title: FeynmanModel.name,
           description: context.tr('feynman_desc'),
           imagePath: 'assets/images/feynman.png',
           onPressed: () {
-            _feynmanOnPressed(context);
+            _onPressedHandler(context, ReviewMethods.feynmanTechnique);
           }),
       ReviewMethodEntity(
           title: PomodoroModel.name,
           description: context.tr('pomodoro_desc'),
           imagePath: 'assets/images/pomodoro.png',
           onPressed: () {
-            _pomodoroOnPressed(context);
+            _onPressedHandler(context, ReviewMethods.pomodoroTechnique);
           }),
       ReviewMethodEntity(
           title: ElaborationModel.name,
           description: context.tr('elaboration_desc'),
           imagePath: 'assets/images/elaboration.webp',
           onPressed: () {
-            _elaborationOnPressed(context);
+            _onPressedHandler(context, ReviewMethods.elaboration);
           }),
     ];
 

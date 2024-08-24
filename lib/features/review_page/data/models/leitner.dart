@@ -26,7 +26,7 @@ class LeitnerSystemModel {
       required this.flashcards});
 
   /// Converts from model to json
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toFirestore() => {
         'id': id,
         'user_notebook_id': userNotebookId,
         'title': title,

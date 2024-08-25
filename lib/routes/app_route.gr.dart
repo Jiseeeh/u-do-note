@@ -15,6 +15,26 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AcronymQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<AcronymQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AcronymQuizScreen(
+          acronymModel: args.acronymModel,
+          key: args.key,
+        ),
+      );
+    },
+    AcronymRoute.name: (routeData) {
+      final args = routeData.argsAs<AcronymRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AcronymScreen(
+          args.acronymModel,
+          key: args.key,
+        ),
+      );
+    },
     AnalyticsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -187,6 +207,82 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [AcronymQuizScreen]
+class AcronymQuizRoute extends PageRouteInfo<AcronymQuizRouteArgs> {
+  AcronymQuizRoute({
+    required AcronymModel acronymModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AcronymQuizRoute.name,
+          args: AcronymQuizRouteArgs(
+            acronymModel: acronymModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'AcronymQuizRoute';
+
+  static const PageInfo<AcronymQuizRouteArgs> page =
+      PageInfo<AcronymQuizRouteArgs>(name);
+}
+
+class AcronymQuizRouteArgs {
+  const AcronymQuizRouteArgs({
+    required this.acronymModel,
+    this.key,
+  });
+
+  final AcronymModel acronymModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AcronymQuizRouteArgs{acronymModel: $acronymModel, key: $key}';
+  }
+}
+
+/// generated route for
+/// [AcronymScreen]
+class AcronymRoute extends PageRouteInfo<AcronymRouteArgs> {
+  AcronymRoute({
+    required AcronymModel acronymModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AcronymRoute.name,
+          args: AcronymRouteArgs(
+            acronymModel: acronymModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'AcronymRoute';
+
+  static const PageInfo<AcronymRouteArgs> page =
+      PageInfo<AcronymRouteArgs>(name);
+}
+
+class AcronymRouteArgs {
+  const AcronymRouteArgs({
+    required this.acronymModel,
+    this.key,
+  });
+
+  final AcronymModel acronymModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AcronymRouteArgs{acronymModel: $acronymModel, key: $key}';
+  }
 }
 
 /// generated route for

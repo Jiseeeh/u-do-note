@@ -12,6 +12,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/review_page/data/models/acronym.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
@@ -19,6 +20,8 @@ import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/feynman/feynman_notice.dart';
@@ -42,6 +45,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final feynmanBtnGlobalKey = GlobalKey();
   final pomodoroBtnGlobalKey = GlobalKey();
   final elaborationBtnGlobalKey = GlobalKey();
+  final acronymBtnGlobalKey = GlobalKey();
 
   bool isPomodoroActive() {
     var pomodoro = ref.watch(pomodoroProvider);
@@ -71,17 +75,23 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       case ReviewMethods.leitnerSystem:
         notice = const LeitnerSystemNotice();
         preReview = const LeitnerPreReview();
+        break;
       case ReviewMethods.feynmanTechnique:
         notice = const FeynmanNotice();
         preReview = const FeynmanPreReview();
+        break;
       case ReviewMethods.pomodoroTechnique:
         notice = const PomodoroNotice();
         preReview = const PomodoroPreReview();
+        break;
       case ReviewMethods.elaboration:
         notice = const ElaborationNotice();
         preReview = const ElaborationPreReview();
+        break;
       case ReviewMethods.acronymMnemonics:
-        throw UnsupportedError('Not yet supported');
+        notice = const AcronymNotice();
+        preReview = const AcronymPreReview();
+        break;
     }
 
     var willContinue = await showDialog(
@@ -167,8 +177,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         key = elaborationBtnGlobalKey;
         break;
       case ReviewMethods.acronymMnemonics:
-        // TODO: Handle this case.
-        key = GlobalKey();
+        key = acronymBtnGlobalKey;
         break;
     }
 
@@ -320,6 +329,16 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       onPressed: () {
                         _onPressedHandler(context, ReviewMethods.elaboration);
                       }),
+                  const SizedBox(height: 16),
+                  ReviewMethod(
+                      title: AcronymModel.name,
+                      description: context.tr('acronym_desc'),
+                      imagePath: 'assets/images/acronym.webp',
+                      buttonKey: acronymBtnGlobalKey,
+                      onPressed: () {
+                        _onPressedHandler(
+                            context, ReviewMethods.acronymMnemonics);
+                      }),
                 ])),
               )
             ],
@@ -360,6 +379,13 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           imagePath: 'assets/images/elaboration.webp',
           onPressed: () {
             _onPressedHandler(context, ReviewMethods.elaboration);
+          }),
+      ReviewMethodEntity(
+          title: AcronymModel.name,
+          description: context.tr('acronym_desc'),
+          imagePath: 'assets/images/acronym.webp',
+          onPressed: () {
+            _onPressedHandler(context, ReviewMethods.acronymMnemonics);
           }),
     ];
 

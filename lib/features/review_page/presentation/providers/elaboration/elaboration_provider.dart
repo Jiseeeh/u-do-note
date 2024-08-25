@@ -49,10 +49,8 @@ class Elaboration extends _$Elaboration {
 
   /// Save the quiz results
   /// This also be used to save the remark when the user has not taken the quiz
-  /// [isOldSession] is used to identify if we update or add the quiz remark
-  Future<dynamic> saveQuizResults(
-      String notebookId, ElaborationModel elaborationModel,
-      {bool isOldSession = false}) async {
+  Future<dynamic> saveQuizResults(String notebookId,
+      ElaborationModel elaborationModel) async {
     var saveQuizResults = ref.read(saveQuizResultsProvider);
 
     var failureOrString = await saveQuizResults(notebookId, elaborationModel);

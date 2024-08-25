@@ -7,6 +7,7 @@ import 'package:multi_dropdown/multi_dropdown.dart';
 
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
+import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review.dart';
@@ -20,6 +21,8 @@ class FeynmanPreReview extends ConsumerStatefulWidget {
 }
 
 class _FeynmanPreReviewState extends ConsumerState<FeynmanPreReview> {
+  var _oldFeynmanSessionId = "";
+
   @override
   Widget build(BuildContext context) {
     return PreReview(handler: handleFeynmanTechnique);
@@ -51,29 +54,16 @@ class _FeynmanPreReviewState extends ConsumerState<FeynmanPreReview> {
       return;
     }
 
-    var willReviewOldSessions = await showDialog(
-        context: context,
-        builder: (dialogContext) {
-          return AlertDialog(
-            title: Text(context.tr("notice")),
-            content: Text(context.tr("old_session_notice_q",
-                namedArgs: {"reviewMethod": "Feynman"})),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(false);
-                },
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(true);
-                },
-                child: const Text('Yes'),
-              ),
-            ],
-          );
-        });
+    var willReviewOldSessions = await CustomDialog.show(context,
+        title: "notice",
+        subTitle: "old_session_notice_q",
+        subTitleArgs: {
+          "reviewMethod": "Feynman"
+        },
+        buttons: [
+          CustomDialogButton(text: "No", value: false),
+          CustomDialogButton(text: "Yes", value: true)
+        ]);
 
     if (!context.mounted) return;
 
@@ -84,62 +74,35 @@ class _FeynmanPreReviewState extends ConsumerState<FeynmanPreReview> {
       return;
     }
 
-    var sessionId = await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (dialogContext) {
-          var sessionId = "";
-          return AlertDialog(
-            scrollable: true,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(context.tr("feynman_old_session_label")),
-                Text(
-                  context.tr("old_session_notice"),
-                  style: const TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(null);
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop(sessionId);
-                },
-                child: const Text('Continue'),
-              ),
-            ],
-            content: MultiSelect(
-              items: oldFeynmanModels
-                  .map((el) =>
-                      DropdownItem(label: el.sessionName, value: el.id!))
-                  .toList(),
-              hintText: "Notice",
-              title: "Notice",
-              validationText: "Please select at least one session",
-              prefixIcon: Icons.arrow_drop_down_circle_outlined,
-              singleSelect: true,
-              onSelectionChanged: (items) {
-                sessionId = items.first;
-              },
-            ),
-          );
-        });
+    await CustomDialog.show(context,
+        title: "feynman_old_session_label",
+        subTitle: "old_session_notice",
+        buttons: [
+          CustomDialogButton(text: "Cancel", value: false),
+          CustomDialogButton(text: "Continue", value: true)
+        ],
+        content: MultiSelect(
+          items: oldFeynmanModels
+              .map((el) => DropdownItem(label: el.sessionName, value: el.id!))
+              .toList(),
+          hintText: "Notice",
+          title: "Notice",
+          validationText: "Please select at least one session",
+          prefixIcon: Icons.arrow_drop_down_circle_outlined,
+          singleSelect: true,
+          onSelectionChanged: (items) {
+            _oldFeynmanSessionId = items.first;
+          },
+        ));
 
     if (!context.mounted) return;
-    if (sessionId == null || sessionId.isEmpty) return;
+    if (_oldFeynmanSessionId.isEmpty) return;
 
     context.router.push(FeynmanTechniqueRoute(
         contentFromPages: reviewScreenState.getContentFromPages,
         sessionName: reviewScreenState.getSessionTitle,
         feynmanEntity: oldFeynmanModels
-            .firstWhere((el) => el.id == sessionId)
+            .firstWhere((el) => el.id == _oldFeynmanSessionId)
             .toEntity()));
   }
 }

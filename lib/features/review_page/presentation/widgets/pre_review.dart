@@ -141,6 +141,7 @@ class _PreReviewState extends ConsumerState<PreReview> {
             }
 
             // ? for the handler to use
+            reviewScreenState.setSessionTitle(_titleController.text);
             reviewScreenState.setContentFromPages(contentFromPages);
             reviewScreenState.setNotebookId(_notebookId);
             reviewScreenState.setNotebookPagesIds(

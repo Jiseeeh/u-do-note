@@ -22,7 +22,7 @@ class CustomDialog {
             children: [
               Text(context.tr(title, namedArgs: titleArgs)),
               subTitle != null
-                  ? Text(context.tr(subTitle),
+                  ? Text(context.tr(subTitle, namedArgs: subTitleArgs),
                       style: Theme.of(context).textTheme.bodyMedium)
                   : const Text("")
             ],

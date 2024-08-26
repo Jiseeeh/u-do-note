@@ -139,7 +139,7 @@ class _AcronymPreReviewState extends ConsumerState<AcronymPreReview> {
     if (!context.mounted) return;
 
     if (mnemonics is Failure) {
-      EasyLoading.showError(context.tr("general_e"));
+      EasyLoading.showError(mnemonics.message);
       logger.w("Error at mnemonics generation: ${mnemonics.message}");
       return;
     }

@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/Jiseeeh/u-do-note/compare/v1.4.0...v1.5.0) (2024-08-26)
+
+
+### Features
+
+* add acronym mnemonics ([#86](https://github.com/Jiseeeh/u-do-note/issues/86)) ([ca9c9a4](https://github.com/Jiseeeh/u-do-note/commit/ca9c9a470fb9f4551a1cd5aef9ff80bacf70ba2b))
+
 # [1.4.0](https://github.com/Jiseeeh/u-do-note/compare/v1.3.0...v1.4.0) (2024-08-21)
 
 

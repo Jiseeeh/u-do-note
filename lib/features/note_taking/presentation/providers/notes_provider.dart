@@ -166,11 +166,16 @@ Stream<List<NotebookEntity>> notebooksStream(NotebooksStreamRef ref) {
           .snapshots()
           .listen(
         (snapshot) {
-          if (!controller.isClosed) {
-            final notebooks = snapshot.docs.map((doc) {
-              return NotebookModel.fromFirestore(doc.id, doc.data()).toEntity();
-            }).toList();
-            controller.add(notebooks);
+          try {
+            if (!controller.isClosed) {
+              final notebooks = snapshot.docs.map((doc) {
+                return NotebookModel.fromFirestore(doc.id, doc.data())
+                    .toEntity();
+              }).toList();
+              controller.add(notebooks);
+            }
+          } catch (e) {
+            controller.addError(e);
           }
         },
         onError: (error) {

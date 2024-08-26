@@ -8,6 +8,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'firebase_options.dart';
 import 'package:u_do_note/core/constant.dart' as constants;
+import 'package:u_do_note/core/shared/presentation/widgets/custom_error.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_theme_provider.dart';
 import 'package:u_do_note/core/shared/theme/app_theme.dart';
 import 'package:u_do_note/observers.dart';
@@ -58,7 +59,12 @@ class MainApp extends ConsumerWidget {
               darkTheme: AppTheme.darkTheme,
               themeMode: themeMode,
               routerConfig: appRouter.config(),
-              builder: EasyLoading.init(),
+              builder: (context, widget) {
+                ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+                  return CustomError(errorDetails: errorDetails);
+                };
+                return EasyLoading.init()(context, widget);
+              },
             ));
   }
 }

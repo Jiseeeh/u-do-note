@@ -13,8 +13,8 @@ part 'elaboration_provider.g.dart';
 @riverpod
 ElaborationRemoteDataSource elaborationRemoteDataSource(
     ElaborationRemoteDataSourceRef ref) {
-  var firebaseAuth = ref.read(firebaseAuthProvider);
   var firestore = ref.read(firestoreProvider);
+  var firebaseAuth = ref.read(firebaseAuthProvider);
 
   return ElaborationRemoteDataSource(firestore, firebaseAuth);
 }
@@ -49,10 +49,8 @@ class Elaboration extends _$Elaboration {
 
   /// Save the quiz results
   /// This also be used to save the remark when the user has not taken the quiz
-  /// [isOldSession] is used to identify if we update or add the quiz remark
-  Future<dynamic> saveQuizResults(
-      String notebookId, ElaborationModel elaborationModel,
-      {bool isOldSession = false}) async {
+  Future<dynamic> saveQuizResults(String notebookId,
+      ElaborationModel elaborationModel) async {
     var saveQuizResults = ref.read(saveQuizResultsProvider);
 
     var failureOrString = await saveQuizResults(notebookId, elaborationModel);

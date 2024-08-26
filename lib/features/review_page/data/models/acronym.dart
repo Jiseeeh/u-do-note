@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:u_do_note/core/shared/data/models/quiz.dart';
 import 'package:u_do_note/core/shared/data/models/question.dart';
 
-class ElaborationModel extends QuizModel {
+import 'package:u_do_note/core/shared/data/models/quiz.dart';
+
+class AcronymModel extends QuizModel {
   final String? id;
   final String content;
   final String sessionName;
   final Timestamp createdAt;
-  static const name = "Elaboration";
+  static const name = "Acronym Mnemonics";
 
-  const ElaborationModel({
+  const AcronymModel({
     super.questions,
     super.selectedAnswersIndex,
     super.score,
@@ -22,8 +22,8 @@ class ElaborationModel extends QuizModel {
   });
 
   /// Converts from firestore to model
-  factory ElaborationModel.fromFirestore(String id, Map<String, dynamic> data) {
-    return ElaborationModel(
+  factory AcronymModel.fromFirestore(String id, Map<String, dynamic> data) {
+    return AcronymModel(
       id: id,
       content: data['content'],
       sessionName: data['session_name'],
@@ -53,7 +53,7 @@ class ElaborationModel extends QuizModel {
   }
 
   /// Copy with new values
-  ElaborationModel copyWith({
+  AcronymModel copyWith({
     String? id,
     String? content,
     String? sessionName,
@@ -63,7 +63,7 @@ class ElaborationModel extends QuizModel {
     int? score,
     String? remark,
   }) {
-    return ElaborationModel(
+    return AcronymModel(
       id: id ?? this.id,
       content: content ?? this.content,
       sessionName: sessionName ?? this.sessionName,

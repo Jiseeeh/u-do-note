@@ -22,13 +22,13 @@ class ElaborationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future.delayed(
-        Duration.zero,
+        const Duration(seconds: 3),
         () => showDialog(
             context: context,
             builder: (dialogContext) {
               return AlertDialog(
                 title: Text(context.tr('notice')),
-                content: Text(context.tr('elaboration_review')),
+                content: Text(context.tr('review_remind')),
                 actions: [
                   TextButton(
                       onPressed: () {
@@ -67,11 +67,11 @@ class ElaborationScreen extends ConsumerWidget {
 
             reviewState.resetState();
 
-            if (context.mounted) Navigator.of(context).pop();
+            if (context.mounted) context.router.replace(const ReviewRoute());
           } else {
             reviewState.resetState();
 
-            Navigator.of(context).pop();
+            context.router.replace(const ReviewRoute());
           }
         }
       },

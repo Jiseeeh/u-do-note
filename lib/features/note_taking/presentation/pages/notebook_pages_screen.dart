@@ -10,9 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -21,6 +19,7 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
+import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
@@ -278,33 +277,29 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                             ],
                             content: Column(
                               children: [
-                                MultiSelectDialogField(
-                                  listType: MultiSelectListType.CHIP,
+                                MultiSelect(
                                   items: notebooks
                                       .firstWhere(
                                           (nb) => nb.id == widget.notebookId)
                                       .notes
-                                      .map((note) => MultiSelectItem<String>(
-                                          note.id, note.title))
+                                      .map((note) => DropdownItem(
+                                          label: note.title, value: note.id))
                                       .toList(),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.withOpacity(0.1),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(8)),
-                                  ),
-                                  onConfirm: (results) {
+                                  hintText: "Notebook Pages",
+                                  title: "Pages",
+                                  subTitle:
+                                      "You can select multiple pages if you like.",
+                                  validationText:
+                                      "Please select one or more page.",
+                                  prefixIcon:
+                                      Icons.arrow_drop_down_circle_outlined,
+                                  singleSelect: true,
+                                  onSelectionChanged: (items) {
                                     setState(() {
                                       notebookIdsToPasteExtractedContent =
-                                          results;
+                                          items;
                                     });
                                   },
-                                  buttonIcon: const Icon(
-                                    Icons.arrow_drop_down_circle_outlined,
-                                    color: Colors.blue,
-                                  ),
-                                  buttonText: const Text(
-                                    "Notebook Pages",
-                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 const Text('OR'),

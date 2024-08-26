@@ -1,29 +1,28 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 
-import 'package:u_do_note/core/shared/theme/colors.dart';
-
-class MultiSelect<T> extends ConsumerWidget {
-  final List<T> initialItems;
+class MultiSelect<T extends Object> extends ConsumerWidget {
+  final List<DropdownItem<T>> items;
+  final MultiSelectController<T>? controller;
+  final bool singleSelect;
+  final String hintText;
   final String title;
-  final String subTitle;
-  final List<MultiSelectItem<T>> items;
-  final IconData buttonIcon;
-  final String? buttonText;
+  final String? subTitle;
+  final String validationText;
+  final IconData prefixIcon;
   final GlobalKey<FormFieldState<dynamic>>? customKey;
-  final void Function(List<T>) onConfirm;
   final void Function(List<T>)? onSelectionChanged;
 
-  const MultiSelect(
-      {required this.initialItems,
+  const MultiSelect({required this.items,
+    required this.hintText,
       required this.title,
-      required this.subTitle,
-      required this.items,
-      required this.buttonIcon,
-      required this.onConfirm,
-      this.buttonText,
+      required this.validationText,
+      required this.prefixIcon,
+      this.controller,
+      this.subTitle,
+      this.singleSelect = false,
       this.customKey,
       this.onSelectionChanged,
       Key? key})
@@ -31,36 +30,60 @@ class MultiSelect<T> extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MultiSelectDialogField(
+    return MultiDropdown<T>(
       key: customKey,
-      initialValue: initialItems,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(context.tr(title)),
-          Text(
-            context.tr(subTitle),
-            style: const TextStyle(fontSize: 12),
-          )
-        ],
-      ),
       items: items,
-      selectedItemsTextStyle: const TextStyle(color: AppColors.white),
-      selectedColor: AppColors.secondary,
-      listType: MultiSelectListType.CHIP,
-      decoration: BoxDecoration(
-        color: AppColors.secondary.withOpacity(0.1),
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
+      controller: controller,
+      enabled: true,
+      singleSelect: singleSelect,
+      onSelectionChange: onSelectionChanged,
+      fieldDecoration: FieldDecoration(
+        hintText: hintText,
+        hintStyle: const TextStyle(color: Colors.black87),
+        prefixIcon: Icon(prefixIcon),
+        showClearIcon: false,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Colors.black87,
+          ),
+        ),
       ),
-      onSelectionChanged: onSelectionChanged,
-      onConfirm: onConfirm,
-      buttonIcon: Icon(
-        buttonIcon,
-        color: AppColors.secondary,
+      dropdownDecoration: DropdownDecoration(
+        marginTop: 2,
+        maxHeight: 500,
+        header: Padding(
+          padding: const EdgeInsets.all(8),
+          child: RichText(
+            text: TextSpan(
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+                text: context.tr(title),
+                children: [
+                  subTitle != null
+                      ? const TextSpan(text: "\n")
+                      : const TextSpan(text: ""),
+                  subTitle != null
+                      ? TextSpan(
+                          text: context.tr(subTitle!),
+                          style: Theme.of(context).textTheme.bodySmall)
+                      : const TextSpan(text: ""),
+                ]),
+          ),
+        ),
       ),
-      buttonText: Text(
-        buttonText ?? title,
-      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return validationText;
+        }
+        return null;
+      },
     );
   }
 }

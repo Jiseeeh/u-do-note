@@ -81,6 +81,8 @@ class LeitnerRemoteDataSource {
     }
     var userId = FirebaseAuth.instance.currentUser!.uid;
 
+    // TODO: use toFirestore of leitner
+
     // ? save the flashcards to firestore to be updated
     // ? after the user has reviewed the flashcards.
     var now = Timestamp.now();

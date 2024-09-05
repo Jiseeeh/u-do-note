@@ -76,8 +76,6 @@ class BlurtingRemoteDataSource {
       String notebookId, BlurtingModel blurtingModel) async {
     var userId = _auth.currentUser!.uid;
 
-    logger.d(blurtingModel.toFirestore());
-
     // ? user did not take the quiz after reviewing
     if (blurtingModel.selectedAnswersIndex == null) {
       await _firestore

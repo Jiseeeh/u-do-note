@@ -12,16 +12,19 @@ class ReviewScreenState {
   /// Specific for analyze notes because that feature only uses one note at a time
   String? noteId;
 
-  ReviewScreenState({
-    this.reviewMethod,
-    // ? defaults to "" as accessing it at first where on multi selects throws bad state
-    this.notebookId = "",
-    this.contentFromPages,
-    this.sessionTitle,
-    this.isFromAutoAnalysis = false,
-    this.notebookPagesIds,
-    this.noteId,
-  });
+  /// Specific for blurting method
+  bool isFromOldBlurtingSession;
+
+  ReviewScreenState(
+      {this.reviewMethod,
+      // ? defaults to "" as accessing it at first where on multi selects throws bad state
+      this.notebookId = "",
+      this.contentFromPages,
+      this.sessionTitle,
+      this.isFromAutoAnalysis = false,
+      this.notebookPagesIds,
+      this.noteId,
+      this.isFromOldBlurtingSession = false});
 
   get getReviewMethod => reviewMethod;
 
@@ -36,6 +39,8 @@ class ReviewScreenState {
   get getNoteId => noteId;
 
   get getNotebookPagesIds => notebookPagesIds;
+
+  get getIsFromOldBlurtingSession => isFromOldBlurtingSession;
 
   void setReviewMethod(ReviewMethods reviewMethod) {
     this.reviewMethod = reviewMethod;
@@ -69,6 +74,11 @@ class ReviewScreenState {
     this.noteId = noteId;
   }
 
+  void setIsFromOldBlurtingSession(bool value) {
+    logger.d('Setting isFromOldBlurtingSession to: $value');
+    isFromOldBlurtingSession = value;
+  }
+
   void resetState() {
     logger.w('Resetting state...');
     reviewMethod = null;
@@ -78,6 +88,7 @@ class ReviewScreenState {
     sessionTitle = null;
     isFromAutoAnalysis = false;
     noteId = null;
+    isFromOldBlurtingSession = false;
   }
 
   @override

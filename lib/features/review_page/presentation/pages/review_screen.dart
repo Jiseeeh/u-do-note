@@ -13,6 +13,7 @@ import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
@@ -22,6 +23,8 @@ import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/p
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/blurting/blurting_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/blurting/blurting_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/feynman/feynman_notice.dart';
@@ -46,6 +49,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final pomodoroBtnGlobalKey = GlobalKey();
   final elaborationBtnGlobalKey = GlobalKey();
   final acronymBtnGlobalKey = GlobalKey();
+  final blurtingBtnGlobalKey = GlobalKey();
 
   bool isPomodoroActive() {
     var pomodoro = ref.watch(pomodoroProvider);
@@ -70,27 +74,38 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
     Widget notice;
     Widget preReview;
+    var reviewScreenState = ref.read(reviewScreenProvider);
 
     switch (reviewMethod) {
       case ReviewMethods.leitnerSystem:
         notice = const LeitnerSystemNotice();
         preReview = const LeitnerPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.leitnerSystem);
         break;
       case ReviewMethods.feynmanTechnique:
         notice = const FeynmanNotice();
         preReview = const FeynmanPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.feynmanTechnique);
         break;
       case ReviewMethods.pomodoroTechnique:
         notice = const PomodoroNotice();
         preReview = const PomodoroPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.pomodoroTechnique);
         break;
       case ReviewMethods.elaboration:
         notice = const ElaborationNotice();
         preReview = const ElaborationPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.elaboration);
         break;
       case ReviewMethods.acronymMnemonics:
         notice = const AcronymNotice();
         preReview = const AcronymPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.acronymMnemonics);
+        break;
+      case ReviewMethods.blurting:
+        notice = const BlurtingNotice();
+        preReview = const BlurtingPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.blurting);
         break;
     }
 
@@ -178,6 +193,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         break;
       case ReviewMethods.acronymMnemonics:
         key = acronymBtnGlobalKey;
+        break;
+      case ReviewMethods.blurting:
+        key = blurtingBtnGlobalKey;
         break;
     }
 
@@ -339,6 +357,15 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                         _onPressedHandler(
                             context, ReviewMethods.acronymMnemonics);
                       }),
+                  const SizedBox(height: 16),
+                  ReviewMethod(
+                      title: BlurtingModel.name,
+                      description: context.tr('blurting_desc'),
+                      imagePath: 'assets/images/blurting.webp',
+                      buttonKey: blurtingBtnGlobalKey,
+                      onPressed: () {
+                        _onPressedHandler(context, ReviewMethods.blurting);
+                      }),
                 ])),
               )
             ],
@@ -386,6 +413,13 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           imagePath: 'assets/images/acronym.webp',
           onPressed: () {
             _onPressedHandler(context, ReviewMethods.acronymMnemonics);
+          }),
+      ReviewMethodEntity(
+          title: BlurtingModel.name,
+          description: context.tr('blurting_desc'),
+          imagePath: 'assets/images/blurting.webp',
+          onPressed: () {
+            _onPressedHandler(context, ReviewMethods.blurting);
           }),
     ];
 

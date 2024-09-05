@@ -3,5 +3,6 @@ enum ReviewMethods {
   feynmanTechnique,
   pomodoroTechnique,
   elaboration,
-  acronymMnemonics
+  acronymMnemonics,
+  blurting
 }

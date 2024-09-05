@@ -69,7 +69,7 @@ class NoteRemoteDataSource {
     return response;
   }
 
-  Future<String> createNote(
+  Future<NoteModel> createNote(
       {required String notebookId,
       required String title,
       String? initialContent}) async {
@@ -108,8 +108,10 @@ class NoteRemoteDataSource {
 
     logger.d('defaultContent: $defaultContent');
 
+    var id = DateTime.now().millisecondsSinceEpoch.toString();
+
     var newNote = NoteModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: id,
       title: title,
       content: defaultContent,
       plainTextContent: initialNoteText,
@@ -131,11 +133,32 @@ class NoteRemoteDataSource {
       'updated_at': FieldValue.serverTimestamp()
     });
 
-    const response = 'Note created successfully.';
+    logger.i("Page created successfully.");
 
-    logger.i(response);
+    return newNote;
+  }
 
-    return response;
+  Future<NoteModel> getNote(String notebookId, String noteId) async {
+    var userId = _auth.currentUser!.uid;
+
+    var notebook = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .get();
+
+    if (!notebook.exists) throw "No notebook found with id: $notebookId";
+
+    var notes = notebook.data()!['notes'];
+    List<NoteModel> notesModel = [];
+
+    for (var note in notes) {
+      notesModel.add(NoteModel.fromFirestore(note));
+    }
+
+    return notesModel.firstWhere((noteModel) => noteModel.id == noteId,
+        orElse: () => throw "No note found with id: $noteId");
   }
 
   Future<List<NotebookModel>> getNotebooks() async {

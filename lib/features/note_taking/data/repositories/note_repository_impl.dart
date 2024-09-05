@@ -14,13 +14,27 @@ class NoteRepositoryImpl implements NoteRepository {
   const NoteRepositoryImpl(this._noteRemoteDataSource);
 
   @override
-  Future<Either<Failure, String>> createNote(
+  Future<Either<Failure, NoteModel>> createNote(
       {required String notebookId,
       required String title,
       String? initialContent}) async {
     try {
       var res = await _noteRemoteDataSource.createNote(
           notebookId: notebookId, title: title, initialContent: initialContent);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoteModel>> getNote(
+      String notebookId, String noteId) async {
+    try {
+      var res = await _noteRemoteDataSource.getNote(notebookId, noteId);
 
       return Right(res);
     } on FirebaseAuthException catch (e) {

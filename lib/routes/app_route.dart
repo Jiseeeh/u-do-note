@@ -13,6 +13,7 @@ import 'package:u_do_note/features/note_taking/presentation/pages/notebook_pages
 import 'package:u_do_note/features/note_taking/presentation/pages/notebooks_screen.dart';
 import 'package:u_do_note/features/note_taking/presentation/pages/summary_screen.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/core/shared/data/models/question.dart';
@@ -20,6 +21,7 @@ import 'package:u_do_note/features/review_page/domain/entities/feynman/feynman.d
 import 'package:u_do_note/core/shared/domain/entities/question.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/acronym/acronym_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/acronym/acronym_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/blurting/blurting_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/elaboration/elaboration_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/elaboration/elaboration_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynman_technique_screen.dart';
@@ -77,6 +79,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ElaborationRoute.page, path: '/elaboration'),
         AutoRoute(page: ElaborationQuizRoute.page, path: '/elaboration-quiz'),
         AutoRoute(page: AcronymRoute.page, path: '/acronym'),
-        AutoRoute(page: AcronymQuizRoute.page, path: '/acronym-quiz')
+        AutoRoute(page: AcronymQuizRoute.page, path: '/acronym-quiz'),
+        AutoRoute(page: BlurtingQuizRoute.page, path: '/blurting-quiz')
       ];
 }

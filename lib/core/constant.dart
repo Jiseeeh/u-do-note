@@ -17,3 +17,6 @@ const defaultTechniquesUsage = {
   PomodoroModel.name: 0,
   ElaborationModel.name: 0,
 };
+
+const minTitleLen = 1;
+const maxTitleLen = 18;

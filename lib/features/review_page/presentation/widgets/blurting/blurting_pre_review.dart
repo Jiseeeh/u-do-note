@@ -8,7 +8,9 @@ import 'package:multi_dropdown/multi_dropdown.dart';
 
 import 'package:u_do_note/core/constant.dart' as constants;
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/firestore_filter_enum.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
+import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/core/utility.dart';
@@ -51,13 +53,32 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
         .getOldSessions(
             notebookId: _notebookId,
             methodName: BlurtingModel.name,
-            fromFirestore: BlurtingModel.fromFirestore);
+            fromFirestore: BlurtingModel.fromFirestore,
+            filters: [
+          QueryFilter(
+              field: 'remark', operation: FirestoreFilter.isNull, value: true)
+        ]);
 
     EasyLoading.dismiss();
 
     if (!context.mounted) return;
 
     if (oldBlurtingModels.isEmpty) {
+      await _startNewBlurtingSession(context);
+      return;
+    }
+
+    var willReviewOld = await CustomDialog.show(context,
+        title: "Notice",
+        subTitle: "Do you want to take a quiz from an old session?",
+        buttons: [
+          CustomDialogButton(text: "No", value: false),
+          CustomDialogButton(text: "Yes", value: true),
+        ]);
+
+    if (!context.mounted) return;
+
+    if (!willReviewOld) {
       await _startNewBlurtingSession(context);
       return;
     }

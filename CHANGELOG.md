@@ -1,3 +1,14 @@
+# [1.6.0](https://github.com/Jiseeeh/u-do-note/compare/v1.5.0...v1.6.0) (2024-09-06)
+
+
+### Features
+
+* add blurting method ([#87](https://github.com/Jiseeeh/u-do-note/issues/87)) ([aefecfc](https://github.com/Jiseeeh/u-do-note/commit/aefecfcbdf6f10372259368646153c8545b55619))
+* add custom error widget ([a07ea27](https://github.com/Jiseeeh/u-do-note/commit/a07ea2795169e1223df3af89ea0716aeeffbfbb9))
+* add error handling ([3978b91](https://github.com/Jiseeeh/u-do-note/commit/3978b91331cb5ed0fe7a385045313d6cbd5d89f5))
+* add error illustration ([424863b](https://github.com/Jiseeeh/u-do-note/commit/424863b89addae887a79e9593d32a054f174504c))
+* replace error screen ([c9dd2c1](https://github.com/Jiseeeh/u-do-note/commit/c9dd2c138991ad3a53836d6a5ad9e5bdefb11541))
+
 # [1.5.0](https://github.com/Jiseeeh/u-do-note/compare/v1.4.0...v1.5.0) (2024-08-26)
 
 

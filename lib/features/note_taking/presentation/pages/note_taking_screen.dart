@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,13 +17,18 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
+import 'package:u_do_note/core/shared/data/models/question.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
+import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/analyze_image_text_dialog.dart';
+import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/blurting/blurting_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
@@ -30,10 +36,14 @@ import 'package:u_do_note/routes/app_route.dart';
 class NoteTakingScreen extends ConsumerStatefulWidget {
   final String notebookId;
   final NoteEntity note;
+  final BlurtingModel? blurtingModel;
 
-  const NoteTakingScreen(
-      {required this.notebookId, required this.note, Key? key})
-      : super(key: key);
+  const NoteTakingScreen({
+    required this.notebookId,
+    required this.note,
+    this.blurtingModel,
+    Key? key,
+  }) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -53,10 +63,14 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   var _isToolbarVisible = true;
   var _speechEnabled = false;
   var _wordsSpoken = "";
+  var _isFromOldBlurtingSession = false;
+  var _minBlurtingText = 200; // min limit before asking if done
+  var _maxBlurtingText = 500; // max limit before asking if done
+  var _hasBeenOrganized = false;
   String? _learningTechniqueAnalyzed;
   String? _reasonAnalyzed;
   String? _topicAnalyzed;
-  Timer? _timer;
+  Timer? _analyzeNoteTimer;
   Timer? _noteLenTimer;
   Timer? _autoSaveTimer;
 
@@ -67,6 +81,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     final document = _loadDocument();
     _fleatherController = FleatherController(document: document);
     _focusNode = FocusNode();
+
+    _checkIfFromBlurting();
 
     _noteTitleController.text = widget.note.title;
 
@@ -93,6 +109,14 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     // ? to update the character count on ui
     _fleatherController!.addListener(() {
       setState(() {});
+
+      if (widget.blurtingModel == null || _hasBeenOrganized) return;
+
+      var noteLen = _fleatherController!.document.toPlainText().length;
+
+      if (noteLen >= _minBlurtingText || noteLen >= _maxBlurtingText) {
+        _showBlurtingDialog(context);
+      }
     });
 
     _lastSavedContent = _fleatherController!.document.toPlainText();
@@ -104,6 +128,94 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     });
 
     checkIfAnalyzed(context);
+
+    if (widget.blurtingModel != null) {
+      Future.delayed(
+          Duration.zero,
+          () => showDialog(
+              context: context,
+              builder: (dialogContext) {
+                return AlertDialog(
+                  scrollable: true,
+                  title: const Text("Blurting tips"),
+                  content: const Column(
+                    children: [
+                      Text(
+                          "\u2022 Write anything that comes to your mind about the topic, don't worry about organizing it. You can also use the mic if you want to.\n"),
+                      Text(
+                          "\u2022 If nothing comes to mind, just take a 5-10 minute break and come back.\n"),
+                      Text(
+                          "\u2022 We will ask after some time if you are done, or you can also tap the plus button in the bottom right of the screen and choose Done.")
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                        child: const Text("Okay"))
+                  ],
+                );
+              }));
+    }
+  }
+
+  void _checkIfFromBlurting() {
+    var reviewScreenState = ref.read(reviewScreenProvider);
+
+    _isFromOldBlurtingSession = reviewScreenState.getIsFromOldBlurtingSession;
+
+    if (_isFromOldBlurtingSession) {
+      _hasBeenOrganized = true;
+      _minBlurtingText += _fleatherController!.document.toPlainText().length;
+      _maxBlurtingText += _fleatherController!.document.toPlainText().length;
+    }
+  }
+
+  void _showBlurtingDialog(BuildContext context) async {
+    await CustomDialog.show(context,
+        title: "Blurting",
+        subTitle:
+            "Are you done writing down your ideas? If so, let us do the rest!",
+        buttons: [
+          CustomDialogButton(text: "No"),
+          CustomDialogButton(
+              text: "Yes",
+              onPressed: () async {
+                EasyLoading.show(
+                    status: 'Please wait...',
+                    maskType: EasyLoadingMaskType.black,
+                    dismissOnTap: false);
+
+                var res = await ref
+                    .read(blurtingProvider.notifier)
+                    .applyBlurting(
+                        content: _fleatherController!.document.toPlainText());
+
+                EasyLoading.dismiss();
+
+                if (!context.mounted) return;
+
+                if (res is Failure) {
+                  EasyLoading.showError(context.tr("general_e"));
+                  logger.e(res.message);
+                  return;
+                }
+
+                var docLen = _fleatherController!.document.length - 1;
+                _fleatherController!.document.replace(0, docLen, res);
+
+                setState(() {
+                  _hasBeenOrganized = true;
+                });
+
+                await CustomDialog.show(context,
+                    title: "Blurting",
+                    subTitle:
+                        "Review the content, and after you are done tap the plus button again and choose Quiz.",
+                    buttons: [CustomDialogButton(text: "Okay")]);
+              }),
+        ]);
   }
 
   ParchmentDocument _loadDocument() {
@@ -116,13 +228,15 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   void dispose() {
     logger.d('Disposing Timers...');
 
-    _timer?.cancel();
+    _analyzeNoteTimer?.cancel();
     _noteLenTimer?.cancel();
     _autoSaveTimer?.cancel();
     super.dispose();
   }
 
   void checkIfAnalyzed(BuildContext context) async {
+    if (widget.blurtingModel != null) return;
+
     var prefs = await ref.read(sharedPreferencesProvider.future);
 
     var note = prefs.get('note_${widget.note.id}');
@@ -175,9 +289,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   }
 
   void _analyzeNote(_NoteData noteData) async {
+    if (widget.blurtingModel != null) return;
+
     var prefs = await ref.read(sharedPreferencesProvider.future);
 
-    _timer = Timer(const Duration(seconds: 5), () {
+    _analyzeNoteTimer = Timer(const Duration(seconds: 5), () {
       ref
           .read(notebooksProvider.notifier)
           .analyzeNote(_fleatherController!.document.toPlainText())
@@ -469,14 +585,31 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO deprecated but this sht works not PopScope
-    return WillPopScope(
-      onWillPop: () async {
-        onSave(showLoading: false);
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
 
-        Navigator.pop(context);
+        if (context.mounted) {
+          onSave(showLoading: false);
 
-        return true;
+          if (widget.blurtingModel != null && !_isFromOldBlurtingSession) {
+            var reviewScreenState = ref.read(reviewScreenProvider);
+
+            var blurtingModel = BlurtingModel(
+                noteId: widget.note.id,
+                sessionName: reviewScreenState.getSessionTitle,
+                createdAt: Timestamp.now(),
+                content: _fleatherController!.document.toPlainText());
+
+            await ref.read(blurtingProvider.notifier).saveQuizResults(
+                notebookId: reviewScreenState.getNotebookId,
+                blurtingModel: blurtingModel);
+          }
+          if (context.mounted) {
+            context.router.replace(const ReviewRoute());
+          }
+        }
       },
       child: SafeArea(
           child: Scaffold(
@@ -493,11 +626,57 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                       buttonSize: const Size(50, 50),
                       curve: Curves.bounceIn,
                       children: [
-                        SpeedDialChild(
-                            elevation: 0,
-                            child: const Icon(Icons.summarize_rounded),
-                            labelWidget: const Text('Summarize'),
-                            onTap: onSummarizeNote(context)),
+                        widget.blurtingModel != null
+                            ? SpeedDialChild(
+                                elevation: 0,
+                                child: const Icon(Icons.check),
+                                labelWidget:
+                                    Text(_hasBeenOrganized ? "Quiz" : "Done"),
+                                onTap: () async {
+                                  if (!_hasBeenOrganized) {
+                                    _showBlurtingDialog(context);
+                                    return;
+                                  }
+                                  var content = _fleatherController!.document
+                                      .toPlainText();
+
+                                  EasyLoading.show(
+                                      status: 'Generating quiz...',
+                                      maskType: EasyLoadingMaskType.black,
+                                      dismissOnTap: false);
+
+                                  var res = await ref
+                                      .read(sharedProvider.notifier)
+                                      .generateQuizQuestions(content: content);
+
+                                  EasyLoading.dismiss();
+
+                                  if (!context.mounted) return;
+
+                                  if (res is Failure) {
+                                    EasyLoading.showError(
+                                        context.tr("general_e"));
+                                    return;
+                                  }
+
+                                  res = res as List<QuestionModel>;
+
+                                  var updatedBlurtingModel =
+                                      widget.blurtingModel!.copyWith(
+                                    content: content,
+                                    questions: res,
+                                  );
+
+                                  if (!context.mounted) return;
+
+                                  context.router.replace(BlurtingQuizRoute(
+                                      blurtingModel: updatedBlurtingModel));
+                                })
+                            : SpeedDialChild(
+                                elevation: 0,
+                                child: const Icon(Icons.summarize_rounded),
+                                labelWidget: const Text('Summarize'),
+                                onTap: onSummarizeNote(context)),
                         SpeedDialChild(
                             elevation: 0,
                             child: const Icon(Icons.mic_rounded),
@@ -646,7 +825,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
-                _fleatherController!.document.toPlainText().length.toString(),
+                _fleatherController?.document.toPlainText().length.toString() ??
+                    "0",
                 textAlign: TextAlign.right,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),

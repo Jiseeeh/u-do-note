@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:u_do_note/core/constant.dart' as constants;
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 
@@ -19,8 +20,6 @@ class AddNoteDialog extends ConsumerStatefulWidget {
 class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
   final _titleController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _maxTitleLength = 18;
-  final _minTitleLength = 1;
 
   // TODO: add choosing of color of note
   // if we add this, we also need to add functionality to change it.
@@ -35,18 +34,18 @@ class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
           children: [
             TextFormField(
               controller: _titleController,
-              maxLength: _maxTitleLength,
+              maxLength: constants.maxTitleLen,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a page title';
                 }
 
-                if (value.length < _minTitleLength) {
-                  return 'Title must be at least $_minTitleLength characters';
+                if (value.length < constants.minTitleLen) {
+                  return 'Title must be at least ${constants.minTitleLen} characters';
                 }
 
-                if (value.length > _maxTitleLength) {
-                  return 'Title must be at most $_maxTitleLength characters';
+                if (value.length > constants.maxTitleLen) {
+                  return 'Title must be at most ${constants.maxTitleLen} characters';
                 }
 
                 return null;
@@ -89,7 +88,7 @@ class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
                         return;
                       }
 
-                      EasyLoading.showSuccess(res);
+                      EasyLoading.showSuccess("Page created successfully.");
                       _titleController.clear();
 
                       if (context.mounted) Navigator.of(context).pop();

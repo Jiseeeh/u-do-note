@@ -21,6 +21,7 @@ import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart'
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/get_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/summarize_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_multiple_notes.dart';
@@ -93,6 +94,13 @@ CreateNote createNote(CreateNoteRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return CreateNote(repository);
+}
+
+@riverpod
+GetNote getNote(GetNoteRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return GetNote(repository);
 }
 
 @riverpod
@@ -275,9 +283,20 @@ class Notebooks extends _$Notebooks {
       String? initialContent}) async {
     var createNote = ref.read(createNoteProvider);
 
-    var failureOrString = await createNote(notebookId, title, initialContent);
+    var failureOrNoteModel =
+        await createNote(notebookId, title, initialContent);
 
-    return failureOrString.fold((failure) => failure, (res) => res);
+    return failureOrNoteModel.fold((failure) => failure, (res) => res);
+  }
+
+  /// Gets a the note with the id [noteId] from notebook with the id [notebookId]
+  Future<dynamic> getNote(
+      {required String notebookId, required String noteId}) async {
+    var getNote = ref.read(getNoteProvider);
+
+    var failureOrNoteModel = await getNote(notebookId, noteId);
+
+    return failureOrNoteModel.fold((failure) => failure, (res) => res);
   }
 
   /// Deletes a specific note from a notebook

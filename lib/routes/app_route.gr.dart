@@ -41,6 +41,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AnalyticsScreen(),
       );
     },
+    BlurtingQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<BlurtingQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BlurtingQuizScreen(
+          blurtingModel: args.blurtingModel,
+          key: args.key,
+        ),
+      );
+    },
     ElaborationQuizRoute.name: (routeData) {
       final args = routeData.argsAs<ElaborationQuizRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -120,6 +130,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: NoteTakingScreen(
           notebookId: args.notebookId,
           note: args.note,
+          blurtingModel: args.blurtingModel,
           key: args.key,
         ),
       );
@@ -297,6 +308,44 @@ class AnalyticsRoute extends PageRouteInfo<void> {
   static const String name = 'AnalyticsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BlurtingQuizScreen]
+class BlurtingQuizRoute extends PageRouteInfo<BlurtingQuizRouteArgs> {
+  BlurtingQuizRoute({
+    required BlurtingModel blurtingModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BlurtingQuizRoute.name,
+          args: BlurtingQuizRouteArgs(
+            blurtingModel: blurtingModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BlurtingQuizRoute';
+
+  static const PageInfo<BlurtingQuizRouteArgs> page =
+      PageInfo<BlurtingQuizRouteArgs>(name);
+}
+
+class BlurtingQuizRouteArgs {
+  const BlurtingQuizRouteArgs({
+    required this.blurtingModel,
+    this.key,
+  });
+
+  final BlurtingModel blurtingModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'BlurtingQuizRouteArgs{blurtingModel: $blurtingModel, key: $key}';
+  }
 }
 
 /// generated route for
@@ -563,6 +612,7 @@ class NoteTakingRoute extends PageRouteInfo<NoteTakingRouteArgs> {
   NoteTakingRoute({
     required String notebookId,
     required NoteEntity note,
+    BlurtingModel? blurtingModel,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -570,6 +620,7 @@ class NoteTakingRoute extends PageRouteInfo<NoteTakingRouteArgs> {
           args: NoteTakingRouteArgs(
             notebookId: notebookId,
             note: note,
+            blurtingModel: blurtingModel,
             key: key,
           ),
           initialChildren: children,
@@ -585,6 +636,7 @@ class NoteTakingRouteArgs {
   const NoteTakingRouteArgs({
     required this.notebookId,
     required this.note,
+    this.blurtingModel,
     this.key,
   });
 
@@ -592,11 +644,13 @@ class NoteTakingRouteArgs {
 
   final NoteEntity note;
 
+  final BlurtingModel? blurtingModel;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'NoteTakingRouteArgs{notebookId: $notebookId, note: $note, key: $key}';
+    return 'NoteTakingRouteArgs{notebookId: $notebookId, note: $note, blurtingModel: $blurtingModel, key: $key}';
   }
 }
 

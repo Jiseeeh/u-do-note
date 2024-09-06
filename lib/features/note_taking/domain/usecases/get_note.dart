@@ -4,14 +4,13 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/features/note_taking/domain/repositories/note_repository.dart';
 
-class CreateNote {
+class GetNote {
   final NoteRepository _noteRepository;
 
-  CreateNote(this._noteRepository);
+  const GetNote(this._noteRepository);
 
   Future<Either<Failure, NoteModel>> call(
-      String notebookId, String title, String? initialContent) async {
-    return await _noteRepository.createNote(
-        notebookId: notebookId, title: title, initialContent: initialContent);
+      String notebookId, String noteId) async {
+    return await _noteRepository.getNote(notebookId, noteId);
   }
 }

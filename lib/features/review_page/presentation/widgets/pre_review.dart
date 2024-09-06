@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import 'package:u_do_note/core/constant.dart' as constants;
 import 'package:u_do_note/core/helper.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/target.dart';
@@ -29,8 +30,6 @@ class _PreReviewState extends ConsumerState<PreReview> {
   final _notebooksKey = GlobalKey<FormFieldState>();
   final _notebookPagesKey = GlobalKey<FormFieldState>();
   final _titleController = TextEditingController();
-  final _minTitleName = 1;
-  final _maxTitleName = 18;
   String _notebookId = "";
   final _notebooksController = MultiSelectController<String>();
   final _pagesController = MultiSelectController<String>();
@@ -158,21 +157,21 @@ class _PreReviewState extends ConsumerState<PreReview> {
           children: [
             TextFormField(
               key: _titleKey,
-              maxLength: _maxTitleName,
+              maxLength: constants.maxTitleLen,
               controller: _titleController,
               validator: (value) {
                 if (value!.isEmpty) {
                   return context.tr("title_field_notice");
                 }
 
-                if (value.length < _minTitleName) {
+                if (value.length < constants.minTitleLen) {
                   return context.tr("title_length_min",
-                      namedArgs: {"min": _minTitleName.toString()});
+                      namedArgs: {"min": constants.minTitleLen.toString()});
                 }
 
-                if (value.length > _maxTitleName) {
+                if (value.length > constants.maxTitleLen) {
                   return context.tr("title_length_max",
-                      namedArgs: {"max": _maxTitleName.toString()});
+                      namedArgs: {"max": constants.maxTitleLen.toString()});
                 }
 
                 return null;

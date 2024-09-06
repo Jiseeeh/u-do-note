@@ -68,7 +68,7 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
       return;
     }
 
-    var willReviewOld = await CustomDialog.show(context,
+    var willReviewOldSessions = await CustomDialog.show(context,
         title: "Notice",
         subTitle: "Do you want to take a quiz from an old session?",
         buttons: [
@@ -78,7 +78,7 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
     if (!context.mounted) return;
 
-    if (!willReviewOld) {
+    if (!willReviewOldSessions) {
       await _startNewBlurtingSession(context);
       return;
     }

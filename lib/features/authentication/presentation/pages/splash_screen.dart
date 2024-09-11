@@ -22,7 +22,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   void _navigateToHome(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 3));
 
     if (!context.mounted) return;
 
@@ -34,7 +34,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
-        child: Lottie.asset('assets/splash.json'),
+        child: Lottie.asset('assets/images/logo/splash.json'),
       ),
     );
   }

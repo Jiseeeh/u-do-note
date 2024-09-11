@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 
 import 'package:u_do_note/routes/app_route.dart';
 
@@ -32,7 +33,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: AppColors.primaryNew,
       body: Center(
         child: Lottie.asset('assets/images/logo/splash.json'),
       ),

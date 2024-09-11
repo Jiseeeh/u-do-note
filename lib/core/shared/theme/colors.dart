@@ -47,6 +47,7 @@ class AppColors {
   /// Lighter++ primary color
   static const darkSearchBar = Color(0xff162d45);
 
+  static const primaryNew = Color(0xff004D7D);
 
 
 }

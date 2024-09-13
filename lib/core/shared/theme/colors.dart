@@ -49,5 +49,6 @@ class AppColors {
 
   static const primaryNew = Color(0xff004D7D);
 
+  static const primaryBackground = Color(0xfff7f7f7);
 
 }

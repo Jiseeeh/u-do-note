@@ -106,6 +106,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const IntroScreen(),
       );
     },
+    LandingRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LandingScreen(),
+      );
+    },
     LeitnerSystemRoute.name: (routeData) {
       final args = routeData.argsAs<LeitnerSystemRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -545,6 +551,20 @@ class IntroRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'IntroRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [LandingScreen]
+class LandingRoute extends PageRouteInfo<void> {
+  const LandingRoute({List<PageRouteInfo>? children})
+      : super(
+          LandingRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LandingRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

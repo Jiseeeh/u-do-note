@@ -18,7 +18,8 @@ class HomepageScreen extends ConsumerWidget {
         NotebooksRoute(),
         ReviewRoute(),
         AnalyticsRoute(),
-        SettingsRoute()
+        SettingsRoute(),
+        LandingRoute()
       ],
       extendBody: true,
       bottomNavigationBuilder: (_, tabsRouter) {
@@ -70,25 +71,17 @@ class HomepageScreen extends ConsumerWidget {
                   },
                   color: tabsRouter.activeIndex == 3 ? AppColors.white : null,
                 ),
+                 IconButton(
+                  icon: const Icon(Icons.home_outlined),
+                  onPressed: () {
+                    tabsRouter.setActiveIndex(4);
+                  },
+                  color: tabsRouter.activeIndex == 4 ? AppColors.white : null,
+                ),
               ],
             ),
           ),
         );
-        //        return BottomNavigationBar(
-        //   currentIndex: tabsRouter.activeIndex,
-        //   onTap: tabsRouter.setActiveIndex,
-        //   fixedColor: Colors.grey,
-        //   unselectedItemColor: Colors.black,
-        //   items: const [
-        //     BottomNavigationBarItem(label: 'Notes', icon: Icon(Icons.home)),
-        //     BottomNavigationBarItem(
-        //         label: 'Review Methods', icon: Icon(Icons.folder)),
-        //     BottomNavigationBarItem(
-        //         label: 'Analytics', icon: Icon(Icons.bar_chart)),
-        //     BottomNavigationBarItem(
-        //         label: 'Settings', icon: Icon(Icons.settings)),
-        //   ],
-        // );
       },
     );
   }

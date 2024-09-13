@@ -48,7 +48,7 @@ class ReviewMethod extends ConsumerWidget {
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
-                            ?.copyWith(color: AppColors.darkGrey),
+                            ?.copyWith(),
                       ),
                     ],
                   )),
@@ -65,7 +65,7 @@ class ReviewMethod extends ConsumerWidget {
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
-                            ?.copyWith(color: AppColors.white)),
+                            ?.copyWith()),
                   )
                 ],
               ),

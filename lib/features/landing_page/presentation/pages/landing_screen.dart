@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/shared/theme/colors.dart';
@@ -28,9 +27,9 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
     return GestureDetector(
       child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: AppColors.primaryBackground,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
-            backgroundColor: AppColors.primaryBackground,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             automaticallyImplyLeading: false,
             title: Column(
               mainAxisSize: MainAxisSize.max,
@@ -43,7 +42,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                 Align(
                   alignment: const AlignmentDirectional(-1, 0),
                   child: Text('Dummy Names',
-                      style: Theme.of(context).textTheme.labelMedium),
+                      style: Theme.of(context).textTheme.labelLarge),
                 ),
               ],
             ),
@@ -59,8 +58,8 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
           body: SafeArea(
               top: true,
               child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                   child: SingleChildScrollView(
                     child: Column(
@@ -78,17 +77,17 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                     color: Color(0x33000000),
                                     offset: Offset(0, 1))
                               ],
-                              gradient: const LinearGradient(
+                              gradient: LinearGradient(
                                   colors: [
-                                    AppColors.primary,
-                                    AppColors.secondary
+                                    Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).colorScheme.secondary,
                                   ],
-                                  stops: [
+                                  stops: const [
                                     0,
                                     1
                                   ],
-                                  begin: AlignmentDirectional(0.94, -1),
-                                  end: AlignmentDirectional(-0.94, 1)),
+                                  begin: const AlignmentDirectional(0.94, -1),
+                                  end: const AlignmentDirectional(-0.94, 1)),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Padding(
@@ -143,7 +142,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                color: AppColors.primaryBackground,
+                                color: Theme.of(context).scaffoldBackgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
@@ -188,20 +187,20 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                         child: Card(
                                           clipBehavior:
                                               Clip.antiAliasWithSaveLayer,
-                                          color: AppColors.darkGrey,
+                                          color: Theme.of(context).cardColor,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
-                                          child: const Padding(
+                                          child: Padding(
                                             padding:
-                                                EdgeInsetsDirectional.fromSTEB(
+                                                const EdgeInsetsDirectional.fromSTEB(
                                                     10, 10, 10, 10),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
-                                                Align(
+                                                const Align(
                                                   alignment:
                                                       AlignmentDirectional(
                                                           -1, 0),
@@ -215,7 +214,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                Align(
+                                                const Align(
                                                   alignment:
                                                       AlignmentDirectional(
                                                           -1, 0),
@@ -233,7 +232,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                   mainAxisSize:
                                                       MainAxisSize.max,
                                                   children: [
-                                                    Align(
+                                                    const Align(
                                                       alignment:
                                                           AlignmentDirectional(
                                                               -1, 0),
@@ -243,13 +242,13 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                     ),
                                                     Padding(
                                                       padding:
-                                                          EdgeInsetsDirectional
+                                                          const EdgeInsetsDirectional
                                                               .fromSTEB(
                                                                   10, 0, 0, 0),
                                                       child: Icon(
                                                         Icons.arrow_forward,
                                                         color:
-                                                            AppColors.primary,
+                                                            Theme.of(context).colorScheme.secondary,
                                                         size: 14,
                                                       ),
                                                     ),
@@ -268,20 +267,20 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                         child: Card(
                                           clipBehavior:
                                               Clip.antiAliasWithSaveLayer,
-                                          color: AppColors.darkGrey,
+                                          color: Theme.of(context).cardColor,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
-                                          child: const Padding(
+                                          child: Padding(
                                             padding:
-                                                EdgeInsetsDirectional.fromSTEB(
+                                                const EdgeInsetsDirectional.fromSTEB(
                                                     10, 10, 10, 10),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
-                                                Align(
+                                                const Align(
                                                   alignment:
                                                       AlignmentDirectional(
                                                           -1, 0),
@@ -295,7 +294,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                Align(
+                                                const Align(
                                                   alignment:
                                                       AlignmentDirectional(
                                                           -1, 0),
@@ -313,7 +312,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                   mainAxisSize:
                                                       MainAxisSize.max,
                                                   children: [
-                                                    Align(
+                                                    const Align(
                                                       alignment:
                                                           AlignmentDirectional(
                                                               -1, 0),
@@ -323,13 +322,13 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                     ),
                                                     Padding(
                                                       padding:
-                                                          EdgeInsetsDirectional
+                                                          const EdgeInsetsDirectional
                                                               .fromSTEB(
                                                                   10, 0, 0, 0),
                                                       child: Icon(
                                                         Icons.arrow_forward,
                                                         color:
-                                                            AppColors.primary,
+                                                            Theme.of(context).colorScheme.secondary,
                                                         size: 14,
                                                       ),
                                                     ),
@@ -351,7 +350,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                             child: Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: AppColors.primaryBackground,
+                                color: Theme.of(context).scaffoldBackgroundColor,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Column(
@@ -408,7 +407,8 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                       padding: EdgeInsets.zero,
                                       shrinkWrap: true,
                                       scrollDirection: Axis.vertical,
-                                      physics: const NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.only(
@@ -416,288 +416,12 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                           child: Container(
                                             width: double.infinity,
                                             decoration: BoxDecoration(
-                                              color: AppColors.white,
-                                              boxShadow: const [
+                                              color: Theme.of(context).scaffoldBackgroundColor,
+                                              boxShadow: [
                                                 BoxShadow(
                                                   blurRadius: 0,
-                                                  color: AppColors.white,
-                                                  offset: Offset(
-                                                    0,
-                                                    1,
-                                                  ),
-                                                )
-                                              ],
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            alignment:
-                                                const AlignmentDirectional(
-                                                    -1, 0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(8),
-                                                    bottomRight:
-                                                        Radius.circular(0),
-                                                    topLeft: Radius.circular(8),
-                                                    topRight:
-                                                        Radius.circular(0),
-                                                  ),
-                                                  child: Image.asset(
-                                                    'assets/images/feynman.png',
-                                                    width: 85,
-                                                    height: 142,
-                                                    fit: BoxFit.fitHeight,
-                                                  ),
-                                                ),
-                                                const Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                8, 12, 16, 12),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  -1, 0),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0,
-                                                                        0,
-                                                                        0,
-                                                                        10),
-                                                            child: Text(
-                                                              'Notebook Name',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  -1, 0),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0,
-                                                                        0,
-                                                                        0,
-                                                                        10),
-                                                            child: Text(
-                                                              'Learning Strategy',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(0,
-                                                                      8, 0, 0),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            children: [
-                                                              Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0,
-                                                                            0,
-                                                                            4,
-                                                                            0),
-                                                                child: Text(
-                                                                  'Started:',
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child: Text(
-                                                                  'Today, 6:20pm',
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                const Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 10.0),
-                                                  child:
-                                                      Icon(Icons.chevron_right),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10.0),
-                                          child: Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.white,
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  blurRadius: 0,
-                                                  color: AppColors.white,
-                                                  offset: Offset(
-                                                    0,
-                                                    1,
-                                                  ),
-                                                )
-                                              ],
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            alignment:
-                                                const AlignmentDirectional(
-                                                    -1, 0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(8),
-                                                    bottomRight:
-                                                        Radius.circular(0),
-                                                    topLeft: Radius.circular(8),
-                                                    topRight:
-                                                        Radius.circular(0),
-                                                  ),
-                                                  child: Image.asset(
-                                                    'assets/images/feynman.png',
-                                                    width: 85,
-                                                    height: 142,
-                                                    fit: BoxFit.fitHeight,
-                                                  ),
-                                                ),
-                                                const Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                8, 12, 16, 12),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  -1, 0),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0,
-                                                                        0,
-                                                                        0,
-                                                                        10),
-                                                            child: Text(
-                                                              'Notebook Name',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  -1, 0),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0,
-                                                                        0,
-                                                                        0,
-                                                                        10),
-                                                            child: Text(
-                                                              'Learning Strategy',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(0,
-                                                                      8, 0, 0),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            children: [
-                                                              Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0,
-                                                                            0,
-                                                                            4,
-                                                                            0),
-                                                                child: Text(
-                                                                  'Started:',
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child: Text(
-                                                                  'Today, 6:20pm',
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                const Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 10.0),
-                                                  child:
-                                                      Icon(Icons.chevron_right),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10.0),
-                                          child: Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.white,
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  blurRadius: 0,
-                                                  color: AppColors.white,
-                                                  offset: Offset(
+                                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                                  offset: const Offset(
                                                     0,
                                                     1,
                                                   ),

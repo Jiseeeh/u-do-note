@@ -41,7 +41,7 @@ class _RemainingCardsState extends ConsumerState<RemainingCards> {
   Widget build(BuildContext context) {
     return Text(
       remainingCardsText,
-      style: const TextStyle(fontSize: 20, color: AppColors.jetBlack),
+      style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.secondary),
     );
   }
 }

@@ -96,36 +96,36 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                 ),
               ),
               Container(
-                decoration: const BoxDecoration(
-                    color: AppColors.lightGrey,
-                    borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary,
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(35),
                         topRight: Radius.circular(35))),
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 15),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Text(
                         "Create New Account",
                         style: TextStyle(
-                            color: AppColors.darkGrey,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontSize: 18,
                             fontFamily: 'Inter-Bold',
                             fontWeight: FontWeight.w500),
                       ),
                     ),
                     Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(35),
                             topRight: Radius.circular(35)),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.shadow,
+                            color: Theme.of(context).colorScheme.secondary,
                             spreadRadius: 5,
                             blurRadius: 7,
-                            offset: Offset(0, -3), // changes position of shadow
+                            offset: const Offset(0, -3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -347,10 +347,10 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            const Text(
+                                            Text(
                                                 'Already Have an Account?',
                                                 style: TextStyle(
-                                                    color: AppColors.grey)),
+                                                    color: Theme.of(context).colorScheme.secondary,)),
                                             TextButton(
                                               onPressed: () {
                                                 context.router

@@ -53,8 +53,8 @@ class AppTextStyles {
   /// Text style for others
 
   static const TextStyle authFieldHintStyle = TextStyle(
-      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.grey);
+      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.secondaryText);
 
   static const TextStyle authFieldTextStyle = TextStyle(
-      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.black);
+      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.primaryText);
 }

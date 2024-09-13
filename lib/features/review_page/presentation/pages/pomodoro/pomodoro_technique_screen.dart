@@ -248,7 +248,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
         appBar: AppBar(
           title: const Text("Pomodoro"),
         ),
-        backgroundColor: AppColors.extraLightGrey,
+        backgroundColor: Theme.of(context).cardColor,
         body: SingleChildScrollView(
           child: Column(
             children: [

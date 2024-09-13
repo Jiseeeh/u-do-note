@@ -219,7 +219,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                             .textTheme
                             .displayLarge
                             ?.copyWith(
-                                color: AppColors.white,
+                                color: Theme.of(context).scaffoldBackgroundColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.sp)),
                   ],
@@ -265,7 +265,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge
-                      ?.copyWith(color: AppColors.grey)),
+                      ?.copyWith(color: Theme.of(context).scaffoldBackgroundColor,)),
               Text(
                 username,
                 style: Theme.of(context).textTheme.displayLarge,

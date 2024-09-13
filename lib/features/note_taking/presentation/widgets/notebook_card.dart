@@ -124,7 +124,7 @@ class NotebookCard extends ConsumerWidget {
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium
-                      ?.copyWith(color: AppColors.grey))
+                      ?.copyWith())
             ],
           ),
         ),

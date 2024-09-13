@@ -35,8 +35,8 @@ class AnswerContainer extends ConsumerWidget {
             decoration: BoxDecoration(
               border: Border.all(
                 color: selectedAnswerIndex == currentIndex
-                    ? AppColors.jetBlack
-                    : AppColors.lightShadow,
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).cardColor,
               ),
               borderRadius: BorderRadius.circular(8),
             ),

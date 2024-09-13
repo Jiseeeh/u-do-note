@@ -14,38 +14,43 @@ class TextThemes {
       displayLarge: AppTextStyles.h1,
       displayMedium: AppTextStyles.h2,
       displaySmall: AppTextStyles.h3,
+      headlineLarge: AppTextStyles.h2,
       headlineMedium: AppTextStyles.h4,
       headlineSmall: AppTextStyles.h5,
+    );
+  }
+
+ /// Primary text theme
+  static TextTheme get primaryTextTheme {
+    return TextTheme(
+      bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.secondaryText),
+      bodyMedium: AppTextStyles.body.copyWith(color: AppColors.secondaryText),
+      titleMedium: AppTextStyles.bodySm.copyWith(color: AppColors.primaryText),
+      titleSmall: AppTextStyles.bodyXs.copyWith(color: AppColors.primaryText),
+      displayLarge: AppTextStyles.h1.copyWith(color: AppColors.primaryText),
+      displayMedium: AppTextStyles.h2.copyWith(color: AppColors.primaryText),
+      displaySmall: AppTextStyles.h3.copyWith(color: AppColors.primaryText),
+      headlineLarge: AppTextStyles.h4.copyWith(color: AppColors.headlineText),
+      headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.headlineText),
+      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.headlineText),
     );
   }
 
   /// Dark text theme
   static TextTheme get darkTextTheme {
     return TextTheme(
-      bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.white),
-      bodyMedium: AppTextStyles.body.copyWith(color: AppColors.white),
-      titleMedium: AppTextStyles.bodySm.copyWith(color: AppColors.white),
-      titleSmall: AppTextStyles.bodyXs.copyWith(color: AppColors.white),
-      displayLarge: AppTextStyles.h1.copyWith(color: AppColors.white),
-      displayMedium: AppTextStyles.h2.copyWith(color: AppColors.white),
-      displaySmall: AppTextStyles.h3.copyWith(color: AppColors.white),
-      headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.white),
-      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.white),
+      bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.darkSecondaryText),
+      bodyMedium: AppTextStyles.body.copyWith(color: AppColors.darkSecondaryText),
+      titleMedium: AppTextStyles.bodySm.copyWith(color: AppColors.darkPrimaryText),
+      titleSmall: AppTextStyles.bodyXs.copyWith(color: AppColors.darkPrimaryText),
+      displayLarge: AppTextStyles.h1.copyWith(color: AppColors.darkPrimaryText),
+      displayMedium: AppTextStyles.h2.copyWith(color: AppColors.darkPrimaryText),
+      displaySmall: AppTextStyles.h3.copyWith(color: AppColors.darkPrimaryText),
+      headlineLarge: AppTextStyles.h4.copyWith(color: AppColors.darkHeadlineText),
+      headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.darkHeadlineText),
+      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.darkHeadlineText),
     );
   }
 
-  /// Primary text theme
-  static TextTheme get primaryTextTheme {
-    return TextTheme(
-      bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.primary),
-      bodyMedium: AppTextStyles.body.copyWith(color: AppColors.primary),
-      titleMedium: AppTextStyles.bodySm.copyWith(color: AppColors.primary),
-      titleSmall: AppTextStyles.bodyXs.copyWith(color: AppColors.primary),
-      displayLarge: AppTextStyles.h1.copyWith(color: AppColors.primary),
-      displayMedium: AppTextStyles.h2.copyWith(color: AppColors.primary),
-      displaySmall: AppTextStyles.h3.copyWith(color: AppColors.primary),
-      headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.primary),
-      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.primary),
-    );
-  }
+ 
 }

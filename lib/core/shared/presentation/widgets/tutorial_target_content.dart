@@ -20,7 +20,7 @@ class TutorialTargetContent extends ConsumerWidget {
       children: [
         Text(context.tr(translationKey),
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                color: AppColors.white,
+                color: AppColors.primaryBackground,
                 fontWeight: FontWeight.bold,
                 fontSize: 16.sp))
       ],

@@ -125,7 +125,7 @@ class QuizResultsScreen extends ConsumerWidget {
                                             : choiceIndex ==
                                                     selectedAnswersIndex[index]
                                                 ? Colors.red
-                                                : AppColors.lightShadow),
+                                                : Theme.of(context).cardColor),
                                     borderRadius: BorderRadius.circular(8)),
                                 child: Row(
                                   mainAxisAlignment:
@@ -170,7 +170,7 @@ class QuizResultsScreen extends ConsumerWidget {
         radius: 12,
         child: Icon(
           Icons.check,
-          color: AppColors.white,
+          color: AppColors.primaryBackground,
         ),
       );
 
@@ -179,7 +179,7 @@ class QuizResultsScreen extends ConsumerWidget {
         radius: 12,
         child: Icon(
           Icons.close,
-          color: AppColors.white,
+          color: AppColors.primaryBackground,
         ),
       );
 }

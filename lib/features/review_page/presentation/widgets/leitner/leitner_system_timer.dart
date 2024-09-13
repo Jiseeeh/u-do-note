@@ -53,16 +53,16 @@ class _TimerWidgetState extends ConsumerState<TimerWidget> {
         children: [
           Text(
             time,
-            style: const TextStyle(color: AppColors.jetBlack, fontSize: 35),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 35),
           ),
           LinearPercentIndicator(
             lineHeight: 8,
             percent: percent,
             barRadius: const Radius.circular(8),
-            leading: const Icon(Icons.timer, color: AppColors.grey),
+            leading: Icon(Icons.timer, color: Theme.of(context).cardColor),
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            backgroundColor: AppColors.lightShadow,
-            progressColor: AppColors.secondary,
+            backgroundColor: Theme.of(context).cardColor,
+            progressColor: Theme.of(context).colorScheme.secondary,
           ),
         ],
       ),

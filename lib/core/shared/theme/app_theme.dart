@@ -11,11 +11,12 @@ class AppTheme {
       fontFamily: AppTextStyles.fontFamily,
       brightness: Brightness.light,
       primaryColor: AppColors.primary,
-      textTheme: TextThemes.textTheme,
-      primaryTextTheme: TextThemes.primaryTextTheme,
+      textTheme: TextThemes.primaryTextTheme,
       scaffoldBackgroundColor: AppColors.primaryBackground,
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.secondaryBackground),
+          backgroundColor: AppColors.secondaryBackground,
+          selectedItemColor: AppColors.primary,
+          unselectedItemColor: AppColors.darkSecondaryText),
       // searchBarTheme: SearchBarThemeData(
       //   backgroundColor: MaterialStateColor.resolveWith((_) {
       //     return const Color.fromARGB(255, 255, 255, 255);
@@ -39,7 +40,7 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.dark,
       fontFamily: AppTextStyles.fontFamily,
-      primaryColor: AppColors.primary,
+      primaryColor: AppColors.darkPrimary,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.darkPrimary,
         secondary: AppColors.darkSecondary,
@@ -47,14 +48,15 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: AppColors.darkPrimaryBackground,
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.darkSecondaryBackground),
+          backgroundColor: AppColors.darkSecondaryBackground,
+          selectedItemColor: AppColors.darkPrimary,
+          unselectedItemColor: AppColors.secondaryText),
       // searchBarTheme: SearchBarThemeData(
       //   backgroundColor: MaterialStateColor.resolveWith((_) {
       //     return AppColors.darkSearchBar;
       //   }),
       // ),
       textTheme: TextThemes.darkTextTheme,
-      primaryTextTheme: TextThemes.primaryTextTheme,
       appBarTheme: const AppBarTheme(
         elevation: 0,
         backgroundColor: AppColors.primary,

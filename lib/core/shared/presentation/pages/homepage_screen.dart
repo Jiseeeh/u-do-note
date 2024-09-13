@@ -38,7 +38,7 @@ class HomepageScreen extends ConsumerWidget {
           shape: const CircularNotchedRectangle(),
           color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
           child: IconTheme(
-            data: const IconThemeData(color: AppColors.secondaryText),
+            data: IconThemeData(color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor! ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -48,35 +48,35 @@ class HomepageScreen extends ConsumerWidget {
                   onPressed: () {
                     tabsRouter.setActiveIndex(1);
                   },
-                  color: tabsRouter.activeIndex == 1 ? Theme.of(context).primaryColor : null,
+                  color: tabsRouter.activeIndex == 1 ? Theme.of(context).bottomNavigationBarTheme.selectedItemColor : null,
                 ),
                 IconButton(
                   icon: const Icon(Icons.folder_outlined),
                   onPressed: () {
                     tabsRouter.setActiveIndex(0);
                   },
-                  color: tabsRouter.activeIndex == 0 ? Theme.of(context).primaryColor : null,
+                  color: tabsRouter.activeIndex == 0 ? Theme.of(context).bottomNavigationBarTheme.selectedItemColor  : null,
                 ),
                 IconButton(
                   icon: const Icon(Icons.bar_chart_rounded),
                   onPressed: () {
                     tabsRouter.setActiveIndex(2);
                   },
-                  color: tabsRouter.activeIndex == 2 ? AppColors.primary : null,
+                  color: tabsRouter.activeIndex == 2 ? Theme.of(context).bottomNavigationBarTheme.selectedItemColor  : null,
                 ),
                 IconButton(
                   icon: const Icon(Icons.settings_outlined),
                   onPressed: () {
                     tabsRouter.setActiveIndex(3);
                   },
-                  color: tabsRouter.activeIndex == 3 ? AppColors.primary : null,
+                  color: tabsRouter.activeIndex == 3 ? Theme.of(context).bottomNavigationBarTheme.selectedItemColor  : null,
                 ),
                  IconButton(
                   icon: const Icon(Icons.home_outlined),
                   onPressed: () {
                     tabsRouter.setActiveIndex(4);
                   },
-                  color: tabsRouter.activeIndex == 4 ? AppColors.primary : null,
+                  color: tabsRouter.activeIndex == 4 ? Theme.of(context).bottomNavigationBarTheme.selectedItemColor  : null,
                 ),
               ],
             ),

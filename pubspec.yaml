@@ -73,9 +73,18 @@ flutter:
   uses-material-design: true
 
   fonts:
-  - family: Inter
-    fonts:
-      - asset: lib\fonts\Inter-Regular.ttf
-      - asset: lib\fonts\Inter-Bold.ttf
-        weight: 700
+    - family: Outfit
+      fonts:
+        - asset: assets/fonts/Outfit-Regular.ttf
+        - asset: assets/fonts/Outfit-Medium.ttf
+          weight: 600
+        - asset: assets/fonts/Outfit-SemiBold.ttf
+          weight: 700
+    - family: Readex
+      fonts:
+        - asset: assets/fonts/ReadexPro-Regular.ttf
+        - asset: assets/fonts/ReadexPro-Medium.ttf
+          weight: 600
+        - asset: assets/fonts/ReadexPro-SemiBold.ttf
+          weight: 700
 

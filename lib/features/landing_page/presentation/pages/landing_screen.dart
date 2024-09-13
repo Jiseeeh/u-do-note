@@ -2,8 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:u_do_note/core/shared/theme/colors.dart';
-
 @RoutePage()
 class LandingScreen extends ConsumerStatefulWidget {
   const LandingScreen({super.key});
@@ -31,20 +29,23 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
           appBar: AppBar(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             automaticallyImplyLeading: false,
-            title: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Align(
-                  alignment: const AlignmentDirectional(-1, 0),
-                  child: Text('Welcome Back',
-                      style: Theme.of(context).textTheme.labelMedium),
-                ),
-                Align(
-                  alignment: const AlignmentDirectional(-1, 0),
-                  child: Text('Dummy Names',
-                      style: Theme.of(context).textTheme.labelLarge),
-                ),
-              ],
+            title: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0,10,0,0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Align(
+                    alignment: const AlignmentDirectional(-1, 0),
+                    child: Text('Welcome Back',
+                        style: Theme.of(context).textTheme.bodyLarge),
+                  ),
+                  Align(
+                    alignment: const AlignmentDirectional(-1, 0),
+                    child: Text('Dummy Name',
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ),
+                ],
+              ),
             ),
             actions: const [
               Padding(
@@ -142,7 +143,8 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).scaffoldBackgroundColor,
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
@@ -194,9 +196,8 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                 BorderRadius.circular(8),
                                           ),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    10, 10, 10, 10),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(10, 10, 10, 10),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
@@ -244,11 +245,12 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                       padding:
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  10, 0, 0, 0),
+                                                              10, 0, 0, 0),
                                                       child: Icon(
                                                         Icons.arrow_forward,
-                                                        color:
-                                                            Theme.of(context).colorScheme.secondary,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary,
                                                         size: 14,
                                                       ),
                                                     ),
@@ -274,9 +276,8 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                 BorderRadius.circular(8),
                                           ),
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    10, 10, 10, 10),
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(10, 10, 10, 10),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
@@ -324,11 +325,12 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                       padding:
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  10, 0, 0, 0),
+                                                              10, 0, 0, 0),
                                                       child: Icon(
                                                         Icons.arrow_forward,
-                                                        color:
-                                                            Theme.of(context).colorScheme.secondary,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary,
                                                         size: 14,
                                                       ),
                                                     ),
@@ -350,7 +352,8 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                             child: Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).scaffoldBackgroundColor,
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Column(
@@ -416,11 +419,13 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                           child: Container(
                                             width: double.infinity,
                                             decoration: BoxDecoration(
-                                              color: Theme.of(context).scaffoldBackgroundColor,
+                                              color: Theme.of(context)
+                                                  .scaffoldBackgroundColor,
                                               boxShadow: [
                                                 BoxShadow(
                                                   blurRadius: 0,
-                                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                                  color: Theme.of(context)
+                                                      .scaffoldBackgroundColor,
                                                   offset: const Offset(
                                                     0,
                                                     1,
@@ -548,7 +553,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                             ),
                                           ),
                                         ),
-                                       ],
+                                      ],
                                     ),
                                   ),
                                 ],

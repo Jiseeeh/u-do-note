@@ -7,7 +7,7 @@ class AppTextStyles {
   /// Text style for body
   static const TextStyle bodyLg = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w400,
   );
 
   static const TextStyle body = TextStyle(
@@ -17,43 +17,47 @@ class AppTextStyles {
 
   static const TextStyle bodySm = TextStyle(
     fontSize: 12,
-    fontWeight: FontWeight.w300,
-  );
-
-  static const TextStyle bodyXs = TextStyle(
-    fontSize: 10,
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w400,
   );
 
   /// Text style for heading
-
   static const TextStyle h1 = TextStyle(
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: FontWeight.w700,
   );
 
   static const TextStyle h2 = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.w700,
+    fontSize: 24,
+    fontWeight: FontWeight.w400,
   );
 
   static const TextStyle h3 = TextStyle(
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: FontWeight.w600,
   );
 
+  /// Text style for title
   static const TextStyle h4 = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w500,
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
   );
 
   static const TextStyle h5 = TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary);
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle h6 = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
 
   /// Text style for others
 
   static const TextStyle authFieldHintStyle = TextStyle(
-      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.secondaryText);
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      color: AppColors.secondaryText);
 
   static const TextStyle authFieldTextStyle = TextStyle(
       fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.primaryText);

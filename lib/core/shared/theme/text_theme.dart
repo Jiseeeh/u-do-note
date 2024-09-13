@@ -4,51 +4,38 @@ import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
 
 class TextThemes {
-  /// Main text theme
-  static TextTheme get textTheme {
-    return const TextTheme(
-      bodyLarge: AppTextStyles.bodyLg,
-      bodyMedium: AppTextStyles.body,
-      titleMedium: AppTextStyles.bodySm,
-      titleSmall: AppTextStyles.bodyXs,
-      displayLarge: AppTextStyles.h1,
-      displayMedium: AppTextStyles.h2,
-      displaySmall: AppTextStyles.h3,
-      headlineLarge: AppTextStyles.h2,
-      headlineMedium: AppTextStyles.h4,
-      headlineSmall: AppTextStyles.h5,
-    );
-  }
-
+  
  /// Primary text theme
   static TextTheme get primaryTextTheme {
     return TextTheme(
-      bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.secondaryText),
-      bodyMedium: AppTextStyles.body.copyWith(color: AppColors.secondaryText),
-      titleMedium: AppTextStyles.bodySm.copyWith(color: AppColors.primaryText),
-      titleSmall: AppTextStyles.bodyXs.copyWith(color: AppColors.primaryText),
-      displayLarge: AppTextStyles.h1.copyWith(color: AppColors.primaryText),
-      displayMedium: AppTextStyles.h2.copyWith(color: AppColors.primaryText),
-      displaySmall: AppTextStyles.h3.copyWith(color: AppColors.primaryText),
-      headlineLarge: AppTextStyles.h4.copyWith(color: AppColors.headlineText),
-      headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.headlineText),
-      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.headlineText),
+      bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.secondaryText, fontFamily: 'Readex'),
+      bodyMedium: AppTextStyles.body.copyWith(color: AppColors.secondaryText, fontFamily: 'Readex'),
+      bodySmall: AppTextStyles.bodySm.copyWith(color: AppColors.secondaryText, fontFamily: 'Readex'),
+
+      headlineLarge: AppTextStyles.h1.copyWith(color: AppColors.headlineText, fontFamily: 'Outfit'),
+      headlineMedium: AppTextStyles.h2.copyWith(color: AppColors.headlineText, fontFamily: 'Outfit'),
+      headlineSmall: AppTextStyles.h3.copyWith(color: AppColors.headlineText, fontFamily: 'Outfit'),
+
+      titleLarge: AppTextStyles.h4.copyWith(color: AppColors.primaryText, fontFamily: 'Outfit'),
+      titleMedium: AppTextStyles.h5.copyWith(color: AppColors.primaryText, fontFamily: 'Outfit'),
+      titleSmall: AppTextStyles.h6.copyWith(color: AppColors.primaryText, fontFamily: 'Outfit'),
     );
   }
 
   /// Dark text theme
   static TextTheme get darkTextTheme {
     return TextTheme(
-      bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.darkSecondaryText),
-      bodyMedium: AppTextStyles.body.copyWith(color: AppColors.darkSecondaryText),
-      titleMedium: AppTextStyles.bodySm.copyWith(color: AppColors.darkPrimaryText),
-      titleSmall: AppTextStyles.bodyXs.copyWith(color: AppColors.darkPrimaryText),
-      displayLarge: AppTextStyles.h1.copyWith(color: AppColors.darkPrimaryText),
-      displayMedium: AppTextStyles.h2.copyWith(color: AppColors.darkPrimaryText),
-      displaySmall: AppTextStyles.h3.copyWith(color: AppColors.darkPrimaryText),
-      headlineLarge: AppTextStyles.h4.copyWith(color: AppColors.darkHeadlineText),
-      headlineMedium: AppTextStyles.h4.copyWith(color: AppColors.darkHeadlineText),
-      headlineSmall: AppTextStyles.h5.copyWith(color: AppColors.darkHeadlineText),
+      bodyLarge: AppTextStyles.bodyLg.copyWith(color: AppColors.darkSecondaryText, fontFamily: 'Readex'),
+      bodyMedium: AppTextStyles.body.copyWith(color: AppColors.darkSecondaryText, fontFamily: 'Readex'),
+      bodySmall: AppTextStyles.bodySm.copyWith(color: AppColors.darkSecondaryText, fontFamily: 'Readex'),
+
+      headlineLarge: AppTextStyles.h1.copyWith(color: AppColors.darkHeadlineText, fontFamily: 'Outfit'),
+      headlineMedium: AppTextStyles.h2.copyWith(color: AppColors.darkHeadlineText, fontFamily: 'Outfit'),
+      headlineSmall: AppTextStyles.h3.copyWith(color: AppColors.darkHeadlineText, fontFamily: 'Outfit'),
+
+      titleLarge: AppTextStyles.h4.copyWith(color: AppColors.darkPrimaryText, fontFamily: 'Outfit'),
+      titleMedium: AppTextStyles.h5.copyWith(color: AppColors.darkPrimaryText, fontFamily: 'Outfit'),
+      titleSmall: AppTextStyles.h6.copyWith(color: AppColors.darkPrimaryText, fontFamily: 'Outfit'),
     );
   }
 

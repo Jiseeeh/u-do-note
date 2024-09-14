@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,6 +33,7 @@ import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leit
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class ReviewScreen extends ConsumerStatefulWidget {
@@ -219,26 +219,14 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                             .textTheme
                             .displayLarge
                             ?.copyWith(
-                                color: Theme.of(context).scaffoldBackgroundColor,
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.sp)),
                   ],
                 );
               })
         ]);
-  }
-
-  String _getGreeting(BuildContext context) {
-    var hour = DateTime.now().hour;
-
-    if (hour < 12) {
-      return '${context.tr("greet_morning")},';
-    }
-    if (hour < 17) {
-      return '${context.tr("greet_afternoon")},';
-    }
-
-    return '${context.tr("greet_evening")},';
   }
 
   @override
@@ -250,30 +238,43 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   }
 
   AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
-    var username = FirebaseAuth.instance.currentUser!.displayName!;
     return AppBar(
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
+      toolbarHeight: 80,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(_getGreeting(context),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Theme.of(context).scaffoldBackgroundColor,)),
-              Text(
-                username,
-                style: Theme.of(context).textTheme.displayLarge,
-              )
-            ],
-          ),
-        ],
+      title: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Align(
+              alignment: const AlignmentDirectional(-1, 0),
+              child: Text('U Do Note',
+                  style: Theme.of(context).textTheme.bodyLarge),
+            ),
+            Align(
+              alignment: const AlignmentDirectional(-1, 0),
+              child: Text('Learning Strategies',
+                  style: Theme.of(context).textTheme.titleLarge),
+            ),
+          ],
+        ),
       ),
+      actions: [
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 16, 0),
+          child: IconButton(
+            icon: Icon(Icons.account_circle_outlined,
+                color: Theme.of(context).colorScheme.primary, size: 32),
+            onPressed: () {
+              context.router.push(const SettingsRoute());
+            },
+          ),
+        ),
+      ],
+      centerTitle: false,
+      elevation: 0,
     );
   }
 
@@ -284,10 +285,12 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           child: Column(
             children: [
               SearchAnchor(
+                viewBackgroundColor: Theme.of(context).cardColor,
                 isFullScreen: false,
                 builder: (context, controller) {
                   return SearchBar(
-                    hintText: 'Search',
+                    hintText: 'Search for learning strategies...',
+                    hintStyle: Theme.of(context).searchBarTheme.hintStyle,
                     backgroundColor:
                         Theme.of(context).searchBarTheme.backgroundColor,
                     shadowColor: MaterialStateColor.resolveWith((_) {
@@ -295,7 +298,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                     }),
                     controller: controller,
                     padding: const MaterialStatePropertyAll<EdgeInsets>(
-                        EdgeInsets.symmetric(horizontal: 16.0)),
+                        EdgeInsets.symmetric(horizontal: 12.0)),
                     onTap: () {
                       controller.openView();
                     },
@@ -425,8 +428,17 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
     for (var method in reviewMethodEntities) {
       reviewMethodTiles.add(ListTile(
-        title: Text(method.title),
-        subtitle: Text(method.description),
+        title: Text(
+          method.title,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+        ),
+        subtitle: Text(
+          method.description,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         leading: Image.asset(
           method.imagePath,
           fit: BoxFit.fill,
@@ -438,6 +450,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
           method.onPressed();
         },
+        tileColor: Theme.of(context).cardColor,
       ));
     }
 
@@ -457,8 +470,11 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     }
 
     return [
-      const ListTile(
-        title: Text('No results found'),
+      ListTile(
+        title: Text(
+          'No results found',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
       )
     ];
   }

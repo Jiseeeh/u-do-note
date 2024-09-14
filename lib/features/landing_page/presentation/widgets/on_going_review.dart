@@ -90,8 +90,9 @@ class OnGoingReview extends ConsumerWidget {
                                     .bodyMedium
                                     ?.copyWith(
                                         color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary)),
+                                            .textTheme
+                                            .headlineLarge
+                                            ?.color)),
                           ),
                         ],
                       ),

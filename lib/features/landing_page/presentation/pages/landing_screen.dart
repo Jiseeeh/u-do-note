@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/features/landing_page/presentation/widgets/on_going_review.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class LandingScreen extends ConsumerStatefulWidget {
@@ -22,6 +24,18 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
     super.initState();
   }
 
+  String _getGreeting(BuildContext context) {
+    var hour = DateTime.now().hour;
+
+    if (hour < 12) {
+      return context.tr("greet_morning");
+    }
+    if (hour < 17) {
+      return context.tr("greet_afternoon");
+    }
+    return context.tr("greet_evening");
+  }
+
   @override
   Widget build(
     BuildContext context,
@@ -31,6 +45,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
           key: scaffoldKey,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
+            scrolledUnderElevation: 0.0,
             toolbarHeight: 80,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             automaticallyImplyLeading: false,
@@ -41,7 +56,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                 children: [
                   Align(
                     alignment: const AlignmentDirectional(-1, 0),
-                    child: Text('Welcome Back',
+                    child: Text(_getGreeting(context),
                         style: Theme.of(context).textTheme.bodyLarge),
                   ),
                   Align(
@@ -58,10 +73,13 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
             actions: [
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 16, 0),
-                child: Icon(Icons.account_circle_outlined,
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 32
-                    ),
+                child: IconButton(
+                  icon: Icon(Icons.account_circle_outlined,
+                      color: Theme.of(context).colorScheme.primary, size: 32),
+                  onPressed: () {
+                    context.router.push(const SettingsRoute());
+                  },
+                ),
               ),
             ],
             centerTitle: false,
@@ -300,8 +318,9 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                       child: Icon(
                                                         Icons.arrow_forward,
                                                         color: Theme.of(context)
-                                                            .colorScheme
-                                                            .secondary,
+                                                            .textTheme
+                                                            .headlineLarge
+                                                            ?.color,
                                                         size: 14,
                                                       ),
                                                     ),
@@ -389,8 +408,9 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                                       child: Icon(
                                                         Icons.arrow_forward,
                                                         color: Theme.of(context)
-                                                            .colorScheme
-                                                            .secondary,
+                                                            .textTheme
+                                                            .headlineLarge
+                                                            ?.color,
                                                         size: 14,
                                                       ),
                                                     ),

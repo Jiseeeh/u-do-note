@@ -12,15 +12,7 @@ class AppTheme {
       primaryColor: AppColors.primary,
       textTheme: TextThemes.primaryTextTheme,
       scaffoldBackgroundColor: AppColors.primaryBackground,
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.secondaryBackground,
-          selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.darkSecondaryText),
-      // searchBarTheme: SearchBarThemeData(
-      //   backgroundColor: MaterialStateColor.resolveWith((_) {
-      //     return const Color.fromARGB(255, 255, 255, 255);
-      //   }),
-      // ),
+      cardColor: AppColors.secondaryBackground,
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.secondary,
@@ -30,7 +22,17 @@ class AppTheme {
         scrolledUnderElevation: 0,
         elevation: 0,
       ),
-      cardColor: AppColors.secondaryBackground,
+      searchBarTheme: SearchBarThemeData(
+        backgroundColor: MaterialStateColor.resolveWith((_) {
+          return AppColors.secondaryBackground;
+        }),
+        hintStyle: MaterialStateProperty.all(
+            const TextStyle(color: AppColors.secondaryText)),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: AppColors.secondaryBackground,
+          selectedItemColor: AppColors.primary,
+          unselectedItemColor: AppColors.darkSecondaryText),
     );
   }
 
@@ -39,28 +41,30 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.dark,
       primaryColor: AppColors.darkPrimary,
+      textTheme: TextThemes.darkTextTheme,
+      scaffoldBackgroundColor: AppColors.darkPrimaryBackground,
+      cardColor: AppColors.darkSecondaryBackground,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.darkPrimary,
         secondary: AppColors.darkSecondary,
         error: AppColors.error,
       ),
-      scaffoldBackgroundColor: AppColors.darkPrimaryBackground,
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.darkSecondaryBackground,
-          selectedItemColor: AppColors.darkPrimary,
-          unselectedItemColor: AppColors.secondaryText),
-      // searchBarTheme: SearchBarThemeData(
-      //   backgroundColor: MaterialStateColor.resolveWith((_) {
-      //     return AppColors.darkSearchBar;
-      //   }),
-      // ),
-      textTheme: TextThemes.darkTextTheme,
       appBarTheme: const AppBarTheme(
         elevation: 0,
         backgroundColor: AppColors.primary,
         titleTextStyle: AppTextStyles.h2,
       ),
-      cardColor: AppColors.darkSecondaryBackground,
+      searchBarTheme: SearchBarThemeData(
+        backgroundColor: MaterialStateColor.resolveWith((_) {
+          return AppColors.darkSecondaryBackground;
+        }),
+        hintStyle: MaterialStateProperty.all(
+            const TextStyle(color: AppColors.darkSecondaryText)),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: AppColors.darkSecondaryBackground,
+          selectedItemColor: AppColors.darkPrimary,
+          unselectedItemColor: AppColors.secondaryText),
     );
   }
 }

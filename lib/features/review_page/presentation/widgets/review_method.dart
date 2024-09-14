@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:u_do_note/core/shared/theme/colors.dart';
-
 class ReviewMethod extends ConsumerWidget {
   final String title;
   final String description;
@@ -31,63 +29,81 @@ class ReviewMethod extends ConsumerWidget {
       ),
       child: Row(
         children: [
+          Container(
+            width: 100,
+            height: containerHeight,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+              child: Image(
+                image: AssetImage(imagePath),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title,
-                          style: Theme.of(context).textTheme.headlineSmall),
-                      Text(
+                  Align(
+                    alignment: const AlignmentDirectional(-1, 0),
+                    child: Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                      child: Text(
+                        title,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: const AlignmentDirectional(-1, 0),
+                    child: Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                      child: Text(
                         description,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: const AlignmentDirectional(1, 0),
+                    child: TextButton(
+                      onPressed: () {
+                        onPressed();
+                      },
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        backgroundColor: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: Text(
+                        'Learn More',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
-                            ?.copyWith(),
+                            ?.copyWith(color: Theme.of(context).cardColor),
                       ),
-                    ],
-                  )),
-                  TextButton(
-                    key: buttonKey,
-                    onPressed: onPressed,
-                    style: ButtonStyle(
-                        // lessen the border radius
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12))),
-                        backgroundColor:
-                            MaterialStateProperty.all(AppColors.secondary)),
-                    child: Text('Start',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith()),
-                  )
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
           // ?IDK WHY THIS WORKS, BUT IT DOES. I'M NOT GONNA QUESTION IT
           // ?MONKEY PATCHING FTW
-          Container(
-              width: 130,
-              height: containerHeight,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8)),
-                child: Image(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover,
-                ),
-              )),
         ],
       ),
     );

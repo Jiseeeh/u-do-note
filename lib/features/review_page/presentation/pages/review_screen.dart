@@ -293,11 +293,11 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                     hintStyle: Theme.of(context).searchBarTheme.hintStyle,
                     backgroundColor:
                         Theme.of(context).searchBarTheme.backgroundColor,
-                    shadowColor: MaterialStateColor.resolveWith((_) {
+                    shadowColor: WidgetStateColor.resolveWith((_) {
                       return Colors.transparent;
                     }),
                     controller: controller,
-                    padding: const MaterialStatePropertyAll<EdgeInsets>(
+                    padding: const WidgetStatePropertyAll<EdgeInsets>(
                         EdgeInsets.symmetric(horizontal: 12.0)),
                     onTap: () {
                       controller.openView();

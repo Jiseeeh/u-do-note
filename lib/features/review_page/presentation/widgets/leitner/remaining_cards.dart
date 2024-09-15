@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:u_do_note/core/shared/theme/colors.dart';
 
 class RemainingCardsController {
   late void Function(int remaining, int total) syncRemainingCards;

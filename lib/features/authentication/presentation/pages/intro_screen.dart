@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/text_styles.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/authentication/presentation/widgets/onboard_container.dart';
 import 'package:u_do_note/routes/app_route.dart';
 

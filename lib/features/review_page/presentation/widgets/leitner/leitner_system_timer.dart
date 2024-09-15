@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-import 'package:u_do_note/core/shared/theme/colors.dart';
 
 class TimerWidget extends ConsumerStatefulWidget {
   final Stopwatch stopwatch;

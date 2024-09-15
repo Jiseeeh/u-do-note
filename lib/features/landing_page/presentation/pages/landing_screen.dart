@@ -162,15 +162,13 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                               TextButton(
                                                 onPressed: null,
                                                 style: ButtonStyle(
-                                                    shape: MaterialStateProperty
-                                                        .all(RoundedRectangleBorder(
+                                                    shape: WidgetStateProperty.all(RoundedRectangleBorder(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         12))),
                                                     backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(Theme.of(
+                                                        WidgetStateProperty.all(Theme.of(
                                                                     context)
                                                                 .scaffoldBackgroundColor)),
                                                 child: Text('Review',

@@ -21,7 +21,6 @@ import 'package:u_do_note/core/shared/data/models/question.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/analyze_image_text_dialog.dart';

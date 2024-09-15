@@ -23,10 +23,10 @@ class AppTheme {
         elevation: 0,
       ),
       searchBarTheme: SearchBarThemeData(
-        backgroundColor: MaterialStateColor.resolveWith((_) {
+        backgroundColor: WidgetStateColor.resolveWith((_) {
           return AppColors.secondaryBackground;
         }),
-        hintStyle: MaterialStateProperty.all(
+        hintStyle: WidgetStateProperty.all(
             const TextStyle(color: AppColors.secondaryText)),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -55,10 +55,10 @@ class AppTheme {
         titleTextStyle: AppTextStyles.h2,
       ),
       searchBarTheme: SearchBarThemeData(
-        backgroundColor: MaterialStateColor.resolveWith((_) {
+        backgroundColor: WidgetStateColor.resolveWith((_) {
           return AppColors.darkSecondaryBackground;
         }),
-        hintStyle: MaterialStateProperty.all(
+        hintStyle: WidgetStateProperty.all(
             const TextStyle(color: AppColors.darkSecondaryText)),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(

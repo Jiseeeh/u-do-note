@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:u_do_note/core/shared/presentation/providers/inherited_data_provider.dart';
 
-class BottomBar extends StatefulWidget {
+class BottomBar extends ConsumerStatefulWidget {
   final Widget child;
   final int currentPage;
   final TabController tabController;
@@ -11,6 +13,7 @@ class BottomBar extends StatefulWidget {
   final Color barColor;
   final double end;
   final double start;
+
   const BottomBar({
     required this.child,
     required this.currentPage,
@@ -20,14 +23,15 @@ class BottomBar extends StatefulWidget {
     required this.barColor,
     required this.end,
     required this.start,
-    Key? key, required StackFit fit,
+    Key? key,
+    required StackFit fit,
   }) : super(key: key);
 
   @override
-  _BottomBarState createState() => _BottomBarState();
+  ConsumerState<BottomBar> createState() => _BottomBarState();
 }
 
-class _BottomBarState extends State<BottomBar>
+class _BottomBarState extends ConsumerState<BottomBar>
     with SingleTickerProviderStateMixin {
   ScrollController scrollBottomBarController = ScrollController();
   late AnimationController _controller;
@@ -115,7 +119,7 @@ class _BottomBarState extends State<BottomBar>
         Positioned(
           bottom: widget.start,
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.easeIn,
             width: isOnTop == true ? 0 : 40,
             height: isOnTop == true ? 0 : 40,
@@ -193,7 +197,7 @@ class _BottomBarState extends State<BottomBar>
                                                   ? widget.colors[4]
                                                   : widget.unselectedColor,
                               width: 4),
-                          insets: EdgeInsets.fromLTRB(16, 0, 16, 8)),
+                          insets: const EdgeInsets.fromLTRB(16, 0, 16, 8)),
                       tabs: [
                         SizedBox(
                           height: 55,

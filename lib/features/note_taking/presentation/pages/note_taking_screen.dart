@@ -441,12 +441,12 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             text: 'Learning Technique Suggested: ',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.jetBlack,
+                                color: Theme.of(context).colorScheme.secondary,
                                 fontSize: 16.sp)),
                         TextSpan(
                             text: _learningTechniqueAnalyzed,
                             style: TextStyle(
-                                color: AppColors.jetBlack, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
                       ],
                     ),
                   ),
@@ -458,12 +458,12 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             text: 'Reason: ',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.jetBlack,
+                                color: Theme.of(context).colorScheme.secondary,
                                 fontSize: 16.sp)),
                         TextSpan(
                             text: _reasonAnalyzed,
                             style: TextStyle(
-                                color: AppColors.jetBlack, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
                       ],
                     ),
                   ),
@@ -475,18 +475,18 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             text: 'Notice: ',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.jetBlack,
+                                color: Theme.of(context).colorScheme.secondary,
                                 fontSize: 16.sp)),
                         TextSpan(
                             text:
                                 'If you want to get started with the suggested learning technique, click ',
                             style: TextStyle(
-                                color: AppColors.jetBlack, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
                         TextSpan(
                             text: 'Go button below',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.jetBlack,
+                                color: Theme.of(context).colorScheme.secondary,
                                 fontSize: 16.sp)),
                       ],
                     ),
@@ -851,8 +851,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
                           _wordsSpoken,
-                          style: const TextStyle(
-                              color: AppColors.jetBlack,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.bold),
                         ),
                       )),
@@ -872,7 +872,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
           hintText: 'Your note title.',
           border: InputBorder.none,
         ),
-        style: const TextStyle(color: AppColors.jetBlack),
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary,),
       ),
       scrolledUnderElevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

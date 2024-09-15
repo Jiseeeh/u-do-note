@@ -140,7 +140,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             bottom: 0,
                             right: 5.w,
                             child: CircleAvatar(
-                              backgroundColor: AppColors.lightGrey,
+                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                               child: IconButton(
                                 onPressed: () async {
                                   EasyLoading.show(
@@ -172,7 +172,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   Icons.edit,
                                   size: 16.sp, // Adjust the size as needed
                                   color: AppColors
-                                      .black, // Adjust the color as needed
+                                      .primary, // Adjust the color as needed
                                 ),
                               ),
                             ))
@@ -193,7 +193,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               .textTheme
                               .displayMedium
                               ?.copyWith(
-                                  fontSize: 20.sp, color: AppColors.black)),
+                                  fontSize: 20.sp)),
                     ),
                   ),
                   SizedBox(height: 1.h),
@@ -201,7 +201,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
-                          ?.copyWith(color: AppColors.grey, fontSize: 14.sp)),
+                          ?.copyWith(fontSize: 14.sp)),
                 ],
               ),
             ),

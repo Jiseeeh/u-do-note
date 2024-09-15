@@ -15,7 +15,7 @@ class SocialIcon extends ConsumerWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
           border: Border.all(
-              width: 1, color: AppColors.lightShadow),
+              width: 1, color: AppColors.secondary),
           shape: BoxShape.circle),
       child: SvgPicture.asset(
         src,

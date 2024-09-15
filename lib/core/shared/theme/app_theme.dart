@@ -5,65 +5,66 @@ import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/core/shared/theme/text_theme.dart';
 
 class AppTheme {
-  static ThemeData get darkTheme {
-    return ThemeData(
-      brightness: Brightness.dark,
-      fontFamily: AppTextStyles.fontFamily,
-      primaryColor: AppColors.primary,
-      colorScheme: const ColorScheme.dark(
-        primary: AppColors.white,
-        secondary: AppColors.lightGrey,
-        error: AppColors.error,
-        background: AppColors.primary,
-        tertiary: Color.fromARGB(255, 194, 182, 72),
-      ),
-      scaffoldBackgroundColor: AppColors.primary,
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.darkBottomNavBar),
-      searchBarTheme: SearchBarThemeData(
-        backgroundColor: MaterialStateColor.resolveWith((_) {
-          return AppColors.darkSearchBar;
-        }),
-      ),
-      textTheme: TextThemes.darkTextTheme,
-      primaryTextTheme: TextThemes.primaryTextTheme,
-      appBarTheme: const AppBarTheme(
-        elevation: 0,
-        backgroundColor: AppColors.primary,
-        titleTextStyle: AppTextStyles.h2,
-      ),
-      cardColor: const Color(0xff11365D),
-    );
-  }
-
   /// Light theme data of the app
   static ThemeData get lightTheme {
     return ThemeData(
-      fontFamily: AppTextStyles.fontFamily,
       brightness: Brightness.light,
       primaryColor: AppColors.primary,
-      textTheme: TextThemes.textTheme,
-      primaryTextTheme: TextThemes.primaryTextTheme,
-      scaffoldBackgroundColor: AppColors.white,
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.primary),
-      searchBarTheme: SearchBarThemeData(
-        backgroundColor: MaterialStateColor.resolveWith((_) {
-          return const Color.fromARGB(255, 255, 255, 255);
-        }),
-      ),
+      textTheme: TextThemes.primaryTextTheme,
+      scaffoldBackgroundColor: AppColors.primaryBackground,
+      cardColor: AppColors.secondaryBackground,
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.secondary,
         error: AppColors.error,
-        onSecondary: Color(0xffABACAF),
-        tertiary: Color.fromARGB(255, 255, 245, 157),
       ),
       appBarTheme: const AppBarTheme(
         scrolledUnderElevation: 0,
         elevation: 0,
       ),
-      cardColor: const Color(0xffD2E3FF)
+      searchBarTheme: SearchBarThemeData(
+        backgroundColor: MaterialStateColor.resolveWith((_) {
+          return AppColors.secondaryBackground;
+        }),
+        hintStyle: MaterialStateProperty.all(
+            const TextStyle(color: AppColors.secondaryText)),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: AppColors.secondaryBackground,
+          selectedItemColor: AppColors.primary,
+          unselectedItemColor: AppColors.darkSecondaryText),
+    );
+  }
+
+  /// Dark theme data of the app
+  static ThemeData get darkTheme {
+    return ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: AppColors.darkPrimary,
+      textTheme: TextThemes.darkTextTheme,
+      scaffoldBackgroundColor: AppColors.darkPrimaryBackground,
+      cardColor: AppColors.darkSecondaryBackground,
+      colorScheme: const ColorScheme.dark(
+        primary: AppColors.darkPrimary,
+        secondary: AppColors.darkSecondary,
+        error: AppColors.error,
+      ),
+      appBarTheme: const AppBarTheme(
+        elevation: 0,
+        backgroundColor: AppColors.primary,
+        titleTextStyle: AppTextStyles.h2,
+      ),
+      searchBarTheme: SearchBarThemeData(
+        backgroundColor: MaterialStateColor.resolveWith((_) {
+          return AppColors.darkSecondaryBackground;
+        }),
+        hintStyle: MaterialStateProperty.all(
+            const TextStyle(color: AppColors.darkSecondaryText)),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: AppColors.darkSecondaryBackground,
+          selectedItemColor: AppColors.darkPrimary,
+          unselectedItemColor: AppColors.secondaryText),
     );
   }
 }

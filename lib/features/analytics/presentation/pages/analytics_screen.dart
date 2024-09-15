@@ -126,12 +126,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 children: [
                   Text('Your performance',
                       style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                            color: AppColors.white,
+                            color: AppColors.primaryBackground,
                           )),
                   const SizedBox(height: 5),
                   Text('This is up-to-date.',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppColors.white,
+                            color: AppColors.primaryBackground,
                           )),
                 ]),
           ),
@@ -227,7 +227,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .textTheme
                                               .labelSmall
                                               ?.copyWith(
-                                                color: AppColors.grey,
+                                                color: AppColors.primaryBackground,
                                               )),
                                     ],
                                   ),
@@ -266,7 +266,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                               .textTheme
                                               .labelSmall
                                               ?.copyWith(
-                                                color: AppColors.grey,
+                                                color: AppColors.primaryBackground,
                                               )),
                                     ],
                                   ),

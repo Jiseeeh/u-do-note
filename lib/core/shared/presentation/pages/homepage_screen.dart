@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
@@ -15,10 +14,11 @@ class HomepageScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AutoTabsScaffold(
       routes: const [
-        NotebooksRoute(),
+        LandingRoute(),
         ReviewRoute(),
+        NotebooksRoute(),
         AnalyticsRoute(),
-        SettingsRoute()
+        // SettingsRoute(),
       ],
       extendBody: true,
       bottomNavigationBuilder: (_, tabsRouter) {
@@ -37,7 +37,10 @@ class HomepageScreen extends ConsumerWidget {
           shape: const CircularNotchedRectangle(),
           color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
           child: IconTheme(
-            data: const IconThemeData(color: AppColors.shadow),
+            data: IconThemeData(
+                color: Theme.of(context)
+                    .bottomNavigationBarTheme
+                    .unselectedItemColor!),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -45,50 +48,51 @@ class HomepageScreen extends ConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.home_outlined),
                   onPressed: () {
-                    tabsRouter.setActiveIndex(1);
-                  },
-                  color: tabsRouter.activeIndex == 1 ? AppColors.white : null,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.folder_outlined),
-                  onPressed: () {
                     tabsRouter.setActiveIndex(0);
                   },
-                  color: tabsRouter.activeIndex == 0 ? AppColors.white : null,
+                  color: tabsRouter.activeIndex == 0
+                      ? Theme.of(context)
+                          .bottomNavigationBarTheme
+                          .selectedItemColor
+                      : null,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.lightbulb_outline),
+                  onPressed: () {
+                    tabsRouter.setActiveIndex(1);
+                  },
+                  color: tabsRouter.activeIndex == 1
+                      ? Theme.of(context)
+                          .bottomNavigationBarTheme
+                          .selectedItemColor
+                      : null,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.library_books_outlined),
+                  onPressed: () {
+                    tabsRouter.setActiveIndex(2);
+                  },
+                  color: tabsRouter.activeIndex == 2
+                      ? Theme.of(context)
+                          .bottomNavigationBarTheme
+                          .selectedItemColor
+                      : null,
                 ),
                 IconButton(
                   icon: const Icon(Icons.bar_chart_rounded),
                   onPressed: () {
-                    tabsRouter.setActiveIndex(2);
-                  },
-                  color: tabsRouter.activeIndex == 2 ? AppColors.white : null,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.settings_outlined),
-                  onPressed: () {
                     tabsRouter.setActiveIndex(3);
                   },
-                  color: tabsRouter.activeIndex == 3 ? AppColors.white : null,
+                  color: tabsRouter.activeIndex == 3
+                      ? Theme.of(context)
+                          .bottomNavigationBarTheme
+                          .selectedItemColor
+                      : null,
                 ),
               ],
             ),
           ),
         );
-        //        return BottomNavigationBar(
-        //   currentIndex: tabsRouter.activeIndex,
-        //   onTap: tabsRouter.setActiveIndex,
-        //   fixedColor: Colors.grey,
-        //   unselectedItemColor: Colors.black,
-        //   items: const [
-        //     BottomNavigationBarItem(label: 'Notes', icon: Icon(Icons.home)),
-        //     BottomNavigationBarItem(
-        //         label: 'Review Methods', icon: Icon(Icons.folder)),
-        //     BottomNavigationBarItem(
-        //         label: 'Analytics', icon: Icon(Icons.bar_chart)),
-        //     BottomNavigationBarItem(
-        //         label: 'Settings', icon: Icon(Icons.settings)),
-        //   ],
-        // );
       },
     );
   }

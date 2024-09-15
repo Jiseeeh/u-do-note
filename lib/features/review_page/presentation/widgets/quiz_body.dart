@@ -38,20 +38,20 @@ class QuizBody extends ConsumerWidget {
               Text(
                 'Question ${currentQuestionIndex + 1} of ${questions.length}',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: AppColors.grey,
+                      
                     ),
               ),
               LinearPercentIndicator(
                 lineHeight: 8,
                 percent: startTime / 30,
                 barRadius: const Radius.circular(8),
-                leading: const Icon(Icons.timer, color: AppColors.grey),
+                leading: Icon(Icons.timer, color: Theme.of(context).cardColor),
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                backgroundColor: AppColors.lightShadow,
+                backgroundColor: Theme.of(context).cardColor,
                 progressColor: AppColors.secondary,
               ),
-              const Divider(
-                  height: 1, color: AppColors.lightShadow, thickness: 1),
+              Divider(
+                  height: 1, color: Theme.of(context).cardColor, thickness: 1),
             ],
           ),
         ),
@@ -59,7 +59,7 @@ class QuizBody extends ConsumerWidget {
           height: 20.h,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppColors.extraLightGrey,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
@@ -78,7 +78,7 @@ class QuizBody extends ConsumerWidget {
           child: Ink(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.extraLightGrey,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: SingleChildScrollView(
@@ -118,7 +118,7 @@ class QuizBody extends ConsumerWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge
-                                ?.copyWith(color: AppColors.white),
+                                ?.copyWith(),
                           )))
                 ],
               ),

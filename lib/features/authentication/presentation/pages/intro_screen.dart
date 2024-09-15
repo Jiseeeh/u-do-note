@@ -45,9 +45,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
       onFinish: () {
         context.router.push(const SignUpRoute());
       },
-      finishButtonStyle: const FinishButtonStyle(
-          backgroundColor: AppColors.btnOnBoard,
-          foregroundColor: AppColors.black),
+      finishButtonStyle: FinishButtonStyle(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.secondary,),
       skipTextButton: const Text('Skip', style: AppTextStyles.body),
       trailing: const Text('Login', style: AppTextStyles.body),
       trailingFunction: () {

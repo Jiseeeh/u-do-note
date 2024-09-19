@@ -49,7 +49,7 @@ class AppTheme {
         secondary: AppColors.darkSecondary,
         error: AppColors.error,
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         elevation: 0,
         backgroundColor: AppColors.primary,
         titleTextStyle: AppTextStyles.h2,

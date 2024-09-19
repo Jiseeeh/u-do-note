@@ -189,7 +189,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                       const SizedBox(
                                         height: 15,
                                       ),
-                                      const Align(
+                                      Align(
                                           alignment: Alignment.topLeft,
                                           child: Text(
                                             "Email Address",
@@ -207,7 +207,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      const Align(
+                                      Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           "Display Name",
@@ -225,7 +225,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                       const SizedBox(
                                         height: 15,
                                       ),
-                                      const Align(
+                                      Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           "Password",
@@ -254,7 +254,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      const Align(
+                                      Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           "Repeat Password",

@@ -1,15 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/datasources/remote/shared_remote_datasource.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/data/repositories/shared_repository_impl.dart';
 import 'package:u_do_note/core/shared/domain/repositories/shared_repository.dart';
 import 'package:u_do_note/core/shared/domain/usecases/generate_quiz_questions.dart';
 import 'package:u_do_note/core/shared/domain/usecases/get_old_sessions.dart';
+import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/blurting.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/blurting/blurting_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/blurting/blurting_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/feynman/feynman_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/feynman/feynman_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_system_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_pre_review.dart';
 
 part 'shared_provider.g.dart';
 
@@ -100,5 +125,126 @@ class Shared extends _$Shared {
       logger.e(failure.message);
       return [];
     }, (res) => res);
+  }
+
+  bool _isPomodoroActive() {
+    var pomodoro = ref.watch(pomodoroProvider);
+
+    if (pomodoro.pomodoroTimer != null) {
+      EasyLoading.showToast(
+          'Please finish the current pomodoro session first or cancel if you want to switch to another review method.',
+          duration: const Duration(seconds: 3),
+          toastPosition: EasyLoadingToastPosition.bottom);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  void _onReviewMethodPressed(
+      BuildContext context, ReviewMethods reviewMethod) async {
+    if (reviewMethod != ReviewMethods.pomodoroTechnique &&
+        _isPomodoroActive()) {
+      return;
+    }
+
+    Widget notice;
+    Widget preReview;
+    var reviewScreenState = ref.read(reviewScreenProvider);
+
+    switch (reviewMethod) {
+      case ReviewMethods.leitnerSystem:
+        notice = const LeitnerSystemNotice();
+        preReview = const LeitnerPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.leitnerSystem);
+        break;
+      case ReviewMethods.feynmanTechnique:
+        notice = const FeynmanNotice();
+        preReview = const FeynmanPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.feynmanTechnique);
+        break;
+      case ReviewMethods.pomodoroTechnique:
+        notice = const PomodoroNotice();
+        preReview = const PomodoroPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.pomodoroTechnique);
+        break;
+      case ReviewMethods.elaboration:
+        notice = const ElaborationNotice();
+        preReview = const ElaborationPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.elaboration);
+        break;
+      case ReviewMethods.acronymMnemonics:
+        notice = const AcronymNotice();
+        preReview = const AcronymPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.acronymMnemonics);
+        break;
+      case ReviewMethods.blurting:
+        notice = const BlurtingNotice();
+        preReview = const BlurtingPreReview();
+        reviewScreenState.setReviewMethod(ReviewMethods.blurting);
+        break;
+    }
+
+    var willContinue = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => notice);
+
+    if (!willContinue || !context.mounted) return;
+
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => preReview);
+  }
+
+  List<ReviewMethodEntity> getReviewMethods(BuildContext context) {
+    List<ReviewMethodEntity> methods = [
+      ReviewMethodEntity(
+          title: LeitnerSystemModel.name,
+          description: context.tr('leitner_desc'),
+          imagePath: LeitnerSystemModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.leitnerSystem);
+          }),
+      ReviewMethodEntity(
+          title: FeynmanModel.name,
+          description: context.tr('feynman_desc'),
+          imagePath: FeynmanModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.feynmanTechnique);
+          }),
+      ReviewMethodEntity(
+          title: PomodoroModel.name,
+          description: context.tr('pomodoro_desc'),
+          imagePath: PomodoroModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.pomodoroTechnique);
+          }),
+      ReviewMethodEntity(
+          title: ElaborationModel.name,
+          description: context.tr('elaboration_desc'),
+          imagePath: ElaborationModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.elaboration);
+          }),
+      ReviewMethodEntity(
+          title: AcronymModel.name,
+          description: context.tr('acronym_desc'),
+          imagePath: AcronymModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.acronymMnemonics);
+          }),
+      ReviewMethodEntity(
+          title: BlurtingModel.name,
+          description: context.tr('blurting_desc'),
+          imagePath: BlurtingModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.blurting);
+          })
+    ];
+
+    return methods;
   }
 }

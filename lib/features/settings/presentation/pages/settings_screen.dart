@@ -113,7 +113,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       enabled: isLoading,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: SizedBox(
               width: 100.w,

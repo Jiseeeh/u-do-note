@@ -17,6 +17,7 @@ class FeynmanModel {
   final List<types.Message> messages;
   final List<String> recentRobotMessages;
   final List<String> recentUserMessages;
+  static const coverImagePath = "assets/images/feynman.png";
   static const name = "Feynman Technique";
 
   const FeynmanModel({
@@ -36,27 +37,25 @@ class FeynmanModel {
   /// Converts from firestore to model
   factory FeynmanModel.fromFirestore(String id, Map<String, dynamic> data) {
     var remark = data['remark'];
-    var score = data['score'];
 
-    if (remark.toString().isEmpty && score.toString().isEmpty) {
-      // ? if these two fields are empty, then questions is also empty
-      // ? additional info in feynman_remote_datasource.dart at saveQuizResults
-      remark = "";
-      score = 0;
-    }
+    // if (remark.toString().isEmpty && score.toString().isEmpty) {
+    //   // ? if these two fields are empty, then questions is also empty
+    //   // ? additional info in feynman_remote_datasource.dart at saveQuizResults
+    //   remark = "";
+    //   score = 0;
+    // }
 
     return FeynmanModel(
       id: id,
       remark: remark,
-      score: score,
-      questions: remark.isNotEmpty
+      score: data['score'],
+      questions: remark != null
           ? (data['questions'] as List)
               .map((question) => QuestionModel.fromJson(question))
               .toList()
           : [],
-      selectedAnswersIndex: remark.isNotEmpty
-          ? List<int>.from(data['selected_answers_index'])
-          : [],
+      selectedAnswersIndex:
+          remark != null ? List<int>.from(data['selected_answers_index']) : [],
       sessionName: data['title'],
       createdAt: data['created_at'],
       contentFromPagesUsed: data['content_from_pages'],

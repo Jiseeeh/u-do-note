@@ -8,6 +8,7 @@ class AcronymModel extends QuizModel {
   final String content;
   final String sessionName;
   final Timestamp createdAt;
+  static const coverImagePath = "assets/images/acronym.webp";
   static const name = "Acronym Mnemonics";
 
   const AcronymModel({

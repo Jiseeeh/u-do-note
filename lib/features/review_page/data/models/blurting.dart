@@ -5,10 +5,12 @@ import 'package:u_do_note/core/shared/data/models/quiz.dart';
 
 class BlurtingModel extends QuizModel {
   final String? id;
+  final String notebookId;
   final String noteId;
   final String content;
   final String sessionName;
   final Timestamp createdAt;
+  static const coverImagePath = "assets/images/blurting.webp";
   static const name = "Blurting Method";
 
   const BlurtingModel({
@@ -17,6 +19,7 @@ class BlurtingModel extends QuizModel {
     super.score,
     super.remark,
     this.id,
+    required this.notebookId,
     required this.content,
     required this.noteId,
     required this.sessionName,
@@ -27,6 +30,7 @@ class BlurtingModel extends QuizModel {
   factory BlurtingModel.fromFirestore(String id, Map<String, dynamic> data) {
     return BlurtingModel(
       id: id,
+      notebookId: data['notebook_id'],
       content: data['content'],
       noteId: data['note_id'],
       sessionName: data['session_name'],
@@ -45,6 +49,7 @@ class BlurtingModel extends QuizModel {
     return {
       'content': content,
       'note_id': noteId,
+      'notebook_id': notebookId,
       'session_name': sessionName,
       'created_at': createdAt,
       'questions':
@@ -59,6 +64,7 @@ class BlurtingModel extends QuizModel {
   /// Copy with new values
   BlurtingModel copyWith({
     String? id,
+    String? notebookId,
     String? content,
     String? noteId,
     String? sessionName,
@@ -70,6 +76,7 @@ class BlurtingModel extends QuizModel {
   }) {
     return BlurtingModel(
       id: id ?? this.id,
+      notebookId: notebookId ?? this.notebookId,
       content: content ?? this.content,
       noteId: noteId ?? this.noteId,
       sessionName: sessionName ?? this.sessionName,

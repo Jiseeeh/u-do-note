@@ -12,7 +12,7 @@ class ElaborationNotice extends ConsumerWidget {
         children: [
           Text(
             context.tr("elaboration_notice"),
-            style: Theme.of(context).textTheme.displaySmall,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(
             context.tr("review_desc"),

@@ -445,7 +445,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                         TextSpan(
                             text: _learningTechniqueAnalyzed,
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 16.sp)),
                       ],
                     ),
                   ),
@@ -462,7 +463,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                         TextSpan(
                             text: _reasonAnalyzed,
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 16.sp)),
                       ],
                     ),
                   ),
@@ -480,7 +482,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             text:
                                 'If you want to get started with the suggested learning technique, click ',
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 16.sp)),
                         TextSpan(
                             text: 'Go button below',
                             style: TextStyle(
@@ -597,6 +600,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
             var blurtingModel = BlurtingModel(
                 noteId: widget.note.id,
+                notebookId: widget.notebookId,
                 sessionName: reviewScreenState.getSessionTitle,
                 createdAt: Timestamp.now(),
                 content: _fleatherController!.document.toPlainText());
@@ -871,7 +875,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
           hintText: 'Your note title.',
           border: InputBorder.none,
         ),
-        style: TextStyle(color: Theme.of(context).colorScheme.secondary,),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
       ),
       scrolledUnderElevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

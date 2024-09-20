@@ -1,3 +1,17 @@
+# [1.7.0](https://github.com/Jiseeeh/u-do-note/compare/v1.6.0...v1.7.0) (2024-09-20)
+
+
+### Bug Fixes
+
+* reduce splash screen animation ([#88](https://github.com/Jiseeeh/u-do-note/issues/88)) ([6ac2f70](https://github.com/Jiseeeh/u-do-note/commit/6ac2f70bed1da343922ce48b6b59aba385f7b8fb))
+
+
+### Features
+
+* add landing page ([#89](https://github.com/Jiseeeh/u-do-note/issues/89)) ([9d81c2b](https://github.com/Jiseeeh/u-do-note/commit/9d81c2b4350e4067a1352efd2acf678e6634bb05))
+* cleanup ([#90](https://github.com/Jiseeeh/u-do-note/issues/90)) ([25e48ee](https://github.com/Jiseeeh/u-do-note/commit/25e48ee2dec881f8ed0c54b027cdd9ffe49b1de3))
+* integrate landing screen with firestore ([#91](https://github.com/Jiseeeh/u-do-note/issues/91)) ([a8d440b](https://github.com/Jiseeeh/u-do-note/commit/a8d440b6d180d82fb54f26fdd6e85d4a8a1e296d))
+
 # [1.6.0](https://github.com/Jiseeeh/u-do-note/compare/v1.5.0...v1.6.0) (2024-09-06)
 
 

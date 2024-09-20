@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:u_do_note/core/logger/logger.dart';
 
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/landing_page/data/datasources/landing_page_remote_datasource.dart';
 import 'package:u_do_note/features/landing_page/data/repositories/landing_page_repository_impl.dart';

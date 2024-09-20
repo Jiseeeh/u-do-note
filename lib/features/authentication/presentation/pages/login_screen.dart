@@ -163,7 +163,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                       const SizedBox(
                                         height: 20,
                                       ),
-                                      const Align(
+                                      Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           "Email Address",
@@ -182,7 +182,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      const Align(
+                                      Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           "Password",

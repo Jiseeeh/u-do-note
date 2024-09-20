@@ -12,7 +12,7 @@ class PomodoroNotice extends ConsumerWidget {
         children: [
           Text(
             context.tr("pomodoro_notice"),
-            style: Theme.of(context).textTheme.displaySmall,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(
             context.tr("review_desc"),

@@ -13,7 +13,7 @@ class LeitnerSystemNotice extends ConsumerWidget {
         children: [
           Text(
             context.tr("leitner_notice"),
-            style: Theme.of(context).textTheme.displaySmall,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(
             context.tr('leitner_desc'),

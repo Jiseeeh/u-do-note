@@ -115,7 +115,7 @@ final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
 );
 
 typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
-String _$sharedHash() => r'44abd4a6e09c042047604561de648c29b57e9226';
+String _$sharedHash() => r'acadf17b9740e42a9397d46467d258d5f82f0391';
 
 /// See also [Shared].
 @ProviderFor(Shared)

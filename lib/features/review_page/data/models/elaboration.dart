@@ -8,6 +8,7 @@ class ElaborationModel extends QuizModel {
   final String content;
   final String sessionName;
   final Timestamp createdAt;
+  static const coverImagePath = "assets/images/elaboration.webp";
   static const name = "Elaboration";
 
   const ElaborationModel({

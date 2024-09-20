@@ -15,7 +15,7 @@ class AcronymNotice extends ConsumerWidget {
           Text(
             context.tr("pre_review_notice",
                 namedArgs: {"reviewMethod": AcronymModel.name}),
-            style: Theme.of(context).textTheme.displaySmall,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(
             context.tr("review_desc"),

@@ -108,8 +108,8 @@ class FeynmanRemoteDataSource {
       'notebook_id': notebookId,
       'recent_robot_messages': feynmanModel.recentRobotMessages,
       'recent_user_messages': feynmanModel.recentUserMessages,
-      'score': '',
-      'remark': '',
+      'score': null,
+      'remark': null,
     });
 
     return doc.id;

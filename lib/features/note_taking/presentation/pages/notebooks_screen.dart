@@ -114,7 +114,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Text(
         'U Do Note',
-        style: Theme.of(context).textTheme.displayLarge,
+        style: Theme.of(context).textTheme.headlineLarge,
       ),
       actions: [
         PopupMenuButton<String>(

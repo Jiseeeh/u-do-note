@@ -41,6 +41,9 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   late List<BlurtingModel> _onGoingBlurtingReviews = [];
   late List<Widget> _onGoingReviews = [];
   late final List<LearningMethod> _featuredMethods = [];
+  VoidCallback? _heroReviewOnPressed;
+  String _heroText =
+      "Please wait!\nWe are checking if you have something to review.";
   bool _isLoading = true;
 
   @override
@@ -118,130 +121,164 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
 
   List<Widget> _buildOnGoingReviews(BuildContext context) {
     List<Widget> widgets = [];
+    List<VoidCallback?> onPressedCallbacks = [];
 
     for (var i = 0; i < _onGoingLeitnerReviews.length; i++) {
+      leitnerOnPressed() async {
+        var willReview = await _willReviewOld(_onGoingLeitnerReviews[i].title);
+
+        if (!willReview || !context.mounted) return;
+
+        context.router.push(LeitnerSystemRoute(
+            notebookId: _onGoingLeitnerReviews[i].userNotebookId!,
+            leitnerSystemModel: _onGoingLeitnerReviews[i]));
+      }
+
+      onPressedCallbacks.add(leitnerOnPressed);
+
       widgets.add(OnGoingReview(
         notebookName: _onGoingLeitnerReviews[i].title,
         learningMethod: LeitnerSystemModel.name,
         imagePath: LeitnerSystemModel.coverImagePath,
         dateStarted: DateFormat.yMd()
             .format(_onGoingLeitnerReviews[i].createdAt.toDate()),
-        onPressed: () async {
-          var willReview =
-              await _willReviewOld(_onGoingLeitnerReviews[i].title);
-
-          if (!willReview || !context.mounted) return;
-
-          context.router.push(LeitnerSystemRoute(
-              notebookId: _onGoingLeitnerReviews[i].userNotebookId!,
-              leitnerSystemModel: _onGoingLeitnerReviews[i]));
-        },
+        onPressed: leitnerOnPressed,
       ));
     }
 
     for (var i = 0; i < _onGoingFeynmanReviews.length; i++) {
+      feynmanOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingFeynmanReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        context.router.push(FeynmanTechniqueRoute(
+            contentFromPages: _onGoingFeynmanReviews[i].contentFromPagesUsed,
+            sessionName: _onGoingFeynmanReviews[i].sessionName,
+            feynmanEntity: _onGoingFeynmanReviews[i].toEntity()));
+      }
+
+      onPressedCallbacks.add(feynmanOnPressed);
+
       widgets.add(OnGoingReview(
         notebookName: _onGoingFeynmanReviews[i].sessionName,
         learningMethod: FeynmanModel.name,
         imagePath: FeynmanModel.coverImagePath,
         dateStarted: DateFormat.yMd()
             .format(_onGoingFeynmanReviews[i].createdAt.toDate()),
-        onPressed: () async {
-          var willReview =
-              await _willReviewOld(_onGoingFeynmanReviews[i].sessionName);
-
-          if (!willReview || !context.mounted) return;
-
-          context.router.push(FeynmanTechniqueRoute(
-              contentFromPages: _onGoingFeynmanReviews[i].contentFromPagesUsed,
-              sessionName: _onGoingFeynmanReviews[i].sessionName,
-              feynmanEntity: _onGoingFeynmanReviews[i].toEntity()));
-        },
+        onPressed: feynmanOnPressed,
       ));
     }
 
     for (var i = 0; i < _onGoingElaborationReviews.length; i++) {
+      elaborationOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingElaborationReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        context.router.push(
+            ElaborationRoute(elaborationModel: _onGoingElaborationReviews[i]));
+      }
+
+      onPressedCallbacks.add(elaborationOnPressed);
+
       widgets.add(OnGoingReview(
         notebookName: _onGoingElaborationReviews[i].sessionName,
         learningMethod: ElaborationModel.name,
         imagePath: ElaborationModel.coverImagePath,
         dateStarted: DateFormat.yMd()
             .format(_onGoingElaborationReviews[i].createdAt.toDate()),
-        onPressed: () async {
-          var willReview =
-              await _willReviewOld(_onGoingElaborationReviews[i].sessionName);
-
-          if (!willReview || !context.mounted) return;
-
-          context.router.push(ElaborationRoute(
-              elaborationModel: _onGoingElaborationReviews[i]));
-        },
+        onPressed: elaborationOnPressed,
       ));
     }
 
     for (var i = 0; i < _onGoingAcronymReviews.length; i++) {
+      acronymOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingAcronymReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        context.router
+            .push(AcronymRoute(acronymModel: _onGoingAcronymReviews[i]));
+      }
+
+      onPressedCallbacks.add(acronymOnPressed);
+
       widgets.add(OnGoingReview(
         notebookName: _onGoingAcronymReviews[i].sessionName,
         learningMethod: AcronymModel.name,
         imagePath: AcronymModel.coverImagePath,
         dateStarted: DateFormat.yMd()
             .format(_onGoingAcronymReviews[i].createdAt.toDate()),
-        onPressed: () async {
-          var willReview =
-              await _willReviewOld(_onGoingAcronymReviews[i].sessionName);
-
-          if (!willReview || !context.mounted) return;
-
-          context.router
-              .push(AcronymRoute(acronymModel: _onGoingAcronymReviews[i]));
-        },
+        onPressed: acronymOnPressed,
       ));
     }
 
     for (var i = 0; i < _onGoingBlurtingReviews.length; i++) {
+      blurtingOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingBlurtingReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        EasyLoading.show(
+            status: 'Please wait...',
+            maskType: EasyLoadingMaskType.black,
+            dismissOnTap: false);
+
+        var res = await ref.read(notebooksProvider.notifier).getNote(
+            notebookId: _onGoingBlurtingReviews[i].notebookId,
+            noteId: _onGoingBlurtingReviews[i].noteId);
+
+        if (!context.mounted) return;
+
+        EasyLoading.dismiss();
+
+        if (res is Failure) {
+          EasyLoading.showError(context.tr("general_e"));
+          return;
+        }
+
+        res = res as NoteModel;
+
+        ref.read(reviewScreenProvider).setIsFromOldBlurtingSession(true);
+
+        context.router.push(NoteTakingRoute(
+            notebookId: _onGoingBlurtingReviews[i].noteId,
+            note: res.toEntity(),
+            blurtingModel: _onGoingBlurtingReviews[i]));
+      }
+
+      onPressedCallbacks.add(blurtingOnPressed);
+
       widgets.add(OnGoingReview(
         notebookName: _onGoingBlurtingReviews[i].sessionName,
         learningMethod: BlurtingModel.name,
         imagePath: BlurtingModel.coverImagePath,
         dateStarted: DateFormat.yMd()
             .format(_onGoingBlurtingReviews[i].createdAt.toDate()),
-        onPressed: () async {
-          var willReview =
-              await _willReviewOld(_onGoingBlurtingReviews[i].sessionName);
-
-          if (!willReview || !context.mounted) return;
-
-          EasyLoading.show(
-              status: 'Please wait...',
-              maskType: EasyLoadingMaskType.black,
-              dismissOnTap: false);
-
-          var res = await ref.read(notebooksProvider.notifier).getNote(
-              notebookId: _onGoingBlurtingReviews[i].notebookId,
-              noteId: _onGoingBlurtingReviews[i].noteId);
-
-          if (!context.mounted) return;
-
-          EasyLoading.dismiss();
-
-          if (res is Failure) {
-            EasyLoading.showError(context.tr("general_e"));
-            return;
-          }
-
-          res = res as NoteModel;
-
-          ref.read(reviewScreenProvider).setIsFromOldBlurtingSession(true);
-
-          context.router.push(NoteTakingRoute(
-              notebookId: _onGoingBlurtingReviews[i].noteId,
-              note: res.toEntity(),
-              blurtingModel: _onGoingBlurtingReviews[i]));
-        },
+        onPressed: blurtingOnPressed,
       ));
     }
 
+    if (widgets.isNotEmpty) {
+      setState(() {
+        _heroText = "You have on-going reviews!\nGet started now.";
+      });
+    } else {
+      setState(() {
+        _heroText = "All caught up!\nNo reviews at the moment.";
+      });
+    }
+
     widgets.shuffle();
+    onPressedCallbacks.shuffle();
+
+    _heroReviewOnPressed =
+        onPressedCallbacks[Random().nextInt(onPressedCallbacks.length)];
 
     return widgets;
   }
@@ -356,68 +393,74 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   0, 0, 0, 8),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
                                     padding:
                                         const EdgeInsetsDirectional.fromSTEB(
                                             0, 0, 12, 0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(16, 12, 12, 0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsetsDirectional
-                                                        .fromSTEB(0, 0, 0, 12),
-                                                child: Text(
-                                                    'Excellent, Pending Review \nis almost done',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium
-                                                        ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .scaffoldBackgroundColor)),
-                                              ),
-                                              TextButton(
-                                                onPressed: null,
-                                                style: ButtonStyle(
-                                                    shape: WidgetStateProperty.all(
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12))),
-                                                    backgroundColor:
-                                                        WidgetStateProperty.all(
-                                                            Theme.of(context)
-                                                                .scaffoldBackgroundColor)),
-                                                child: Text('Review',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleSmall
-                                                        ?.copyWith(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .secondary)),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              16, 12, 12, 0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(_heroText.split("\n")[0],
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: Theme.of(context)
+                                                          .scaffoldBackgroundColor)),
+                                          const SizedBox(height: 2),
+                                          Text(_heroText.split("\n")[1],
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: Theme.of(context)
+                                                          .scaffoldBackgroundColor)),
+                                          _heroReviewOnPressed != null
+                                              ? TextButton(
+                                                  onPressed: () {
+                                                    if (_isLoading) return;
+
+                                                    _heroReviewOnPressed!
+                                                        .call();
+                                                  },
+                                                  style: ButtonStyle(
+                                                      shape: WidgetStateProperty.all(
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12))),
+                                                      backgroundColor:
+                                                          WidgetStateProperty
+                                                              .all(Theme.of(
+                                                                      context)
+                                                                  .scaffoldBackgroundColor)),
+                                                  child: Text('Review',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleSmall
+                                                          ?.copyWith(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .secondary)),
+                                                )
+                                              : const SizedBox(height: 10)
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ],

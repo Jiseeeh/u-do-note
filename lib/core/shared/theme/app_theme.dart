@@ -50,6 +50,7 @@ class AppTheme {
         error: AppColors.error,
       ),
       appBarTheme: AppBarTheme(
+        scrolledUnderElevation: 0,
         elevation: 0,
         backgroundColor: AppColors.primary,
         titleTextStyle: AppTextStyles.h2,

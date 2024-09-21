@@ -309,269 +309,267 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   Widget build(
     BuildContext context,
   ) {
-    return GestureDetector(
-      child: Scaffold(
-          key: _scaffoldKey,
+    return Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          scrolledUnderElevation: 0.0,
+          toolbarHeight: 80,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
-            scrolledUnderElevation: 0.0,
-            toolbarHeight: 80,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            automaticallyImplyLeading: false,
-            title: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Align(
-                    alignment: const AlignmentDirectional(-1, 0),
-                    child: Text(_getGreeting(context),
-                        style: Theme.of(context).textTheme.bodyLarge),
-                  ),
-                  Align(
-                    alignment: const AlignmentDirectional(-1, 0),
-                    child: Text(_username,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(fontSize: 28)),
-                  ),
-                ],
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Align(
+                  alignment: const AlignmentDirectional(-1, 0),
+                  child: Text(_getGreeting(context),
+                      style: Theme.of(context).textTheme.bodyLarge),
+                ),
+                Align(
+                  alignment: const AlignmentDirectional(-1, 0),
+                  child: Text(_username,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontSize: 28)),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 16, 0),
+              child: IconButton(
+                icon: Icon(Icons.account_circle_outlined,
+                    color: Theme.of(context).colorScheme.primary, size: 32),
+                onPressed: () {
+                  context.router.push(const SettingsRoute());
+                },
               ),
             ),
-            actions: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 16, 0),
-                child: IconButton(
-                  icon: Icon(Icons.account_circle_outlined,
-                      color: Theme.of(context).colorScheme.primary, size: 32),
-                  onPressed: () {
-                    context.router.push(const SettingsRoute());
-                  },
+          ],
+          centerTitle: false,
+          elevation: 0,
+        ),
+        body: SafeArea(
+            top: true,
+            child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
                 ),
-              ),
-            ],
-            centerTitle: false,
-            elevation: 0,
-          ),
-          body: SafeArea(
-              top: true,
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              16, 12, 16, 0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              boxShadow: const [
-                                BoxShadow(
-                                    blurRadius: 3,
-                                    color: Color(0x33000000),
-                                    offset: Offset(0, 1))
-                              ],
-                              gradient: LinearGradient(
-                                  colors: [
-                                    Theme.of(context).colorScheme.primary,
-                                    Theme.of(context).colorScheme.secondary,
-                                  ],
-                                  stops: const [
-                                    0,
-                                    1
-                                  ],
-                                  begin: const AlignmentDirectional(0.94, -1),
-                                  end: const AlignmentDirectional(-0.94, 1)),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 0, 0, 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                  blurRadius: 3,
+                                  color: Color(0x33000000),
+                                  offset: Offset(0, 1))
+                            ],
+                            gradient: LinearGradient(
+                                colors: [
+                                  Theme.of(context).colorScheme.primary,
+                                  Theme.of(context).colorScheme.secondary,
+                                ],
+                                stops: const [
+                                  0,
+                                  1
+                                ],
+                                begin: const AlignmentDirectional(0.94, -1),
+                                end: const AlignmentDirectional(-0.94, 1)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 0, 0, 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 12, 0),
+                                  child: Padding(
                                     padding:
                                         const EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 12, 0),
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              16, 12, 12, 0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(_heroText.split("\n")[0],
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Theme.of(context)
-                                                          .scaffoldBackgroundColor)),
-                                          const SizedBox(height: 2),
-                                          Text(_heroText.split("\n")[1],
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Theme.of(context)
-                                                          .scaffoldBackgroundColor)),
-                                          _heroReviewOnPressed != null
-                                              ? TextButton(
-                                                  onPressed: () {
-                                                    if (_isLoading) return;
+                                            16, 12, 12, 0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(_heroText.split("\n")[0],
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Theme.of(context)
+                                                        .scaffoldBackgroundColor)),
+                                        const SizedBox(height: 2),
+                                        Text(_heroText.split("\n")[1],
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Theme.of(context)
+                                                        .scaffoldBackgroundColor)),
+                                        _heroReviewOnPressed != null
+                                            ? TextButton(
+                                                onPressed: () {
+                                                  if (_isLoading) return;
 
-                                                    _heroReviewOnPressed!
-                                                        .call();
-                                                  },
-                                                  style: ButtonStyle(
-                                                      shape: WidgetStateProperty.all(
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12))),
-                                                      backgroundColor:
-                                                          WidgetStateProperty
-                                                              .all(Theme.of(
-                                                                      context)
-                                                                  .scaffoldBackgroundColor)),
-                                                  child: Text('Review',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleSmall
-                                                          ?.copyWith(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .colorScheme
-                                                                  .secondary)),
-                                                )
-                                              : const SizedBox(height: 10)
-                                        ],
-                                      ),
+                                                  _heroReviewOnPressed!.call();
+                                          },
+                                          style: ButtonStyle(
+                                              shape: WidgetStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          12))),
+                                              backgroundColor:
+                                              WidgetStateProperty.all(
+                                                  Theme
+                                                      .of(context)
+                                                      .scaffoldBackgroundColor)),
+                                          child: Text('Review',
+                                              style: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .titleSmall
+                                                  ?.copyWith(
+                                                  color: Theme
+                                                      .of(
+                                                      context)
+                                                      .colorScheme
+                                                      .secondary)),
+                                        )
+                                            : const SizedBox(height: 10)
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
-                        Padding(
+                      ),
+                      Padding(
+                        padding:
+                        const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Theme
+                                  .of(context)
+                                  .scaffoldBackgroundColor,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0, 0, 0, 5),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Align(
+                                      alignment:
+                                      const AlignmentDirectional(-1, 0),
+                                      child: Text('Learning Methods',
+                                          style: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .headlineSmall),
+                                    ),
+                                    Expanded(
+                                        child: Align(
+                                          alignment:
+                                          const AlignmentDirectional(1, 0),
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            child: const Text(
+                                              'See All',
+                                            ),
+                                            onTap: () {
+                                              context.router
+                                                  .push(const ReviewRoute());
+                                            },
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  children: _featuredMethods)
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               16, 12, 16, 0),
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(8)),
+                              color: Theme
+                                  .of(context)
+                                  .scaffoldBackgroundColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       0, 0, 0, 5),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Align(
-                                        alignment:
-                                            const AlignmentDirectional(-1, 0),
-                                        child: Text('Learning Methods',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineSmall),
-                                      ),
-                                      Expanded(
-                                          child: Align(
-                                        alignment:
-                                            const AlignmentDirectional(1, 0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          child: const Text(
-                                            'See All',
-                                          ),
-                                          onTap: () {
-                                            context.router
-                                                .push(const ReviewRoute());
-                                          },
-                                        ),
-                                      )),
-                                    ],
-                                  ),
+                                  child: Text('On Going Review',
+                                      style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .headlineSmall),
                                 ),
-                                Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: _featuredMethods)
+                                _isLoading
+                                    ? const Center(
+                                    child: CircularProgressIndicator())
+                                    : Padding(
+                                  padding: const EdgeInsetsDirectional
+                                      .fromSTEB(0, 0, 0, 8),
+                                  child: _onGoingReviews.isNotEmpty
+                                      ? ListView(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    physics:
+                                    const NeverScrollableScrollPhysics(),
+                                    children: _onGoingReviews,
+                                  )
+                                      : const Text(
+                                      "Looking good! You don't have anything to review."),
+                                ),
                               ],
                             ),
-                          ),
-                        ),
-                        Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                16, 12, 16, 0),
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 0, 5),
-                                    child: Text('On Going Review',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineSmall),
-                                  ),
-                                  _isLoading
-                                      ? const Center(
-                                          child: CircularProgressIndicator())
-                                      : Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0, 0, 0, 8),
-                                          child: _onGoingReviews.isNotEmpty
-                                              ? ListView(
-                                                  padding: EdgeInsets.zero,
-                                                  shrinkWrap: true,
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
-                                                  children: _onGoingReviews,
-                                                )
-                                              : const Text(
-                                                  "Looking good! You don't have anything to review."),
-                                        ),
-                                ],
-                              ),
-                            ))
-                      ],
-                    ),
-                  )))),
-    );
+                          ))
+                    ],
+                  ),
+                ))));
   }
 }

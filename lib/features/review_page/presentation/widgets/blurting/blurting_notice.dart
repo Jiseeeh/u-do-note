@@ -48,6 +48,7 @@ class BlurtingNotice extends ConsumerWidget {
               title: context.tr("review_quiz_q"),
               content: context.tr("blurting_quiz")),
           buildNoticeContent(context,
+              // TODO: translation
               title: context.tr("Can I choose to take the quiz later?"),
               content: context.tr(
                   "Yes, just press the back button in the note-taking screen, and if you want to take the quiz for that, choose the session you want when prompted to select an old session.")),

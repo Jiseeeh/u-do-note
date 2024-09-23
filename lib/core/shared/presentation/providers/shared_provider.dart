@@ -20,6 +20,7 @@ import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
@@ -35,6 +36,7 @@ import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leit
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_notice.dart';
 
 part 'shared_provider.g.dart';
 
@@ -184,6 +186,10 @@ class Shared extends _$Shared {
         preReview = const BlurtingPreReview();
         reviewScreenState.setReviewMethod(ReviewMethods.blurting);
         break;
+      case ReviewMethods.spacedRepetition:
+        notice = const SpacedRepetitionNotice();
+        preReview = const Placeholder();
+        break;
     }
 
     var willContinue = await showDialog(
@@ -242,6 +248,13 @@ class Shared extends _$Shared {
           imagePath: BlurtingModel.coverImagePath,
           onPressed: () {
             _onReviewMethodPressed(context, ReviewMethods.blurting);
+          }),
+      ReviewMethodEntity(
+          title: SpacedRepetition.name,
+          description: context.tr('spaced_repetition_desc'),
+          imagePath: SpacedRepetition.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.spacedRepetition);
           })
     ];
 

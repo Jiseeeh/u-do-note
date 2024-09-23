@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+
 class PomodoroNotice extends ConsumerWidget {
   const PomodoroNotice({super.key});
 
@@ -11,7 +13,8 @@ class PomodoroNotice extends ConsumerWidget {
       title: Column(
         children: [
           Text(
-            context.tr("pomodoro_notice"),
+            context.tr("pre_review_notice",
+                namedArgs: {"reviewMethod": PomodoroModel.name}),
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(

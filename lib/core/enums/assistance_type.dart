@@ -1,0 +1,1 @@
+enum AssistanceType { summarize, guide }

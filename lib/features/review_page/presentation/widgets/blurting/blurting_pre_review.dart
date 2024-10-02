@@ -9,6 +9,7 @@ import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:u_do_note/core/constant.dart' as constants;
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/firestore_filter_enum.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
@@ -162,6 +163,8 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
     if (res is Failure) {
       EasyLoading.showError(context.tr("general_e"));
+      logger.w(res.message);
+      return;
     }
 
     res = res as NoteModel;

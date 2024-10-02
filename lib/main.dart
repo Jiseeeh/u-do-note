@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import 'firebase_options.dart';
 import 'package:u_do_note/core/constant.dart' as constants;
@@ -35,9 +38,14 @@ void main() async {
 }
 
 Future<void> initDeps() async {
+  final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   OpenAI.apiKey = Env.openAIKey;
   OpenAI.showLogs = true;
+
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation(currentTimeZone));
 }
 
 class MainApp extends ConsumerWidget {

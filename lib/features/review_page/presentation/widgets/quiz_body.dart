@@ -15,6 +15,7 @@ class QuizBody extends ConsumerWidget {
   final Function(int) onSelectAnswer;
   final Function() onNext;
   final Function(BuildContext) onFinish;
+
   const QuizBody(
       {required this.questions,
       required this.startTime,
@@ -37,9 +38,7 @@ class QuizBody extends ConsumerWidget {
             children: [
               Text(
                 'Question ${currentQuestionIndex + 1} of ${questions.length}',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      
-                    ),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(),
               ),
               LinearPercentIndicator(
                 lineHeight: 8,
@@ -65,10 +64,7 @@ class QuizBody extends ConsumerWidget {
           child: Center(
             child: Text(
               questions[currentQuestionIndex].question,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
           ),
@@ -115,10 +111,7 @@ class QuizBody extends ConsumerWidget {
                             currentQuestionIndex == questions.length - 1
                                 ? 'Finish'
                                 : 'Next',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(),
+                            style: Theme.of(context).textTheme.titleMedium,
                           )))
                 ],
               ),

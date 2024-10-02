@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:u_do_note/core/constant.dart' as constant;
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/datasources/remote/shared_remote_datasource.dart';
@@ -37,6 +41,7 @@ import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leit
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_pre_review.dart';
 
 part 'shared_provider.g.dart';
 
@@ -82,6 +87,53 @@ GetOldSessions getOldSessions(GetOldSessionsRef ref) {
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GetOldSessions(sharedRepository);
+}
+
+@Riverpod(keepAlive: true)
+StreamController<String?> selectNotificationStream(
+    SelectNotificationStreamRef ref) {
+  final controller = StreamController<String?>.broadcast();
+
+  ref.onDispose(() {
+    controller.close();
+  });
+
+  return controller;
+}
+
+@Riverpod(keepAlive: true)
+class LocalNotification extends _$LocalNotification {
+  @override
+  FlutterLocalNotificationsPlugin build() {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse nr) {
+      if (nr.payload != null) {
+        var stream = ref.read(selectNotificationStreamProvider);
+        switch (nr.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            logger.d("adding to stream");
+            stream.sink.add(nr.payload);
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            if (nr.actionId == constant.navigationActionId) {
+              logger.d("adding to stream with nav id");
+              stream.sink.add(nr.payload);
+            }
+            break;
+        }
+      }
+    });
+
+    return flutterLocalNotificationsPlugin;
+  }
 }
 
 @riverpod
@@ -188,7 +240,7 @@ class Shared extends _$Shared {
         break;
       case ReviewMethods.spacedRepetition:
         notice = const SpacedRepetitionNotice();
-        preReview = const Placeholder();
+        preReview = const SpacedRepetitionPreReview();
         break;
     }
 
@@ -250,9 +302,9 @@ class Shared extends _$Shared {
             _onReviewMethodPressed(context, ReviewMethods.blurting);
           }),
       ReviewMethodEntity(
-          title: SpacedRepetition.name,
+          title: SpacedRepetitionModel.name,
           description: context.tr('spaced_repetition_desc'),
-          imagePath: SpacedRepetition.coverImagePath,
+          imagePath: SpacedRepetitionModel.coverImagePath,
           onPressed: () {
             _onReviewMethodPressed(context, ReviewMethods.spacedRepetition);
           })

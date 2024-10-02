@@ -69,20 +69,23 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var notebooks = ref.watch(notebooksStreamProvider).value;
+    var asyncNotebooks = ref.watch(notebooksStreamProvider);
 
-    if (notebooks != null && notebooks.isEmpty) {
-      return Center(
-        child: Text(context.tr("no_notebook")),
-      );
-    }
+    return switch (asyncNotebooks) {
+      AsyncData(value: final notebooks) => _buildScaffold(context, notebooks),
+      AsyncError(:final error) => Center(child: Text(error.toString())),
+      _ => const Center(child: CircularProgressIndicator()),
+    };
+  }
 
+  Scaffold _buildScaffold(
+      BuildContext context, List<NotebookEntity> notebooks) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         scrolledUnderElevation: 0,
         title: Text(
-          notebooks!.firstWhere((nb) => nb.id == widget.notebookId).subject,
+          notebooks.firstWhere((nb) => nb.id == widget.notebookId).subject,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -410,7 +413,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   // TODO: pending for deletion (unused)
                   ref.read(appStateProvider.notifier).setCurrentNoteId(note.id);
 
-                  context.router.push(NoteTakingRoute(
+                  context.router.replace(NoteTakingRoute(
                       notebookId: widget.notebookId, note: note));
                 },
                 icon: const Icon(Icons.edit)),

@@ -14,7 +14,7 @@ class SpacedRepetitionNotice extends ConsumerWidget {
         children: [
           Text(
             context.tr("pre_review_notice",
-                namedArgs: {"reviewMethod": SpacedRepetition.name}),
+                namedArgs: {"reviewMethod": SpacedRepetitionModel.name}),
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(

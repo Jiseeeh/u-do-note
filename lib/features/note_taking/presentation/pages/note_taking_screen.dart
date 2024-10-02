@@ -27,8 +27,10 @@ import 'package:u_do_note/features/note_taking/presentation/widgets/analyze_imag
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/blurting/blurting_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/spaced_repetition/spaced_repetition_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
@@ -36,10 +38,12 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
   final String notebookId;
   final NoteEntity note;
   final BlurtingModel? blurtingModel;
+  final SpacedRepetitionModel? spacedRepetitionModel;
 
   const NoteTakingScreen({
     required this.notebookId,
     required this.note,
+    this.spacedRepetitionModel,
     this.blurtingModel,
     Key? key,
   }) : super(key: key);
@@ -145,6 +149,39 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                           "\u2022 If nothing comes to mind, just take a 5-10 minute break and come back.\n"),
                       Text(
                           "\u2022 We will ask after some time if you are done, or you can also tap the plus button in the bottom right of the screen and choose Done.")
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                        child: const Text("Okay"))
+                  ],
+                );
+              }));
+    } else if (widget.spacedRepetitionModel != null) {
+      String content =
+          "Review this note and come back after an hour or wait the notification to start your initial quiz. Remember to exit with the back button at the top left.";
+
+      var nextQuiz = widget.spacedRepetitionModel!.nextReview;
+
+      if (ref.read(reviewScreenProvider).getIsFromOldSpacedRepetition) {
+        content =
+            "Your next quiz will be on ${DateFormat("EEE, dd MMM yyyy").format(nextQuiz!.toDate())}.";
+      }
+
+      Future.delayed(
+          Duration.zero,
+          () => showDialog(
+              context: context,
+              builder: (dialogContext) {
+                return AlertDialog(
+                  scrollable: true,
+                  title: const Text("Spaced Repetition tips"),
+                  content: Column(
+                    children: [
+                      Text(content),
                     ],
                   ),
                   actions: [
@@ -595,9 +632,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         if (context.mounted) {
           onSave(showLoading: false);
 
-          if (widget.blurtingModel != null && !_isFromOldBlurtingSession) {
-            var reviewScreenState = ref.read(reviewScreenProvider);
+          var reviewScreenState = ref.read(reviewScreenProvider);
 
+          if (widget.blurtingModel != null && !_isFromOldBlurtingSession) {
             var blurtingModel = BlurtingModel(
                 noteId: widget.note.id,
                 notebookId: widget.notebookId,
@@ -608,9 +645,17 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             await ref.read(blurtingProvider.notifier).saveQuizResults(
                 notebookId: reviewScreenState.getNotebookId,
                 blurtingModel: blurtingModel);
+          } else if (widget.spacedRepetitionModel != null &&
+              !reviewScreenState.getIsFromOldSpacedRepetition) {
+            logger.d("Saving empty quiz results spaced rep.");
+            await ref.read(spacedRepetitionProvider.notifier).saveQuizResults(
+                notebookId: widget.notebookId,
+                spacedRepetitionModel: widget.spacedRepetitionModel!);
           }
+
           if (context.mounted) {
-            context.router.replace(const ReviewRoute());
+            context.router.replace(NotebookPagesRoute(
+                notebookId: ref.read(reviewScreenProvider).getNotebookId));
           }
         }
       },

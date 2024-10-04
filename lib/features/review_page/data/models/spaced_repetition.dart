@@ -81,7 +81,7 @@ class SpacedRepetitionModel {
       'note_id': noteId,
       'created_at': createdAt.millisecondsSinceEpoch,
       'next_review': nextReview?.millisecondsSinceEpoch,
-      'scores': scores?.map((score) => score.toFirestore()) ?? [],
+      'scores': scores?.map((score) => score.toFirestore()).toList() ?? [],
       'questions':
           questions?.map((question) => question.toJson()).toList() ?? [],
       'selected_answers_index': selectedAnswersIndex ?? [],

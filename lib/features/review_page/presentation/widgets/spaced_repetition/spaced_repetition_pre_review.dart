@@ -222,26 +222,36 @@ class _SpacedRepetitionPreReviewState
         createdAt: Timestamp.now(),
         nextReview: Timestamp.fromDate(nextHour));
 
+    logger.d("Saving empty quiz results spaced rep.");
+    var docId = await ref
+        .read(spacedRepetitionProvider.notifier)
+        .saveQuizResults(
+            notebookId: spacedRepetitionModel.notebookId,
+            spacedRepetitionModel: spacedRepetitionModel);
+
+    var updatedSpacedRepModel = spacedRepetitionModel.copyWith(id: docId);
+
     await ref.read(localNotificationProvider).zonedSchedule(
         DateTime.now().millisecondsSinceEpoch % 100000,
         'Spaced Repetition',
-        'Time to take your quiz!',
+        'Time to take your quiz with ${updatedSpacedRepModel.sessionName}',
         nextHour,
-        payload: json.encode(spacedRepetitionModel.toJson()),
+        payload: json.encode(updatedSpacedRepModel.toJson()),
         const NotificationDetails(
             android: AndroidNotificationDetails(
-                'quiz_notification', 'Quiz Notification',
-                channelDescription:
-                    'Notifications about spaced repetition quizzes.')),
+          'quiz_notification',
+          'Quiz Notification',
+          channelDescription: 'Notifications about spaced repetition quizzes.',
+        )),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
 
     if (context.mounted) {
       context.router.push(NoteTakingRoute(
-          notebookId: _notebookId,
+          notebookId: updatedSpacedRepModel.notebookId,
           note: resOrNote.toEntity(),
-          spacedRepetitionModel: spacedRepetitionModel));
+          spacedRepetitionModel: updatedSpacedRepModel));
     }
   }
 

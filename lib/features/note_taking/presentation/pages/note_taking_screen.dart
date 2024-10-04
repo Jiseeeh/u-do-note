@@ -30,7 +30,6 @@ import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/blurting/blurting_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/spaced_repetition/spaced_repetition_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
@@ -645,12 +644,6 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             await ref.read(blurtingProvider.notifier).saveQuizResults(
                 notebookId: reviewScreenState.getNotebookId,
                 blurtingModel: blurtingModel);
-          } else if (widget.spacedRepetitionModel != null &&
-              !reviewScreenState.getIsFromOldSpacedRepetition) {
-            logger.d("Saving empty quiz results spaced rep.");
-            await ref.read(spacedRepetitionProvider.notifier).saveQuizResults(
-                notebookId: widget.notebookId,
-                spacedRepetitionModel: widget.spacedRepetitionModel!);
           }
 
           if (context.mounted) {

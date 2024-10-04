@@ -91,19 +91,20 @@ class SpacedRepetitionRemoteDataSource {
 
     // initial save, on back button press from note taking
     if (spacedRepetitionModel.questions == null) {
-      await _firestore
+      var doc = await _firestore
           .collection(FirestoreCollection.users.name)
           .doc(userId)
           .collection(FirestoreCollection.user_notes.name)
-          .doc(notebookId)
+          .doc(spacedRepetitionModel.notebookId)
           .collection(FirestoreCollection.remarks.name)
           .add(spacedRepetitionModel.toFirestore());
 
-      Helper.updateTechniqueUsage(
-          _firestore, userId, notebookId, SpacedRepetitionModel.name);
+      Helper.updateTechniqueUsage(_firestore, userId,
+          spacedRepetitionModel.notebookId, SpacedRepetitionModel.name);
 
-      return "Successfully saved empty quiz";
+      return doc.id;
     }
+
     // subsequent quizzes
     if (spacedRepetitionModel.scores != null) {
       var scores = spacedRepetitionModel.scores!.map((e) => e.score);
@@ -161,7 +162,7 @@ class SpacedRepetitionRemoteDataSource {
           .collection(FirestoreCollection.users.name)
           .doc(userId)
           .collection(FirestoreCollection.user_notes.name)
-          .doc(notebookId)
+          .doc(updatedSpacedRepetitionModel.notebookId)
           .collection(FirestoreCollection.remarks.name)
           .doc(updatedSpacedRepetitionModel.id)
           .update(updatedSpacedRepetitionModel.toFirestore());

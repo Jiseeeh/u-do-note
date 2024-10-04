@@ -132,7 +132,22 @@ final selectNotificationStreamProvider =
 );
 
 typedef SelectNotificationStreamRef = ProviderRef<StreamController<String?>>;
-String _$localNotificationHash() => r'234f95bece9e312e849b66355665cf371715d458';
+String _$getLaunchPayloadHash() => r'd60ef8490cad576229a551428a28b9c761586fac';
+
+/// See also [getLaunchPayload].
+@ProviderFor(getLaunchPayload)
+final getLaunchPayloadProvider = AutoDisposeFutureProvider<String?>.internal(
+  getLaunchPayload,
+  name: r'getLaunchPayloadProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getLaunchPayloadHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetLaunchPayloadRef = AutoDisposeFutureProviderRef<String?>;
+String _$localNotificationHash() => r'40d9c4c5bdb421795534d8a7ee48bb6fdaf507da';
 
 /// See also [LocalNotification].
 @ProviderFor(LocalNotification)

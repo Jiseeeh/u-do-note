@@ -101,6 +101,12 @@ StreamController<String?> selectNotificationStream(
   return controller;
 }
 
+@riverpod
+Future<String?> getLaunchPayload(GetLaunchPayloadRef ref) async {
+  final notificationPlugin = ref.read(localNotificationProvider.notifier);
+  return await notificationPlugin.getOnLaunchPayload();
+}
+
 @Riverpod(keepAlive: true)
 class LocalNotification extends _$LocalNotification {
   @override
@@ -133,6 +139,13 @@ class LocalNotification extends _$LocalNotification {
     });
 
     return flutterLocalNotificationsPlugin;
+  }
+
+  Future<String?> getOnLaunchPayload() async {
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await state.getNotificationAppLaunchDetails();
+
+    return notificationAppLaunchDetails?.notificationResponse?.payload;
   }
 }
 

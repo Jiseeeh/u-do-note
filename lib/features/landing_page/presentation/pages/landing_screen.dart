@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -54,58 +53,9 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   void initState() {
     super.initState();
 
-    _listenToNotifications(context);
-
     _populateOnGoingReviews();
     // ? workaround when accessing getReviewMethods idk why as of writing...
     Future.delayed(Duration.zero, _populateFeaturedMethods);
-  }
-
-  void _listenToNotifications(BuildContext context) {
-    ref
-        .read(selectNotificationStreamProvider)
-        .stream
-        .listen((String? payload) async {
-      EasyLoading.show(
-          status: 'Please wait...',
-          maskType: EasyLoadingMaskType.black,
-          dismissOnTap: false);
-
-      try {
-        var spacedRepModel =
-            SpacedRepetitionModel.fromJson(json.decode(payload!));
-
-        ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
-
-        if (spacedRepModel.questions!.isEmpty ||
-            spacedRepModel.questions == null) {
-          var resOrQuestions = await ref
-              .read(sharedProvider.notifier)
-              .generateQuizQuestions(content: spacedRepModel.content);
-
-          if (resOrQuestions is Failure) {
-            throw "Cannot create your quiz, please try again later.";
-          }
-
-          var updatedModel = spacedRepModel.copyWith(questions: resOrQuestions);
-
-          if (context.mounted) {
-            context.router.push(
-                SpacedRepetitionQuizRoute(spacedRepetitionModel: updatedModel));
-          }
-        } else {
-          if (context.mounted) {
-            context.router.push(SpacedRepetitionQuizRoute(
-                spacedRepetitionModel: spacedRepModel));
-          }
-        }
-      } catch (e) {
-        EasyLoading.showError("Something went wrong when starting the quiz.");
-        logger.w(e);
-      } finally {
-        EasyLoading.dismiss();
-      }
-    });
   }
 
   void _populateOnGoingReviews() async {

@@ -201,7 +201,7 @@ class _SpacedRepetitionQuizScreenState
       var res = await ref
           .read(spacedRepetitionProvider.notifier)
           .saveQuizResults(
-              notebookId: ref.read(reviewScreenProvider).getNotebookId,
+              notebookId: updatedSpacedRepModel.notebookId,
               spacedRepetitionModel: updatedSpacedRepModel);
 
       EasyLoading.dismiss();

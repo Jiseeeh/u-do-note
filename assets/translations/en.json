@@ -62,7 +62,6 @@
   "old_session_notice": "The last selected session will be used.",
   "old_session_title": "Choose an old session to review.",
   "old_session_check": "Checking if you have old sessions to review...",
-  "title": "Title",
   "title_field_notice": "Please enter a title.",
   "title_length_max": "Title must be at most {max} characters.",
   "title_length_min": "Title must be at least {min} characters.",

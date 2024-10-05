@@ -72,7 +72,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$spacedRepetitionHash() => r'7d7c108c4f38f7ab3427e288e8622b31e0fcefe6';
+String _$spacedRepetitionHash() => r'91ba481159c6a490354569e8027cec741a06ca3c';
 
 /// See also [SpacedRepetition].
 @ProviderFor(SpacedRepetition)

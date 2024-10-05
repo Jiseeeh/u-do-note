@@ -250,9 +250,7 @@ class _SpacedRepetitionPreReviewState
     logger.d("Saving empty quiz results spaced rep.");
     var docId = await ref
         .read(spacedRepetitionProvider.notifier)
-        .saveQuizResults(
-            notebookId: spacedRepetitionModel.notebookId,
-            spacedRepetitionModel: spacedRepetitionModel);
+        .saveQuizResults(spacedRepetitionModel: spacedRepetitionModel);
 
     var updatedSpacedRepModel = spacedRepetitionModel.copyWith(id: docId);
 

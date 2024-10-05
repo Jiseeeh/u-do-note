@@ -10,8 +10,8 @@ class SaveQuizResults {
   const SaveQuizResults(this._spacedRepetitionRepository);
 
   Future<Either<Failure, String>> call(
-      String notebookId, SpacedRepetitionModel spacedRepetitionModel) async {
-    return await _spacedRepetitionRepository.saveQuizResults(
-        notebookId, spacedRepetitionModel);
+      SpacedRepetitionModel spacedRepetitionModel) async {
+    return await _spacedRepetitionRepository
+        .saveQuizResults(spacedRepetitionModel);
   }
 }

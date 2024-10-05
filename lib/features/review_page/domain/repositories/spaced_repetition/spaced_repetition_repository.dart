@@ -9,5 +9,5 @@ abstract class SpacedRepetitionRepository {
       String content, AssistanceType type);
 
   Future<Either<Failure, String>> saveQuizResults(
-      String notebookId, SpacedRepetitionModel spacedRepetitionModel);
+      SpacedRepetitionModel spacedRepetitionModel);
 }

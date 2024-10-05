@@ -86,7 +86,7 @@ class SpacedRepetitionRemoteDataSource {
   }
 
   Future<String> saveQuizResults(
-      String notebookId, SpacedRepetitionModel spacedRepetitionModel) async {
+      SpacedRepetitionModel spacedRepetitionModel) async {
     var userId = _auth.currentUser!.uid;
 
     // initial save, on back button press from note taking

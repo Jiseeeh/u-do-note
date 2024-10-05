@@ -63,12 +63,10 @@ class SpacedRepetition extends _$SpacedRepetition {
   /// Returns the saved document's ID on the first call,
   /// the subsequent calls just returns a success message.
   Future<dynamic> saveQuizResults(
-      {required String notebookId,
-      required SpacedRepetitionModel spacedRepetitionModel}) async {
+      {required SpacedRepetitionModel spacedRepetitionModel}) async {
     var saveQuizResults = ref.read(saveQuizResultsProvider);
 
-    var failureOrMessage =
-        await saveQuizResults(notebookId, spacedRepetitionModel);
+    var failureOrMessage = await saveQuizResults(spacedRepetitionModel);
 
     return failureOrMessage.fold((failure) => failure, (res) => res);
   }

@@ -26,10 +26,10 @@ class SpacedRepetitionImpl implements SpacedRepetitionRepository {
 
   @override
   Future<Either<Failure, String>> saveQuizResults(
-      String notebookId, SpacedRepetitionModel spacedRepetitionModel) async {
+      SpacedRepetitionModel spacedRepetitionModel) async {
     try {
-      var res = await _spacedRepetitionRemoteDataSource.saveQuizResults(
-          notebookId, spacedRepetitionModel);
+      var res = await _spacedRepetitionRemoteDataSource
+          .saveQuizResults(spacedRepetitionModel);
 
       return Right(res);
     } catch (e) {

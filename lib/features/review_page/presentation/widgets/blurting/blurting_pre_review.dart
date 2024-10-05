@@ -208,6 +208,10 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
         ),
         TextButton(
             onPressed: () {
+              if (!_formKey.currentState!.validate()) {
+                return;
+              }
+
               ref
                   .read(reviewScreenProvider)
                   .setSessionTitle(_sessionTitleController.text);

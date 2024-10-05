@@ -304,6 +304,10 @@ class _SpacedRepetitionPreReviewState
         ),
         TextButton(
             onPressed: () {
+              if (!_formKey.currentState!.validate()) {
+                return;
+              }
+
               var reviewScreenState = ref.read(reviewScreenProvider);
               var contentFromPages = "";
 

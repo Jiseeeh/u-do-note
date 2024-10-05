@@ -58,6 +58,10 @@ class SpacedRepetition extends _$SpacedRepetition {
     return failureOrContent.fold((failure) => failure, (res) => res);
   }
 
+  /// Used to save the quiz results of [SpacedRepetitionModel]
+  ///
+  /// Returns the saved document's ID on the first call,
+  /// the subsequent calls just returns a success message.
   Future<dynamic> saveQuizResults(
       {required String notebookId,
       required SpacedRepetitionModel spacedRepetitionModel}) async {

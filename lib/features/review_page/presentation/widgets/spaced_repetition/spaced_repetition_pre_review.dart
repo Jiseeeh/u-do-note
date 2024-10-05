@@ -118,8 +118,33 @@ class _SpacedRepetitionPreReviewState
       var spacedRepModel =
           oldSpacedRepModels.firstWhere((model) => model.id == model.id);
 
-      context.router.push(
-          SpacedRepetitionQuizRoute(spacedRepetitionModel: spacedRepModel));
+      ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
+
+      EasyLoading.show(
+        status: 'Please wait...',
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false,
+      );
+
+      if (spacedRepModel.questions == null ||
+          spacedRepModel.questions!.isEmpty) {
+        var resOrQuestions = await ref
+            .read(sharedProvider.notifier)
+            .generateQuizQuestions(content: spacedRepModel.content);
+
+        if (resOrQuestions is Failure) {
+          throw "Cannot create your quiz, please try again later.";
+        }
+
+        spacedRepModel = spacedRepModel.copyWith(questions: resOrQuestions);
+      }
+
+      EasyLoading.dismiss();
+
+      if (context.mounted) {
+        context.router.push(
+            SpacedRepetitionQuizRoute(spacedRepetitionModel: spacedRepModel));
+      }
     }
   }
 
@@ -209,7 +234,7 @@ class _SpacedRepetitionPreReviewState
 
     resOrNote = resOrNote as NoteModel;
 
-    var nextHour = tz.TZDateTime.now(tz.local).add(const Duration(hours: 1));
+    var nextHour = tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10));
 
     logger.d(
         "Initial quiz scheduled on ${DateFormat("EEE, dd MMM yyyy").format(nextHour)}");

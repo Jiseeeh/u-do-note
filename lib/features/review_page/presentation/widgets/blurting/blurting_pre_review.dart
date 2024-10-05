@@ -239,10 +239,10 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
                 return null;
               },
-              decoration: InputDecoration(
-                labelText: context.tr("title"),
-                hintText: "Enter a title for the session.",
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Session Title",
+                hintText: "Physics-1",
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 10),
@@ -290,10 +290,10 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
                 return null;
               },
-              decoration: InputDecoration(
-                labelText: context.tr("title"),
-                hintText: "Page Title",
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Page Title",
+                hintText: "Physics",
+                border: OutlineInputBorder(),
               ),
             ),
           ],

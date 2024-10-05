@@ -40,7 +40,7 @@ void main() async {
       path: 'assets/translations',
       child: ProviderScope(
         observers: [Observers()],
-        child: MainApp(),
+        child: const MainApp(),
       ),
     ),
   );

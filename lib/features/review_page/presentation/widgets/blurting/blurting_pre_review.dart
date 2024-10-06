@@ -9,6 +9,7 @@ import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:u_do_note/core/constant.dart' as constants;
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/firestore_filter_enum.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
@@ -162,6 +163,8 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
     if (res is Failure) {
       EasyLoading.showError(context.tr("general_e"));
+      logger.w(res.message);
+      return;
     }
 
     res = res as NoteModel;
@@ -205,6 +208,10 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
         ),
         TextButton(
             onPressed: () {
+              if (!_formKey.currentState!.validate()) {
+                return;
+              }
+
               ref
                   .read(reviewScreenProvider)
                   .setSessionTitle(_sessionTitleController.text);
@@ -236,10 +243,10 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
                 return null;
               },
-              decoration: InputDecoration(
-                labelText: context.tr("title"),
-                hintText: "Enter a title for the session.",
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Session Title",
+                hintText: "Physics-1",
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 10),
@@ -287,10 +294,10 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
                 return null;
               },
-              decoration: InputDecoration(
-                labelText: context.tr("title"),
-                hintText: "Page Title",
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Page Title",
+                hintText: "Physics",
+                border: OutlineInputBorder(),
               ),
             ),
           ],

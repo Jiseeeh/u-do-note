@@ -18,6 +18,7 @@ import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/core/shared/data/models/question.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman/feynman.dart';
 import 'package:u_do_note/core/shared/domain/entities/question.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/acronym/acronym_quiz_screen.dart';
@@ -32,6 +33,7 @@ import 'package:u_do_note/features/review_page/presentation/pages/pomodoro/pomod
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynman_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/spaced_repetition/spaced_repetition_quiz_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
 
@@ -44,7 +46,6 @@ class AppRouter extends _$AppRouter {
 
   @override
   List<AutoRoute> get routes => [
-        // add routes here
         AutoRoute(page: SplashRoute.page, path: '/splash', initial: true),
         AutoRoute(
             page: IntroRoute.page,
@@ -82,6 +83,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ElaborationQuizRoute.page, path: '/elaboration-quiz'),
         AutoRoute(page: AcronymRoute.page, path: '/acronym'),
         AutoRoute(page: AcronymQuizRoute.page, path: '/acronym-quiz'),
-        AutoRoute(page: BlurtingQuizRoute.page, path: '/blurting-quiz')
+        AutoRoute(page: BlurtingQuizRoute.page, path: '/blurting-quiz'),
+        AutoRoute(page: SpacedRepetitionQuizRoute.page, path: '/spaced-quiz'),
       ];
 }

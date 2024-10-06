@@ -136,6 +136,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: NoteTakingScreen(
           notebookId: args.notebookId,
           note: args.note,
+          spacedRepetitionModel: args.spacedRepetitionModel,
           blurtingModel: args.blurtingModel,
           key: args.key,
         ),
@@ -204,6 +205,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SignUpScreen(),
+      );
+    },
+    SpacedRepetitionQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<SpacedRepetitionQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SpacedRepetitionQuizScreen(
+          spacedRepetitionModel: args.spacedRepetitionModel,
+          key: args.key,
+        ),
       );
     },
     SplashRoute.name: (routeData) {
@@ -632,6 +643,7 @@ class NoteTakingRoute extends PageRouteInfo<NoteTakingRouteArgs> {
   NoteTakingRoute({
     required String notebookId,
     required NoteEntity note,
+    SpacedRepetitionModel? spacedRepetitionModel,
     BlurtingModel? blurtingModel,
     Key? key,
     List<PageRouteInfo>? children,
@@ -640,6 +652,7 @@ class NoteTakingRoute extends PageRouteInfo<NoteTakingRouteArgs> {
           args: NoteTakingRouteArgs(
             notebookId: notebookId,
             note: note,
+            spacedRepetitionModel: spacedRepetitionModel,
             blurtingModel: blurtingModel,
             key: key,
           ),
@@ -656,6 +669,7 @@ class NoteTakingRouteArgs {
   const NoteTakingRouteArgs({
     required this.notebookId,
     required this.note,
+    this.spacedRepetitionModel,
     this.blurtingModel,
     this.key,
   });
@@ -664,13 +678,15 @@ class NoteTakingRouteArgs {
 
   final NoteEntity note;
 
+  final SpacedRepetitionModel? spacedRepetitionModel;
+
   final BlurtingModel? blurtingModel;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'NoteTakingRouteArgs{notebookId: $notebookId, note: $note, blurtingModel: $blurtingModel, key: $key}';
+    return 'NoteTakingRouteArgs{notebookId: $notebookId, note: $note, spacedRepetitionModel: $spacedRepetitionModel, blurtingModel: $blurtingModel, key: $key}';
   }
 }
 
@@ -867,6 +883,45 @@ class SignUpRoute extends PageRouteInfo<void> {
   static const String name = 'SignUpRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SpacedRepetitionQuizScreen]
+class SpacedRepetitionQuizRoute
+    extends PageRouteInfo<SpacedRepetitionQuizRouteArgs> {
+  SpacedRepetitionQuizRoute({
+    required SpacedRepetitionModel spacedRepetitionModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SpacedRepetitionQuizRoute.name,
+          args: SpacedRepetitionQuizRouteArgs(
+            spacedRepetitionModel: spacedRepetitionModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SpacedRepetitionQuizRoute';
+
+  static const PageInfo<SpacedRepetitionQuizRouteArgs> page =
+      PageInfo<SpacedRepetitionQuizRouteArgs>(name);
+}
+
+class SpacedRepetitionQuizRouteArgs {
+  const SpacedRepetitionQuizRouteArgs({
+    required this.spacedRepetitionModel,
+    this.key,
+  });
+
+  final SpacedRepetitionModel spacedRepetitionModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'SpacedRepetitionQuizRouteArgs{spacedRepetitionModel: $spacedRepetitionModel, key: $key}';
+  }
 }
 
 /// generated route for

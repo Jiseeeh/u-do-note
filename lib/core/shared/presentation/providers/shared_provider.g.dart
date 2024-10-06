@@ -115,7 +115,55 @@ final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
 );
 
 typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
-String _$sharedHash() => r'acadf17b9740e42a9397d46467d258d5f82f0391';
+String _$selectNotificationStreamHash() =>
+    r'e28e3494324886142dd4fb3ef4eb5284405cbb67';
+
+/// See also [selectNotificationStream].
+@ProviderFor(selectNotificationStream)
+final selectNotificationStreamProvider =
+    Provider<StreamController<String?>>.internal(
+  selectNotificationStream,
+  name: r'selectNotificationStreamProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$selectNotificationStreamHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SelectNotificationStreamRef = ProviderRef<StreamController<String?>>;
+String _$getLaunchPayloadHash() => r'd60ef8490cad576229a551428a28b9c761586fac';
+
+/// See also [getLaunchPayload].
+@ProviderFor(getLaunchPayload)
+final getLaunchPayloadProvider = AutoDisposeFutureProvider<String?>.internal(
+  getLaunchPayload,
+  name: r'getLaunchPayloadProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getLaunchPayloadHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetLaunchPayloadRef = AutoDisposeFutureProviderRef<String?>;
+String _$localNotificationHash() => r'40d9c4c5bdb421795534d8a7ee48bb6fdaf507da';
+
+/// See also [LocalNotification].
+@ProviderFor(LocalNotification)
+final localNotificationProvider = NotifierProvider<LocalNotification,
+    FlutterLocalNotificationsPlugin>.internal(
+  LocalNotification.new,
+  name: r'localNotificationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$localNotificationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LocalNotification = Notifier<FlutterLocalNotificationsPlugin>;
+String _$sharedHash() => r'11c65b04b60080d3c3588ced29fdb2994f9c189c';
 
 /// See also [Shared].
 @ProviderFor(Shared)

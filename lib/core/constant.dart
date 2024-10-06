@@ -18,5 +18,10 @@ const defaultTechniquesUsage = {
   ElaborationModel.name: 0,
 };
 
+/* ==================== Fields ========================= */
 const minTitleLen = 1;
 const maxTitleLen = 18;
+
+/* =================== Notifications ================== */
+const String urlLaunchActionId = 'id_1';
+const String navigationActionId = 'id_3';

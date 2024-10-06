@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:u_do_note/core/constant.dart' as constant;
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/datasources/remote/shared_remote_datasource.dart';
@@ -20,6 +24,7 @@ import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
@@ -35,6 +40,8 @@ import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leit
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_pre_review.dart';
 
 part 'shared_provider.g.dart';
 
@@ -80,6 +87,66 @@ GetOldSessions getOldSessions(GetOldSessionsRef ref) {
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GetOldSessions(sharedRepository);
+}
+
+@Riverpod(keepAlive: true)
+StreamController<String?> selectNotificationStream(
+    SelectNotificationStreamRef ref) {
+  final controller = StreamController<String?>.broadcast();
+
+  ref.onDispose(() {
+    controller.close();
+  });
+
+  return controller;
+}
+
+@riverpod
+Future<String?> getLaunchPayload(GetLaunchPayloadRef ref) async {
+  final notificationPlugin = ref.read(localNotificationProvider.notifier);
+  return await notificationPlugin.getOnLaunchPayload();
+}
+
+@Riverpod(keepAlive: true)
+class LocalNotification extends _$LocalNotification {
+  @override
+  FlutterLocalNotificationsPlugin build() {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse nr) {
+      if (nr.payload != null) {
+        var stream = ref.read(selectNotificationStreamProvider);
+        switch (nr.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            logger.d("adding to stream");
+            stream.sink.add(nr.payload);
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            if (nr.actionId == constant.navigationActionId) {
+              logger.d("adding to stream with nav id");
+              stream.sink.add(nr.payload);
+            }
+            break;
+        }
+      }
+    });
+
+    return flutterLocalNotificationsPlugin;
+  }
+
+  Future<String?> getOnLaunchPayload() async {
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await state.getNotificationAppLaunchDetails();
+
+    return notificationAppLaunchDetails?.notificationResponse?.payload;
+  }
 }
 
 @riverpod
@@ -184,6 +251,10 @@ class Shared extends _$Shared {
         preReview = const BlurtingPreReview();
         reviewScreenState.setReviewMethod(ReviewMethods.blurting);
         break;
+      case ReviewMethods.spacedRepetition:
+        notice = const SpacedRepetitionNotice();
+        preReview = const SpacedRepetitionPreReview();
+        break;
     }
 
     var willContinue = await showDialog(
@@ -242,6 +313,13 @@ class Shared extends _$Shared {
           imagePath: BlurtingModel.coverImagePath,
           onPressed: () {
             _onReviewMethodPressed(context, ReviewMethods.blurting);
+          }),
+      ReviewMethodEntity(
+          title: SpacedRepetitionModel.name,
+          description: context.tr('spaced_repetition_desc'),
+          imagePath: SpacedRepetitionModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.spacedRepetition);
           })
     ];
 

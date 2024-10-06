@@ -14,13 +14,20 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
-class ElaborationScreen extends ConsumerWidget {
-  final ElaborationModel _elaborationModel;
+class ElaborationScreen extends ConsumerStatefulWidget {
+  final ElaborationModel elaborationModel;
 
-  const ElaborationScreen(this._elaborationModel, {Key? key}) : super(key: key);
+  const ElaborationScreen(this.elaborationModel, {Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ElaborationScreen> createState() => _ElaborationScreenState();
+}
+
+class _ElaborationScreenState extends ConsumerState<ElaborationScreen> {
+  @override
+  void initState() {
+    super.initState();
+
     Future.delayed(
         const Duration(seconds: 3),
         () => showDialog(
@@ -38,7 +45,10 @@ class ElaborationScreen extends ConsumerWidget {
                 ],
               );
             }));
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -47,13 +57,13 @@ class ElaborationScreen extends ConsumerWidget {
         if (context.mounted) {
           var reviewState = ref.read(reviewScreenProvider);
 
-          if (_elaborationModel.id == null) {
+          if (widget.elaborationModel.id == null) {
             logger.i('Saving empty quiz');
 
             var elaborationModel = ElaborationModel(
                 sessionName: reviewState.getSessionTitle,
                 createdAt: Timestamp.now(),
-                content: _elaborationModel.content);
+                content: widget.elaborationModel.content);
 
             var res = await ref
                 .read(elaborationProvider.notifier)
@@ -109,7 +119,7 @@ class ElaborationScreen extends ConsumerWidget {
                             dismissOnTap: false);
 
                         var res = await sharedRepository.generateQuizQuestions(
-                            content: _elaborationModel.content);
+                            content: widget.elaborationModel.content);
 
                         EasyLoading.dismiss();
 
@@ -122,7 +132,7 @@ class ElaborationScreen extends ConsumerWidget {
                           Navigator.of(dialogContext).pop();
                         } else {
                           var updatedElaborationModel =
-                              _elaborationModel.copyWith(
+                              widget.elaborationModel.copyWith(
                             questions: res,
                           );
 
@@ -144,7 +154,7 @@ class ElaborationScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Text(_elaborationModel.content,
+                Text(widget.elaborationModel.content,
                     style: Theme.of(context).textTheme.bodyLarge),
               ],
             ),

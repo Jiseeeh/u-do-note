@@ -8,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/utility.dart';
@@ -20,6 +21,7 @@ import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
@@ -39,6 +41,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   late List<ElaborationModel> _onGoingElaborationReviews = [];
   late List<AcronymModel> _onGoingAcronymReviews = [];
   late List<BlurtingModel> _onGoingBlurtingReviews = [];
+  late List<SpacedRepetitionModel> _onGoingSpacedRepetitionReviews = [];
   late List<Widget> _onGoingReviews = [];
   late final List<LearningMethod> _featuredMethods = [];
   VoidCallback? _heroReviewOnPressed;
@@ -85,6 +88,12 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
         .getOnGoingReviews(
             methodName: BlurtingModel.name,
             fromFirestore: BlurtingModel.fromFirestore);
+
+    _onGoingSpacedRepetitionReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: SpacedRepetitionModel.name,
+            fromFirestore: SpacedRepetitionModel.fromFirestore);
 
     setState(() {
       _onGoingReviews = _buildOnGoingReviews(context);
@@ -264,6 +273,68 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
       ));
     }
 
+    for (var i = 0; i < _onGoingSpacedRepetitionReviews.length; i++) {
+      spacedRepetitionOnPressed() async {
+        var willReview = await _willReviewOld(
+            _onGoingSpacedRepetitionReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        try {
+          ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
+          ref
+              .read(reviewScreenProvider)
+              .setNotebookId(_onGoingSpacedRepetitionReviews[i].notebookId);
+
+          if (_onGoingSpacedRepetitionReviews[i].questions!.isEmpty ||
+              _onGoingSpacedRepetitionReviews[i].questions == null) {
+            EasyLoading.show(
+                status: 'Please wait...',
+                maskType: EasyLoadingMaskType.black,
+                dismissOnTap: false);
+
+            var resOrQuestions = await ref
+                .read(sharedProvider.notifier)
+                .generateQuizQuestions(
+                    content: _onGoingSpacedRepetitionReviews[i].content);
+
+            if (resOrQuestions is Failure) {
+              throw "Cannot create your quiz, please try again later.";
+            }
+
+            var updatedModel = _onGoingSpacedRepetitionReviews[i]
+                .copyWith(questions: resOrQuestions);
+
+            if (context.mounted) {
+              context.router.push(SpacedRepetitionQuizRoute(
+                  spacedRepetitionModel: updatedModel));
+            }
+          } else {
+            if (context.mounted) {
+              context.router.push(SpacedRepetitionQuizRoute(
+                  spacedRepetitionModel: _onGoingSpacedRepetitionReviews[i]));
+            }
+          }
+        } catch (e) {
+          EasyLoading.showError("Something went wrong when starting the quiz.");
+          logger.w(e);
+        } finally {
+          EasyLoading.dismiss();
+        }
+      }
+
+      onPressedCallbacks.add(spacedRepetitionOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingSpacedRepetitionReviews[i].sessionName,
+        learningMethod: SpacedRepetitionModel.name,
+        imagePath: SpacedRepetitionModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingSpacedRepetitionReviews[i].createdAt.toDate()),
+        onPressed: spacedRepetitionOnPressed,
+      ));
+    }
+
     if (widgets.isNotEmpty) {
       setState(() {
         _heroText = "You have on-going reviews!\nGet started now.";
@@ -420,12 +491,12 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                                         if (_isLoading) return;
 
                                         _heroReviewOnPressed!.call();
-                                },
-                                style: ButtonStyle(
-                                    shape: WidgetStateProperty.all(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(
+                                      },
+                                      style: ButtonStyle(
+                                          shape: WidgetStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
                                                           12))),
                                           backgroundColor: WidgetStateProperty
                                               .all(Theme.of(context)

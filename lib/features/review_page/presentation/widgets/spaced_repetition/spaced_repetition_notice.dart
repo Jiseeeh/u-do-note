@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 
-class PomodoroNotice extends ConsumerWidget {
-  const PomodoroNotice({super.key});
+class SpacedRepetitionNotice extends ConsumerWidget {
+  const SpacedRepetitionNotice({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,7 +14,7 @@ class PomodoroNotice extends ConsumerWidget {
         children: [
           Text(
             context.tr("pre_review_notice",
-                namedArgs: {"reviewMethod": PomodoroModel.name}),
+                namedArgs: {"reviewMethod": SpacedRepetitionModel.name}),
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(
@@ -42,14 +42,15 @@ class PomodoroNotice extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildNoticeContent(context,
-              title: context.tr("pomodoro_timer_desc_q"),
-              content: context.tr("pomodoro_timer_desc")),
-          buildNoticeContent(context,
               title: context.tr("review_grading_q"),
-              content: context.tr("review_grading")),
+              content: context.tr("You will be graded every quiz you take.")),
           buildNoticeContent(context,
               title: context.tr("review_quiz_q"),
-              content: context.tr("pomodoro_quiz")),
+              content: context.tr("You will take the quiz after the timer runs out, and the next subsequent quizzes will be on intervals")),
+          buildNoticeContent(context,
+              title: context.tr("How do I know when it is the time of quiz?"),
+              content: context.tr(
+                  "You'll see your session at on-going reviews in the homepage.")),
         ],
       ),
     );

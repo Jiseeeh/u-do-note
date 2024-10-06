@@ -7,6 +7,7 @@ import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 
 class LandingPageRemoteDataSource {
   final FirebaseFirestore _firestore;
@@ -33,6 +34,7 @@ class LandingPageRemoteDataSource {
 
       switch (methodName) {
         case LeitnerSystemModel.name:
+        case SpacedRepetitionModel.name:
           query =
               query.where('next_review', isLessThanOrEqualTo: Timestamp.now());
           break;

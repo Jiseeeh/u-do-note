@@ -176,10 +176,10 @@ class _PreReviewState extends ConsumerState<PreReview> {
 
                 return null;
               },
-              decoration: InputDecoration(
-                labelText: context.tr("title"),
-                hintText: "Enter a title for the session.",
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Session Title",
+                hintText: "Enter a title for this session.",
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 10),

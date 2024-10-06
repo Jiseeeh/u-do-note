@@ -1,3 +1,19 @@
+# [1.8.0](https://github.com/Jiseeeh/u-do-note/compare/v1.7.0...v1.8.0) (2024-10-06)
+
+
+### Bug Fixes
+
+* cleanup unnecessary padding ([4c2f5de](https://github.com/Jiseeeh/u-do-note/commit/4c2f5de2355ef5d363adfdfd488bc03bda12ab92))
+* old sessions that has remark getting fetched ([a37f3fb](https://github.com/Jiseeeh/u-do-note/commit/a37f3fb94e9149204ac35e2e2244a3ea6d9a02d5))
+* remove unused gesture detector ([1274246](https://github.com/Jiseeeh/u-do-note/commit/127424643399978b380dbf996259bd6e4c76c407))
+* session id being the label ([d5ff38c](https://github.com/Jiseeeh/u-do-note/commit/d5ff38c3efab5532c1f1b0f9a7e344d566ced6ef))
+
+
+### Features
+
+* add scrolled under elevation on dark theme ([d351115](https://github.com/Jiseeeh/u-do-note/commit/d35111550412c1849496fdfb1161ba8240c00e9c))
+* add spaced repetition ([#92](https://github.com/Jiseeeh/u-do-note/issues/92)) ([cc7e5c1](https://github.com/Jiseeeh/u-do-note/commit/cc7e5c1858d1bd093d4f66a4169f195e193afd5b))
+
 # [1.7.0](https://github.com/Jiseeeh/u-do-note/compare/v1.6.0...v1.7.0) (2024-09-20)
 
 

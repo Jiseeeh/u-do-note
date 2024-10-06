@@ -16,15 +16,14 @@ class QuizBody extends ConsumerWidget {
   final Function() onNext;
   final Function(BuildContext) onFinish;
 
-  const QuizBody(
-      {required this.questions,
-      required this.startTime,
-      required this.currentQuestionIndex,
-      required this.selectedAnswerIndex,
-      required this.onSelectAnswer,
-      required this.onNext,
-      required this.onFinish,
-      Key? key})
+  const QuizBody({required this.questions,
+    required this.startTime,
+    required this.currentQuestionIndex,
+    required this.selectedAnswerIndex,
+    required this.onSelectAnswer,
+    required this.onNext,
+    required this.onFinish,
+    Key? key})
       : super(key: key);
 
   @override
@@ -38,7 +37,7 @@ class QuizBody extends ConsumerWidget {
             children: [
               Text(
                 'Question ${currentQuestionIndex + 1} of ${questions.length}',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(),
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               LinearPercentIndicator(
                 lineHeight: 8,
@@ -58,13 +57,18 @@ class QuizBody extends ConsumerWidget {
           height: 20.h,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: Theme
+                .of(context)
+                .cardColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(
               questions[currentQuestionIndex].question,
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headlineSmall,
               textAlign: TextAlign.center,
             ),
           ),
@@ -74,7 +78,9 @@ class QuizBody extends ConsumerWidget {
           child: Ink(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+              color: Theme
+                  .of(context)
+                  .cardColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: SingleChildScrollView(

@@ -120,8 +120,6 @@ class _MainAppState extends ConsumerState<MainApp> {
       case SpacedRepetitionModel.name:
         var spacedRepModel = SpacedRepetitionModel.fromJson(decoded);
 
-        ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
-
         if (spacedRepModel.questions == null ||
             spacedRepModel.questions!.isEmpty) {
           var resOrQuestions = await ref
@@ -136,6 +134,7 @@ class _MainAppState extends ConsumerState<MainApp> {
         }
 
         if (context.mounted) {
+          ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
           appRouter.push(
               SpacedRepetitionQuizRoute(spacedRepetitionModel: spacedRepModel));
         }

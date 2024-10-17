@@ -13,28 +13,32 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
+import 'package:u_do_note/core/utility.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/features/review_page/data/models/score.dart';
-import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/active_recall/active_recall_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/spaced_repetition/spaced_repetition_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/quiz_body.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
-class SpacedRepetitionQuizScreen extends ConsumerStatefulWidget {
-  final SpacedRepetitionModel spacedRepetitionModel;
+class ActiveRecallQuizScreen extends ConsumerStatefulWidget {
+  final ActiveRecallModel activeRecallModel;
+  final String recalledInformation;
 
-  const SpacedRepetitionQuizScreen(
-      {required this.spacedRepetitionModel, Key? key})
+  const ActiveRecallQuizScreen(
+      {required this.activeRecallModel,
+      required this.recalledInformation,
+      Key? key})
       : super(key: key);
 
   @override
-  ConsumerState<SpacedRepetitionQuizScreen> createState() =>
-      _SpacedRepetitionQuizScreenState();
+  ConsumerState<ActiveRecallQuizScreen> createState() =>
+      _ActiveRecallQuizScreenState();
 }
 
-class _SpacedRepetitionQuizScreenState
-    extends ConsumerState<SpacedRepetitionQuizScreen> {
+class _ActiveRecallQuizScreenState
+    extends ConsumerState<ActiveRecallQuizScreen> {
   var currentQuestionIndex = 0;
   var score = 0;
   late Timer timer;
@@ -81,7 +85,7 @@ class _SpacedRepetitionQuizScreenState
       return;
     }
 
-    if (widget.spacedRepetitionModel.questions![currentQuestionIndex]
+    if (widget.activeRecallModel.questions![currentQuestionIndex]
             .correctAnswerIndex ==
         selectedAnswerIndex) {
       logger.d('Correct Answer');
@@ -93,8 +97,7 @@ class _SpacedRepetitionQuizScreenState
 
     logger.d('Incorrect Answer');
 
-    if (currentQuestionIndex <
-        widget.spacedRepetitionModel.questions!.length - 1) {
+    if (currentQuestionIndex < widget.activeRecallModel.questions!.length - 1) {
       currentQuestionIndex++;
     }
 
@@ -110,7 +113,7 @@ class _SpacedRepetitionQuizScreenState
       if (selectedAnswerIndex != null) {
         selectedAnswersIndex.add(selectedAnswerIndex!);
 
-        if (widget.spacedRepetitionModel.questions![currentQuestionIndex]
+        if (widget.activeRecallModel.questions![currentQuestionIndex]
                 .correctAnswerIndex ==
             selectedAnswerIndex) {
           score++;
@@ -119,122 +122,122 @@ class _SpacedRepetitionQuizScreenState
 
       timer.cancel();
 
-      var spacedRepScore = ScoreModel(
+      var activeRecallScore = ScoreModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           date: Timestamp.now(),
           score: score);
 
-      SpacedRepetitionModel updatedSpacedRepModel =
-          widget.spacedRepetitionModel;
+      ActiveRecallModel updatedActiveRecallModel = widget.activeRecallModel;
 
-      if (widget.spacedRepetitionModel.scores != null) {
-        var scores = widget.spacedRepetitionModel.scores;
+      if (widget.activeRecallModel.scores != null) {
+        var scores = widget.activeRecallModel.scores;
 
-        scores!.add(spacedRepScore);
+        scores!.add(activeRecallScore);
 
-        updatedSpacedRepModel = updatedSpacedRepModel.copyWith(scores: scores);
+        updatedActiveRecallModel =
+            updatedActiveRecallModel.copyWith(scores: scores);
       } else {
-        updatedSpacedRepModel =
-            updatedSpacedRepModel.copyWith(scores: [spacedRepScore]);
+        updatedActiveRecallModel =
+            updatedActiveRecallModel.copyWith(scores: [activeRecallScore]);
       }
-
-      var nextReview = tz.TZDateTime.now(tz.local);
-
-      switch (updatedSpacedRepModel.scores!.length) {
-        // second quiz
-        case 1:
-          nextReview = nextReview.add(const Duration(days: 7));
-          break;
-        //  third quiz
-        case 2:
-          nextReview = nextReview.add(const Duration(days: 16));
-          break;
-        //  4th quiz
-        case 3:
-          nextReview = nextReview.add(const Duration(days: 35));
-          break;
-        default:
-          var sum = 0;
-
-          for (var e in updatedSpacedRepModel.scores!) {
-            sum += e.score;
-          }
-
-          var average = sum / updatedSpacedRepModel.scores!.length;
-          var goodThreshold = 8.0;
-
-          if (average >= goodThreshold) {
-            // mastered, once a month
-            // nextReview =
-            //     nextReview.add(const Duration(days: 30)); // For once a month
-            // once every 3 weeks
-            nextReview = nextReview.add(const Duration(days: 21));
-          } else {
-            var lastScores = updatedSpacedRepModel.scores!
-                .sublist(updatedSpacedRepModel.scores!.length - 4);
-            var isDeclining = true;
-
-            for (var i = 0; i < lastScores.length - 1; i++) {
-              if (lastScores[i].score <= lastScores[i + 1].score) {
-                isDeclining = false;
-                break;
-              }
-            }
-
-            if (isDeclining) {
-              nextReview = nextReview.add(const Duration(days: 7));
-            } else {
-              nextReview = nextReview.add(const Duration(days: 3));
-            }
-          }
-      }
-
-      // TODO: check if selectedAnswersIndex is needed
-      updatedSpacedRepModel = updatedSpacedRepModel.copyWith(
-          selectedAnswersIndex: selectedAnswersIndex,
-          nextReview: Timestamp.fromDate(nextReview));
 
       EasyLoading.show(
           status: 'Saving quiz results...',
           maskType: EasyLoadingMaskType.black,
           dismissOnTap: false);
 
-      var res = await ref
-          .read(spacedRepetitionProvider.notifier)
-          .saveQuizResults(spacedRepetitionModel: updatedSpacedRepModel);
+      var failureOrSuccessMessage = await ref
+          .read(activeRecallProvider.notifier)
+          .saveQuizResults(activeRecallModel: updatedActiveRecallModel);
 
       EasyLoading.dismiss();
 
       if (!context.mounted) return;
 
-      if (res is Failure) {
-        logger.e('Failed to save quiz results: ${res.message}');
+      if (failureOrSuccessMessage is Failure) {
+        logger.e(
+            'Failed to save quiz results: ${failureOrSuccessMessage.message}');
         EasyLoading.showError(context.tr("save_quiz_e"));
+      }
+
+      EasyLoading.show(
+          status: 'Getting feedback...',
+          maskType: EasyLoadingMaskType.black,
+          dismissOnTap: false);
+
+      var failureOrJsonStr = await ref
+          .read(activeRecallProvider.notifier)
+          .getActiveRecallFeedback(
+              updatedActiveRecallModel, widget.recalledInformation);
+
+      if (!context.mounted) return;
+
+      EasyLoading.dismiss();
+
+      if (failureOrJsonStr is Failure) {
+        logger.e(
+            'Failed to get the feedback: ${failureOrSuccessMessage.message}');
+        EasyLoading.showError(
+            "Something went wrong when getting the feedback.");
       } else {
+        var decodedJson = json.decode(failureOrJsonStr);
+        var feedback = decodedJson['feedback'];
+        var nextReviewDays = decodedJson['days'];
+        var nextReview = tz.TZDateTime.now(tz.local);
+
+        nextReview = nextReview.add(Duration(days: nextReviewDays));
+
+        updatedActiveRecallModel = updatedActiveRecallModel.copyWith(
+            nextReview: Timestamp.fromDate(nextReview));
+
         logger.d(
             "Next review will be ${DateFormat("EEE, dd MMM yyyy").format(nextReview)}");
+
+        await CustomDialog.show(context,
+            title: "Feedback about your session",
+            subTitle: feedback,
+            buttons: [CustomDialogButton(text: "Okay")]);
+
         await ref.read(localNotificationProvider).zonedSchedule(
             DateTime.now().millisecondsSinceEpoch % 100000,
-            'Spaced Repetition',
-            'Time to take your quiz!',
+            'Active Recall',
+            'Time to take your quiz with ${updatedActiveRecallModel.sessionName}',
             nextReview,
-            payload: json.encode(updatedSpacedRepModel.toJson()),
+            payload: json.encode(updatedActiveRecallModel.toJson()),
             const NotificationDetails(
                 android: AndroidNotificationDetails(
-                    'quiz_notification', 'Quiz Notification',
-                    channelDescription:
-                        'Notifications about spaced repetition quizzes.')),
+              'quiz_notification',
+              'Quiz Notification',
+              channelDescription:
+                  'Notifications about spaced repetition quizzes.',
+            )),
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime);
+
+        EasyLoading.show(
+            status: 'Syncing...',
+            maskType: EasyLoadingMaskType.black,
+            dismissOnTap: false);
+
+        var failureOrNull = await ref
+            .read(activeRecallProvider.notifier)
+            .updateFirestoreModel(updatedActiveRecallModel);
+
+        EasyLoading.dismiss();
+
+        if (failureOrNull is Failure) {
+          logger.e('Failed to sync: ${failureOrSuccessMessage.message}');
+          EasyLoading.showError("Sync failed, try again later.");
+        }
       }
 
       if (context.mounted) {
         context.router.replace(QuizResultsRoute(
-            questions: widget.spacedRepetitionModel.questions!
+            questions: widget.activeRecallModel.questions!
                 .map((question) => question.toEntity())
                 .toList(),
-            correctAnswersIndex: widget.spacedRepetitionModel.questions!
+            correctAnswersIndex: widget.activeRecallModel.questions!
                 .map((question) => question.correctAnswerIndex)
                 .toList(),
             selectedAnswersIndex: selectedAnswersIndex));
@@ -254,7 +257,7 @@ class _SpacedRepetitionQuizScreenState
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: QuizBody(
-        questions: widget.spacedRepetitionModel.questions!,
+        questions: widget.activeRecallModel.questions!,
         currentQuestionIndex: currentQuestionIndex,
         startTime: startTime,
         selectedAnswerIndex: selectedAnswerIndex,

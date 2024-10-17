@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/firestore_filter_enum.dart';
 
@@ -204,5 +205,76 @@ class SharedRemoteDataSource {
     var res = await query.get();
 
     return res.docs.map((doc) => fromFirestore(doc.id, doc.data())).toList();
+  }
+
+  Future<String> generateContentWithAssist(
+      AssistanceType type, String content) async {
+    String systemPrompt = "";
+    String userPrompt = "";
+
+    switch (type) {
+      case AssistanceType.summarize:
+        systemPrompt =
+            "As a helpful assistant, your task is to help the student by providing concise and clear summary of the notes they provide, ensuring the key points are easily digestible.";
+        userPrompt = """
+        Summarize my note below:
+        
+        $content
+                     """;
+        break;
+      case AssistanceType.guide:
+        systemPrompt =
+            "As a helpful assistant, your task is to help the student by creating thoughtful guide questions based on the notes they provide. These questions should encourage deeper understanding and critical thinking.";
+        userPrompt = """
+        Generate guide questions based on the following notes, separate it by a newline
+        
+        $content
+                     """;
+        break;
+    }
+
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(
+          "$systemPrompt\nThe response should be in JSON format containing the only the properties 'content' as string, and 'isValid' as boolean that is depending on the given content.",
+        ),
+      ],
+      role: OpenAIChatMessageRole.system,
+    );
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(userPrompt),
+      ],
+      role: OpenAIChatMessageRole.user,
+    );
+
+    final requestMessages = [
+      systemMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-4o-mini",
+      responseFormat: {"type": "json_object"},
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 600,
+    );
+
+    String? completionContent =
+        chatCompletion.choices.first.message.content!.first.text;
+
+    var decodedJson = json.decode(completionContent!);
+
+    if (!decodedJson['isValid']) throw "The content is not valid.";
+
+    return switch (type) {
+      AssistanceType.summarize =>
+        '$content\nSummary:\n${decodedJson['content']}',
+      AssistanceType.guide =>
+        '$content\nGuide Questions:\n${decodedJson['content']}',
+    };
   }
 }

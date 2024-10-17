@@ -35,6 +35,27 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ActiveRecallQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<ActiveRecallQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ActiveRecallQuizScreen(
+          activeRecallModel: args.activeRecallModel,
+          recalledInformation: args.recalledInformation,
+          key: args.key,
+        ),
+      );
+    },
+    ActiveRecallRoute.name: (routeData) {
+      final args = routeData.argsAs<ActiveRecallRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ActiveRecallScreen(
+          activeRecallModel: args.activeRecallModel,
+          key: args.key,
+        ),
+      );
+    },
     AnalyticsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -138,6 +159,7 @@ abstract class _$AppRouter extends RootStackRouter {
           note: args.note,
           spacedRepetitionModel: args.spacedRepetitionModel,
           blurtingModel: args.blurtingModel,
+          activeRecallModel: args.activeRecallModel,
           key: args.key,
         ),
       );
@@ -310,6 +332,87 @@ class AcronymRouteArgs {
   @override
   String toString() {
     return 'AcronymRouteArgs{acronymModel: $acronymModel, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ActiveRecallQuizScreen]
+class ActiveRecallQuizRoute extends PageRouteInfo<ActiveRecallQuizRouteArgs> {
+  ActiveRecallQuizRoute({
+    required ActiveRecallModel activeRecallModel,
+    required String recalledInformation,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ActiveRecallQuizRoute.name,
+          args: ActiveRecallQuizRouteArgs(
+            activeRecallModel: activeRecallModel,
+            recalledInformation: recalledInformation,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ActiveRecallQuizRoute';
+
+  static const PageInfo<ActiveRecallQuizRouteArgs> page =
+      PageInfo<ActiveRecallQuizRouteArgs>(name);
+}
+
+class ActiveRecallQuizRouteArgs {
+  const ActiveRecallQuizRouteArgs({
+    required this.activeRecallModel,
+    required this.recalledInformation,
+    this.key,
+  });
+
+  final ActiveRecallModel activeRecallModel;
+
+  final String recalledInformation;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ActiveRecallQuizRouteArgs{activeRecallModel: $activeRecallModel, recalledInformation: $recalledInformation, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ActiveRecallScreen]
+class ActiveRecallRoute extends PageRouteInfo<ActiveRecallRouteArgs> {
+  ActiveRecallRoute({
+    required ActiveRecallModel activeRecallModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ActiveRecallRoute.name,
+          args: ActiveRecallRouteArgs(
+            activeRecallModel: activeRecallModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ActiveRecallRoute';
+
+  static const PageInfo<ActiveRecallRouteArgs> page =
+      PageInfo<ActiveRecallRouteArgs>(name);
+}
+
+class ActiveRecallRouteArgs {
+  const ActiveRecallRouteArgs({
+    required this.activeRecallModel,
+    this.key,
+  });
+
+  final ActiveRecallModel activeRecallModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ActiveRecallRouteArgs{activeRecallModel: $activeRecallModel, key: $key}';
   }
 }
 
@@ -645,6 +748,7 @@ class NoteTakingRoute extends PageRouteInfo<NoteTakingRouteArgs> {
     required NoteEntity note,
     SpacedRepetitionModel? spacedRepetitionModel,
     BlurtingModel? blurtingModel,
+    ActiveRecallModel? activeRecallModel,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -654,6 +758,7 @@ class NoteTakingRoute extends PageRouteInfo<NoteTakingRouteArgs> {
             note: note,
             spacedRepetitionModel: spacedRepetitionModel,
             blurtingModel: blurtingModel,
+            activeRecallModel: activeRecallModel,
             key: key,
           ),
           initialChildren: children,
@@ -671,6 +776,7 @@ class NoteTakingRouteArgs {
     required this.note,
     this.spacedRepetitionModel,
     this.blurtingModel,
+    this.activeRecallModel,
     this.key,
   });
 
@@ -682,11 +788,13 @@ class NoteTakingRouteArgs {
 
   final BlurtingModel? blurtingModel;
 
+  final ActiveRecallModel? activeRecallModel;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'NoteTakingRouteArgs{notebookId: $notebookId, note: $note, spacedRepetitionModel: $spacedRepetitionModel, blurtingModel: $blurtingModel, key: $key}';
+    return 'NoteTakingRouteArgs{notebookId: $notebookId, note: $note, spacedRepetitionModel: $spacedRepetitionModel, blurtingModel: $blurtingModel, activeRecallModel: $activeRecallModel, key: $key}';
   }
 }
 

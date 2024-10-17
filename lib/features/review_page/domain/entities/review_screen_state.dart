@@ -18,6 +18,9 @@ class ReviewScreenState {
   /// Specific for spaced repetition
   bool isFromOldSpacedRepetition;
 
+  /// Specific for active recall
+  bool isFromOldActiveRecall;
+
   ReviewScreenState(
       {this.reviewMethod,
       // ? defaults to "" as accessing it at first where on multi selects throws bad state
@@ -28,7 +31,8 @@ class ReviewScreenState {
       this.notebookPagesIds,
       this.noteId,
       this.isFromOldBlurtingSession = false,
-      this.isFromOldSpacedRepetition = false});
+      this.isFromOldSpacedRepetition = false,
+      this.isFromOldActiveRecall = false});
 
   get getReviewMethod => reviewMethod;
 
@@ -47,6 +51,8 @@ class ReviewScreenState {
   get getIsFromOldBlurtingSession => isFromOldBlurtingSession;
 
   get getIsFromOldSpacedRepetition => isFromOldSpacedRepetition;
+
+  get getIsFromOldActiveRecall => isFromOldActiveRecall;
 
   void setReviewMethod(ReviewMethods reviewMethod) {
     this.reviewMethod = reviewMethod;
@@ -90,6 +96,11 @@ class ReviewScreenState {
     isFromOldSpacedRepetition = value;
   }
 
+  void setIsFromOldActiveRecall(bool value) {
+    logger.d('Setting isFromOldActiveRecall to: $value');
+    isFromOldActiveRecall = value;
+  }
+
   void resetState() {
     logger.w('Resetting state...');
     reviewMethod = null;
@@ -101,6 +112,7 @@ class ReviewScreenState {
     noteId = null;
     isFromOldBlurtingSession = false;
     isFromOldSpacedRepetition = false;
+    isFromOldActiveRecall = false;
   }
 
   @override

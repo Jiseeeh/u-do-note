@@ -24,6 +24,7 @@ import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dar
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/analyze_image_text_dialog.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
@@ -38,12 +39,14 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
   final NoteEntity note;
   final BlurtingModel? blurtingModel;
   final SpacedRepetitionModel? spacedRepetitionModel;
+  final ActiveRecallModel? activeRecallModel;
 
   const NoteTakingScreen({
     required this.notebookId,
     required this.note,
     this.spacedRepetitionModel,
     this.blurtingModel,
+    this.activeRecallModel,
     Key? key,
   }) : super(key: key);
 
@@ -161,7 +164,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
               }));
     } else if (widget.spacedRepetitionModel != null) {
       String content =
-          "Review this note and come back after an hour or wait the notification to start your initial quiz. Remember to exit with the back button at the top left.";
+          "Review this note and come back after an hour or wait the notification to start your initial quiz.";
 
       var nextQuiz = widget.spacedRepetitionModel!.nextReview;
 
@@ -178,6 +181,32 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                 return AlertDialog(
                   scrollable: true,
                   title: const Text("Spaced Repetition tips"),
+                  content: Column(
+                    children: [
+                      Text(content),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                        child: const Text("Okay"))
+                  ],
+                );
+              }));
+    } else if (widget.activeRecallModel != null) {
+      String content =
+          "Review this note and come back after 2 hours or wait the notification to start your initial quiz. You will be asked to input what can you remember about your note.";
+
+      Future.delayed(
+          Duration.zero,
+          () => showDialog(
+              context: context,
+              builder: (dialogContext) {
+                return AlertDialog(
+                  scrollable: true,
+                  title: const Text("Active Recall tips"),
                   content: Column(
                     children: [
                       Text(content),

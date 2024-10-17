@@ -10,15 +10,18 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/constant.dart' as constant;
+import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/datasources/remote/shared_remote_datasource.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/data/repositories/shared_repository_impl.dart';
 import 'package:u_do_note/core/shared/domain/repositories/shared_repository.dart';
+import 'package:u_do_note/core/shared/domain/usecases/generate_content_with_assist.dart';
 import 'package:u_do_note/core/shared/domain/usecases/generate_quiz_questions.dart';
 import 'package:u_do_note/core/shared/domain/usecases/get_old_sessions.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
@@ -30,6 +33,8 @@ import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/p
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/active_recall/active_recall_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/active_recall/active_recall_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/blurting/blurting_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/blurting/blurting_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_notice.dart';
@@ -87,6 +92,14 @@ GetOldSessions getOldSessions(GetOldSessionsRef ref) {
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GetOldSessions(sharedRepository);
+}
+
+@riverpod
+GenerateContentWithAssist generateContentWithAssist(
+    GenerateContentWithAssistRef ref) {
+  var sharedRepository = ref.read(sharedRepositoryProvider);
+
+  return GenerateContentWithAssist(sharedRepository);
 }
 
 @Riverpod(keepAlive: true)
@@ -209,6 +222,15 @@ class Shared extends _$Shared {
     return false;
   }
 
+  Future<dynamic> generateContentWithAssist(
+      {required AssistanceType type, required String content}) async {
+    var generateContentWithAssist = ref.read(generateContentWithAssistProvider);
+
+    var failureOrContent = await generateContentWithAssist(type, content);
+
+    return failureOrContent.fold((failure) => failure, (res) => res);
+  }
+
   void _onReviewMethodPressed(
       BuildContext context, ReviewMethods reviewMethod) async {
     if (reviewMethod != ReviewMethods.pomodoroTechnique &&
@@ -254,6 +276,10 @@ class Shared extends _$Shared {
       case ReviewMethods.spacedRepetition:
         notice = const SpacedRepetitionNotice();
         preReview = const SpacedRepetitionPreReview();
+        break;
+      case ReviewMethods.activeRecall:
+        notice = const ActiveRecallNotice();
+        preReview = const ActiveRecallPreReview();
         break;
     }
 
@@ -320,6 +346,13 @@ class Shared extends _$Shared {
           imagePath: SpacedRepetitionModel.coverImagePath,
           onPressed: () {
             _onReviewMethodPressed(context, ReviewMethods.spacedRepetition);
+          }),
+      ReviewMethodEntity(
+          title: ActiveRecallModel.name,
+          description: context.tr('active_recall_desc'),
+          imagePath: ActiveRecallModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.activeRecall);
           })
     ];
 

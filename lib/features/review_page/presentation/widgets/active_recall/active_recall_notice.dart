@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 
-class SpacedRepetitionNotice extends ConsumerWidget {
-  const SpacedRepetitionNotice({super.key});
+class ActiveRecallNotice extends ConsumerWidget {
+  const ActiveRecallNotice({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,7 +14,7 @@ class SpacedRepetitionNotice extends ConsumerWidget {
         children: [
           Text(
             context.tr("pre_review_notice",
-                namedArgs: {"reviewMethod": SpacedRepetitionModel.name}),
+                namedArgs: {"reviewMethod": ActiveRecallModel.name}),
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(
@@ -47,7 +47,7 @@ class SpacedRepetitionNotice extends ConsumerWidget {
           buildNoticeContent(context,
               title: context.tr("review_quiz_q"),
               content: context.tr(
-                  "You will take the quiz after the first hour, and the next subsequent quizzes will be on intervals")),
+                  "You'll take the first quiz 2 hours after starting a session and answering 'What do you remember?' Subsequent quizzes will adjust based on your scores but will continue to ask the same question.")),
           buildNoticeContent(context,
               title: context.tr("How do I know when it is the time of quiz?"),
               content: context.tr(

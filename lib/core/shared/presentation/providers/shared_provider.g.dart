@@ -115,6 +115,24 @@ final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
 );
 
 typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
+String _$generateContentWithAssistHash() =>
+    r'a77f44cdf6f5277fe0e49b44a72b0a1b5713c977';
+
+/// See also [generateContentWithAssist].
+@ProviderFor(generateContentWithAssist)
+final generateContentWithAssistProvider =
+    AutoDisposeProvider<GenerateContentWithAssist>.internal(
+  generateContentWithAssist,
+  name: r'generateContentWithAssistProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$generateContentWithAssistHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GenerateContentWithAssistRef
+    = AutoDisposeProviderRef<GenerateContentWithAssist>;
 String _$selectNotificationStreamHash() =>
     r'e28e3494324886142dd4fb3ef4eb5284405cbb67';
 
@@ -163,7 +181,7 @@ final localNotificationProvider = NotifierProvider<LocalNotification,
 );
 
 typedef _$LocalNotification = Notifier<FlutterLocalNotificationsPlugin>;
-String _$sharedHash() => r'11c65b04b60080d3c3588ced29fdb2994f9c189c';
+String _$sharedHash() => r'185c748cef4e4f6bf08873dcc33112a66f6f8edf';
 
 /// See also [Shared].
 @ProviderFor(Shared)

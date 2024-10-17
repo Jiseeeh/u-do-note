@@ -42,21 +42,6 @@ final spacedRepetitionRepositoryProvider =
 
 typedef SpacedRepetitionRepositoryRef
     = AutoDisposeProviderRef<SpacedRepetitionRepository>;
-String _$generateContentHash() => r'a5100992dad052a8fd34540b270211d21826dd77';
-
-/// See also [generateContent].
-@ProviderFor(generateContent)
-final generateContentProvider = AutoDisposeProvider<GenerateContent>.internal(
-  generateContent,
-  name: r'generateContentProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$generateContentHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef GenerateContentRef = AutoDisposeProviderRef<GenerateContent>;
 String _$saveQuizResultsHash() => r'7b0023ec55603a0dc146938e88c5b44080d71d1d';
 
 /// See also [saveQuizResults].
@@ -72,7 +57,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$spacedRepetitionHash() => r'91ba481159c6a490354569e8027cec741a06ca3c';
+String _$spacedRepetitionHash() => r'66124765ead65aab6c97d3540e93ca273befed1e';
 
 /// See also [SpacedRepetition].
 @ProviderFor(SpacedRepetition)

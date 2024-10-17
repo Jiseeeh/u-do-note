@@ -13,6 +13,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
+import 'package:u_do_note/features/review_page/data/models/score.dart';
 import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/spaced_repetition/spaced_repetition_provider.dart';
@@ -118,7 +119,7 @@ class _SpacedRepetitionQuizScreenState
 
       timer.cancel();
 
-      var spacedRepScore = SpacedRepetitionScore(
+      var spacedRepScore = ScoreModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           date: Timestamp.now(),
           score: score);
@@ -131,7 +132,7 @@ class _SpacedRepetitionQuizScreenState
 
         scores!.add(spacedRepScore);
 
-        updatedSpacedRepModel.copyWith(scores: scores);
+        updatedSpacedRepModel = updatedSpacedRepModel.copyWith(scores: scores);
       } else {
         updatedSpacedRepModel =
             updatedSpacedRepModel.copyWith(scores: [spacedRepScore]);

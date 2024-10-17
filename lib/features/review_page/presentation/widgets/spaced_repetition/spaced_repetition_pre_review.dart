@@ -199,8 +199,9 @@ class _SpacedRepetitionPreReviewState
         dismissOnTap: false);
 
     var resOrContent = await ref
-        .read(spacedRepetitionProvider.notifier)
-        .generateContent(type: _assistType!, content: _contentFromPages);
+        .read(sharedProvider.notifier)
+        .generateContentWithAssist(
+            type: _assistType!, content: _contentFromPages);
 
     if (!context.mounted) return;
 
@@ -234,7 +235,7 @@ class _SpacedRepetitionPreReviewState
 
     resOrNote = resOrNote as NoteModel;
 
-    var nextHour = tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10));
+    var nextHour = tz.TZDateTime.now(tz.local).add(const Duration(hours: 1));
 
     logger.d(
         "Initial quiz scheduled on ${DateFormat("EEE, dd MMM yyyy").format(nextHour)}");

@@ -17,6 +17,7 @@ import 'core/logger/logger.dart';
 import 'features/review_page/data/models/spaced_repetition.dart';
 import 'features/review_page/presentation/providers/review_screen_provider.dart';
 import 'firebase_options.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/custom_error.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_theme_provider.dart';
@@ -113,24 +114,42 @@ class _MainAppState extends ConsumerState<MainApp> {
   Future<void> _handlePayload(BuildContext context, String? payload) async {
     if (payload == null) return;
 
-    var spacedRepModel = SpacedRepetitionModel.fromJson(json.decode(payload));
-    ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
+    var decoded = json.decode(payload);
 
-    if (spacedRepModel.questions == null || spacedRepModel.questions!.isEmpty) {
-      var resOrQuestions = await ref
-          .read(sharedProvider.notifier)
-          .generateQuizQuestions(content: spacedRepModel.content);
+    switch (decoded['review_method']) {
+      case SpacedRepetitionModel.name:
+        var spacedRepModel = SpacedRepetitionModel.fromJson(decoded);
 
-      if (resOrQuestions is Failure) {
-        throw "Cannot create your quiz, please try again later.";
-      }
+        ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
 
-      spacedRepModel = spacedRepModel.copyWith(questions: resOrQuestions);
-    }
+        if (spacedRepModel.questions == null ||
+            spacedRepModel.questions!.isEmpty) {
+          var resOrQuestions = await ref
+              .read(sharedProvider.notifier)
+              .generateQuizQuestions(content: spacedRepModel.content);
 
-    if (context.mounted) {
-      appRouter.push(
-          SpacedRepetitionQuizRoute(spacedRepetitionModel: spacedRepModel));
+          if (resOrQuestions is Failure) {
+            throw "Cannot create your quiz, please try again later.";
+          }
+
+          spacedRepModel = spacedRepModel.copyWith(questions: resOrQuestions);
+        }
+
+        if (context.mounted) {
+          appRouter.push(
+              SpacedRepetitionQuizRoute(spacedRepetitionModel: spacedRepModel));
+        }
+        break;
+      case ActiveRecallModel.name:
+        var activeRecallModel = ActiveRecallModel.fromJson(decoded);
+
+        Future.delayed(const Duration(seconds: 5), () {
+          // ? wait for splashscreen
+          appRouter
+              .push(ActiveRecallRoute(activeRecallModel: activeRecallModel));
+        });
+
+        break;
     }
   }
 

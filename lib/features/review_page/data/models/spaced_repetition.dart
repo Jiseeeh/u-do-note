@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:u_do_note/core/shared/data/models/question.dart';
+import 'package:u_do_note/features/review_page/data/models/score.dart';
 
 class SpacedRepetitionModel {
   final String? id;
@@ -10,7 +11,7 @@ class SpacedRepetitionModel {
   final String noteId;
   final Timestamp createdAt;
   final Timestamp? nextReview;
-  final List<SpacedRepetitionScore>? scores;
+  final List<ScoreModel>? scores;
   final String? remark;
   final List<QuestionModel>? questions;
   final List<int>? selectedAnswersIndex;
@@ -43,7 +44,7 @@ class SpacedRepetitionModel {
       createdAt: data['created_at'],
       nextReview: data['next_review'],
       scores: (data['scores'] as List)
-          .map((score) => SpacedRepetitionScore.fromJson(score))
+          .map((score) => ScoreModel.fromJson(score))
           .toList(),
       questions: (data['questions'] as List)
           .map((question) => QuestionModel.fromJson(question))
@@ -86,6 +87,7 @@ class SpacedRepetitionModel {
           questions?.map((question) => question.toJson()).toList() ?? [],
       'selected_answers_index': selectedAnswersIndex ?? [],
       'remark': remark,
+      'review_method': name,
     };
   }
 
@@ -103,7 +105,7 @@ class SpacedRepetitionModel {
               json['next_review']) // Convert back to Timestamp
           : null,
       scores: (json['scores'] as List)
-          .map((score) => SpacedRepetitionScore.fromJson(score))
+          .map((score) => ScoreModel.fromJson(score))
           .toList(),
       questions: (json['questions'] as List)
           .map((question) => QuestionModel.fromJson(question))
@@ -122,7 +124,7 @@ class SpacedRepetitionModel {
     String? noteId,
     Timestamp? createdAt,
     Timestamp? nextReview,
-    List<SpacedRepetitionScore>? scores,
+    List<ScoreModel>? scores,
     List<QuestionModel>? questions,
     List<int>? selectedAnswersIndex,
     String? remark,
@@ -143,29 +145,3 @@ class SpacedRepetitionModel {
   }
 }
 
-class SpacedRepetitionScore {
-  final String? id;
-  final Timestamp date;
-  final int score;
-
-  SpacedRepetitionScore({
-    this.id,
-    required this.date,
-    required this.score,
-  });
-
-  factory SpacedRepetitionScore.fromJson(Map<String, dynamic> data) {
-    return SpacedRepetitionScore(
-        id: data['id'],
-        date: Timestamp.fromMillisecondsSinceEpoch(data['date']),
-        score: data['score']);
-  }
-
-  Map<String, dynamic> toFirestore() {
-    return {
-      'id': id,
-      'date': date.millisecondsSinceEpoch,
-      'score': score,
-    };
-  }
-}

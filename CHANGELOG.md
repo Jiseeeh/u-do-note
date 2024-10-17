@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/Jiseeeh/u-do-note/compare/v1.8.0...v1.9.0) (2024-10-17)
+
+
+### Features
+
+* add active recall ([#93](https://github.com/Jiseeeh/u-do-note/issues/93)) ([8e75a19](https://github.com/Jiseeeh/u-do-note/commit/8e75a198560ee1fb6fa2e1d17bf10122f1b3bd68))
+
 # [1.8.0](https://github.com/Jiseeeh/u-do-note/compare/v1.7.0...v1.8.0) (2024-10-06)
 
 

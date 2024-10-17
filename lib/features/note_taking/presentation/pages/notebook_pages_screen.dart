@@ -153,11 +153,11 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                 if (result != null) {
                   var first = result.files.first;
 
-                  if (first.size > 4 * 1024 * 1024) {
-                    EasyLoading.showError(context.tr("file_size_e"),
-                        duration: const Duration(seconds: 2));
-                    return;
-                  }
+                  // if (first.size > 4 * 1024 * 1024) {
+                  //   EasyLoading.showError(context.tr("file_size_e"),
+                  //       duration: const Duration(seconds: 2));
+                  //   return;
+                  // }
 
                   if (!extensions.contains(first.extension)) {
                     EasyLoading.showError(context.tr("allowed_files"),

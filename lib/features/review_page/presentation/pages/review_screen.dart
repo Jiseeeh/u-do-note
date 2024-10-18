@@ -319,7 +319,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       imagePath: 'assets/images/flashcard.png',
                       buttonKey: leitnerBtnGlobalKey,
                       onPressed: () {
-                        _onPressedHandler(context, ReviewMethods.leitnerSystem);
+                        // _onPressedHandler(context, ReviewMethods.leitnerSystem);
+                        context.router.push(const StrategyDetailsRoute());
                       }),
                   const SizedBox(height: 16),
                   ReviewMethod(

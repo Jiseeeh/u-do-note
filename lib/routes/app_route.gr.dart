@@ -212,6 +212,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashScreen(),
       );
     },
+    StrategyDetailsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const StrategyDetailsScreen(),
+      );
+    },
     SummaryRoute.name: (routeData) {
       final args = routeData.argsAs<SummaryRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -221,6 +227,12 @@ abstract class _$AppRouter extends RootStackRouter {
           summary: args.summary,
           key: args.key,
         ),
+      );
+    },
+    ThemeSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ThemeSettingsScreen(),
       );
     },
   };
@@ -884,6 +896,20 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [StrategyDetailsScreen]
+class StrategyDetailsRoute extends PageRouteInfo<void> {
+  const StrategyDetailsRoute({List<PageRouteInfo>? children})
+      : super(
+          StrategyDetailsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'StrategyDetailsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [SummaryScreen]
 class SummaryRoute extends PageRouteInfo<SummaryRouteArgs> {
   SummaryRoute({
@@ -924,4 +950,18 @@ class SummaryRouteArgs {
   String toString() {
     return 'SummaryRouteArgs{topic: $topic, summary: $summary, key: $key}';
   }
+}
+
+/// generated route for
+/// [ThemeSettingsScreen]
+class ThemeSettingsRoute extends PageRouteInfo<void> {
+  const ThemeSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          ThemeSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ThemeSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

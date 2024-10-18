@@ -32,7 +32,9 @@ import 'package:u_do_note/features/review_page/presentation/pages/pomodoro/pomod
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynman_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/strategy_details_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/theme_settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
 
 part 'app_route.gr.dart';
@@ -67,6 +69,8 @@ class AppRouter extends _$AppRouter {
               path: 'note-taking') // test if this should be here
         ]),
         AutoRoute(page: SettingsRoute.page, path: '/settings'),
+        AutoRoute(page: ThemeSettingsRoute.page, path: '/theme-settings'),
+
         AutoRoute(
             page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
         AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note'),
@@ -82,6 +86,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ElaborationQuizRoute.page, path: '/elaboration-quiz'),
         AutoRoute(page: AcronymRoute.page, path: '/acronym'),
         AutoRoute(page: AcronymQuizRoute.page, path: '/acronym-quiz'),
-        AutoRoute(page: BlurtingQuizRoute.page, path: '/blurting-quiz')
+        AutoRoute(page: BlurtingQuizRoute.page, path: '/blurting-quiz'),
+        AutoRoute(page: StrategyDetailsRoute.page, path: '/strategy-details'),
+
       ];
 }

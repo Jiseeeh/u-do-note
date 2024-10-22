@@ -270,11 +270,6 @@ class SharedRemoteDataSource {
 
     if (!decodedJson['isValid']) throw "The content is not valid.";
 
-    return switch (type) {
-      AssistanceType.summarize =>
-        '$content\nSummary:\n${decodedJson['content']}',
-      AssistanceType.guide =>
-        '$content\nGuide Questions:\n${decodedJson['content']}',
-    };
+    return decodedJson['content'];
   }
 }

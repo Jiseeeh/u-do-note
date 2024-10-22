@@ -28,6 +28,7 @@ import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
+import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
@@ -47,6 +48,8 @@ import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pom
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/sq3r/sq3r_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/sq3r/sq3r_pre_review.dart';
 
 part 'shared_provider.g.dart';
 
@@ -281,6 +284,10 @@ class Shared extends _$Shared {
         notice = const ActiveRecallNotice();
         preReview = const ActiveRecallPreReview();
         break;
+      case ReviewMethods.sq3r:
+        notice = const Sq3rNotice();
+        preReview = const Sq3rPreReview();
+        break;
     }
 
     var willContinue = await showDialog(
@@ -353,7 +360,14 @@ class Shared extends _$Shared {
           imagePath: ActiveRecallModel.coverImagePath,
           onPressed: () {
             _onReviewMethodPressed(context, ReviewMethods.activeRecall);
-          })
+          }),
+      ReviewMethodEntity(
+          title: Sq3rModel.name,
+          description: context.tr('sq3r_desc'),
+          imagePath: Sq3rModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.sq3r);
+          }),
     ];
 
     return methods;

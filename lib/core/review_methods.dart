@@ -6,5 +6,6 @@ enum ReviewMethods {
   acronymMnemonics,
   blurting,
   spacedRepetition,
-  activeRecall
+  activeRecall,
+  sq3r,
 }

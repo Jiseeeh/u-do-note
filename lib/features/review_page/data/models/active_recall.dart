@@ -8,6 +8,8 @@ class ActiveRecallModel {
   final String content;
   final String sessionName;
   final String notebookId;
+
+  // TODO: not used fck
   final String noteId;
   final Timestamp createdAt;
   final Timestamp? nextReview;

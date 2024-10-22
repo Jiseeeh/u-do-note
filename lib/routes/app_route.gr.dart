@@ -245,6 +245,27 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashScreen(),
       );
     },
+    Sq3rQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<Sq3rQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: Sq3rQuizScreen(
+          sq3rModel: args.sq3rModel,
+          key: args.key,
+        ),
+      );
+    },
+    Sq3rRoute.name: (routeData) {
+      final args = routeData.argsAs<Sq3rRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: Sq3rScreen(
+          sq3rModel: args.sq3rModel,
+          isFromOldSession: args.isFromOldSession,
+          key: args.key,
+        ),
+      );
+    },
     SummaryRoute.name: (routeData) {
       final args = routeData.argsAs<SummaryRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1044,6 +1065,86 @@ class SplashRoute extends PageRouteInfo<void> {
   static const String name = 'SplashRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [Sq3rQuizScreen]
+class Sq3rQuizRoute extends PageRouteInfo<Sq3rQuizRouteArgs> {
+  Sq3rQuizRoute({
+    required Sq3rModel sq3rModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          Sq3rQuizRoute.name,
+          args: Sq3rQuizRouteArgs(
+            sq3rModel: sq3rModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'Sq3rQuizRoute';
+
+  static const PageInfo<Sq3rQuizRouteArgs> page =
+      PageInfo<Sq3rQuizRouteArgs>(name);
+}
+
+class Sq3rQuizRouteArgs {
+  const Sq3rQuizRouteArgs({
+    required this.sq3rModel,
+    this.key,
+  });
+
+  final Sq3rModel sq3rModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'Sq3rQuizRouteArgs{sq3rModel: $sq3rModel, key: $key}';
+  }
+}
+
+/// generated route for
+/// [Sq3rScreen]
+class Sq3rRoute extends PageRouteInfo<Sq3rRouteArgs> {
+  Sq3rRoute({
+    required Sq3rModel sq3rModel,
+    bool isFromOldSession = false,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          Sq3rRoute.name,
+          args: Sq3rRouteArgs(
+            sq3rModel: sq3rModel,
+            isFromOldSession: isFromOldSession,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'Sq3rRoute';
+
+  static const PageInfo<Sq3rRouteArgs> page = PageInfo<Sq3rRouteArgs>(name);
+}
+
+class Sq3rRouteArgs {
+  const Sq3rRouteArgs({
+    required this.sq3rModel,
+    this.isFromOldSession = false,
+    this.key,
+  });
+
+  final Sq3rModel sq3rModel;
+
+  final bool isFromOldSession;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'Sq3rRouteArgs{sq3rModel: $sq3rModel, isFromOldSession: $isFromOldSession, key: $key}';
+  }
 }
 
 /// generated route for

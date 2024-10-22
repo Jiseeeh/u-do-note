@@ -213,6 +213,17 @@ class _SpacedRepetitionPreReviewState
       return;
     }
 
+    switch (_assistType) {
+      case null:
+        break;
+      case AssistanceType.summarize:
+        resOrContent = "$_contentFromPages\nSummary:\n$resOrContent";
+        break;
+      case AssistanceType.guide:
+        resOrContent = "$_contentFromPages\nGuide Questions:\n$resOrContent";
+        break;
+    }
+
     EasyLoading.show(
         status: 'Creating Page...',
         maskType: EasyLoadingMaskType.black,

@@ -237,7 +237,18 @@ class _ActiveRecallPreReviewState extends ConsumerState<ActiveRecallPreReview> {
       final jsonContent = jsonDecode(failureOrNote.content);
       var document = ParchmentDocument.fromJson(jsonContent);
 
-      document.replace(0, document.length - 1, "$resOrContent\n");
+      switch (_assistType) {
+        case null:
+          break;
+        case AssistanceType.summarize:
+          document.replace(0, document.length - 1,
+              "$_contentFromPages\nSummary:\n$resOrContent\n");
+          break;
+        case AssistanceType.guide:
+          document.replace(0, document.length - 1,
+              "$_contentFromPages\nGuide Questions:\n$resOrContent\n");
+          break;
+      }
 
       var noteJson = jsonEncode(document.toDelta().toJson());
       var updatedNote = failureOrNote.copyWith(content: noteJson);
@@ -296,6 +307,17 @@ class _ActiveRecallPreReviewState extends ConsumerState<ActiveRecallPreReview> {
           status: 'Creating Page...',
           maskType: EasyLoadingMaskType.black,
           dismissOnTap: false);
+
+      switch (_assistType) {
+        case null:
+          break;
+        case AssistanceType.summarize:
+          resOrContent = "$_contentFromPages\nSummary:\n$resOrContent";
+          break;
+        case AssistanceType.guide:
+          resOrContent = "$_contentFromPages\nGuide Questions:\n$resOrContent";
+          break;
+      }
 
       var resOrNote = await ref.read(notebooksProvider.notifier).createNote(
           notebookId: _notebookId,

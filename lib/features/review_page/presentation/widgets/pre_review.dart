@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -125,11 +128,22 @@ class _PreReviewState extends ConsumerState<PreReview> {
             }
 
             var contentFromPages = "";
+            ParchmentDocument? documentContent;
             notebooks
                 .firstWhere((notebook) => notebook.id == _notebookId)
                 .notes
                 .forEach((note) {
               if (reviewScreenState.getNotebookPagesIds.contains(note.id)) {
+                final jsonContent = jsonDecode(note.content);
+                if (documentContent == null) {
+                  documentContent = ParchmentDocument.fromJson(jsonContent);
+                } else {
+                  var newDocumentContent =
+                      ParchmentDocument.fromJson(jsonContent);
+
+                  documentContent!.insert(documentContent!.length - 1,
+                      newDocumentContent.toDelta());
+                }
                 contentFromPages += note.plainTextContent;
               }
             });
@@ -142,6 +156,7 @@ class _PreReviewState extends ConsumerState<PreReview> {
             // ? for the handler to use
             reviewScreenState.setSessionTitle(_titleController.text);
             reviewScreenState.setContentFromPages(contentFromPages);
+            reviewScreenState.setDocumentContent(documentContent);
             reviewScreenState.setNotebookId(_notebookId);
             reviewScreenState.setNotebookPagesIds(
                 _pagesController.items.map((item) => item.value).toList());

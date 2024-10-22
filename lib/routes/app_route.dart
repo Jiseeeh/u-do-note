@@ -20,6 +20,7 @@ import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/core/shared/data/models/question.dart';
 import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
+import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman/feynman.dart';
 import 'package:u_do_note/core/shared/domain/entities/question.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/acronym/acronym_quiz_screen.dart';
@@ -37,6 +38,8 @@ import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_s
 import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynman_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/spaced_repetition/spaced_repetition_quiz_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/sq3r/sq3r_quiz_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/sq3r/sq3r_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
 
@@ -91,5 +94,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ActiveRecallRoute.page, path: '/active-recall'),
         AutoRoute(
             page: ActiveRecallQuizRoute.page, path: '/active-recall-quiz'),
+        AutoRoute(page: Sq3rRoute.page, path: '/sq3r'),
+        AutoRoute(page: Sq3rQuizRoute.page, path: '/sq3r-quiz'),
       ];
 }

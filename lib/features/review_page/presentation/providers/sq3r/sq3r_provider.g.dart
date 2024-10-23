@@ -38,21 +38,6 @@ final sq3rRepositoryProvider = AutoDisposeProvider<Sq3rRepository>.internal(
 );
 
 typedef Sq3rRepositoryRef = AutoDisposeProviderRef<Sq3rRepository>;
-String _$getSq3rFeedbackHash() => r'8e368cd8b3740cf87011152b7682711ce28dd393';
-
-/// See also [getSq3rFeedback].
-@ProviderFor(getSq3rFeedback)
-final getSq3rFeedbackProvider = AutoDisposeProvider<GetSq3rFeedback>.internal(
-  getSq3rFeedback,
-  name: r'getSq3rFeedbackProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getSq3rFeedbackHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef GetSq3rFeedbackRef = AutoDisposeProviderRef<GetSq3rFeedback>;
 String _$saveQuizResultsHash() => r'38403f33908abc5a15f66ca01123886d8fa8be5a';
 
 /// See also [saveQuizResults].
@@ -68,7 +53,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$sq3rHash() => r'85474453ff5dac050f91068f6f4ab95d10d74bae';
+String _$sq3rHash() => r'ac003ef7c038e0b5867ccb73d44ae67c531f20e9';
 
 /// See also [Sq3r].
 @ProviderFor(Sq3r)

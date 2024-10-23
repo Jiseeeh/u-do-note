@@ -58,4 +58,17 @@ class SharedImpl extends SharedRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> generateXqrFeedback(
+      String noteContextWithSummary, String questionAndAnswers) async {
+    try {
+      var res = await _sharedRemoteDataSource.generateXqrFeedback(
+          noteContextWithSummary, questionAndAnswers);
+
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

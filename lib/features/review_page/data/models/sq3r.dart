@@ -14,7 +14,7 @@ class Sq3rModel extends QuizModel {
   static const coverImagePath = "assets/images/sq3r.webp";
   static const name = "SQ3R";
 
-  Sq3rModel(
+  const Sq3rModel(
       {super.questions,
       super.selectedAnswersIndex,
       super.score,

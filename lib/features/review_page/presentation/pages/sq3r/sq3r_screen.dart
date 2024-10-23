@@ -16,7 +16,6 @@ import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
-import 'package:u_do_note/features/review_page/presentation/providers/sq3r/sq3r_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 enum Sq3rStatus { surveyWithQuestion, read, recite, review }
@@ -194,7 +193,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
           // might give a diff response.
           _topFleatherController!.document.insert(
               _topFleatherController!.document.length - 1,
-              "Summary/Key points:\n");
+              "Summary/Key points(do not remove for better feedback):\n");
           break;
         }
 
@@ -219,8 +218,8 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
               dismissOnTap: false);
 
           var failureOrJsonContent = await ref
-              .read(sq3rProvider.notifier)
-              .getSq3rFeedback(
+              .read(sharedProvider.notifier)
+              .generateXqrFeedback(
                   noteContextWithSummary:
                       _topFleatherController!.document.toPlainText(),
                   questionAndAnswers:

@@ -62,7 +62,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
             dismissOnTap: false);
 
         var res = await ref.read(notebooksProvider.notifier).createNotebook(
-            name: _nameController.text, coverImg: _notebookCoverImg);
+            name: _nameController.text, coverImg: _notebookCoverImg, category: 'Uncategorized');
 
         EasyLoading.dismiss();
 

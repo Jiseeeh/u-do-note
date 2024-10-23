@@ -22,7 +22,7 @@ class NoteRemoteDataSource {
 
   const NoteRemoteDataSource(this._firestore, this._auth);
 
-  Future<String> createNotebook(String name, XFile? coverImg) async {
+  Future<String> createNotebook(String name, XFile? coverImg, String category) async {
     logger.i('Creating notebook...');
 
     var userId = _auth.currentUser!.uid;
@@ -62,6 +62,7 @@ class NoteRemoteDataSource {
       'cover_file_name': coverImgFileName,
       'techniques_usage': constant.defaultTechniquesUsage,
       'created_at': FieldValue.serverTimestamp(),
+      'categories': FieldValue.serverTimestamp(),
     });
 
     logger.i(response);
@@ -590,5 +591,16 @@ class NoteRemoteDataSource {
     String? jsonRes = chatCompletion.choices.first.message.content!.first.text;
 
     return jsonRes!;
+  }
+
+  Future<List<String>> getCategories() async {
+    var userId = _auth.currentUser!.uid;
+
+    var user = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .get();
+
+    return List.from(user.data()!['categories']);
   }
 }

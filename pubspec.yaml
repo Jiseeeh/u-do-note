@@ -53,6 +53,7 @@ dependencies:
   multi_dropdown: ^3.0.1
   flutter_native_splash: ^2.4.1
   flutter_filter_dialog: ^1.2.0
+  grouped_list: ^6.0.0
 
 dev_dependencies:
   flutter_test:

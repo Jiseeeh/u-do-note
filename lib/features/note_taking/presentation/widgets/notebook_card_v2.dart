@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 
 class NotebookCardV2 extends ConsumerWidget {
-  final String notebookName;
-  final String imagePath;
-  final String pages;
+  final NotebookEntity notebook;
+  const NotebookCardV2(this.notebook, {Key? key}) : super(key: key);
+
+  // final String notebookName;
+  // final String imagePath;
+  // final String pages;
   // final Function() onPressed;
 
-  const NotebookCardV2({
-    super.key,
-    required this.notebookName,
-    required this.imagePath,
-    required this.pages,
-    // required this.onPressed
-  });
+  // const NotebookCardV2({
+  //   super.key,
+  // required this.notebookName,
+  // required this.imagePath,
+  // required this.pages,
+  // required this.onPressed
+  // });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,8 +40,14 @@ class NotebookCardV2 extends ConsumerWidget {
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(0),
               ),
-              child: Image.asset(
-                imagePath,
+              child: Image.network(
+                notebook.coverUrl.isNotEmpty
+                    ? notebook.coverUrl
+                    : 'https://firebasestorage.googleapis.com/v0/b/u-do-note-0.appspot.com/o/notebook_covers%2Fdefault.png?alt=media&token=42535473-0ffa-47a8-b53c-b6f95081ebed',
+                //   notebook.coverUrl.isNotEmpty
+                //   ? NetworkImage(notebook.coverUrl) as ImageProvider
+                //   // TODO: replace with default one
+                //   : const AssetImage('assets/images/default.png')) as String,
                 width: 85,
                 height: 100,
                 fit: BoxFit.cover,
@@ -53,7 +63,7 @@ class NotebookCardV2 extends ConsumerWidget {
                   children: [
                     Align(
                       alignment: const AlignmentDirectional(-1, 0),
-                      child: Text(notebookName,
+                      child: Text(notebook.subject,
                           style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Row(
@@ -66,15 +76,17 @@ class NotebookCardV2 extends ConsumerWidget {
                           ),
                         ),
                         Expanded(
-                          child: Text(pages,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headlineLarge
-                                          ?.color)),
+                          child: Text(
+                            notebook.category,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headlineLarge
+                                        ?.color),
+                          ),
                         ),
                       ],
                     ),

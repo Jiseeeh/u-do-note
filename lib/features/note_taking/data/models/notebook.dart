@@ -14,6 +14,7 @@ class NotebookModel {
   final Timestamp createdAt;
   final Map<String, dynamic> techniquesUsage;
   final List<NoteModel> notes;
+  final String category;
 
   NotebookModel({
     required this.id,
@@ -23,6 +24,7 @@ class NotebookModel {
     required this.createdAt,
     required this.techniquesUsage,
     required this.notes,
+    required this.category,
   });
 
   /// from entity to model
@@ -35,6 +37,7 @@ class NotebookModel {
       createdAt: entity.createdAt,
       techniquesUsage: entity.techniquesUsage,
       notes: entity.notes.map((e) => NoteModel.fromEntity(e)).toList(),
+      category: entity.category,
     );
   }
 
@@ -47,7 +50,8 @@ class NotebookModel {
       coverFileName: coverFileName,
       createdAt: createdAt,
       techniquesUsage: techniquesUsage,
-      notes: notes.map((e) => e.toEntity()).toList(),
+      notes: notes.map((e) => e.toEntity()).toList(), 
+      category: category,
     );
   }
 
@@ -68,6 +72,7 @@ class NotebookModel {
       createdAt: data['created_at'] ?? Timestamp.now(),
       techniquesUsage: data['techniques_usage'] ?? usageDefault,
       notes: notes.map((e) => NoteModel.fromFirestore(e)).toList(),
+      category: data['category']
     );
   }
 
@@ -80,6 +85,7 @@ class NotebookModel {
     Timestamp? createdAt,
     Map<String, int>? techniquesUsage,
     List<NoteModel>? notes,
+    String? category,
   }) {
     return NotebookModel(
       id: id ?? this.id,
@@ -89,6 +95,7 @@ class NotebookModel {
       createdAt: createdAt ?? this.createdAt,
       techniquesUsage: techniquesUsage ?? this.techniquesUsage,
       notes: notes ?? this.notes,
+      category: category ?? this.category,
     );
   }
 

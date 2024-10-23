@@ -46,9 +46,9 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<Either<Failure, String>> createNotebook(
-      String name, XFile? coverImg) async {
+      String name, XFile? coverImg, String category) async {
     try {
-      var res = await _noteRemoteDataSource.createNotebook(name, coverImg);
+      var res = await _noteRemoteDataSource.createNotebook(name, coverImg, category);
 
       return Right(res);
     } catch (e) {
@@ -201,6 +201,17 @@ class NoteRepositoryImpl implements NoteRepository {
       var summarizedText = await _noteRemoteDataSource.summarizeNote(content);
 
       return Right(summarizedText);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<String>>> getCategories() async {
+   try {
+      var categories = await _noteRemoteDataSource.getCategories();
+
+      return Right(categories);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

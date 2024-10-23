@@ -246,6 +246,21 @@ final updateNoteTitleProvider = AutoDisposeProvider<UpdateNoteTitle>.internal(
 );
 
 typedef UpdateNoteTitleRef = AutoDisposeProviderRef<UpdateNoteTitle>;
+String _$getCategoriesHash() => r'2ee22af257b52b564184379a7d5de5c1ef9d086e';
+
+/// See also [getCategories].
+@ProviderFor(getCategories)
+final getCategoriesProvider = AutoDisposeProvider<GetCategories>.internal(
+  getCategories,
+  name: r'getCategoriesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getCategoriesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetCategoriesRef = AutoDisposeProviderRef<GetCategories>;
 String _$notebooksStreamHash() => r'8a56340033c814a39b83775c3f2a379016856f13';
 
 /// See also [notebooksStream].
@@ -262,7 +277,7 @@ final notebooksStreamProvider =
 );
 
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'0a1a5916ca373672ca759764c25ec038abbeec6b';
+String _$notebooksHash() => r'5ac33e1757a06a6c1f5fdc1aff800fedb70561c8';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

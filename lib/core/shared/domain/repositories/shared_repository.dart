@@ -18,4 +18,7 @@ abstract class SharedRepository {
 
   Future<Either<Failure, String>> generateContentWithAssist(
       AssistanceType type, String content);
+
+  Future<Either<Failure, String>> generateXqrFeedback(
+      String noteContextWithSummary, String questionAndAnswers);
 }

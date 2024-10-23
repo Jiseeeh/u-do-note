@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:u_do_note/core/shared/data/models/question.dart';
 import 'package:u_do_note/core/shared/data/models/quiz.dart';
 
-class Sq3rModel extends QuizModel {
+class Pq4rModel extends QuizModel {
   final String? id;
   final String sessionName;
   final String notebookId;
@@ -11,10 +11,10 @@ class Sq3rModel extends QuizModel {
   final String topEditorJsonContent;
   final String bottomEditorJsonContent;
   final Timestamp createdAt;
-  static const coverImagePath = "assets/images/sq3r.webp";
-  static const name = "SQ3R";
+  static const coverImagePath = "assets/images/pq4r.webp";
+  static const name = "PQ4R";
 
-  const Sq3rModel(
+  const Pq4rModel(
       {super.questions,
       super.selectedAnswersIndex,
       super.score,
@@ -46,8 +46,8 @@ class Sq3rModel extends QuizModel {
   }
 
   /// Converts from firestore to model
-  factory Sq3rModel.fromFirestore(String id, Map<String, dynamic> data) {
-    return Sq3rModel(
+  factory Pq4rModel.fromFirestore(String id, Map<String, dynamic> data) {
+    return Pq4rModel(
         id: id,
         contentUsed: data['content_used'],
         sessionName: data['session_name'],
@@ -64,7 +64,7 @@ class Sq3rModel extends QuizModel {
   }
 
   /// Copy with new values
-  Sq3rModel copyWith(
+  Pq4rModel copyWith(
       {String? id,
       String? contentUsed,
       String? sessionName,
@@ -76,7 +76,7 @@ class Sq3rModel extends QuizModel {
       List<int>? selectedAnswersIndex,
       int? score,
       String? remark}) {
-    return Sq3rModel(
+    return Pq4rModel(
         id: id ?? this.id,
         contentUsed: contentUsed ?? this.contentUsed,
         sessionName: sessionName ?? this.sessionName,

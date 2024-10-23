@@ -19,6 +19,7 @@ import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/core/shared/data/models/question.dart';
+import 'package:u_do_note/features/review_page/data/models/pq4r.dart';
 import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman/feynman.dart';
@@ -34,6 +35,8 @@ import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynma
 import 'package:u_do_note/features/review_page/presentation/pages/leitner/leitner_system_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/pomodoro/pomodoro_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/pomodoro/pomodoro_technique_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/pq4r/pq4r_quiz_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/pq4r/pq4r_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynman_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
@@ -96,5 +99,7 @@ class AppRouter extends _$AppRouter {
             page: ActiveRecallQuizRoute.page, path: '/active-recall-quiz'),
         AutoRoute(page: Sq3rRoute.page, path: '/sq3r'),
         AutoRoute(page: Sq3rQuizRoute.page, path: '/sq3r-quiz'),
+        AutoRoute(page: Pq4rRoute.page, path: '/pq4r'),
+        AutoRoute(page: Pq4rQuizRoute.page, path: '/pq4r-quiz'),
       ];
 }

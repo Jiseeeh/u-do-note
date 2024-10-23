@@ -7,15 +7,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/helper.dart';
 import 'package:u_do_note/core/logger/logger.dart';
-import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
+import 'package:u_do_note/features/review_page/data/models/pq4r.dart';
 
-class Sq3rRemoteDataSource {
+class Pq4rRemoteDataSource {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
 
-  const Sq3rRemoteDataSource(this._firestore, this._auth);
+  const Pq4rRemoteDataSource(this._firestore, this._auth);
 
-  Future<String> saveQuizResults(Sq3rModel sq3rModel) async {
+  Future<String> saveQuizResults(Pq4rModel pq4rModel) async {
     var userId = _auth.currentUser!.uid;
 
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -34,7 +34,7 @@ class Sq3rRemoteDataSource {
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
-          Given the score of the student: ${sq3rModel.score}, analyze the performance of the student in his/her quizzes and give a remark.
+          Given the score of the student: ${pq4rModel.score}, analyze the performance of the student in his/her quizzes and give a remark.
           """,
         ),
       ],
@@ -64,18 +64,18 @@ class Sq3rRemoteDataSource {
 
     logger.i("Remark is $remark");
 
-    var updatedSq3rModel = sq3rModel.copyWith(remark: remark);
+    var updatedPq4rModel = pq4rModel.copyWith(remark: remark);
 
     await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
         .collection(FirestoreCollection.user_notes.name)
-        .doc(updatedSq3rModel.notebookId)
+        .doc(updatedPq4rModel.notebookId)
         .collection(FirestoreCollection.remarks.name)
-        .add(updatedSq3rModel.toFirestore());
+        .add(updatedPq4rModel.toFirestore());
 
     Helper.updateTechniqueUsage(
-        _firestore, userId, sq3rModel.notebookId, Sq3rModel.name);
+        _firestore, userId, pq4rModel.notebookId, Pq4rModel.name);
 
     return "Successfully saved quiz results.";
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:fleather/fleather.dart';
@@ -15,25 +16,25 @@ import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/utility.dart';
-import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
+import 'package:u_do_note/features/review_page/data/models/pq4r.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
-enum Sq3rStatus { surveyWithQuestion, read, recite, review }
+enum Pq4rStatus { preview, questions, read, reflect, recite, review }
 
 @RoutePage()
-class Sq3rScreen extends ConsumerStatefulWidget {
-  final Sq3rModel sq3rModel;
+class Pq4rScreen extends ConsumerStatefulWidget {
+  final Pq4rModel pq4rModel;
   final bool isFromOldSession;
 
-  const Sq3rScreen(
-      {required this.sq3rModel, this.isFromOldSession = false, Key? key})
+  const Pq4rScreen(
+      {required this.pq4rModel, this.isFromOldSession = false, Key? key})
       : super(key: key);
 
   @override
-  ConsumerState<Sq3rScreen> createState() => _Sq3rScreenState();
+  ConsumerState<Pq4rScreen> createState() => _Pq4rScreenState();
 }
 
-class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
+class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
   FleatherController? _topFleatherController;
   FleatherController? _bottomFleatherController;
   final GlobalKey<EditorState> _topEditorKey = GlobalKey();
@@ -42,13 +43,23 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
   bool _isTopReadOnly = false;
   bool _isBottomToolbarVisible = true;
   bool _isBottomReadOnly = false;
-  Sq3rStatus _sq3rStatus = Sq3rStatus.surveyWithQuestion;
+  Pq4rStatus _pq4rStatus = Pq4rStatus.preview;
   final int _initialTime = 120;
   late int _startTimeSeconds;
   Timer? _timer;
   final _speechToText = SpeechToText();
   var _speechEnabled = false;
   var _wordsSpoken = "";
+  final reflectionQuestions = [
+    "Why is this information important?",
+    "How does this concept relate to what I already know?",
+    "How would I explain this concept to someone else in my own words?",
+    "Can I think of any real-world examples where this information is applied?",
+    "Are there any personal experiences I can connect to this topic?",
+    "What questions do I still have about this topic?",
+    "If I combined this information with another idea, how would that change my understanding?",
+    "How does this information fit into the bigger picture of what I'm studying?"
+  ];
 
   @override
   void initState() {
@@ -60,14 +71,14 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
     _topFleatherController = FleatherController(document: doc1);
     _bottomFleatherController = FleatherController(document: doc2);
 
-    _startTimeSeconds = _initialTime;
+    _startTimeSeconds = _initialTime - 60;
     if (!widget.isFromOldSession) {
       Future.delayed(
           Duration.zero,
           () => CustomDialog.show(context,
-                  title: "SQ3R -- Survey",
+                  title: "${Pq4rModel.name} -- Preview",
                   subTitle:
-                      "Survey your note for 2 minutes and try to formulate questions on the go.",
+                      "Preview your note for 1 minute to get an overview of and structure of it.",
                   buttons: [
                     CustomDialogButton(
                         text: "Okay",
@@ -97,11 +108,11 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
   }
 
   Future<void> _updateStatus(BuildContext context) async {
-    switch (_sq3rStatus) {
-      case Sq3rStatus.surveyWithQuestion:
+    switch (_pq4rStatus) {
+      case Pq4rStatus.preview:
         var done = await CustomDialog.show(context,
-            title: "SQ3R",
-            subTitle: "Are you done surveying and formulating questions?",
+            title: Pq4rModel.name,
+            subTitle: "Are you done previewing your note?",
             buttons: [
               CustomDialogButton(text: "No", value: false),
               CustomDialogButton(text: "Yes", value: true),
@@ -110,10 +121,31 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
         if (!context.mounted) return;
 
         if (done) {
-          _sq3rStatus = Sq3rStatus.read;
+          _pq4rStatus = Pq4rStatus.questions;
 
           await CustomDialog.show(context,
-              title: "SQ3R -- Read",
+              title: "${Pq4rModel.name} -- Questions",
+              subTitle: "Formulate questions about the material you previewed.",
+              buttons: [CustomDialogButton(text: "Okay")]);
+          break;
+        }
+        break;
+      case Pq4rStatus.questions:
+        var doneFormulatingQuestions = await CustomDialog.show(context,
+            title: Pq4rModel.name,
+            subTitle: "Are you done formulating questions?",
+            buttons: [
+              CustomDialogButton(text: "No", value: false),
+              CustomDialogButton(text: "Yes", value: true),
+            ]);
+
+        if (!context.mounted) return;
+
+        if (doneFormulatingQuestions) {
+          _pq4rStatus = Pq4rStatus.read;
+
+          await CustomDialog.show(context,
+              title: "${Pq4rModel.name} -- Read",
               subTitle:
                   "Read your note thoroughly for 2 minutes while trying to answer your formulated questions.",
               buttons: [CustomDialogButton(text: "Okay")]);
@@ -121,7 +153,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
         }
 
         var formulateQuestions = await CustomDialog.show(context,
-            title: "SQ3R",
+            title: Pq4rModel.name,
             subTitle: "Do you want us to help you formulate questions?",
             buttons: [
               CustomDialogButton(text: "No", value: false),
@@ -140,7 +172,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
               .read(sharedProvider.notifier)
               .generateContentWithAssist(
                   type: AssistanceType.guide,
-                  content: widget.sq3rModel.contentUsed);
+                  content: widget.pq4rModel.contentUsed);
 
           EasyLoading.dismiss();
 
@@ -152,12 +184,12 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
             break;
           }
 
-          _sq3rStatus = Sq3rStatus.read;
+          _pq4rStatus = Pq4rStatus.read;
 
           if (!context.mounted) return;
 
           await CustomDialog.show(context,
-              title: "SQ3R -- Read",
+              title: "${Pq4rModel.name} -- Read",
               subTitle:
                   "Read your note thoroughly for 2 minutes while trying to answer your formulated questions.",
               buttons: [CustomDialogButton(text: "Okay")]);
@@ -170,9 +202,9 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
         }
 
         break;
-      case Sq3rStatus.read:
+      case Pq4rStatus.read:
         var doneReadingAndAnswering = await CustomDialog.show(context,
-            title: "SQ3R",
+            title: Pq4rModel.name,
             subTitle: "Are you done reading and answering the questions?",
             buttons: [
               CustomDialogButton(text: "No", value: false),
@@ -182,28 +214,38 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
         if (!context.mounted) return;
 
         if (doneReadingAndAnswering) {
-          _sq3rStatus = Sq3rStatus.recite;
+          _pq4rStatus = Pq4rStatus.reflect;
+
+          var q1 = getOneReflectionQuestion();
+          var q2 = getOneReflectionQuestion();
+
+          while (q1 == q2) {
+            q2 = getOneReflectionQuestion();
+          }
+
           await CustomDialog.show(context,
-              title: "SQ3R -- Recite",
+              title: "${Pq4rModel.name} -- Reflect",
               subTitle:
-                  "Summarize or highlight the key points of your note by writing them down or using the microphone from the menu at the bottom right.",
+                  "Take a break and reflect on the material. You can ask yourself questions like:",
+              content: Column(
+                children: [
+                  Text(q1),
+                  const SizedBox(height: 2),
+                  Text(q2),
+                ],
+              ),
               buttons: [CustomDialogButton(text: "Okay")]);
 
-          // ? limitation might be when the user removes this header and openai
-          // might give a diff response.
-          _topFleatherController!.document.insert(
-              _topFleatherController!.document.length - 1,
-              "Summary/Key points(do not remove for better feedback):\n");
-          break;
+          _startTimeSeconds = _initialTime + 60;
+          _startTimer();
+          return;
         }
 
-        if (!context.mounted) return;
-
         break;
-      case Sq3rStatus.recite:
-        var doneReciting = await CustomDialog.show(context,
-            title: "SQ3R",
-            subTitle: "Are you done summarizing?",
+      case Pq4rStatus.reflect:
+        var doneReflecting = await CustomDialog.show(context,
+            title: Pq4rModel.name,
+            subTitle: "Are you done reflecting?",
             buttons: [
               CustomDialogButton(text: "No", value: false),
               CustomDialogButton(text: "Yes", value: true),
@@ -211,7 +253,29 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
 
         if (!context.mounted) return;
 
-        if (doneReciting) {
+        if (doneReflecting) {
+          _pq4rStatus = Pq4rStatus.recite;
+          await CustomDialog.show(context,
+              title: "${Pq4rModel.name} -- Recite",
+              subTitle:
+                  "Summarize or highlight the key points of your note by writing them down or using the microphone from the menu at the bottom right.",
+              buttons: [CustomDialogButton(text: "Okay")]);
+
+          _topFleatherController!.document.insert(
+              _topFleatherController!.document.length - 1,
+              "Summary/Key points (do not remove for better feedback):\n");
+        }
+        break;
+      case Pq4rStatus.recite:
+        var doneSummarizing = await CustomDialog.show(context,
+            title: Pq4rModel.name,
+            subTitle: "Are you done summarizing?",
+            buttons: [
+              CustomDialogButton(text: "No", value: false),
+              CustomDialogButton(text: "Yes", value: true),
+            ]);
+
+        if (doneSummarizing) {
           EasyLoading.show(
               status: "Generating feedback...",
               maskType: EasyLoadingMaskType.black,
@@ -227,7 +291,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
 
           EasyLoading.dismiss();
 
-          _sq3rStatus = Sq3rStatus.review;
+          _pq4rStatus = Pq4rStatus.review;
 
           if (failureOrJsonContent is Failure) {
             logger.w(
@@ -242,7 +306,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
           if (!context.mounted) return;
 
           await CustomDialog.show(context,
-              title: "SQ3R -- Review",
+              title: "${Pq4rModel.name} -- Review",
               subTitle: "Review the given feedback and get ready for the quiz.",
               buttons: [CustomDialogButton(text: "Okay")]);
 
@@ -252,9 +316,9 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
           break;
         }
         break;
-      case Sq3rStatus.review:
+      case Pq4rStatus.review:
         var doneReviewing = await CustomDialog.show(context,
-            title: "SQ3R",
+            title: Pq4rModel.name,
             subTitle: "Are you done reviewing?",
             buttons: [
               CustomDialogButton(text: "No", value: false),
@@ -269,7 +333,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
 
           var failureOrQuizQuestions = await ref
               .read(sharedProvider.notifier)
-              .generateQuizQuestions(content: widget.sq3rModel.contentUsed);
+              .generateQuizQuestions(content: widget.pq4rModel.contentUsed);
 
           EasyLoading.dismiss();
 
@@ -283,22 +347,25 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
 
           if (!context.mounted) return;
 
-          var updatedModel = widget.sq3rModel.copyWith(
+          var updatedModel = widget.pq4rModel.copyWith(
               topEditorJsonContent: jsonEncode(
                   _topFleatherController!.document.toDelta().toJson()),
               bottomEditorJsonContent: jsonEncode(
                   _bottomFleatherController!.document.toDelta().toJson()),
               questions: failureOrQuizQuestions);
 
-          context.router.push(Sq3rQuizRoute(sq3rModel: updatedModel));
+          context.router.push(Pq4rQuizRoute(pq4rModel: updatedModel));
 
           return;
         }
         break;
     }
-
     _startTimeSeconds = _initialTime;
     _startTimer();
+  }
+
+  String getOneReflectionQuestion() {
+    return reflectionQuestions[Random().nextInt(reflectionQuestions.length)];
   }
 
   Future<void> _initSpeech() async {
@@ -345,18 +412,18 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
   }
 
   ParchmentDocument _loadDocument1() {
-    final json = jsonDecode(widget.sq3rModel.topEditorJsonContent);
+    final json = jsonDecode(widget.pq4rModel.topEditorJsonContent);
 
     return ParchmentDocument.fromJson(json);
   }
 
   ParchmentDocument _loadDocument2() {
-    if (widget.sq3rModel.bottomEditorJsonContent.isEmpty) {
+    if (widget.pq4rModel.bottomEditorJsonContent.isEmpty) {
       final Delta delta = Delta()..insert('Questions\n1.\n');
 
       return ParchmentDocument.fromDelta(delta);
     } else {
-      final json = jsonDecode(widget.sq3rModel.bottomEditorJsonContent);
+      final json = jsonDecode(widget.pq4rModel.bottomEditorJsonContent);
 
       return ParchmentDocument.fromJson(json);
     }
@@ -376,7 +443,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.sq3rModel.sessionName),
+              Text(widget.pq4rModel.sessionName),
               Text(
                 _formatTime(_startTimeSeconds),
                 style: TextStyle(color: Theme.of(context).primaryColor),

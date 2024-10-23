@@ -199,6 +199,27 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const PomodoroScreen(),
       );
     },
+    Pq4rQuizRoute.name: (routeData) {
+      final args = routeData.argsAs<Pq4rQuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: Pq4rQuizScreen(
+          pq4rModel: args.pq4rModel,
+          key: args.key,
+        ),
+      );
+    },
+    Pq4rRoute.name: (routeData) {
+      final args = routeData.argsAs<Pq4rRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: Pq4rScreen(
+          pq4rModel: args.pq4rModel,
+          isFromOldSession: args.isFromOldSession,
+          key: args.key,
+        ),
+      );
+    },
     QuizResultsRoute.name: (routeData) {
       final args = routeData.argsAs<QuizResultsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -922,6 +943,86 @@ class PomodoroRoute extends PageRouteInfo<void> {
   static const String name = 'PomodoroRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [Pq4rQuizScreen]
+class Pq4rQuizRoute extends PageRouteInfo<Pq4rQuizRouteArgs> {
+  Pq4rQuizRoute({
+    required Pq4rModel pq4rModel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          Pq4rQuizRoute.name,
+          args: Pq4rQuizRouteArgs(
+            pq4rModel: pq4rModel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'Pq4rQuizRoute';
+
+  static const PageInfo<Pq4rQuizRouteArgs> page =
+      PageInfo<Pq4rQuizRouteArgs>(name);
+}
+
+class Pq4rQuizRouteArgs {
+  const Pq4rQuizRouteArgs({
+    required this.pq4rModel,
+    this.key,
+  });
+
+  final Pq4rModel pq4rModel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'Pq4rQuizRouteArgs{pq4rModel: $pq4rModel, key: $key}';
+  }
+}
+
+/// generated route for
+/// [Pq4rScreen]
+class Pq4rRoute extends PageRouteInfo<Pq4rRouteArgs> {
+  Pq4rRoute({
+    required Pq4rModel pq4rModel,
+    bool isFromOldSession = false,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          Pq4rRoute.name,
+          args: Pq4rRouteArgs(
+            pq4rModel: pq4rModel,
+            isFromOldSession: isFromOldSession,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'Pq4rRoute';
+
+  static const PageInfo<Pq4rRouteArgs> page = PageInfo<Pq4rRouteArgs>(name);
+}
+
+class Pq4rRouteArgs {
+  const Pq4rRouteArgs({
+    required this.pq4rModel,
+    this.isFromOldSession = false,
+    this.key,
+  });
+
+  final Pq4rModel pq4rModel;
+
+  final bool isFromOldSession;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'Pq4rRouteArgs{pq4rModel: $pq4rModel, isFromOldSession: $isFromOldSession, key: $key}';
+  }
 }
 
 /// generated route for

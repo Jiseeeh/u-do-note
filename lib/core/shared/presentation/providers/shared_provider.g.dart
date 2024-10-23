@@ -133,6 +133,23 @@ final generateContentWithAssistProvider =
 
 typedef GenerateContentWithAssistRef
     = AutoDisposeProviderRef<GenerateContentWithAssist>;
+String _$generateXqrFeedbackHash() =>
+    r'01b11207afa7e5069e065bff1bc989b75f7bebb9';
+
+/// See also [generateXqrFeedback].
+@ProviderFor(generateXqrFeedback)
+final generateXqrFeedbackProvider =
+    AutoDisposeProvider<GenerateXqrFeedback>.internal(
+  generateXqrFeedback,
+  name: r'generateXqrFeedbackProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$generateXqrFeedbackHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GenerateXqrFeedbackRef = AutoDisposeProviderRef<GenerateXqrFeedback>;
 String _$selectNotificationStreamHash() =>
     r'e28e3494324886142dd4fb3ef4eb5284405cbb67';
 
@@ -181,7 +198,7 @@ final localNotificationProvider = NotifierProvider<LocalNotification,
 );
 
 typedef _$LocalNotification = Notifier<FlutterLocalNotificationsPlugin>;
-String _$sharedHash() => r'5f785c5f241df56af3551ab4ed82811704936622';
+String _$sharedHash() => r'81f1b801babed2f2e73af02fe5b7d22a60bec210';
 
 /// See also [Shared].
 @ProviderFor(Shared)

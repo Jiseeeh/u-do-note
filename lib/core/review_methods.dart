@@ -8,4 +8,5 @@ enum ReviewMethods {
   spacedRepetition,
   activeRecall,
   sq3r,
+  pq4r,
 }

@@ -33,6 +33,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final spacedRepetitionGlobalKey = GlobalKey();
   final activeRecallGlobalKey = GlobalKey();
   final sq3rGlobalKey = GlobalKey();
+  final pq4rGlobalKey = GlobalKey();
   late List<Widget> reviewMethods = [];
 
   late TutorialCoachMark tutorialCoachMark;
@@ -66,7 +67,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       blurtingBtnGlobalKey,
       spacedRepetitionGlobalKey,
       activeRecallGlobalKey,
-      sq3rGlobalKey
+      sq3rGlobalKey,
+      pq4rGlobalKey
     ];
 
     var i = 0;
@@ -152,6 +154,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         break;
       case ReviewMethods.sq3r:
         key = sq3rGlobalKey;
+        break;
+      case ReviewMethods.pq4r:
+        key = pq4rGlobalKey;
         break;
     }
 

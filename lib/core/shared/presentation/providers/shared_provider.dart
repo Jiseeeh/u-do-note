@@ -19,6 +19,7 @@ import 'package:u_do_note/core/shared/data/repositories/shared_repository_impl.d
 import 'package:u_do_note/core/shared/domain/repositories/shared_repository.dart';
 import 'package:u_do_note/core/shared/domain/usecases/generate_content_with_assist.dart';
 import 'package:u_do_note/core/shared/domain/usecases/generate_quiz_questions.dart';
+import 'package:u_do_note/core/shared/domain/usecases/generate_xqr_feedback.dart';
 import 'package:u_do_note/core/shared/domain/usecases/get_old_sessions.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
 import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
@@ -27,6 +28,7 @@ import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+import 'package:u_do_note/features/review_page/data/models/pq4r.dart';
 import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
@@ -46,6 +48,8 @@ import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leit
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_system_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_pre_review.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pq4r/pq4r_notice.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/pq4r/pq4r_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_notice.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/spaced_repetition/spaced_repetition_pre_review.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/sq3r/sq3r_notice.dart';
@@ -103,6 +107,13 @@ GenerateContentWithAssist generateContentWithAssist(
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GenerateContentWithAssist(sharedRepository);
+}
+
+@riverpod
+GenerateXqrFeedback generateXqrFeedback(GenerateXqrFeedbackRef ref) {
+  var sharedRepository = ref.read(sharedRepositoryProvider);
+
+  return GenerateXqrFeedback(sharedRepository);
 }
 
 @Riverpod(keepAlive: true)
@@ -234,6 +245,25 @@ class Shared extends _$Shared {
     return failureOrContent.fold((failure) => failure, (res) => res);
   }
 
+  /// Generates feedback based on [noteContextWithSummary]
+  /// and [questionAndAnswers] of the user.
+  ///
+  /// Returns "acknowledgement" as a string,
+  /// "missed" as as string,
+  /// "suggestions" as string, and
+  /// "isValid" as boolean
+  Future<dynamic> generateXqrFeedback(
+      {required String noteContextWithSummary,
+      required String questionAndAnswers}) async {
+    var generateXqrFeedback = ref.read(generateXqrFeedbackProvider);
+
+    var failureOrContentJson =
+        await generateXqrFeedback(noteContextWithSummary, questionAndAnswers);
+
+    return failureOrContentJson.fold(
+        (failure) => failure, (contentJson) => contentJson);
+  }
+
   void _onReviewMethodPressed(
       BuildContext context, ReviewMethods reviewMethod) async {
     if (reviewMethod != ReviewMethods.pomodoroTechnique &&
@@ -287,6 +317,10 @@ class Shared extends _$Shared {
       case ReviewMethods.sq3r:
         notice = const Sq3rNotice();
         preReview = const Sq3rPreReview();
+        break;
+      case ReviewMethods.pq4r:
+        notice = const Pq4rNotice();
+        preReview = const Pq4rPreReview();
         break;
     }
 
@@ -367,6 +401,13 @@ class Shared extends _$Shared {
           imagePath: Sq3rModel.coverImagePath,
           onPressed: () {
             _onReviewMethodPressed(context, ReviewMethods.sq3r);
+          }),
+      ReviewMethodEntity(
+          title: Pq4rModel.name,
+          description: context.tr('pq4r_desc'),
+          imagePath: Pq4rModel.coverImagePath,
+          onPressed: () {
+            _onReviewMethodPressed(context, ReviewMethods.pq4r);
           }),
     ];
 

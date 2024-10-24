@@ -19,10 +19,14 @@ class SettingsRemoteDataSource {
     GoogleSignIn googleSignIn = GoogleSignIn();
     var userId = _auth.currentUser!.uid;
 
-    await googleSignIn.disconnect();
-
-    logger.d("User $userId is signing out.");
     await _auth.signOut();
+    logger.d("User $userId is signing out.");
+    try {
+      await googleSignIn.disconnect();
+      logger.d("google sign in disconnected");
+    } catch (error) {
+      logger.d("Could not disconnect google sign in with error: $error");
+    }
   }
 
   Future<String> uploadProfilePicture(XFile? image) async {

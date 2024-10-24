@@ -389,7 +389,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
       appBar: AppBar(
         toolbarHeight: 80,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
           child: Column(

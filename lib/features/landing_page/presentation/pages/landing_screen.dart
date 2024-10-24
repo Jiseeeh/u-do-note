@@ -247,6 +247,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
         EasyLoading.dismiss();
 
         if (res is Failure) {
+          logger.d("error: ${res.message}");
           EasyLoading.showError(context.tr("general_e"));
           return;
         }
@@ -254,9 +255,12 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
         res = res as NoteModel;
 
         ref.read(reviewScreenProvider).setIsFromOldBlurtingSession(true);
+        ref
+            .read(reviewScreenProvider)
+            .setNotebookId(_onGoingBlurtingReviews[i].notebookId);
 
         context.router.push(NoteTakingRoute(
-            notebookId: _onGoingBlurtingReviews[i].noteId,
+            notebookId: _onGoingBlurtingReviews[i].notebookId,
             note: res.toEntity(),
             blurtingModel: _onGoingBlurtingReviews[i]));
       }

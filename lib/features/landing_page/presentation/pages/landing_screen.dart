@@ -346,12 +346,15 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
     }
 
     widgets.shuffle();
-    onPressedCallbacks.shuffle();
 
-    _heroReviewOnPressed =
-        onPressedCallbacks[Random().nextInt(onPressedCallbacks.length)];
+    if (onPressedCallbacks.isNotEmpty) {
+      onPressedCallbacks.shuffle();
 
-    return widgets;
+      _heroReviewOnPressed =
+          onPressedCallbacks[Random().nextInt(onPressedCallbacks.length)];
+    }
+
+    return [];
   }
 
   Future<bool> _willReviewOld(String title) async {

@@ -115,12 +115,16 @@ class _ActiveRecallScreenState extends ConsumerState<ActiveRecallScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
-        body: Expanded(
-          child: FleatherEditor(
-              editorKey: _editorKey,
-              padding: const EdgeInsets.all(16),
-              focusNode: _focusNode,
-              controller: _fleatherController!),
+        body: Column(
+          children: [
+            Expanded(
+              child: FleatherEditor(
+                  editorKey: _editorKey,
+                  padding: const EdgeInsets.all(16),
+                  focusNode: _focusNode,
+                  controller: _fleatherController!),
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: () async {

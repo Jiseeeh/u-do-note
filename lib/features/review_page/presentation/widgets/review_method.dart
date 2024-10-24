@@ -90,6 +90,7 @@ class ReviewMethod extends ConsumerWidget {
                         ),
                       ),
                       child: Text(
+                        key: buttonKey,
                         'Learn More',
                         style: Theme.of(context)
                             .textTheme

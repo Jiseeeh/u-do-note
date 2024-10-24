@@ -16,12 +16,13 @@ class SettingsRemoteDataSource {
   SettingsRemoteDataSource(this._auth, this._firestore, this._firebaseStorage);
 
   Future<void> signOut() async {
-    GoogleSignIn googleSignIn = GoogleSignIn();
     var userId = _auth.currentUser!.uid;
 
     await _auth.signOut();
     logger.d("User $userId is signing out.");
+
     try {
+      GoogleSignIn googleSignIn = GoogleSignIn();
       await googleSignIn.disconnect();
       logger.d("google sign in disconnected");
     } catch (error) {

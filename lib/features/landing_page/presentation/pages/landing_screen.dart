@@ -354,7 +354,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
           onPressedCallbacks[Random().nextInt(onPressedCallbacks.length)];
     }
 
-    return [];
+    return widgets;
   }
 
   Future<bool> _willReviewOld(String title) async {

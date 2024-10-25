@@ -1,3 +1,28 @@
+# [1.10.0](https://github.com/Jiseeeh/u-do-note/compare/v1.9.0...v1.10.0) (2024-10-25)
+
+
+### Bug Fixes
+
+* blurting on screen pop crash ([842896a](https://github.com/Jiseeeh/u-do-note/commit/842896a3ac86eb728f16f4383e889a5f3894e760))
+* disconnect google sign in on available devices only ([6fbc67d](https://github.com/Jiseeeh/u-do-note/commit/6fbc67d63075bb4386266be84af497fbbef61553))
+* error on using expanded with wrong parent ([62e5155](https://github.com/Jiseeeh/u-do-note/commit/62e5155b34bb427f3b5bce14d8be50d3e8855c95))
+* google sign in could not disconnect on older devices ([cc8117e](https://github.com/Jiseeeh/u-do-note/commit/cc8117ec4d5f61557270a2a7046e3dc61b4f02fc))
+* infinite on going review loading ([ff5ddb3](https://github.com/Jiseeeh/u-do-note/commit/ff5ddb3c2be1b7f12d0cc443377344663f7f3de1))
+* invalid value not inclusive on quiz finish ([0880931](https://github.com/Jiseeeh/u-do-note/commit/088093100f2b75a705d4a179211552a5fb890268))
+* landing screen remove automatically imply leading ([4e7f73b](https://github.com/Jiseeeh/u-do-note/commit/4e7f73b2546164c78ac3ae964154d02aed5399d0))
+* screen will go back on onboarding after pressing back on login ([608c03e](https://github.com/Jiseeeh/u-do-note/commit/608c03e86840ec64095a70e08ab4c887c23bb1c4))
+* signing out dialog hanging ([768b9cd](https://github.com/Jiseeeh/u-do-note/commit/768b9cdd4271f0319d05f7e7498ef0d777ce834b))
+* tutorial not showing on review cards ([3b9763e](https://github.com/Jiseeeh/u-do-note/commit/3b9763e87d2c1f54838da48fad546f80907c6e58))
+
+
+### Features
+
+* add check if google play services is available on login ([82ae690](https://github.com/Jiseeeh/u-do-note/commit/82ae690d62a40e2ab463cb9de9ea1d5ce9ada0c6))
+* add google api availability ([7cde92f](https://github.com/Jiseeeh/u-do-note/commit/7cde92fe8bf3299aa310f8ba80503637d6ac9d1f))
+* add pq4r ([#95](https://github.com/Jiseeeh/u-do-note/issues/95)) ([53d8ce1](https://github.com/Jiseeeh/u-do-note/commit/53d8ce15534093ef01b39534db5d8a53cf038500))
+* add sq3r ([#94](https://github.com/Jiseeeh/u-do-note/issues/94)) ([7fee5b0](https://github.com/Jiseeeh/u-do-note/commit/7fee5b0e8dfe8bc1c347a929807b7889010941c2))
+* improve quiz generation ([6b1cd5e](https://github.com/Jiseeeh/u-do-note/commit/6b1cd5ecea3f8efd6610022f02b4aecd7fd1334d))
+
 # [1.9.0](https://github.com/Jiseeeh/u-do-note/compare/v1.8.0...v1.9.0) (2024-10-17)
 
 

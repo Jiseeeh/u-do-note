@@ -57,6 +57,15 @@ class _ElaborationQuizScreenState extends ConsumerState<ElaborationQuizScreen> {
 
         // ? force next question
         setState(() {
+          if (currentQuestionIndex + 1 >=
+              widget.elaborationModel.questions!.length) {
+            selectedAnswersIndex.add(-1);
+            _onFinish(context)();
+            return;
+          }
+
+          selectedAnswersIndex.add(-1);
+
           currentQuestionIndex++;
           startTime = 30;
           startTimer();

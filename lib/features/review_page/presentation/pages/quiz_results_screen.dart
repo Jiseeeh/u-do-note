@@ -118,15 +118,21 @@ class QuizResultsScreen extends ConsumerWidget {
                                 padding: const EdgeInsets.all(16),
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: choiceIndex ==
-                                                correctAnswersIndex[index]
-                                            ? Colors.green
-                                            : choiceIndex ==
-                                                    selectedAnswersIndex[index]
-                                                ? Colors.red
-                                                : Theme.of(context).cardColor),
-                                    borderRadius: BorderRadius.circular(8)),
+                                  border: Border.all(
+                                      color: choiceIndex ==
+                                              correctAnswersIndex[index]
+                                          ? Colors.green
+                                          : choiceIndex ==
+                                                  selectedAnswersIndex[index]
+                                              ? Colors.red
+                                              : selectedAnswersIndex[index] ==
+                                                      -1
+                                                  ? Colors
+                                                      .grey // Gray border for unanswered
+                                                  : Theme.of(context)
+                                                      .cardColor),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -144,7 +150,10 @@ class QuizResultsScreen extends ConsumerWidget {
                                         : choiceIndex ==
                                                 selectedAnswersIndex[index]
                                             ? buildIncorrectIcon()
-                                            : const SizedBox.shrink(),
+                                            : selectedAnswersIndex[index] == -1
+                                                ? const Icon(Icons.remove,
+                                                    color: Colors.grey)
+                                                : const SizedBox.shrink(),
                                   ],
                                 ),
                               ),

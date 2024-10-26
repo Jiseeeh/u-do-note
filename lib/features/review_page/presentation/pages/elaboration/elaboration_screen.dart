@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/elaboration/elaboration_provider.dart';
@@ -136,8 +137,11 @@ class _ElaborationScreenState extends ConsumerState<ElaborationScreen> {
                             questions: res,
                           );
 
-                          context.router.replace(ElaborationQuizRoute(
-                              elaborationModel: updatedElaborationModel));
+                          context.router.replace(QuizRoute(
+                            questions: updatedElaborationModel.questions!,
+                            model: updatedElaborationModel,
+                            reviewMethod: ReviewMethods.elaboration,
+                          ));
                         }
                       },
                       child: const Text('Yes'),

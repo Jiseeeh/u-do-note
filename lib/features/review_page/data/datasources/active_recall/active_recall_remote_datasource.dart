@@ -99,7 +99,7 @@ class ActiveRecallRemoteDataSource {
   }
 
   Future<String> getActiveRecallFeedback(
-      ActiveRecallModel activeRecallModel, String recalledInformation) async {
+      ActiveRecallModel activeRecallModel) async {
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
@@ -125,7 +125,7 @@ class ActiveRecallRemoteDataSource {
           ${activeRecallModel.content}
           
           The recalled information of the student:
-          $recalledInformation
+          ${activeRecallModel.recalledInformation}
           """,
         ),
       ],

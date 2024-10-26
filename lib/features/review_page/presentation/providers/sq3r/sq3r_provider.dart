@@ -1,5 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/datasources/sq3r/sq3r_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
@@ -44,5 +49,28 @@ class Sq3r extends _$Sq3r {
     var failureOrMessage = await saveQuizResults(sq3rModel);
 
     return failureOrMessage.fold((failure) => failure, (res) => res);
+  }
+
+  Future<void> onQuizFinish(BuildContext context, Sq3rModel sq3rModel,
+      List<int> selectedAnswersIndex, int score) async {
+    var updatedSq3rModel = sq3rModel.copyWith(
+        score: score, selectedAnswersIndex: selectedAnswersIndex);
+
+    EasyLoading.show(
+        status: 'Saving quiz results...',
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false);
+
+    var failureOrMessage =
+        await ref.read(sq3rProvider.notifier).saveQuizResults(updatedSq3rModel);
+
+    if (!context.mounted) return;
+
+    if (failureOrMessage is Failure) {
+      logger.e('Failed to save quiz results: ${failureOrMessage.message}');
+      EasyLoading.showError(context.tr("save_quiz_e"));
+    }
+
+    EasyLoading.dismiss();
   }
 }

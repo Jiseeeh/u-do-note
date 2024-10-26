@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/pages/homepage_screen.dart';
+import 'package:u_do_note/core/shared/presentation/pages/quiz_screen.dart';
 import 'package:u_do_note/features/analytics/presentation/pages/analytics_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/splash_screen.dart';
 import 'package:u_do_note/features/authentication/presentation/pages/intro_screen.dart';
@@ -24,24 +26,15 @@ import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dar
 import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman/feynman.dart';
 import 'package:u_do_note/core/shared/domain/entities/question.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/acronym/acronym_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/acronym/acronym_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/active_recall/active_recall_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/active_recall/active_recall_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/blurting/blurting_quiz_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/elaboration/elaboration_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/elaboration/elaboration_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynman_technique_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/leitner/leitner_system_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/pomodoro/pomodoro_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/pomodoro/pomodoro_technique_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/pq4r/pq4r_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/pq4r/pq4r_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynman_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/spaced_repetition/spaced_repetition_quiz_screen.dart';
-import 'package:u_do_note/features/review_page/presentation/pages/sq3r/sq3r_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/sq3r/sq3r_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
@@ -81,25 +74,16 @@ class AppRouter extends _$AppRouter {
             page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
         AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note'),
         AutoRoute(page: SummaryRoute.page, path: '/summary'),
-        AutoRoute(page: FeynmanQuizRoute.page, path: '/feynman-quiz'),
         AutoRoute(page: QuizResultsRoute.page, path: '/quiz-results'),
         AutoRoute(page: LeitnerSystemRoute.page, path: '/leitner-system'),
         AutoRoute(page: FeynmanTechniqueRoute.page, path: '/feynman-technique'),
         AutoRoute(
             page: PomodoroRoute.page, path: '/pomodoro', maintainState: false),
-        AutoRoute(page: PomodoroQuizRoute.page, path: '/pomodoro-quiz'),
         AutoRoute(page: ElaborationRoute.page, path: '/elaboration'),
-        AutoRoute(page: ElaborationQuizRoute.page, path: '/elaboration-quiz'),
         AutoRoute(page: AcronymRoute.page, path: '/acronym'),
-        AutoRoute(page: AcronymQuizRoute.page, path: '/acronym-quiz'),
-        AutoRoute(page: BlurtingQuizRoute.page, path: '/blurting-quiz'),
-        AutoRoute(page: SpacedRepetitionQuizRoute.page, path: '/spaced-quiz'),
         AutoRoute(page: ActiveRecallRoute.page, path: '/active-recall'),
-        AutoRoute(
-            page: ActiveRecallQuizRoute.page, path: '/active-recall-quiz'),
         AutoRoute(page: Sq3rRoute.page, path: '/sq3r'),
-        AutoRoute(page: Sq3rQuizRoute.page, path: '/sq3r-quiz'),
         AutoRoute(page: Pq4rRoute.page, path: '/pq4r'),
-        AutoRoute(page: Pq4rQuizRoute.page, path: '/pq4r-quiz'),
+        AutoRoute(page: QuizRoute.page, path: '/quiz'),
       ];
 }

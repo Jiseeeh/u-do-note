@@ -14,6 +14,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/review_page/data/models/pq4r.dart';
@@ -354,7 +355,10 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
                   _bottomFleatherController!.document.toDelta().toJson()),
               questions: failureOrQuizQuestions);
 
-          context.router.push(Pq4rQuizRoute(pq4rModel: updatedModel));
+          context.router.push(QuizRoute(
+              questions: updatedModel.questions!,
+              model: updatedModel,
+              reviewMethod: ReviewMethods.pq4r));
 
           return;
         }

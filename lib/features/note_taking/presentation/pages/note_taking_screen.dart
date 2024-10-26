@@ -739,8 +739,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
                                   if (!context.mounted) return;
 
-                                  context.router.replace(BlurtingQuizRoute(
-                                      blurtingModel: updatedBlurtingModel));
+                                  context.router.replace(QuizRoute(
+                                    questions: updatedBlurtingModel.questions!,
+                                    model: updatedBlurtingModel,
+                                    reviewMethod: ReviewMethods.blurting,
+                                  ));
                                 })
                             : SpeedDialChild(
                                 elevation: 0,

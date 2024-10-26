@@ -16,6 +16,7 @@ class ActiveRecallModel {
   final List<ScoreModel>? scores;
   final String? remark;
   final List<QuestionModel>? questions;
+  final String? recalledInformation;
   static const coverImagePath = "assets/images/active_recall.webp";
   static const name = "Active Recall";
 
@@ -25,6 +26,7 @@ class ActiveRecallModel {
     this.id,
     this.nextReview,
     this.scores,
+    this.recalledInformation,
     required this.content,
     required this.sessionName,
     required this.notebookId,
@@ -123,6 +125,7 @@ class ActiveRecallModel {
     List<ScoreModel>? scores,
     List<QuestionModel>? questions,
     String? remark,
+    String? recalledInformation,
   }) {
     return ActiveRecallModel(
       id: id ?? this.id,
@@ -135,6 +138,7 @@ class ActiveRecallModel {
       scores: scores ?? this.scores,
       questions: questions ?? this.questions,
       remark: remark ?? this.remark,
+      recalledInformation: recalledInformation ?? this.recalledInformation,
     );
   }
 }

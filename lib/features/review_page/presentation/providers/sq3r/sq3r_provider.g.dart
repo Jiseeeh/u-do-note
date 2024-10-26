@@ -53,7 +53,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$sq3rHash() => r'ac003ef7c038e0b5867ccb73d44ae67c531f20e9';
+String _$sq3rHash() => r'32d40efe44571872fdf5766ba86820b9465a6d24';
 
 /// See also [Sq3r].
 @ProviderFor(Sq3r)

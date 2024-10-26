@@ -73,7 +73,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$acronymHash() => r'7e7ba5c63d92a6f4c1e6b8ac26259d3f09b59622';
+String _$acronymHash() => r'd8e56e645030ac18a65e13e66cc94297ea6d653b';
 
 /// See also [Acronym].
 @ProviderFor(Acronym)

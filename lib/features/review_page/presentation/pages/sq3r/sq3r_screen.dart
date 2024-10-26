@@ -13,6 +13,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
@@ -290,7 +291,10 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
                   _bottomFleatherController!.document.toDelta().toJson()),
               questions: failureOrQuizQuestions);
 
-          context.router.push(Sq3rQuizRoute(sq3rModel: updatedModel));
+          context.router.push(QuizRoute(
+              questions: updatedModel.questions!,
+              model: updatedModel,
+              reviewMethod: ReviewMethods.sq3r));
 
           return;
         }

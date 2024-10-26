@@ -1,5 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/datasources/blurting/blurting_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
@@ -7,6 +12,7 @@ import 'package:u_do_note/features/review_page/data/repositories/blurting/blurti
 import 'package:u_do_note/features/review_page/domain/repositories/blurting/blurting_repository.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/blurting/apply_blurting.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/blurting/save_quiz_results.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 
 part 'blurting_provider.g.dart';
 
@@ -66,5 +72,31 @@ class Blurting extends _$Blurting {
     var failureOrString = await saveQuizResults(notebookId, blurtingModel);
 
     return failureOrString.fold((failure) => failure, (res) => res);
+  }
+
+  Future<void> onQuizFinish(BuildContext context, BlurtingModel blurtingModel,
+      List<int> selectedAnswersIndex, int score) async {
+    var reviewState = ref.read(reviewScreenProvider);
+
+    var updatedBlurtingModel = blurtingModel.copyWith(
+        score: score, selectedAnswersIndex: selectedAnswersIndex);
+
+    EasyLoading.show(
+        status: 'Saving quiz results...',
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false);
+
+    var res = await ref.read(blurtingProvider.notifier).saveQuizResults(
+        notebookId: reviewState.getNotebookId,
+        blurtingModel: updatedBlurtingModel);
+
+    EasyLoading.dismiss();
+
+    if (!context.mounted) return;
+
+    if (res is Failure) {
+      logger.e('Failed to save quiz results: ${res.message}');
+      EasyLoading.showError(context.tr("save_quiz_e"));
+    }
   }
 }

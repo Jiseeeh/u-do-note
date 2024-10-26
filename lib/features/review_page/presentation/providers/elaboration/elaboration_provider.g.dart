@@ -74,7 +74,7 @@ final getElaboratedContentProvider =
 );
 
 typedef GetElaboratedContentRef = AutoDisposeProviderRef<GetElaboratedContent>;
-String _$elaborationHash() => r'9dad5ffd6847f987a31be914fbc7523a8954558f';
+String _$elaborationHash() => r'4af1d304529bca55292d8e535d3a7350268e48b9';
 
 /// See also [Elaboration].
 @ProviderFor(Elaboration)

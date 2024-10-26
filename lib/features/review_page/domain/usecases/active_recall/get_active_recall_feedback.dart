@@ -10,8 +10,8 @@ class GetActiveRecallFeedback {
   const GetActiveRecallFeedback(this._activeRecallRepository);
 
   Future<Either<Failure, String>> call(
-      ActiveRecallModel activeRecallModel, String recalledInformation) async {
-    return await _activeRecallRepository.getActiveRecallFeedback(
-        activeRecallModel, recalledInformation);
+      ActiveRecallModel activeRecallModel) async {
+    return await _activeRecallRepository
+        .getActiveRecallFeedback(activeRecallModel);
   }
 }

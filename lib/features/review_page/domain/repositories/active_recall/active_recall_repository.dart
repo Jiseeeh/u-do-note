@@ -8,7 +8,7 @@ abstract class ActiveRecallRepository {
       ActiveRecallModel activeRecallModel);
 
   Future<Either<Failure, String>> getActiveRecallFeedback(
-      ActiveRecallModel activeRecallModel, String recalledInformation);
+      ActiveRecallModel activeRecallModel);
 
   Future<Either<Failure, void>> updateFirestoreModel(
       ActiveRecallModel activeRecallModel);

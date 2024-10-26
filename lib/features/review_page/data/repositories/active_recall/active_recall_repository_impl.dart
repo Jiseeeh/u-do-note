@@ -25,10 +25,10 @@ class ActiveRecallImpl implements ActiveRecallRepository {
 
   @override
   Future<Either<Failure, String>> getActiveRecallFeedback(
-      ActiveRecallModel activeRecallModel, String recalledInformation) async {
+      ActiveRecallModel activeRecallModel) async {
     try {
-      var res = await _activeRecallRemoteDataSource.getActiveRecallFeedback(
-          activeRecallModel, recalledInformation);
+      var res = await _activeRecallRemoteDataSource
+          .getActiveRecallFeedback(activeRecallModel);
 
       return Right(res);
     } catch (e) {

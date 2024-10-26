@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/utility.dart';
@@ -310,13 +311,17 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                 .copyWith(questions: resOrQuestions);
 
             if (context.mounted) {
-              context.router.push(SpacedRepetitionQuizRoute(
-                  spacedRepetitionModel: updatedModel));
+              context.router.push(QuizRoute(
+                  questions: updatedModel.questions!,
+                  model: updatedModel,
+                  reviewMethod: ReviewMethods.spacedRepetition));
             }
           } else {
             if (context.mounted) {
-              context.router.push(SpacedRepetitionQuizRoute(
-                  spacedRepetitionModel: _onGoingSpacedRepetitionReviews[i]));
+              context.router.push(QuizRoute(
+                  questions: _onGoingSpacedRepetitionReviews[i].questions!,
+                  model: _onGoingSpacedRepetitionReviews[i],
+                  reviewMethod: ReviewMethods.spacedRepetition));
             }
           }
         } catch (e) {

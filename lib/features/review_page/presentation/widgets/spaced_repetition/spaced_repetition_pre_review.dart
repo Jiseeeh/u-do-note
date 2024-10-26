@@ -15,6 +15,7 @@ import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/firestore_filter_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
@@ -142,8 +143,10 @@ class _SpacedRepetitionPreReviewState
       EasyLoading.dismiss();
 
       if (context.mounted) {
-        context.router.push(
-            SpacedRepetitionQuizRoute(spacedRepetitionModel: spacedRepModel));
+        context.router.push(QuizRoute(
+            questions: spacedRepModel.questions!,
+            model: spacedRepModel,
+            reviewMethod: ReviewMethods.spacedRepetition));
       }
     }
   }

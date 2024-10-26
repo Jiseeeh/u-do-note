@@ -17,6 +17,7 @@ import 'core/logger/logger.dart';
 import 'features/review_page/data/models/spaced_repetition.dart';
 import 'features/review_page/presentation/providers/review_screen_provider.dart';
 import 'firebase_options.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/custom_error.dart';
@@ -135,8 +136,11 @@ class _MainAppState extends ConsumerState<MainApp> {
 
         if (context.mounted) {
           ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
-          appRouter.push(
-              SpacedRepetitionQuizRoute(spacedRepetitionModel: spacedRepModel));
+
+          appRouter.push(QuizRoute(
+              questions: spacedRepModel.questions!,
+              model: spacedRepModel,
+              reviewMethod: ReviewMethods.spacedRepetition));
         }
         break;
       case ActiveRecallModel.name:

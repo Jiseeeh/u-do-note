@@ -71,7 +71,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 );
 
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$blurtingHash() => r'f2fc730cdd1e5952b4b3c16d975e99069d30962f';
+String _$blurtingHash() => r'2aaaf47c26a65ad1d8c8c0e6a629c734852cbb2d';
 
 /// See also [Blurting].
 @ProviderFor(Blurting)

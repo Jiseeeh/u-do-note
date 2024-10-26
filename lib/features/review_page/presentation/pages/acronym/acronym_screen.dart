@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/acronym/acronym_provider.dart';
@@ -125,13 +126,15 @@ class AcronymScreen extends ConsumerWidget {
 
                             Navigator.of(dialogContext).pop();
                           } else {
-                            var updatedElaborationModel =
-                                _acronymModel.copyWith(
+                            var updatedAcronymModel = _acronymModel.copyWith(
                               questions: res,
                             );
 
-                            context.router.replace(AcronymQuizRoute(
-                                acronymModel: updatedElaborationModel));
+                            context.router.replace(QuizRoute(
+                              questions: updatedAcronymModel.questions!,
+                              model: updatedAcronymModel,
+                              reviewMethod: ReviewMethods.acronymMnemonics,
+                            ));
                           }
                         },
                         child: const Text('Yes'),

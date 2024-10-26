@@ -17,6 +17,8 @@ class FeynmanModel {
   final List<types.Message> messages;
   final List<String> recentRobotMessages;
   final List<String> recentUserMessages;
+  final bool isFromSessionWithoutQuiz;
+  final String? newSessionName;
   static const coverImagePath = "assets/images/feynman.png";
   static const name = "Feynman Technique";
 
@@ -26,6 +28,8 @@ class FeynmanModel {
     this.score,
     this.questions,
     this.selectedAnswersIndex,
+    this.isFromSessionWithoutQuiz = false,
+    this.newSessionName,
     required this.sessionName,
     required this.createdAt,
     required this.contentFromPagesUsed,
@@ -116,20 +120,24 @@ class FeynmanModel {
     List<types.Message>? messages,
     List<String>? recentRobotMessages,
     List<String>? recentUserMessages,
+    bool? isFromSessionWithoutQuiz,
+    String? newSessionName,
   }) {
     return FeynmanModel(
-      id: id ?? this.id,
-      remark: remark ?? this.remark,
-      score: score ?? this.score,
-      questions: questions ?? this.questions,
-      selectedAnswersIndex: selectedAnswersIndex ?? this.selectedAnswersIndex,
-      sessionName: sessionName ?? this.sessionName,
-      createdAt: createdAt ?? this.createdAt,
-      contentFromPagesUsed: contentFromPagesUsed ?? this.contentFromPagesUsed,
-      messages: messages ?? this.messages,
-      recentRobotMessages: recentRobotMessages ?? this.recentRobotMessages,
-      recentUserMessages: recentUserMessages ?? this.recentUserMessages,
-    );
+        id: id ?? this.id,
+        remark: remark ?? this.remark,
+        score: score ?? this.score,
+        questions: questions ?? this.questions,
+        selectedAnswersIndex: selectedAnswersIndex ?? this.selectedAnswersIndex,
+        sessionName: sessionName ?? this.sessionName,
+        createdAt: createdAt ?? this.createdAt,
+        contentFromPagesUsed: contentFromPagesUsed ?? this.contentFromPagesUsed,
+        messages: messages ?? this.messages,
+        recentRobotMessages: recentRobotMessages ?? this.recentRobotMessages,
+        recentUserMessages: recentUserMessages ?? this.recentUserMessages,
+        isFromSessionWithoutQuiz:
+            isFromSessionWithoutQuiz ?? this.isFromSessionWithoutQuiz,
+        newSessionName: newSessionName ?? this.newSessionName);
   }
 }
 
@@ -142,4 +150,3 @@ class ChatMessage {
     required this.role,
   });
 }
-

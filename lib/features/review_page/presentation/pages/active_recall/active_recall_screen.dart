@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parchment_delta/parchment_delta.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/utility.dart';
@@ -155,17 +156,19 @@ class _ActiveRecallScreenState extends ConsumerState<ActiveRecallScreen> {
                   throw "Cannot create your quiz, please try again later.";
                 }
 
-                activeRecallModel =
-                    activeRecallModel.copyWith(questions: resOrQuestions);
+                activeRecallModel = activeRecallModel.copyWith(
+                    questions: resOrQuestions,
+                    recalledInformation:
+                        _fleatherController!.document.toPlainText());
               }
 
               EasyLoading.dismiss();
 
               if (context.mounted) {
-                context.router.replace(ActiveRecallQuizRoute(
-                    activeRecallModel: activeRecallModel,
-                    recalledInformation:
-                        _fleatherController!.document.toPlainText()));
+                context.router.replace(QuizRoute(
+                    questions: activeRecallModel.questions!,
+                    model: activeRecallModel,
+                    reviewMethod: ReviewMethods.activeRecall));
               }
             },
             child: const Icon(Icons.check)),

@@ -591,4 +591,43 @@ class NoteRemoteDataSource {
 
     return jsonRes!;
   }
+
+  Future<String> formatScannedText(String scannedText) async {
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+        role: OpenAIChatMessageRole.system,
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text("""
+            Given the following text extracted from reading a file, format it into readable sentences. Fix any spelling mistakes, correct misrecognized characters (e.g., 'I' instead of '1'), and ensure proper capitalization, punctuation, and spacing. Aim for clarity and coherence, while preserving the original meaning as closely as possible."
+            """),
+        ]);
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+        role: OpenAIChatMessageRole.user,
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(
+            """
+            Format my scanned text: $scannedText;
+            """,
+          ),
+        ]);
+
+    final requestMessages = [
+      systemMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-4o-mini",
+      responseFormat: {"type": "json_object"},
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 800,
+    );
+
+    String? completionContent =
+        chatCompletion.choices.first.message.content!.first.text;
+
+    return completionContent!;
+  }
 }

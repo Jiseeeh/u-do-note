@@ -42,5 +42,7 @@ abstract class NoteRepository {
   Future<Either<Failure, String>> analyzeNote(String content);
 
   Future<Either<Failure, String>> summarizeNote(String content);
+
+  Future<Either<Failure, String>> formatScannedText(String scannedText);
 }
 // TODO: remove braces from params

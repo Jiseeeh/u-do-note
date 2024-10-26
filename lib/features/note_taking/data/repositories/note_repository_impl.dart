@@ -205,4 +205,16 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> formatScannedText(String scannedText) async {
+    try {
+      var formattedText =
+          await _noteRemoteDataSource.formatScannedText(scannedText);
+
+      return Right(formattedText);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

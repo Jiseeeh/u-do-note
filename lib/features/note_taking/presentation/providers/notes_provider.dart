@@ -21,6 +21,7 @@ import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart'
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/format_scanned_text.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/summarize_note.dart';
@@ -143,6 +144,13 @@ UpdateNoteTitle updateNoteTitle(UpdateNoteTitleRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateNoteTitle(repository);
+}
+
+@riverpod
+FormatScannedText formatScannedText(FormatScannedTextRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return FormatScannedText(repository);
 }
 
 @riverpod
@@ -340,5 +348,14 @@ class Notebooks extends _$Notebooks {
     var failureOrJsonStr = await summarizeNote(content);
 
     return failureOrJsonStr.fold((failure) => failure, (jsonStr) => jsonStr);
+  }
+
+  Future<dynamic> formatScannedText({required String scannedText}) async {
+    final formatScannedText = ref.read(formatScannedTextProvider);
+
+    var failureOrScannedText = await formatScannedText(scannedText);
+
+    return failureOrScannedText.fold(
+        (failure) => failure, (formattedText) => formattedText);
   }
 }

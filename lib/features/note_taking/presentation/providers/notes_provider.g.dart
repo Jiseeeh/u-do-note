@@ -246,6 +246,22 @@ final updateNoteTitleProvider = AutoDisposeProvider<UpdateNoteTitle>.internal(
 );
 
 typedef UpdateNoteTitleRef = AutoDisposeProviderRef<UpdateNoteTitle>;
+String _$formatScannedTextHash() => r'8f76a71a02518c46ecc0c3514927786fc8496cb7';
+
+/// See also [formatScannedText].
+@ProviderFor(formatScannedText)
+final formatScannedTextProvider =
+    AutoDisposeProvider<FormatScannedText>.internal(
+  formatScannedText,
+  name: r'formatScannedTextProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$formatScannedTextHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FormatScannedTextRef = AutoDisposeProviderRef<FormatScannedText>;
 String _$notebooksStreamHash() => r'8a56340033c814a39b83775c3f2a379016856f13';
 
 /// See also [notebooksStream].
@@ -262,7 +278,7 @@ final notebooksStreamProvider =
 );
 
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'0a1a5916ca373672ca759764c25ec038abbeec6b';
+String _$notebooksHash() => r'b78579e406fcdc3a55b00b241fd8507096d254fd';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

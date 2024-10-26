@@ -189,9 +189,22 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   EasyLoading.dismiss();
                   document.dispose();
 
+                  var failureOrFormattedText = await ref
+                      .read(notebooksProvider.notifier)
+                      .formatScannedText(scannedText: extractedText);
+
+                  if (failureOrFormattedText is Failure) {
+                    logger.e(
+                        "Could not format extracted text: ${failureOrFormattedText.message}");
+                    EasyLoading.showError("Could not format extracted text..",
+                        duration: const Duration(seconds: 2));
+                  } else {
+                    extractedText = failureOrFormattedText;
+                  }
+
                   if (!context.mounted) return;
 
-                  showDialog(
+                  await showDialog(
                       barrierDismissible: false,
                       context: context,
                       builder: (dialogContext) => AlertDialog(

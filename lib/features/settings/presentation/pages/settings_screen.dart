@@ -139,7 +139,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             bottom: 0,
                             right: 5.w,
                             child: CircleAvatar(
-                              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
                               child: IconButton(
                                 onPressed: () async {
                                   EasyLoading.show(
@@ -191,8 +192,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           style: Theme.of(context)
                               .textTheme
                               .displayMedium
-                              ?.copyWith(
-                                  fontSize: 20.sp)),
+                              ?.copyWith(fontSize: 20.sp)),
                     ),
                   ),
                   SizedBox(height: 1.h),
@@ -393,10 +393,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                         if (hasSeenIntro != null &&
                                             hasSeenIntro) {
                                           context.router
-                                              .replace(const LoginRoute());
+                                              .replaceAll([const LoginRoute()]);
                                         } else {
                                           context.router
-                                              .replace(const IntroRoute());
+                                              .replaceAll([const IntroRoute()]);
                                         }
                                       }
                                     },

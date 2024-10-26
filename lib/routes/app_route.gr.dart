@@ -15,33 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    AcronymQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<AcronymQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: AcronymQuizScreen(
-          acronymModel: args.acronymModel,
-          key: args.key,
-        ),
-      );
-    },
     AcronymRoute.name: (routeData) {
       final args = routeData.argsAs<AcronymRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: AcronymScreen(
           args.acronymModel,
-          key: args.key,
-        ),
-      );
-    },
-    ActiveRecallQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<ActiveRecallQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ActiveRecallQuizScreen(
-          activeRecallModel: args.activeRecallModel,
-          recalledInformation: args.recalledInformation,
           key: args.key,
         ),
       );
@@ -62,43 +41,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AnalyticsScreen(),
       );
     },
-    BlurtingQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<BlurtingQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: BlurtingQuizScreen(
-          blurtingModel: args.blurtingModel,
-          key: args.key,
-        ),
-      );
-    },
-    ElaborationQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<ElaborationQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ElaborationQuizScreen(
-          elaborationModel: args.elaborationModel,
-          key: args.key,
-        ),
-      );
-    },
     ElaborationRoute.name: (routeData) {
       final args = routeData.argsAs<ElaborationRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ElaborationScreen(
           args.elaborationModel,
-          key: args.key,
-        ),
-      );
-    },
-    FeynmanQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<FeynmanQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: FeynmanQuizScreen(
-          onQuizFinish: args.onQuizFinish,
-          questions: args.questions,
           key: args.key,
         ),
       );
@@ -183,30 +131,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotebooksScreen(),
       );
     },
-    PomodoroQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<PomodoroQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: PomodoroQuizScreen(
-          questions: args.questions,
-          key: args.key,
-        ),
-      );
-    },
     PomodoroRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const PomodoroScreen(),
-      );
-    },
-    Pq4rQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<Pq4rQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: Pq4rQuizScreen(
-          pq4rModel: args.pq4rModel,
-          key: args.key,
-        ),
       );
     },
     Pq4rRoute.name: (routeData) {
@@ -232,6 +160,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    QuizRoute.name: (routeData) {
+      final args = routeData.argsAs<QuizRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: QuizScreen(
+          questions: args.questions,
+          model: args.model,
+          reviewMethod: args.reviewMethod,
+          key: args.key,
+        ),
+      );
+    },
     ReviewRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -250,30 +190,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SignUpScreen(),
       );
     },
-    SpacedRepetitionQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<SpacedRepetitionQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: SpacedRepetitionQuizScreen(
-          spacedRepetitionModel: args.spacedRepetitionModel,
-          key: args.key,
-        ),
-      );
-    },
     SplashRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SplashScreen(),
-      );
-    },
-    Sq3rQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<Sq3rQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: Sq3rQuizScreen(
-          sq3rModel: args.sq3rModel,
-          key: args.key,
-        ),
       );
     },
     Sq3rRoute.name: (routeData) {
@@ -299,44 +219,6 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
-}
-
-/// generated route for
-/// [AcronymQuizScreen]
-class AcronymQuizRoute extends PageRouteInfo<AcronymQuizRouteArgs> {
-  AcronymQuizRoute({
-    required AcronymModel acronymModel,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          AcronymQuizRoute.name,
-          args: AcronymQuizRouteArgs(
-            acronymModel: acronymModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'AcronymQuizRoute';
-
-  static const PageInfo<AcronymQuizRouteArgs> page =
-      PageInfo<AcronymQuizRouteArgs>(name);
-}
-
-class AcronymQuizRouteArgs {
-  const AcronymQuizRouteArgs({
-    required this.acronymModel,
-    this.key,
-  });
-
-  final AcronymModel acronymModel;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AcronymQuizRouteArgs{acronymModel: $acronymModel, key: $key}';
-  }
 }
 
 /// generated route for
@@ -374,49 +256,6 @@ class AcronymRouteArgs {
   @override
   String toString() {
     return 'AcronymRouteArgs{acronymModel: $acronymModel, key: $key}';
-  }
-}
-
-/// generated route for
-/// [ActiveRecallQuizScreen]
-class ActiveRecallQuizRoute extends PageRouteInfo<ActiveRecallQuizRouteArgs> {
-  ActiveRecallQuizRoute({
-    required ActiveRecallModel activeRecallModel,
-    required String recalledInformation,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ActiveRecallQuizRoute.name,
-          args: ActiveRecallQuizRouteArgs(
-            activeRecallModel: activeRecallModel,
-            recalledInformation: recalledInformation,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ActiveRecallQuizRoute';
-
-  static const PageInfo<ActiveRecallQuizRouteArgs> page =
-      PageInfo<ActiveRecallQuizRouteArgs>(name);
-}
-
-class ActiveRecallQuizRouteArgs {
-  const ActiveRecallQuizRouteArgs({
-    required this.activeRecallModel,
-    required this.recalledInformation,
-    this.key,
-  });
-
-  final ActiveRecallModel activeRecallModel;
-
-  final String recalledInformation;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'ActiveRecallQuizRouteArgs{activeRecallModel: $activeRecallModel, recalledInformation: $recalledInformation, key: $key}';
   }
 }
 
@@ -473,82 +312,6 @@ class AnalyticsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [BlurtingQuizScreen]
-class BlurtingQuizRoute extends PageRouteInfo<BlurtingQuizRouteArgs> {
-  BlurtingQuizRoute({
-    required BlurtingModel blurtingModel,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          BlurtingQuizRoute.name,
-          args: BlurtingQuizRouteArgs(
-            blurtingModel: blurtingModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'BlurtingQuizRoute';
-
-  static const PageInfo<BlurtingQuizRouteArgs> page =
-      PageInfo<BlurtingQuizRouteArgs>(name);
-}
-
-class BlurtingQuizRouteArgs {
-  const BlurtingQuizRouteArgs({
-    required this.blurtingModel,
-    this.key,
-  });
-
-  final BlurtingModel blurtingModel;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'BlurtingQuizRouteArgs{blurtingModel: $blurtingModel, key: $key}';
-  }
-}
-
-/// generated route for
-/// [ElaborationQuizScreen]
-class ElaborationQuizRoute extends PageRouteInfo<ElaborationQuizRouteArgs> {
-  ElaborationQuizRoute({
-    required ElaborationModel elaborationModel,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ElaborationQuizRoute.name,
-          args: ElaborationQuizRouteArgs(
-            elaborationModel: elaborationModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ElaborationQuizRoute';
-
-  static const PageInfo<ElaborationQuizRouteArgs> page =
-      PageInfo<ElaborationQuizRouteArgs>(name);
-}
-
-class ElaborationQuizRouteArgs {
-  const ElaborationQuizRouteArgs({
-    required this.elaborationModel,
-    this.key,
-  });
-
-  final ElaborationModel elaborationModel;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'ElaborationQuizRouteArgs{elaborationModel: $elaborationModel, key: $key}';
-  }
-}
-
-/// generated route for
 /// [ElaborationScreen]
 class ElaborationRoute extends PageRouteInfo<ElaborationRouteArgs> {
   ElaborationRoute({
@@ -583,55 +346,6 @@ class ElaborationRouteArgs {
   @override
   String toString() {
     return 'ElaborationRouteArgs{elaborationModel: $elaborationModel, key: $key}';
-  }
-}
-
-/// generated route for
-/// [FeynmanQuizScreen]
-class FeynmanQuizRoute extends PageRouteInfo<FeynmanQuizRouteArgs> {
-  FeynmanQuizRoute({
-    required Future<void> Function(
-      List<int>,
-      int,
-    ) onQuizFinish,
-    required List<QuestionModel> questions,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          FeynmanQuizRoute.name,
-          args: FeynmanQuizRouteArgs(
-            onQuizFinish: onQuizFinish,
-            questions: questions,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'FeynmanQuizRoute';
-
-  static const PageInfo<FeynmanQuizRouteArgs> page =
-      PageInfo<FeynmanQuizRouteArgs>(name);
-}
-
-class FeynmanQuizRouteArgs {
-  const FeynmanQuizRouteArgs({
-    required this.onQuizFinish,
-    required this.questions,
-    this.key,
-  });
-
-  final Future<void> Function(
-    List<int>,
-    int,
-  ) onQuizFinish;
-
-  final List<QuestionModel> questions;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'FeynmanQuizRouteArgs{onQuizFinish: $onQuizFinish, questions: $questions, key: $key}';
   }
 }
 
@@ -894,44 +608,6 @@ class NotebooksRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [PomodoroQuizScreen]
-class PomodoroQuizRoute extends PageRouteInfo<PomodoroQuizRouteArgs> {
-  PomodoroQuizRoute({
-    required List<QuestionModel> questions,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          PomodoroQuizRoute.name,
-          args: PomodoroQuizRouteArgs(
-            questions: questions,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'PomodoroQuizRoute';
-
-  static const PageInfo<PomodoroQuizRouteArgs> page =
-      PageInfo<PomodoroQuizRouteArgs>(name);
-}
-
-class PomodoroQuizRouteArgs {
-  const PomodoroQuizRouteArgs({
-    required this.questions,
-    this.key,
-  });
-
-  final List<QuestionModel> questions;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'PomodoroQuizRouteArgs{questions: $questions, key: $key}';
-  }
-}
-
-/// generated route for
 /// [PomodoroScreen]
 class PomodoroRoute extends PageRouteInfo<void> {
   const PomodoroRoute({List<PageRouteInfo>? children})
@@ -943,44 +619,6 @@ class PomodoroRoute extends PageRouteInfo<void> {
   static const String name = 'PomodoroRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [Pq4rQuizScreen]
-class Pq4rQuizRoute extends PageRouteInfo<Pq4rQuizRouteArgs> {
-  Pq4rQuizRoute({
-    required Pq4rModel pq4rModel,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          Pq4rQuizRoute.name,
-          args: Pq4rQuizRouteArgs(
-            pq4rModel: pq4rModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'Pq4rQuizRoute';
-
-  static const PageInfo<Pq4rQuizRouteArgs> page =
-      PageInfo<Pq4rQuizRouteArgs>(name);
-}
-
-class Pq4rQuizRouteArgs {
-  const Pq4rQuizRouteArgs({
-    required this.pq4rModel,
-    this.key,
-  });
-
-  final Pq4rModel pq4rModel;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'Pq4rQuizRouteArgs{pq4rModel: $pq4rModel, key: $key}';
-  }
 }
 
 /// generated route for
@@ -1074,6 +712,53 @@ class QuizResultsRouteArgs {
 }
 
 /// generated route for
+/// [QuizScreen]
+class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
+  QuizRoute({
+    required List<QuestionModel> questions,
+    required Object model,
+    required ReviewMethods reviewMethod,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          QuizRoute.name,
+          args: QuizRouteArgs(
+            questions: questions,
+            model: model,
+            reviewMethod: reviewMethod,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'QuizRoute';
+
+  static const PageInfo<QuizRouteArgs> page = PageInfo<QuizRouteArgs>(name);
+}
+
+class QuizRouteArgs {
+  const QuizRouteArgs({
+    required this.questions,
+    required this.model,
+    required this.reviewMethod,
+    this.key,
+  });
+
+  final List<QuestionModel> questions;
+
+  final Object model;
+
+  final ReviewMethods reviewMethod;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'QuizRouteArgs{questions: $questions, model: $model, reviewMethod: $reviewMethod, key: $key}';
+  }
+}
+
+/// generated route for
 /// [ReviewScreen]
 class ReviewRoute extends PageRouteInfo<void> {
   const ReviewRoute({List<PageRouteInfo>? children})
@@ -1116,45 +801,6 @@ class SignUpRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [SpacedRepetitionQuizScreen]
-class SpacedRepetitionQuizRoute
-    extends PageRouteInfo<SpacedRepetitionQuizRouteArgs> {
-  SpacedRepetitionQuizRoute({
-    required SpacedRepetitionModel spacedRepetitionModel,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          SpacedRepetitionQuizRoute.name,
-          args: SpacedRepetitionQuizRouteArgs(
-            spacedRepetitionModel: spacedRepetitionModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'SpacedRepetitionQuizRoute';
-
-  static const PageInfo<SpacedRepetitionQuizRouteArgs> page =
-      PageInfo<SpacedRepetitionQuizRouteArgs>(name);
-}
-
-class SpacedRepetitionQuizRouteArgs {
-  const SpacedRepetitionQuizRouteArgs({
-    required this.spacedRepetitionModel,
-    this.key,
-  });
-
-  final SpacedRepetitionModel spacedRepetitionModel;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'SpacedRepetitionQuizRouteArgs{spacedRepetitionModel: $spacedRepetitionModel, key: $key}';
-  }
-}
-
-/// generated route for
 /// [SplashScreen]
 class SplashRoute extends PageRouteInfo<void> {
   const SplashRoute({List<PageRouteInfo>? children})
@@ -1166,44 +812,6 @@ class SplashRoute extends PageRouteInfo<void> {
   static const String name = 'SplashRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [Sq3rQuizScreen]
-class Sq3rQuizRoute extends PageRouteInfo<Sq3rQuizRouteArgs> {
-  Sq3rQuizRoute({
-    required Sq3rModel sq3rModel,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          Sq3rQuizRoute.name,
-          args: Sq3rQuizRouteArgs(
-            sq3rModel: sq3rModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'Sq3rQuizRoute';
-
-  static const PageInfo<Sq3rQuizRouteArgs> page =
-      PageInfo<Sq3rQuizRouteArgs>(name);
-}
-
-class Sq3rQuizRouteArgs {
-  const Sq3rQuizRouteArgs({
-    required this.sq3rModel,
-    this.key,
-  });
-
-  final Sq3rModel sq3rModel;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'Sq3rQuizRouteArgs{sq3rModel: $sq3rModel, key: $key}';
-  }
 }
 
 /// generated route for

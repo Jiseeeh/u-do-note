@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/Jiseeeh/u-do-note/compare/v1.10.0...v2.0.0) (2024-10-26)
+
+
+### Code Refactoring
+
+* make quiz screens into one reusable screen ([#105](https://github.com/Jiseeeh/u-do-note/issues/105)) ([eb23d34](https://github.com/Jiseeeh/u-do-note/commit/eb23d3471f0dce00ea0ff8f6ab40546b4887e151))
+
+
+### BREAKING CHANGES
+
+* remove repeated quiz screens and move handlers into their respective providers
+
 # [1.10.0](https://github.com/Jiseeeh/u-do-note/compare/v1.9.0...v1.10.0) (2024-10-25)
 
 

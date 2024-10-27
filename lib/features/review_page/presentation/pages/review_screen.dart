@@ -17,7 +17,7 @@ import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
 class ReviewScreen extends ConsumerStatefulWidget {
-  const ReviewScreen({Key? key}) : super(key: key);
+  const ReviewScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReviewScreenState();

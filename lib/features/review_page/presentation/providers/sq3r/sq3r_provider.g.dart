@@ -7,7 +7,7 @@ part of 'sq3r_provider.dart';
 // **************************************************************************
 
 String _$sq3rRemoteDataSourceHash() =>
-    r'0d4ac473f51da89b6f7e851a7e65bf5ac9e5df0c';
+    r'bfaff6a44e476dd6ac448ac01a624d2b5a9ccea7';
 
 /// See also [sq3rRemoteDataSource].
 @ProviderFor(sq3rRemoteDataSource)
@@ -25,7 +25,7 @@ final sq3rRemoteDataSourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef Sq3rRemoteDataSourceRef = AutoDisposeProviderRef<Sq3rRemoteDataSource>;
-String _$sq3rRepositoryHash() => r'df0ae4734eab13c3f91ac12acaab03d44555543d';
+String _$sq3rRepositoryHash() => r'00d595049425240fc4681d10febda4e5e8151e38';
 
 /// See also [sq3rRepository].
 @ProviderFor(sq3rRepository)
@@ -42,7 +42,7 @@ final sq3rRepositoryProvider = AutoDisposeProvider<Sq3rRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef Sq3rRepositoryRef = AutoDisposeProviderRef<Sq3rRepository>;
-String _$saveQuizResultsHash() => r'38403f33908abc5a15f66ca01123886d8fa8be5a';
+String _$saveQuizResultsHash() => r'fee5d39ee4bacf03bd7262de274e05ef0e02a4e4';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)

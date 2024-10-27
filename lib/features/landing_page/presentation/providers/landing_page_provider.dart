@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
@@ -10,8 +11,7 @@ import 'package:u_do_note/features/landing_page/domain/usecases/get_on_going_rev
 part 'landing_page_provider.g.dart';
 
 @riverpod
-LandingPageRemoteDataSource landingPageRemoteDataSource(
-    LandingPageRemoteDataSourceRef ref) {
+LandingPageRemoteDataSource landingPageRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -19,14 +19,14 @@ LandingPageRemoteDataSource landingPageRemoteDataSource(
 }
 
 @riverpod
-LandingPageRepository landingPageRepository(LandingPageRepositoryRef ref) {
+LandingPageRepository landingPageRepository(Ref ref) {
   final remoteDataSource = ref.read(landingPageRemoteDataSourceProvider);
 
   return LandingPageImpl(remoteDataSource);
 }
 
 @riverpod
-GetOnGoingReviews getOnGoingReviews(GetOnGoingReviewsRef ref) {
+GetOnGoingReviews getOnGoingReviews(Ref ref) {
   final repository = ref.read(landingPageRepositoryProvider);
 
   return GetOnGoingReviews(repository);

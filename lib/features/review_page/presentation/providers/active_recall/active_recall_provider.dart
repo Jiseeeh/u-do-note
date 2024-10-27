@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -24,8 +25,7 @@ import 'package:u_do_note/features/review_page/domain/usecases/active_recall/upd
 part 'active_recall_provider.g.dart';
 
 @riverpod
-ActiveRecallRemoteDataSource activeRecallRemoteDataSource(
-    ActiveRecallRemoteDataSourceRef ref) {
+ActiveRecallRemoteDataSource activeRecallRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -33,29 +33,28 @@ ActiveRecallRemoteDataSource activeRecallRemoteDataSource(
 }
 
 @riverpod
-ActiveRecallRepository activeRecallRepository(ActiveRecallRepositoryRef ref) {
+ActiveRecallRepository activeRecallRepository(Ref ref) {
   final remoteDataSource = ref.read(activeRecallRemoteDataSourceProvider);
 
   return ActiveRecallImpl(remoteDataSource);
 }
 
 @riverpod
-SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(Ref ref) {
   final repository = ref.read(activeRecallRepositoryProvider);
 
   return SaveQuizResults(repository);
 }
 
 @riverpod
-GetActiveRecallFeedback getActiveRecallFeedback(
-    GetActiveRecallFeedbackRef ref) {
+GetActiveRecallFeedback getActiveRecallFeedback(Ref ref) {
   final repository = ref.read(activeRecallRepositoryProvider);
 
   return GetActiveRecallFeedback(repository);
 }
 
 @riverpod
-UpdateFirestoreModel updateFirestoreModel(UpdateFirestoreModelRef ref) {
+UpdateFirestoreModel updateFirestoreModel(Ref ref) {
   final repository = ref.read(activeRecallRepositoryProvider);
 
   return UpdateFirestoreModel(repository);

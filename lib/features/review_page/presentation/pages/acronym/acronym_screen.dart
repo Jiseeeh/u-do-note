@@ -15,46 +15,57 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
-class AcronymScreen extends ConsumerWidget {
-  final AcronymModel _acronymModel;
+class AcronymScreen extends ConsumerStatefulWidget {
+  final AcronymModel acronymModel;
 
-  const AcronymScreen(this._acronymModel, {Key? key}) : super(key: key);
+  const AcronymScreen(this.acronymModel, {super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    Future.delayed(
-        const Duration(seconds: 3),
-        () => showDialog(
-            context: context,
-            builder: (dialogContext) {
-              return AlertDialog(
-                title: Text(context.tr('notice')),
-                content: Text(context.tr('review_remind')),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                      },
-                      child: const Text("Okay"))
-                ],
-              );
-            }));
+  ConsumerState<AcronymScreen> createState() => _AcronymScreenState();
+}
 
+class _AcronymScreenState extends ConsumerState<AcronymScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      showDialog(
+          context: context,
+          builder: (dialogContext) {
+            return AlertDialog(
+              title: Text(context.tr('notice')),
+              content: Text(context.tr('review_remind')),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: const Text("Okay"))
+              ],
+            );
+          });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PopScope(
         canPop: false,
-        onPopInvoked: (didPop) async {
+        onPopInvokedWithResult: (didPop, _) async {
           if (didPop) return;
 
           if (context.mounted) {
             var reviewState = ref.read(reviewScreenProvider);
 
-            if (_acronymModel.id == null) {
+            if (widget.acronymModel.id == null) {
               logger.i('Saving empty quiz');
 
               var acronymModel = AcronymModel(
                   sessionName: reviewState.getSessionTitle,
                   createdAt: Timestamp.now(),
-                  content: _acronymModel.content);
+                  content: widget.acronymModel.content);
 
               var res = await ref
                   .read(acronymProvider.notifier)
@@ -113,7 +124,7 @@ class AcronymScreen extends ConsumerWidget {
 
                           var res =
                               await sharedRepository.generateQuizQuestions(
-                                  content: _acronymModel.content);
+                                  content: widget.acronymModel.content);
 
                           EasyLoading.dismiss();
 
@@ -126,7 +137,8 @@ class AcronymScreen extends ConsumerWidget {
 
                             Navigator.of(dialogContext).pop();
                           } else {
-                            var updatedAcronymModel = _acronymModel.copyWith(
+                            var updatedAcronymModel =
+                                widget.acronymModel.copyWith(
                               questions: res,
                             );
 
@@ -151,7 +163,7 @@ class AcronymScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Text(_acronymModel.content,
+                  Text(widget.acronymModel.content,
                       style: Theme.of(context).textTheme.bodyLarge),
                 ],
               ),

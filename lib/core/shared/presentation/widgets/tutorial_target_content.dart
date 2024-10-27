@@ -8,8 +8,7 @@ import 'package:u_do_note/core/shared/theme/colors.dart';
 class TutorialTargetContent extends ConsumerWidget {
   final String translationKey;
 
-  const TutorialTargetContent({required this.translationKey, Key? key})
-      : super(key: key);
+  const TutorialTargetContent({required this.translationKey, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

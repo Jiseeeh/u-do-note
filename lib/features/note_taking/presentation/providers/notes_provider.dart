@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -34,7 +35,7 @@ import 'package:u_do_note/features/note_taking/domain/usecases/upload_notebook_c
 part 'notes_provider.g.dart';
 
 @riverpod
-NoteRemoteDataSource noteRemoteDataSource(NoteRemoteDataSourceRef ref) {
+NoteRemoteDataSource noteRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -42,119 +43,119 @@ NoteRemoteDataSource noteRemoteDataSource(NoteRemoteDataSourceRef ref) {
 }
 
 @riverpod
-NoteRepository noteRepository(NoteRepositoryRef ref) {
+NoteRepository noteRepository(Ref ref) {
   final noteRemoteDataSource = ref.read(noteRemoteDataSourceProvider);
 
   return NoteRepositoryImpl(noteRemoteDataSource);
 }
 
 @riverpod
-CreateNotebook createNotebook(CreateNotebookRef ref) {
+CreateNotebook createNotebook(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return CreateNotebook(repository);
 }
 
 @riverpod
-GetNotebooks getNotebooks(GetNotebooksRef ref) {
+GetNotebooks getNotebooks(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return GetNotebooks(repository);
 }
 
 @riverpod
-UpdateNote updateNote(UpdateNoteRef ref) {
+UpdateNote updateNote(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateNote(repository);
 }
 
 @riverpod
-UpdateMultipleNotes updateMultipleNotes(UpdateMultipleNotesRef ref) {
+UpdateMultipleNotes updateMultipleNotes(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateMultipleNotes(repository);
 }
 
 @riverpod
-UpdateNotebook updateNotebook(UpdateNotebookRef ref) {
+UpdateNotebook updateNotebook(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateNotebook(repository);
 }
 
 @riverpod
-DeleteNote deleteNote(DeleteNoteRef ref) {
+DeleteNote deleteNote(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return DeleteNote(repository);
 }
 
 @riverpod
-CreateNote createNote(CreateNoteRef ref) {
+CreateNote createNote(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return CreateNote(repository);
 }
 
 @riverpod
-GetNote getNote(GetNoteRef ref) {
+GetNote getNote(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return GetNote(repository);
 }
 
 @riverpod
-UploadNotebookCover uploadNotebookCover(UploadNotebookCoverRef ref) {
+UploadNotebookCover uploadNotebookCover(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UploadNotebookCover(repository);
 }
 
 @riverpod
-DeleteNotebook deleteNotebook(DeleteNotebookRef ref) {
+DeleteNotebook deleteNotebook(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return DeleteNotebook(repository);
 }
 
 @riverpod
-AnalyzeImageText analyzeImageText(AnalyzeImageTextRef ref) {
+AnalyzeImageText analyzeImageText(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return AnalyzeImageText(repository);
 }
 
 @riverpod
-AnalyzeNote analyzeNote(AnalyzeNoteRef ref) {
+AnalyzeNote analyzeNote(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return AnalyzeNote(repository);
 }
 
 @riverpod
-SummarizeNote summarizeNote(SummarizeNoteRef ref) {
+SummarizeNote summarizeNote(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return SummarizeNote(repository);
 }
 
 @riverpod
-UpdateNoteTitle updateNoteTitle(UpdateNoteTitleRef ref) {
+UpdateNoteTitle updateNoteTitle(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateNoteTitle(repository);
 }
 
 @riverpod
-FormatScannedText formatScannedText(FormatScannedTextRef ref) {
+FormatScannedText formatScannedText(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return FormatScannedText(repository);
 }
 
 @riverpod
-Stream<List<NotebookEntity>> notebooksStream(NotebooksStreamRef ref) {
+Stream<List<NotebookEntity>> notebooksStream(Ref ref) {
   final FirebaseFirestore firestore = ref.read(firestoreProvider);
   final FirebaseAuth auth = ref.read(firebaseAuthProvider);
   final StreamController<List<NotebookEntity>> controller = StreamController();

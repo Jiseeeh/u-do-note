@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -15,8 +16,7 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 part 'pomodoro_technique_provider.g.dart';
 
 @riverpod
-PomodoroRemoteDataSource pomodoroTechniqueDataSource(
-    PomodoroTechniqueDataSourceRef ref) {
+PomodoroRemoteDataSource pomodoroTechniqueDataSource(Ref ref) {
   var firebaseAuth = ref.read(firebaseAuthProvider);
   var firestore = ref.read(firestoreProvider);
 
@@ -24,15 +24,14 @@ PomodoroRemoteDataSource pomodoroTechniqueDataSource(
 }
 
 @riverpod
-PomodoroTechniqueRepository pomodoroTechniqueRepository(
-    PomodoroTechniqueRepositoryRef ref) {
+PomodoroTechniqueRepository pomodoroTechniqueRepository(Ref ref) {
   final remoteDataSource = ref.read(pomodoroTechniqueDataSourceProvider);
 
   return PomodoroTechniqueRepositoryImpl(remoteDataSource);
 }
 
 @riverpod
-SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(Ref ref) {
   final repository = ref.read(pomodoroTechniqueRepositoryProvider);
 
   return SaveQuizResults(repository);

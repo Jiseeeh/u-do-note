@@ -7,7 +7,7 @@ part of 'notes_provider.dart';
 // **************************************************************************
 
 String _$noteRemoteDataSourceHash() =>
-    r'b2c7987b3257fcc4f0ec8bac2d8c1424e748c813';
+    r'453e566249f5ace4a21764173da0bdde4b35240a';
 
 /// See also [noteRemoteDataSource].
 @ProviderFor(noteRemoteDataSource)
@@ -25,7 +25,7 @@ final noteRemoteDataSourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef NoteRemoteDataSourceRef = AutoDisposeProviderRef<NoteRemoteDataSource>;
-String _$noteRepositoryHash() => r'3da53f2770b68e899afc872990136e13879f4f92';
+String _$noteRepositoryHash() => r'4a76ba267eeb701d9515abdf54917097daa005f3';
 
 /// See also [noteRepository].
 @ProviderFor(noteRepository)
@@ -42,7 +42,7 @@ final noteRepositoryProvider = AutoDisposeProvider<NoteRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef NoteRepositoryRef = AutoDisposeProviderRef<NoteRepository>;
-String _$createNotebookHash() => r'c4b233fc758bd45a673f8f8e8fa2569847d97173';
+String _$createNotebookHash() => r'bccae629c7e4f921e99127facef61cd56a58bbe6';
 
 /// See also [createNotebook].
 @ProviderFor(createNotebook)
@@ -59,7 +59,7 @@ final createNotebookProvider = AutoDisposeProvider<CreateNotebook>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CreateNotebookRef = AutoDisposeProviderRef<CreateNotebook>;
-String _$getNotebooksHash() => r'8161c604c39e93812146a67d0c2a506b63df0d40';
+String _$getNotebooksHash() => r'e394f342c4e67c5243fd02d0d01feb40d6a4e5aa';
 
 /// See also [getNotebooks].
 @ProviderFor(getNotebooks)
@@ -75,7 +75,7 @@ final getNotebooksProvider = AutoDisposeProvider<GetNotebooks>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetNotebooksRef = AutoDisposeProviderRef<GetNotebooks>;
-String _$updateNoteHash() => r'e84248c06816e2e9d1768531b6fa1cd256ca325d';
+String _$updateNoteHash() => r'3ee9613c420c37e651bfa9178204df0a2ee4ef43';
 
 /// See also [updateNote].
 @ProviderFor(updateNote)
@@ -92,7 +92,7 @@ final updateNoteProvider = AutoDisposeProvider<UpdateNote>.internal(
 // ignore: unused_element
 typedef UpdateNoteRef = AutoDisposeProviderRef<UpdateNote>;
 String _$updateMultipleNotesHash() =>
-    r'b72dad75379e6cdda5cc621490e7c98c14afebc4';
+    r'720a83d72945b9b5e7cbd8da55485f5c163f95b5';
 
 /// See also [updateMultipleNotes].
 @ProviderFor(updateMultipleNotes)
@@ -110,7 +110,7 @@ final updateMultipleNotesProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UpdateMultipleNotesRef = AutoDisposeProviderRef<UpdateMultipleNotes>;
-String _$updateNotebookHash() => r'd9003158329bb13f5b3effed8fe743f74c877d01';
+String _$updateNotebookHash() => r'cc6e89a8249e05cb4734372994fd6043b5908c56';
 
 /// See also [updateNotebook].
 @ProviderFor(updateNotebook)
@@ -127,7 +127,7 @@ final updateNotebookProvider = AutoDisposeProvider<UpdateNotebook>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UpdateNotebookRef = AutoDisposeProviderRef<UpdateNotebook>;
-String _$deleteNoteHash() => r'8edc023c660ee54b0d662d699406de75b77072c9';
+String _$deleteNoteHash() => r'305d6bbe8ab04efd38caf47502c47662781d10f9';
 
 /// See also [deleteNote].
 @ProviderFor(deleteNote)
@@ -143,7 +143,7 @@ final deleteNoteProvider = AutoDisposeProvider<DeleteNote>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteNoteRef = AutoDisposeProviderRef<DeleteNote>;
-String _$createNoteHash() => r'3e267d1ef655a98cb83c56682ffc5ffab8548ffa';
+String _$createNoteHash() => r'fde3909fec85deefb983f7169ad6889acbbefd57';
 
 /// See also [createNote].
 @ProviderFor(createNote)
@@ -159,7 +159,7 @@ final createNoteProvider = AutoDisposeProvider<CreateNote>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CreateNoteRef = AutoDisposeProviderRef<CreateNote>;
-String _$getNoteHash() => r'688987cc5b2b28985bf18d433a48e6c3794f0439';
+String _$getNoteHash() => r'9ac115964ac9e59fb34f0950e4abcac48e702d4a';
 
 /// See also [getNote].
 @ProviderFor(getNote)
@@ -176,7 +176,7 @@ final getNoteProvider = AutoDisposeProvider<GetNote>.internal(
 // ignore: unused_element
 typedef GetNoteRef = AutoDisposeProviderRef<GetNote>;
 String _$uploadNotebookCoverHash() =>
-    r'463d0b698b07097f89700ae1327751d7c4d6cfcf';
+    r'33a7f1b10c043785e85c2c6327e075977bb14599';
 
 /// See also [uploadNotebookCover].
 @ProviderFor(uploadNotebookCover)
@@ -194,7 +194,7 @@ final uploadNotebookCoverProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UploadNotebookCoverRef = AutoDisposeProviderRef<UploadNotebookCover>;
-String _$deleteNotebookHash() => r'4415607be4b3945f25f0377aaa5745cd8cfee4b1';
+String _$deleteNotebookHash() => r'507cb16eb090e0c1fb9b517a62f58d4cf64382fd';
 
 /// See also [deleteNotebook].
 @ProviderFor(deleteNotebook)
@@ -211,7 +211,7 @@ final deleteNotebookProvider = AutoDisposeProvider<DeleteNotebook>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteNotebookRef = AutoDisposeProviderRef<DeleteNotebook>;
-String _$analyzeImageTextHash() => r'ffdb7475911e55334ae93918ebf52af73e95832c';
+String _$analyzeImageTextHash() => r'3ed516809f89ea17e352cf9c38cf3e4204b310e1';
 
 /// See also [analyzeImageText].
 @ProviderFor(analyzeImageText)
@@ -228,7 +228,7 @@ final analyzeImageTextProvider = AutoDisposeProvider<AnalyzeImageText>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AnalyzeImageTextRef = AutoDisposeProviderRef<AnalyzeImageText>;
-String _$analyzeNoteHash() => r'8c6cf3d2cf9d16a002c8a88c0974c95523861fe3';
+String _$analyzeNoteHash() => r'b24120ebe2e4ff9d0f4125494053eaa0ffb90f82';
 
 /// See also [analyzeNote].
 @ProviderFor(analyzeNote)
@@ -244,7 +244,7 @@ final analyzeNoteProvider = AutoDisposeProvider<AnalyzeNote>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AnalyzeNoteRef = AutoDisposeProviderRef<AnalyzeNote>;
-String _$summarizeNoteHash() => r'd127b9d823a2fa10d16fe24371f9055bab395d1e';
+String _$summarizeNoteHash() => r'8633eb9a2247e19eadf0aa83020e18a50fac105d';
 
 /// See also [summarizeNote].
 @ProviderFor(summarizeNote)
@@ -261,7 +261,7 @@ final summarizeNoteProvider = AutoDisposeProvider<SummarizeNote>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SummarizeNoteRef = AutoDisposeProviderRef<SummarizeNote>;
-String _$updateNoteTitleHash() => r'99d967da67822b4bbad0d227995df5ef04aef734';
+String _$updateNoteTitleHash() => r'ec1f36a33075be11761ac839a7980d77a87d5b45';
 
 /// See also [updateNoteTitle].
 @ProviderFor(updateNoteTitle)
@@ -278,7 +278,7 @@ final updateNoteTitleProvider = AutoDisposeProvider<UpdateNoteTitle>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UpdateNoteTitleRef = AutoDisposeProviderRef<UpdateNoteTitle>;
-String _$formatScannedTextHash() => r'8f76a71a02518c46ecc0c3514927786fc8496cb7';
+String _$formatScannedTextHash() => r'b549880decbb17df4107e14b6def1af906678870';
 
 /// See also [formatScannedText].
 @ProviderFor(formatScannedText)
@@ -296,7 +296,7 @@ final formatScannedTextProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FormatScannedTextRef = AutoDisposeProviderRef<FormatScannedText>;
-String _$notebooksStreamHash() => r'8a56340033c814a39b83775c3f2a379016856f13';
+String _$notebooksStreamHash() => r'23a4f95267ef958ed6d3759a63f007f55d83ee45';
 
 /// See also [notebooksStream].
 @ProviderFor(notebooksStream)

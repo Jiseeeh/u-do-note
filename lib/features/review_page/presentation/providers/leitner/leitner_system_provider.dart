@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -13,36 +14,33 @@ import 'package:u_do_note/features/review_page/domain/usecases/leitner/generate_
 part 'leitner_system_provider.g.dart';
 
 @riverpod
-FirebaseFirestore firestore(FirestoreRef ref) {
+FirebaseFirestore firestore(Ref ref) {
   return FirebaseFirestore.instance;
 }
 
 @riverpod
-LeitnerRemoteDataSource leitnerSystemRemoteDataSource(
-    LeitnerSystemRemoteDataSourceRef ref) {
+LeitnerRemoteDataSource leitnerSystemRemoteDataSource(Ref ref) {
   final firestore = ref.read(firestoreProvider);
 
   return LeitnerRemoteDataSource(firestore);
 }
 
 @riverpod
-LeitnerSystemRepository leitnerSystemRepository(
-    LeitnerSystemRepositoryRef ref) {
+LeitnerSystemRepository leitnerSystemRepository(Ref ref) {
   final remoteDataSource = ref.read(leitnerSystemRemoteDataSourceProvider);
 
   return LeitnerSystemImpl(remoteDataSource);
 }
 
 @riverpod
-GenerateFlashcards generateFlashcards(GenerateFlashcardsRef ref) {
+GenerateFlashcards generateFlashcards(Ref ref) {
   final repository = ref.read(leitnerSystemRepositoryProvider);
 
   return GenerateFlashcards(repository);
 }
 
 @riverpod
-AnalyzeFlashcardsResult analyzeFlashcardsResult(
-    AnalyzeFlashcardsResultRef ref) {
+AnalyzeFlashcardsResult analyzeFlashcardsResult(Ref ref) {
   final repository = ref.read(leitnerSystemRepositoryProvider);
 
   return AnalyzeFlashcardsResult(repository);

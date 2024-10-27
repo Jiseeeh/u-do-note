@@ -23,8 +23,7 @@ class QuizBody extends ConsumerWidget {
     required this.onSelectAnswer,
     required this.onNext,
     required this.onFinish,
-    Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

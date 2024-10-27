@@ -7,7 +7,7 @@ part of 'analytics_screen_provider.dart';
 // **************************************************************************
 
 String _$remarkRemoteDataSourceHash() =>
-    r'2ce48d19fda76e2e7c2f4dd8905a87e77890be01';
+    r'bab80d24b401a394067b5519849b8da7a271fa49';
 
 /// See also [remarkRemoteDataSource].
 @ProviderFor(remarkRemoteDataSource)
@@ -26,7 +26,7 @@ final remarkRemoteDataSourceProvider =
 // ignore: unused_element
 typedef RemarkRemoteDataSourceRef
     = AutoDisposeProviderRef<RemarkRemoteDataSource>;
-String _$remarkRepositoryHash() => r'67cc37b1037dbd011238cb3d1c97ca8ef6dceecd';
+String _$remarkRepositoryHash() => r'c0bac4adc749a10d64998bebd56b2963f695ab76';
 
 /// See also [remarkRepository].
 @ProviderFor(remarkRepository)
@@ -43,7 +43,7 @@ final remarkRepositoryProvider = AutoDisposeProvider<RemarkRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef RemarkRepositoryRef = AutoDisposeProviderRef<RemarkRepository>;
-String _$getRemarksHash() => r'1f5f71efc09d5166338fc5406a5920238f0f617f';
+String _$getRemarksHash() => r'9e5dfaf1587cf87db9e03b45677a5a754b054e72';
 
 /// See also [getRemarks].
 @ProviderFor(getRemarks)
@@ -60,7 +60,7 @@ final getRemarksProvider = AutoDisposeProvider<GetRemarks>.internal(
 // ignore: unused_element
 typedef GetRemarksRef = AutoDisposeProviderRef<GetRemarks>;
 String _$getFlashcardsToReviewHash() =>
-    r'3de7a0a857f6b1732a95952e5c02521e56fe0400';
+    r'c322851066e40c83b17d84574a9eea9d22f0a871';
 
 /// See also [getFlashcardsToReview].
 @ProviderFor(getFlashcardsToReview)
@@ -79,7 +79,7 @@ final getFlashcardsToReviewProvider =
 // ignore: unused_element
 typedef GetFlashcardsToReviewRef
     = AutoDisposeProviderRef<GetFlashcardsToReview>;
-String _$getQuizzesToTakeHash() => r'fb104e6c7841f0d1a839b1bbfc331ebafff1544d';
+String _$getQuizzesToTakeHash() => r'aaac8dc0a43e809a180eae531143510b9fca4ac2';
 
 /// See also [getQuizzesToTake].
 @ProviderFor(getQuizzesToTake)
@@ -96,7 +96,7 @@ final getQuizzesToTakeProvider = AutoDisposeProvider<GetQuizzesToTake>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetQuizzesToTakeRef = AutoDisposeProviderRef<GetQuizzesToTake>;
-String _$getAnalysisHash() => r'872ef6fc6314a9fffe007abf9e64bc73be951bcd';
+String _$getAnalysisHash() => r'66055c66b76b82dd76919c88b2f8f7a6e709495f';
 
 /// See also [getAnalysis].
 @ProviderFor(getAnalysis)

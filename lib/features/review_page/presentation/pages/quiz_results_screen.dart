@@ -18,8 +18,7 @@ class QuizResultsScreen extends ConsumerWidget {
       {required this.questions,
       required this.correctAnswersIndex,
       required this.selectedAnswersIndex,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +33,7 @@ class QuizResultsScreen extends ConsumerWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (didPop, _) {
         var pomodoro = ref.read(pomodoroProvider);
 
         pomodoro.resetState();

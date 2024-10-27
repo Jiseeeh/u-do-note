@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/constant.dart' as constant;
@@ -58,22 +59,22 @@ import 'package:u_do_note/features/review_page/presentation/widgets/sq3r/sq3r_pr
 part 'shared_provider.g.dart';
 
 @riverpod
-FirebaseAuth firebaseAuth(FirebaseAuthRef ref) {
+FirebaseAuth firebaseAuth(Ref ref) {
   return FirebaseAuth.instance;
 }
 
 @riverpod
-FirebaseFirestore firestore(FirestoreRef ref) {
+FirebaseFirestore firestore(Ref ref) {
   return FirebaseFirestore.instance;
 }
 
 @riverpod
-FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
+FirebaseStorage firebaseStorage(Ref ref) {
   return FirebaseStorage.instance;
 }
 
 @riverpod
-SharedRemoteDataSource sharedRemoteDataSource(SharedRemoteDataSourceRef ref) {
+SharedRemoteDataSource sharedRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -81,44 +82,42 @@ SharedRemoteDataSource sharedRemoteDataSource(SharedRemoteDataSourceRef ref) {
 }
 
 @riverpod
-SharedRepository sharedRepository(SharedRepositoryRef ref) {
+SharedRepository sharedRepository(Ref ref) {
   var sharedRemoteDataSource = ref.read(sharedRemoteDataSourceProvider);
 
   return SharedImpl(sharedRemoteDataSource);
 }
 
 @riverpod
-GenerateQuizQuestions generateQuizQuestions(GenerateQuizQuestionsRef ref) {
+GenerateQuizQuestions generateQuizQuestions(Ref ref) {
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GenerateQuizQuestions(sharedRepository);
 }
 
 @riverpod
-GetOldSessions getOldSessions(GetOldSessionsRef ref) {
+GetOldSessions getOldSessions(Ref ref) {
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GetOldSessions(sharedRepository);
 }
 
 @riverpod
-GenerateContentWithAssist generateContentWithAssist(
-    GenerateContentWithAssistRef ref) {
+GenerateContentWithAssist generateContentWithAssist(Ref ref) {
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GenerateContentWithAssist(sharedRepository);
 }
 
 @riverpod
-GenerateXqrFeedback generateXqrFeedback(GenerateXqrFeedbackRef ref) {
+GenerateXqrFeedback generateXqrFeedback(Ref ref) {
   var sharedRepository = ref.read(sharedRepositoryProvider);
 
   return GenerateXqrFeedback(sharedRepository);
 }
 
 @Riverpod(keepAlive: true)
-StreamController<String?> selectNotificationStream(
-    SelectNotificationStreamRef ref) {
+StreamController<String?> selectNotificationStream(Ref ref) {
   final controller = StreamController<String?>.broadcast();
 
   ref.onDispose(() {
@@ -129,7 +128,7 @@ StreamController<String?> selectNotificationStream(
 }
 
 @riverpod
-Future<String?> getLaunchPayload(GetLaunchPayloadRef ref) async {
+Future<String?> getLaunchPayload(Ref ref) async {
   final notificationPlugin = ref.read(localNotificationProvider.notifier);
   return await notificationPlugin.getOnLaunchPayload();
 }

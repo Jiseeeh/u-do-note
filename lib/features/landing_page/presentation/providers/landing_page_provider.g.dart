@@ -7,7 +7,7 @@ part of 'landing_page_provider.dart';
 // **************************************************************************
 
 String _$landingPageRemoteDataSourceHash() =>
-    r'cc3ae353ac5f59e3053197fb455b1b3b8c76f91b';
+    r'5f86a4f84c7f7d7fc11cb06df5e571fda013131b';
 
 /// See also [landingPageRemoteDataSource].
 @ProviderFor(landingPageRemoteDataSource)
@@ -27,7 +27,7 @@ final landingPageRemoteDataSourceProvider =
 typedef LandingPageRemoteDataSourceRef
     = AutoDisposeProviderRef<LandingPageRemoteDataSource>;
 String _$landingPageRepositoryHash() =>
-    r'edfb3a19fc129e2a899532b3e0caaf9f8f125750';
+    r'4adc9cc17f92265eadfc46780f6b331c0f1e23af';
 
 /// See also [landingPageRepository].
 @ProviderFor(landingPageRepository)
@@ -46,7 +46,7 @@ final landingPageRepositoryProvider =
 // ignore: unused_element
 typedef LandingPageRepositoryRef
     = AutoDisposeProviderRef<LandingPageRepository>;
-String _$getOnGoingReviewsHash() => r'4fac24ecb78f6181f4a5e402fe4455bee91f4078';
+String _$getOnGoingReviewsHash() => r'b4b162eb7ef595ce5df06b4f2a7d301444e48a81';
 
 /// See also [getOnGoingReviews].
 @ProviderFor(getOnGoingReviews)

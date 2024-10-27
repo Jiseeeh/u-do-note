@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -18,8 +19,7 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 part 'elaboration_provider.g.dart';
 
 @riverpod
-ElaborationRemoteDataSource elaborationRemoteDataSource(
-    ElaborationRemoteDataSourceRef ref) {
+ElaborationRemoteDataSource elaborationRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -27,21 +27,21 @@ ElaborationRemoteDataSource elaborationRemoteDataSource(
 }
 
 @riverpod
-ElaborationRepository elaborationRepository(ElaborationRepositoryRef ref) {
+ElaborationRepository elaborationRepository(Ref ref) {
   final remoteDataSource = ref.read(elaborationRemoteDataSourceProvider);
 
   return ElaborationImpl(remoteDataSource);
 }
 
 @riverpod
-SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(Ref ref) {
   final repository = ref.read(elaborationRepositoryProvider);
 
   return SaveQuizResults(repository);
 }
 
 @riverpod
-GetElaboratedContent getElaboratedContent(GetElaboratedContentRef ref) {
+GetElaboratedContent getElaboratedContent(Ref ref) {
   final repository = ref.read(elaborationRepositoryProvider);
 
   return GetElaboratedContent(repository);

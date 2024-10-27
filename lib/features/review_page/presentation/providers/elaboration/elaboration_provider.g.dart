@@ -7,7 +7,7 @@ part of 'elaboration_provider.dart';
 // **************************************************************************
 
 String _$elaborationRemoteDataSourceHash() =>
-    r'c50d35c764063781371dbb062162e6981ca1d84c';
+    r'99b0d8f053e70bab79c574e6130f17b0fe238ac5';
 
 /// See also [elaborationRemoteDataSource].
 @ProviderFor(elaborationRemoteDataSource)
@@ -27,7 +27,7 @@ final elaborationRemoteDataSourceProvider =
 typedef ElaborationRemoteDataSourceRef
     = AutoDisposeProviderRef<ElaborationRemoteDataSource>;
 String _$elaborationRepositoryHash() =>
-    r'857892d9507190c867913685b9022124bde4db45';
+    r'9d69f5dade2ab5064ed2a99c3553ee3869d19eba';
 
 /// See also [elaborationRepository].
 @ProviderFor(elaborationRepository)
@@ -46,7 +46,7 @@ final elaborationRepositoryProvider =
 // ignore: unused_element
 typedef ElaborationRepositoryRef
     = AutoDisposeProviderRef<ElaborationRepository>;
-String _$saveQuizResultsHash() => r'c8939482e07f726b7f555b48aff57dffa6f4a1a3';
+String _$saveQuizResultsHash() => r'7bd5a6aa0937b6ec5a77e13fa7ee55fac56f5fa6';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)
@@ -64,7 +64,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 // ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$getElaboratedContentHash() =>
-    r'b737b75a1fdc838cb7e53612a4654deadeb578d4';
+    r'174c7b561c4b709bd594a59ba494201049a88986';
 
 /// See also [getElaboratedContent].
 @ProviderFor(getElaboratedContent)

@@ -102,7 +102,9 @@ class _MainAppState extends ConsumerState<MainApp> {
       );
 
       try {
-        await _handlePayload(context, payload);
+        if (context.mounted) {
+          await _handlePayload(context, payload);
+        }
       } catch (e) {
         EasyLoading.showError("Something went wrong when starting the quiz.");
         logger.w(e);

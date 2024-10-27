@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -21,8 +22,7 @@ import 'package:u_do_note/features/review_page/domain/usecases/spaced_repetition
 part 'spaced_repetition_provider.g.dart';
 
 @riverpod
-SpacedRepetitionRemoteDataSource spacedRemoteDataSource(
-    SpacedRemoteDataSourceRef ref) {
+SpacedRepetitionRemoteDataSource spacedRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -30,15 +30,14 @@ SpacedRepetitionRemoteDataSource spacedRemoteDataSource(
 }
 
 @riverpod
-SpacedRepetitionRepository spacedRepetitionRepository(
-    SpacedRepetitionRepositoryRef ref) {
+SpacedRepetitionRepository spacedRepetitionRepository(Ref ref) {
   final remoteDataSource = ref.read(spacedRemoteDataSourceProvider);
 
   return SpacedRepetitionImpl(remoteDataSource);
 }
 
 @riverpod
-SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(Ref ref) {
   final repository = ref.read(spacedRepetitionRepositoryProvider);
 
   return SaveQuizResults(repository);

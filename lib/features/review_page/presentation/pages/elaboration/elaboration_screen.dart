@@ -18,7 +18,7 @@ import 'package:u_do_note/routes/app_route.dart';
 class ElaborationScreen extends ConsumerStatefulWidget {
   final ElaborationModel elaborationModel;
 
-  const ElaborationScreen(this.elaborationModel, {Key? key}) : super(key: key);
+  const ElaborationScreen(this.elaborationModel, {super.key});
 
   @override
   ConsumerState<ElaborationScreen> createState() => _ElaborationScreenState();
@@ -29,30 +29,31 @@ class _ElaborationScreenState extends ConsumerState<ElaborationScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(
-        const Duration(seconds: 3),
-        () => showDialog(
-            context: context,
-            builder: (dialogContext) {
-              return AlertDialog(
-                title: Text(context.tr('notice')),
-                content: Text(context.tr('review_remind')),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                      },
-                      child: const Text("Okay"))
-                ],
-              );
-            }));
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      showDialog(
+          context: context,
+          builder: (dialogContext) {
+            return AlertDialog(
+              title: Text(context.tr('notice')),
+              content: Text(context.tr('review_remind')),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: const Text("Okay"))
+              ],
+            );
+          });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
 
         if (context.mounted) {

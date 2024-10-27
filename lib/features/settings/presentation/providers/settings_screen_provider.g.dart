@@ -7,7 +7,7 @@ part of 'settings_screen_provider.dart';
 // **************************************************************************
 
 String _$settingsRemoteDataSourceHash() =>
-    r'ac98a9458850e4d1cc16bf809e00b7c9aa114276';
+    r'15bb8f5cd7735cc021d1c7db69b6fbc9f95d1860';
 
 /// See also [settingsRemoteDataSource].
 @ProviderFor(settingsRemoteDataSource)
@@ -27,7 +27,7 @@ final settingsRemoteDataSourceProvider =
 typedef SettingsRemoteDataSourceRef
     = AutoDisposeProviderRef<SettingsRemoteDataSource>;
 String _$settingsRepositoryHash() =>
-    r'0f25932dd57222b988c44c27337165e9c33dc3d2';
+    r'd60fb709a0e53ddb79c389a4771e0ab667a47957';
 
 /// See also [settingsRepository].
 @ProviderFor(settingsRepository)
@@ -45,7 +45,7 @@ final settingsRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SettingsRepositoryRef = AutoDisposeProviderRef<SettingsRepository>;
-String _$signOutHash() => r'075fea2f827df65ae65bdc6341653f81627f5143';
+String _$signOutHash() => r'9de82ed3a126758eaef53ec4e5431a14ef84297c';
 
 /// See also [signOut].
 @ProviderFor(signOut)
@@ -62,7 +62,7 @@ final signOutProvider = AutoDisposeProvider<SignOut>.internal(
 // ignore: unused_element
 typedef SignOutRef = AutoDisposeProviderRef<SignOut>;
 String _$uploadProfilePictureHash() =>
-    r'cf12acafe6536988c6f91e64bc2dac22f7a146a5';
+    r'5e734d5e1ff8adf3eb69eda08c06d5c2f1623770';
 
 /// See also [uploadProfilePicture].
 @ProviderFor(uploadProfilePicture)

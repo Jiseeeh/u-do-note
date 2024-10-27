@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -18,8 +19,7 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 part 'acronym_provider.g.dart';
 
 @riverpod
-AcronymRemoteDataSource acronymRemoteDataSource(
-    AcronymRemoteDataSourceRef ref) {
+AcronymRemoteDataSource acronymRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -27,22 +27,21 @@ AcronymRemoteDataSource acronymRemoteDataSource(
 }
 
 @riverpod
-AcronymRepository acronymRepository(AcronymRepositoryRef ref) {
+AcronymRepository acronymRepository(Ref ref) {
   final remoteDataSource = ref.read(acronymRemoteDataSourceProvider);
 
   return AcronymImpl(remoteDataSource);
 }
 
 @riverpod
-GenerateAcronymMnemonics generateAcronymMnemonics(
-    GenerateAcronymMnemonicsRef ref) {
+GenerateAcronymMnemonics generateAcronymMnemonics(Ref ref) {
   final repository = ref.read(acronymRepositoryProvider);
 
   return GenerateAcronymMnemonics(repository);
 }
 
 @riverpod
-SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(Ref ref) {
   final repository = ref.read(acronymRepositoryProvider);
 
   return SaveQuizResults(repository);

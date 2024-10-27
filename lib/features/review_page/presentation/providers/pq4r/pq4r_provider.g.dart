@@ -7,7 +7,7 @@ part of 'pq4r_provider.dart';
 // **************************************************************************
 
 String _$pq4rRemoteDataSourceHash() =>
-    r'2fb9c14c20caaf49b1e5db3962f20e0e15cb2713';
+    r'b04b27e00aa80be9918021605c3fb69cd6a975f3';
 
 /// See also [pq4rRemoteDataSource].
 @ProviderFor(pq4rRemoteDataSource)
@@ -25,7 +25,7 @@ final pq4rRemoteDataSourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef Pq4rRemoteDataSourceRef = AutoDisposeProviderRef<Pq4rRemoteDataSource>;
-String _$pq4rRepositoryHash() => r'de12f295a171923b3f92071c3cf04b208fb5bb11';
+String _$pq4rRepositoryHash() => r'1195c4882106d833e117d0ddbac491c4343b8eb6';
 
 /// See also [pq4rRepository].
 @ProviderFor(pq4rRepository)
@@ -42,7 +42,7 @@ final pq4rRepositoryProvider = AutoDisposeProvider<Pq4rRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef Pq4rRepositoryRef = AutoDisposeProviderRef<Pq4rRepository>;
-String _$saveQuizResultsHash() => r'f751ede2cff74d375ec2e1458e487e4786739e86';
+String _$saveQuizResultsHash() => r'794d4d4e5b034cfb34cc629c96dcff00f91fa2a3';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)

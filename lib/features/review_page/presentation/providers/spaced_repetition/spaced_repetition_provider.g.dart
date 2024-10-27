@@ -7,7 +7,7 @@ part of 'spaced_repetition_provider.dart';
 // **************************************************************************
 
 String _$spacedRemoteDataSourceHash() =>
-    r'd1412f1c9f8a1af6d9c3966fb55189a468a817d5';
+    r'1f6bead19291b53c9d0dec862d4e6cc34c05def1';
 
 /// See also [spacedRemoteDataSource].
 @ProviderFor(spacedRemoteDataSource)
@@ -27,7 +27,7 @@ final spacedRemoteDataSourceProvider =
 typedef SpacedRemoteDataSourceRef
     = AutoDisposeProviderRef<SpacedRepetitionRemoteDataSource>;
 String _$spacedRepetitionRepositoryHash() =>
-    r'a1442ef4d7b6284f1259edcec76e4eff5607b7ca';
+    r'46752d58ba9536002b7a657a40bb0d8f49828223';
 
 /// See also [spacedRepetitionRepository].
 @ProviderFor(spacedRepetitionRepository)
@@ -46,7 +46,7 @@ final spacedRepetitionRepositoryProvider =
 // ignore: unused_element
 typedef SpacedRepetitionRepositoryRef
     = AutoDisposeProviderRef<SpacedRepetitionRepository>;
-String _$saveQuizResultsHash() => r'7b0023ec55603a0dc146938e88c5b44080d71d1d';
+String _$saveQuizResultsHash() => r'c2de1fe4f24c2781e5481db9fa733b15ad6fd2cb';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)

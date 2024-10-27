@@ -14,8 +14,7 @@ class AnswerContainer extends ConsumerWidget {
       required this.selectedAnswerIndex,
       required this.question,
       required this.onSelectAnswer,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

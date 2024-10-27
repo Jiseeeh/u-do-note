@@ -39,8 +39,7 @@ class QuizScreen extends ConsumerStatefulWidget {
       {required this.questions,
       required this.model,
       required this.reviewMethod,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   ConsumerState<QuizScreen> createState() => _QuizScreenState();
@@ -237,7 +236,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (didPop, _) {
         timer.cancel();
 
         ref.read(reviewScreenProvider).resetState();

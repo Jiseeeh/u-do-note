@@ -9,8 +9,9 @@ import 'package:u_do_note/features/note_taking/presentation/providers/notes_prov
 class AddNoteDialog extends ConsumerStatefulWidget {
   final String notebookId;
   final String? initialContent;
-  const AddNoteDialog({Key? key, required this.notebookId, this.initialContent})
-      : super(key: key);
+
+  const AddNoteDialog(
+      {super.key, required this.notebookId, this.initialContent});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:parchment_delta/parchment_delta.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 import 'package:u_do_note/core/enums/assistance_type.dart';
@@ -27,8 +26,7 @@ class Sq3rScreen extends ConsumerStatefulWidget {
   final bool isFromOldSession;
 
   const Sq3rScreen(
-      {required this.sq3rModel, this.isFromOldSession = false, Key? key})
-      : super(key: key);
+      {required this.sq3rModel, this.isFromOldSession = false, super.key});
 
   @override
   ConsumerState<Sq3rScreen> createState() => _Sq3rScreenState();
@@ -63,19 +61,21 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
 
     _startTimeSeconds = _initialTime;
     if (!widget.isFromOldSession) {
-      Future.delayed(
-          Duration.zero,
-          () => CustomDialog.show(context,
-                  title: "SQ3R -- Survey",
-                  subTitle:
-                      "Survey your note for 2 minutes and try to formulate questions on the go.",
-                  buttons: [
-                    CustomDialogButton(
-                        text: "Okay",
-                        onPressed: () {
-                          _startTimer();
-                        })
-                  ]));
+      Future.delayed(Duration.zero, () {
+        if (!mounted) return;
+
+        CustomDialog.show(context,
+            title: "SQ3R -- Survey",
+            subTitle:
+                "Survey your note for 2 minutes and try to formulate questions on the go.",
+            buttons: [
+              CustomDialogButton(
+                  text: "Okay",
+                  onPressed: () {
+                    _startTimer();
+                  })
+            ]);
+      });
     }
   }
 

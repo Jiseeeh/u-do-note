@@ -6,9 +6,9 @@ class CustomError extends ConsumerWidget {
   final FlutterErrorDetails errorDetails;
 
   const CustomError({
-    Key? key,
+    super.key,
     required this.errorDetails,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

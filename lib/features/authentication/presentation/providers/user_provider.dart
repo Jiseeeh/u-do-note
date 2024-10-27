@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -14,37 +15,35 @@ import 'package:u_do_note/features/authentication/domain/usecases/sign_up_with_e
 part 'user_provider.g.dart';
 
 @riverpod
-UserRemoteDataSource userRemoteDataSource(UserRemoteDataSourceRef ref) {
+UserRemoteDataSource userRemoteDataSource(Ref ref) {
   var auth = ref.read(firebaseAuthProvider);
 
   return UserRemoteDataSource(auth);
 }
 
 @riverpod
-UserRepository userRepository(UserRepositoryRef ref) {
+UserRepository userRepository(Ref ref) {
   final userRemoteDataSource = ref.read(userRemoteDataSourceProvider);
 
   return UserRepositoryImpl(userRemoteDataSource);
 }
 
 @riverpod
-SignInWithEmailAndPassword signInWithEmailAndPassword(
-    SignInWithEmailAndPasswordRef ref) {
+SignInWithEmailAndPassword signInWithEmailAndPassword(Ref ref) {
   final repository = ref.read(userRepositoryProvider);
 
   return SignInWithEmailAndPassword(repository);
 }
 
 @riverpod
-SignUpWithEmailAndPassword signUpWithEmailAndPassword(
-    SignUpWithEmailAndPasswordRef ref) {
+SignUpWithEmailAndPassword signUpWithEmailAndPassword(Ref ref) {
   final repository = ref.read(userRepositoryProvider);
 
   return SignUpWithEmailAndPassword(repository);
 }
 
 @riverpod
-ResetPassword resetPassword(ResetPasswordRef ref) {
+ResetPassword resetPassword(Ref ref) {
   final repository = ref.read(userRepositoryProvider);
 
   return ResetPassword(repository);

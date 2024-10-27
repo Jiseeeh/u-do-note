@@ -23,9 +23,9 @@ class BottomBar extends ConsumerStatefulWidget {
     required this.barColor,
     required this.end,
     required this.start,
-    Key? key,
+    super.key,
     required StackFit fit,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<BottomBar> createState() => _BottomBarState();

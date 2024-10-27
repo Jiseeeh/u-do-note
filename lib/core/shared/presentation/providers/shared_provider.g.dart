@@ -6,7 +6,7 @@ part of 'shared_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$firebaseAuthHash() => r'7791bf70ce0f01bf991a53a76abc915478673c0b';
+String _$firebaseAuthHash() => r'912368c3df3f72e4295bf7a8cda93b9c5749d923';
 
 /// See also [firebaseAuth].
 @ProviderFor(firebaseAuth)
@@ -22,7 +22,7 @@ final firebaseAuthProvider = AutoDisposeProvider<FirebaseAuth>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirebaseAuthRef = AutoDisposeProviderRef<FirebaseAuth>;
-String _$firestoreHash() => r'ef4a6b0737caace50a6d79dd3e4e2aa1bc3031d5';
+String _$firestoreHash() => r'0e25e335c5657f593fc1baf3d9fd026e70bca7fa';
 
 /// See also [firestore].
 @ProviderFor(firestore)
@@ -38,7 +38,7 @@ final firestoreProvider = AutoDisposeProvider<FirebaseFirestore>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
-String _$firebaseStorageHash() => r'9ece783a064077980d64000c5d6f0b1846ff5c4c';
+String _$firebaseStorageHash() => r'aa6946fd2a3470c4f3e2e72956076591cc63b435';
 
 /// See also [firebaseStorage].
 @ProviderFor(firebaseStorage)
@@ -56,7 +56,7 @@ final firebaseStorageProvider = AutoDisposeProvider<FirebaseStorage>.internal(
 // ignore: unused_element
 typedef FirebaseStorageRef = AutoDisposeProviderRef<FirebaseStorage>;
 String _$sharedRemoteDataSourceHash() =>
-    r'8cdac29bcd0b2f34b0e01f1de07ae2869f6484be';
+    r'2fcc2df9a720a9cf2f2422fd6e596a91602f2b2c';
 
 /// See also [sharedRemoteDataSource].
 @ProviderFor(sharedRemoteDataSource)
@@ -75,7 +75,7 @@ final sharedRemoteDataSourceProvider =
 // ignore: unused_element
 typedef SharedRemoteDataSourceRef
     = AutoDisposeProviderRef<SharedRemoteDataSource>;
-String _$sharedRepositoryHash() => r'3701c81f259fdc78db86863b92e8872000f2eaf5';
+String _$sharedRepositoryHash() => r'34c6d74b169db9a753e582645879956d80ca4a18';
 
 /// See also [sharedRepository].
 @ProviderFor(sharedRepository)
@@ -93,7 +93,7 @@ final sharedRepositoryProvider = AutoDisposeProvider<SharedRepository>.internal(
 // ignore: unused_element
 typedef SharedRepositoryRef = AutoDisposeProviderRef<SharedRepository>;
 String _$generateQuizQuestionsHash() =>
-    r'b58913008bf63a09c779c29241c42eafcaa3f315';
+    r'982fed27f4b62f9e72777951ab56a189ac81430a';
 
 /// See also [generateQuizQuestions].
 @ProviderFor(generateQuizQuestions)
@@ -112,7 +112,7 @@ final generateQuizQuestionsProvider =
 // ignore: unused_element
 typedef GenerateQuizQuestionsRef
     = AutoDisposeProviderRef<GenerateQuizQuestions>;
-String _$getOldSessionsHash() => r'6d505c8a2f13e730cd7e30c8330706ca8dacee0b';
+String _$getOldSessionsHash() => r'ddcdd2b4462c4274ba657608095ee68d5146b587';
 
 /// See also [getOldSessions].
 @ProviderFor(getOldSessions)
@@ -130,7 +130,7 @@ final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
 // ignore: unused_element
 typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
 String _$generateContentWithAssistHash() =>
-    r'a77f44cdf6f5277fe0e49b44a72b0a1b5713c977';
+    r'54dd8ad00189e6c5ff4dd2e4ede33f4268978275';
 
 /// See also [generateContentWithAssist].
 @ProviderFor(generateContentWithAssist)
@@ -150,7 +150,7 @@ final generateContentWithAssistProvider =
 typedef GenerateContentWithAssistRef
     = AutoDisposeProviderRef<GenerateContentWithAssist>;
 String _$generateXqrFeedbackHash() =>
-    r'01b11207afa7e5069e065bff1bc989b75f7bebb9';
+    r'becfdc39e2262a13b77d62dcda0815bd59f010a9';
 
 /// See also [generateXqrFeedback].
 @ProviderFor(generateXqrFeedback)
@@ -169,7 +169,7 @@ final generateXqrFeedbackProvider =
 // ignore: unused_element
 typedef GenerateXqrFeedbackRef = AutoDisposeProviderRef<GenerateXqrFeedback>;
 String _$selectNotificationStreamHash() =>
-    r'e28e3494324886142dd4fb3ef4eb5284405cbb67';
+    r'a541123e50ef0c467470a7a14205831f7296c25f';
 
 /// See also [selectNotificationStream].
 @ProviderFor(selectNotificationStream)
@@ -187,7 +187,7 @@ final selectNotificationStreamProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SelectNotificationStreamRef = ProviderRef<StreamController<String?>>;
-String _$getLaunchPayloadHash() => r'd60ef8490cad576229a551428a28b9c761586fac';
+String _$getLaunchPayloadHash() => r'7ecc4007d57788d4112d875b11748b72f027ef62';
 
 /// See also [getLaunchPayload].
 @ProviderFor(getLaunchPayload)

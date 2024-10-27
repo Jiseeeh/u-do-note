@@ -20,7 +20,7 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 class PreReview extends ConsumerStatefulWidget {
   final void Function(BuildContext context) handler;
 
-  const PreReview({required this.handler, Key? key}) : super(key: key);
+  const PreReview({required this.handler, super.key});
 
   @override
   ConsumerState<PreReview> createState() => _PreReviewState();

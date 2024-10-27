@@ -3,7 +3,6 @@ import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parchment_delta/parchment_delta.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/review_methods.dart';
@@ -17,8 +16,7 @@ import 'package:u_do_note/routes/app_route.dart';
 class ActiveRecallScreen extends ConsumerStatefulWidget {
   final ActiveRecallModel activeRecallModel;
 
-  const ActiveRecallScreen({required this.activeRecallModel, Key? key})
-      : super(key: key);
+  const ActiveRecallScreen({required this.activeRecallModel, super.key});
 
   @override
   ConsumerState<ActiveRecallScreen> createState() => _ActiveRecallScreenState();
@@ -54,9 +52,9 @@ class _ActiveRecallScreenState extends ConsumerState<ActiveRecallScreen> {
 
     if (!_showDialogAgain) return;
 
-    Future.delayed(
-      Duration.zero,
-      () => showDialog(
+    Future.delayed(Duration.zero, () {
+      if (!mounted) return;
+      showDialog(
         context: context,
         builder: (dialogContext) {
           return StatefulBuilder(
@@ -96,8 +94,8 @@ class _ActiveRecallScreenState extends ConsumerState<ActiveRecallScreen> {
             },
           );
         },
-      ),
-    );
+      );
+    });
   }
 
   ParchmentDocument _loadDocument() {

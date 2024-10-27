@@ -14,7 +14,7 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 class NotebookCard extends ConsumerWidget {
   final NotebookEntity notebook;
 
-  const NotebookCard(this.notebook, {Key? key}) : super(key: key);
+  const NotebookCard(this.notebook, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

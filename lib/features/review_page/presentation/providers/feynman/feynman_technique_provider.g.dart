@@ -7,7 +7,7 @@ part of 'feynman_technique_provider.dart';
 // **************************************************************************
 
 String _$feynmanRemoteDataSourceHash() =>
-    r'c43e2bfeade78774649c3744723ee1fc0f8b72f9';
+    r'0875cc4576ce468a97641546ed55ba5926c1faa3';
 
 /// See also [feynmanRemoteDataSource].
 @ProviderFor(feynmanRemoteDataSource)
@@ -27,7 +27,7 @@ final feynmanRemoteDataSourceProvider =
 typedef FeynmanRemoteDataSourceRef
     = AutoDisposeProviderRef<FeynmanRemoteDataSource>;
 String _$feynmanTechniqueRepositoryHash() =>
-    r'b69333e4674f1538a92608d841b6ff2e8fe9350f';
+    r'959c5fd51f2d7cb316a341414e97210be8793a24';
 
 /// See also [feynmanTechniqueRepository].
 @ProviderFor(feynmanTechniqueRepository)
@@ -46,7 +46,7 @@ final feynmanTechniqueRepositoryProvider =
 // ignore: unused_element
 typedef FeynmanTechniqueRepositoryRef
     = AutoDisposeProviderRef<FeynmanTechniqueRepository>;
-String _$getChatResponseHash() => r'8df9d00b00a47b8991f765bea6247011329bbde6';
+String _$getChatResponseHash() => r'34db0bd6480ca64ffd16895ff7bed322d7d07f3f';
 
 /// See also [getChatResponse].
 @ProviderFor(getChatResponse)
@@ -63,7 +63,7 @@ final getChatResponseProvider = AutoDisposeProvider<GetChatResponse>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetChatResponseRef = AutoDisposeProviderRef<GetChatResponse>;
-String _$saveSessionHash() => r'cb845d9dafb8c6d535dedf7cf2765da803fd52fa';
+String _$saveSessionHash() => r'8f37fd5a083966d7799837e6bce77f8c814a202f';
 
 /// See also [saveSession].
 @ProviderFor(saveSession)
@@ -79,7 +79,7 @@ final saveSessionProvider = AutoDisposeProvider<SaveSession>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SaveSessionRef = AutoDisposeProviderRef<SaveSession>;
-String _$saveQuizResultsHash() => r'0f4609705679d52ebeb2c0e39f78915bc46824c0';
+String _$saveQuizResultsHash() => r'1244e5ab9cf2b86720daf919b334f9c17bb3a027';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)

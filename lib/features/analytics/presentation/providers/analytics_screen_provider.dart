@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 
@@ -14,7 +15,7 @@ import 'package:u_do_note/features/analytics/domain/usecases/get_remarks.dart';
 part 'analytics_screen_provider.g.dart';
 
 @riverpod
-RemarkRemoteDataSource remarkRemoteDataSource(RemarkRemoteDataSourceRef ref) {
+RemarkRemoteDataSource remarkRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -22,35 +23,35 @@ RemarkRemoteDataSource remarkRemoteDataSource(RemarkRemoteDataSourceRef ref) {
 }
 
 @riverpod
-RemarkRepository remarkRepository(RemarkRepositoryRef ref) {
+RemarkRepository remarkRepository(Ref ref) {
   var dataSource = ref.read(remarkRemoteDataSourceProvider);
 
   return RemarkRepositoryImpl(dataSource);
 }
 
 @riverpod
-GetRemarks getRemarks(GetRemarksRef ref) {
+GetRemarks getRemarks(Ref ref) {
   var repository = ref.read(remarkRepositoryProvider);
 
   return GetRemarks(repository);
 }
 
 @riverpod
-GetFlashcardsToReview getFlashcardsToReview(GetFlashcardsToReviewRef ref) {
+GetFlashcardsToReview getFlashcardsToReview(Ref ref) {
   var repository = ref.read(remarkRepositoryProvider);
 
   return GetFlashcardsToReview(repository);
 }
 
 @riverpod
-GetQuizzesToTake getQuizzesToTake(GetQuizzesToTakeRef ref) {
+GetQuizzesToTake getQuizzesToTake(Ref ref) {
   var repository = ref.read(remarkRepositoryProvider);
 
   return GetQuizzesToTake(repository);
 }
 
 @riverpod
-GetAnalysis getAnalysis(GetAnalysisRef ref) {
+GetAnalysis getAnalysis(Ref ref) {
   var repository = ref.read(remarkRepositoryProvider);
 
   return GetAnalysis(repository);
@@ -63,7 +64,6 @@ class AnalyticsScreen extends _$AnalyticsScreen {
     return;
   }
 
-  
   /// Returns the remarks in all learning strategies.
   Future<List<RemarkModel>> getRemarks() async {
     final getRemarks = ref.read(getRemarksProvider);
@@ -72,7 +72,6 @@ class AnalyticsScreen extends _$AnalyticsScreen {
 
     return failureOrRemarksModel.fold((failure) => [], (remarks) => remarks);
   }
-
 
   /// Returns the number of flashcards to review.
   Future<dynamic> getFlashcardsToReview() async {

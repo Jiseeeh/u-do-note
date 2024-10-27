@@ -248,7 +248,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (didPop, _) {
         var pomodoro = ref.watch(pomodoroProvider);
 
         if (pomodoro.pomodoroTimer == null) {

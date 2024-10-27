@@ -7,7 +7,7 @@ part of 'pomodoro_technique_provider.dart';
 // **************************************************************************
 
 String _$pomodoroTechniqueDataSourceHash() =>
-    r'cddbddf1812e2e5ee288cd0e4f5b9339b1b44aa8';
+    r'5431f0cc229d33cf50545d960d0b52e69c8fa24e';
 
 /// See also [pomodoroTechniqueDataSource].
 @ProviderFor(pomodoroTechniqueDataSource)
@@ -27,7 +27,7 @@ final pomodoroTechniqueDataSourceProvider =
 typedef PomodoroTechniqueDataSourceRef
     = AutoDisposeProviderRef<PomodoroRemoteDataSource>;
 String _$pomodoroTechniqueRepositoryHash() =>
-    r'bcc98341d1bafbbaf72bad5cc4b3a1e3eda6a442';
+    r'bd348ae63cd5ad447c9a9eeefa37829e71714725';
 
 /// See also [pomodoroTechniqueRepository].
 @ProviderFor(pomodoroTechniqueRepository)
@@ -46,7 +46,7 @@ final pomodoroTechniqueRepositoryProvider =
 // ignore: unused_element
 typedef PomodoroTechniqueRepositoryRef
     = AutoDisposeProviderRef<PomodoroTechniqueRepository>;
-String _$saveQuizResultsHash() => r'02e9cbd10c99ddca395b2b8a855169262ff3cc6e';
+String _$saveQuizResultsHash() => r'2e3fd489fe28d0494c11d90620930f010044819a';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)

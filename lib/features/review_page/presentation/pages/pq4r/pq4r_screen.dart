@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:parchment_delta/parchment_delta.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 import 'package:u_do_note/core/enums/assistance_type.dart';
@@ -28,8 +27,7 @@ class Pq4rScreen extends ConsumerStatefulWidget {
   final bool isFromOldSession;
 
   const Pq4rScreen(
-      {required this.pq4rModel, this.isFromOldSession = false, Key? key})
-      : super(key: key);
+      {required this.pq4rModel, this.isFromOldSession = false, super.key});
 
   @override
   ConsumerState<Pq4rScreen> createState() => _Pq4rScreenState();
@@ -74,19 +72,21 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
 
     _startTimeSeconds = _initialTime - 60;
     if (!widget.isFromOldSession) {
-      Future.delayed(
-          Duration.zero,
-          () => CustomDialog.show(context,
-                  title: "${Pq4rModel.name} -- Preview",
-                  subTitle:
-                      "Preview your note for 1 minute to get an overview of and structure of it.",
-                  buttons: [
-                    CustomDialogButton(
-                        text: "Okay",
-                        onPressed: () {
-                          _startTimer();
-                        })
-                  ]));
+      Future.delayed(Duration.zero, () {
+        if (!mounted) return;
+
+        CustomDialog.show(context,
+            title: "${Pq4rModel.name} -- Preview",
+            subTitle:
+                "Preview your note for 1 minute to get an overview of and structure of it.",
+            buttons: [
+              CustomDialogButton(
+                  text: "Okay",
+                  onPressed: () {
+                    _startTimer();
+                  })
+            ]);
+      });
     }
   }
 

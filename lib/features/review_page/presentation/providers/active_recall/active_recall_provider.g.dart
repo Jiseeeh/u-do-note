@@ -7,7 +7,7 @@ part of 'active_recall_provider.dart';
 // **************************************************************************
 
 String _$activeRecallRemoteDataSourceHash() =>
-    r'1c861cd35d7a9f490ec19740c86d72f5b9dfdc75';
+    r'88dfe66c2c06cc3d9ca91a897fbda7b62c64174f';
 
 /// See also [activeRecallRemoteDataSource].
 @ProviderFor(activeRecallRemoteDataSource)
@@ -27,7 +27,7 @@ final activeRecallRemoteDataSourceProvider =
 typedef ActiveRecallRemoteDataSourceRef
     = AutoDisposeProviderRef<ActiveRecallRemoteDataSource>;
 String _$activeRecallRepositoryHash() =>
-    r'4baeb3d020c9e1e7d2666eef083b891ed58f6f8b';
+    r'5ac75be6a5ed1036adcd9acdc910a6107b9c4327';
 
 /// See also [activeRecallRepository].
 @ProviderFor(activeRecallRepository)
@@ -46,7 +46,7 @@ final activeRecallRepositoryProvider =
 // ignore: unused_element
 typedef ActiveRecallRepositoryRef
     = AutoDisposeProviderRef<ActiveRecallRepository>;
-String _$saveQuizResultsHash() => r'2f4b7071a7a1702b9bb01557129d54a194275267';
+String _$saveQuizResultsHash() => r'4df3c617c9537e6e24a2060e53b60dbc1ab89b23';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)
@@ -64,7 +64,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 // ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$getActiveRecallFeedbackHash() =>
-    r'61e3bac5bfef6612df303896c0ad558084d96231';
+    r'118be50b66fa0a4755256c8a9bf9a05eaca1349f';
 
 /// See also [getActiveRecallFeedback].
 @ProviderFor(getActiveRecallFeedback)
@@ -84,7 +84,7 @@ final getActiveRecallFeedbackProvider =
 typedef GetActiveRecallFeedbackRef
     = AutoDisposeProviderRef<GetActiveRecallFeedback>;
 String _$updateFirestoreModelHash() =>
-    r'b5d540e86a994f4f0e03adc2feb43b15416625ad';
+    r'6a4d05beee8b1822ef60addefbb5fd37c0acb98d';
 
 /// See also [updateFirestoreModel].
 @ProviderFor(updateFirestoreModel)

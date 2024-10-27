@@ -11,8 +11,7 @@ class LearningMethod extends ConsumerWidget {
       {required this.title,
       required this.description,
       required this.onLearnMore,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

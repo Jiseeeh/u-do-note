@@ -47,8 +47,8 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
     this.spacedRepetitionModel,
     this.blurtingModel,
     this.activeRecallModel,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -111,7 +111,6 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
       }
     });
 
-    // ? to update the character count on ui
     _fleatherController!.addListener(() {
       setState(() {});
 
@@ -135,36 +134,37 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     checkIfAnalyzed(context);
 
     if (widget.blurtingModel != null) {
-      Future.delayed(
-          Duration.zero,
-          () => showDialog(
-              context: context,
-              builder: (dialogContext) {
-                return AlertDialog(
-                  scrollable: true,
-                  title: const Text("Blurting tips"),
-                  content: const Column(
-                    children: [
-                      Text(
-                          "\u2022 Write anything that comes to your mind about the topic, don't worry about organizing it. You can also use the mic if you want to.\n"),
-                      Text(
-                          "\u2022 If nothing comes to mind, just take a 5-10 minute break and come back.\n"),
-                      Text(
-                          "\u2022 We will ask after some time if you are done, or you can also tap the plus button in the bottom right of the screen and choose Done.")
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop();
-                        },
-                        child: const Text("Okay"))
+      Future.delayed(Duration.zero, () {
+        if (!mounted) return;
+        showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                scrollable: true,
+                title: const Text("Blurting tips"),
+                content: const Column(
+                  children: [
+                    Text(
+                        "\u2022 Write anything that comes to your mind about the topic, don't worry about organizing it. You can also use the mic if you want to.\n"),
+                    Text(
+                        "\u2022 If nothing comes to mind, just take a 5-10 minute break and come back.\n"),
+                    Text(
+                        "\u2022 We will ask after some time if you are done, or you can also tap the plus button in the bottom right of the screen and choose Done.")
                   ],
-                );
-              }));
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text("Okay"))
+                ],
+              );
+            });
+      });
     } else if (widget.spacedRepetitionModel != null) {
       String content =
-          "Review this note and come back after an hour or wait the notification to start your initial quiz.";
+          "Review this note and come back after an hour or wait for the notification to start your initial quiz.";
 
       var nextQuiz = widget.spacedRepetitionModel!.nextReview;
 
@@ -173,54 +173,52 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             "Your next quiz will be on ${DateFormat("EEE, dd MMM yyyy").format(nextQuiz!.toDate())}.";
       }
 
-      Future.delayed(
-          Duration.zero,
-          () => showDialog(
-              context: context,
-              builder: (dialogContext) {
-                return AlertDialog(
-                  scrollable: true,
-                  title: const Text("Spaced Repetition tips"),
-                  content: Column(
-                    children: [
-                      Text(content),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop();
-                        },
-                        child: const Text("Okay"))
-                  ],
-                );
-              }));
+      Future.delayed(Duration.zero, () {
+        if (!mounted) return;
+        showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                scrollable: true,
+                title: const Text("Spaced Repetition tips"),
+                content: Column(
+                  children: [Text(content)],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text("Okay"))
+                ],
+              );
+            });
+      });
     } else if (widget.activeRecallModel != null) {
       String content =
-          "Review this note and come back after 2 hours or wait the notification to start your initial quiz. You will be asked to input what can you remember about your note.";
+          "Review this note and come back after 2 hours or wait for the notification to start your initial quiz. You will be asked to input what you can remember about your note.";
 
-      Future.delayed(
-          Duration.zero,
-          () => showDialog(
-              context: context,
-              builder: (dialogContext) {
-                return AlertDialog(
-                  scrollable: true,
-                  title: const Text("Active Recall tips"),
-                  content: Column(
-                    children: [
-                      Text(content),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop();
-                        },
-                        child: const Text("Okay"))
-                  ],
-                );
-              }));
+      Future.delayed(Duration.zero, () {
+        if (!mounted) return;
+        showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                scrollable: true,
+                title: const Text("Active Recall tips"),
+                content: Column(
+                  children: [Text(content)],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text("Okay"))
+                ],
+              );
+            });
+      });
     }
   }
 
@@ -381,7 +379,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
         setState(() {});
 
-        showAnalysisDialog(context);
+        if (mounted) {
+          showAnalysisDialog(context);
+        }
       });
     });
   }
@@ -654,7 +654,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
 
         if (context.mounted) {

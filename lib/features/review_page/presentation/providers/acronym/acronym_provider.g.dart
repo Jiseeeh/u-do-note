@@ -7,7 +7,7 @@ part of 'acronym_provider.dart';
 // **************************************************************************
 
 String _$acronymRemoteDataSourceHash() =>
-    r'1fb0a324e739ea59e5519249c1bbb68743efbad8';
+    r'ef5f807c2897e35b1a27d2cdd73d11e92c92fa3d';
 
 /// See also [acronymRemoteDataSource].
 @ProviderFor(acronymRemoteDataSource)
@@ -26,7 +26,7 @@ final acronymRemoteDataSourceProvider =
 // ignore: unused_element
 typedef AcronymRemoteDataSourceRef
     = AutoDisposeProviderRef<AcronymRemoteDataSource>;
-String _$acronymRepositoryHash() => r'f37317205c7b3037cf1a4fca87f1df55752969a8';
+String _$acronymRepositoryHash() => r'7d58f4d01534d2df0f6f4467cb2dfda81b3a430b';
 
 /// See also [acronymRepository].
 @ProviderFor(acronymRepository)
@@ -45,7 +45,7 @@ final acronymRepositoryProvider =
 // ignore: unused_element
 typedef AcronymRepositoryRef = AutoDisposeProviderRef<AcronymRepository>;
 String _$generateAcronymMnemonicsHash() =>
-    r'9fa1a7da991c040419d76eedeee3141a3250df86';
+    r'60b56e054e2fa5d16fd764b6a5cb23fd1477f6af';
 
 /// See also [generateAcronymMnemonics].
 @ProviderFor(generateAcronymMnemonics)
@@ -64,7 +64,7 @@ final generateAcronymMnemonicsProvider =
 // ignore: unused_element
 typedef GenerateAcronymMnemonicsRef
     = AutoDisposeProviderRef<GenerateAcronymMnemonics>;
-String _$saveQuizResultsHash() => r'1b26bac6dfece9222636f90139ef7636801ecacd';
+String _$saveQuizResultsHash() => r'c8af524c1fadfabe16a2eb3338610c516e755448';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)

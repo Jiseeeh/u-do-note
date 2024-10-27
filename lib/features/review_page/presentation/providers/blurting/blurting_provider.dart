@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -17,8 +18,7 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 part 'blurting_provider.g.dart';
 
 @riverpod
-BlurtingRemoteDataSource blurtingRemoteDataSource(
-    BlurtingRemoteDataSourceRef ref) {
+BlurtingRemoteDataSource blurtingRemoteDataSource(Ref ref) {
   var firestore = ref.read(firestoreProvider);
   var firebaseAuth = ref.read(firebaseAuthProvider);
 
@@ -26,21 +26,21 @@ BlurtingRemoteDataSource blurtingRemoteDataSource(
 }
 
 @riverpod
-BlurtingRepository blurtingRepository(BlurtingRepositoryRef ref) {
+BlurtingRepository blurtingRepository(Ref ref) {
   var remoteDataSource = ref.read(blurtingRemoteDataSourceProvider);
 
   return BlurtingImpl(remoteDataSource);
 }
 
 @riverpod
-ApplyBlurting applyBlurting(ApplyBlurtingRef ref) {
+ApplyBlurting applyBlurting(Ref ref) {
   var repository = ref.read(blurtingRepositoryProvider);
 
   return ApplyBlurting(repository);
 }
 
 @riverpod
-SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(Ref ref) {
   var repository = ref.read(blurtingRepositoryProvider);
 
   return SaveQuizResults(repository);

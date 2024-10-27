@@ -28,8 +28,7 @@ class FeynmanTechniqueScreen extends ConsumerStatefulWidget {
   final FeynmanEntity? feynmanEntity;
 
   const FeynmanTechniqueScreen(this.contentFromPages, this.sessionName,
-      {this.feynmanEntity, Key? key})
-      : super(key: key);
+      {this.feynmanEntity, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -429,7 +428,7 @@ class _FeynmanTechniqueScreenState
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (didPop, _) {
         // ? This is to prevent the app from assuming that the user
         // ? has come from the analyze notes
         ref.read(reviewScreenProvider).resetState();

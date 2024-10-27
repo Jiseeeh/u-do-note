@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -17,8 +18,7 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 part 'feynman_technique_provider.g.dart';
 
 @riverpod
-FeynmanRemoteDataSource feynmanRemoteDataSource(
-    FeynmanRemoteDataSourceRef ref) {
+FeynmanRemoteDataSource feynmanRemoteDataSource(Ref ref) {
   var firebaseAuth = ref.read(firebaseAuthProvider);
   var firestore = ref.read(firestoreProvider);
 
@@ -26,28 +26,27 @@ FeynmanRemoteDataSource feynmanRemoteDataSource(
 }
 
 @riverpod
-FeynmanTechniqueRepository feynmanTechniqueRepository(
-    FeynmanTechniqueRepositoryRef ref) {
+FeynmanTechniqueRepository feynmanTechniqueRepository(Ref ref) {
   final remoteDataSource = ref.read(feynmanRemoteDataSourceProvider);
   return FeynmanTechniqueImpl(remoteDataSource);
 }
 
 @riverpod
-GetChatResponse getChatResponse(GetChatResponseRef ref) {
+GetChatResponse getChatResponse(Ref ref) {
   final repository = ref.read(feynmanTechniqueRepositoryProvider);
 
   return GetChatResponse(repository);
 }
 
 @riverpod
-SaveSession saveSession(SaveSessionRef ref) {
+SaveSession saveSession(Ref ref) {
   final repository = ref.read(feynmanTechniqueRepositoryProvider);
 
   return SaveSession(repository);
 }
 
 @riverpod
-SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(Ref ref) {
   final repository = ref.read(feynmanTechniqueRepositoryProvider);
 
   return SaveQuizResults(repository);

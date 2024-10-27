@@ -14,7 +14,7 @@ import 'package:u_do_note/features/note_taking/presentation/providers/notes_prov
 class AddNotebookDialog extends ConsumerStatefulWidget {
   final NotebookEntity? notebookEntity;
 
-  const AddNotebookDialog({this.notebookEntity, Key? key}) : super(key: key);
+  const AddNotebookDialog({this.notebookEntity, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>

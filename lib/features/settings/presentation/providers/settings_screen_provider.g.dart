@@ -22,6 +22,8 @@ final settingsRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SettingsRemoteDataSourceRef
     = AutoDisposeProviderRef<SettingsRemoteDataSource>;
 String _$settingsRepositoryHash() =>
@@ -40,6 +42,8 @@ final settingsRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SettingsRepositoryRef = AutoDisposeProviderRef<SettingsRepository>;
 String _$signOutHash() => r'075fea2f827df65ae65bdc6341653f81627f5143';
 
@@ -54,6 +58,8 @@ final signOutProvider = AutoDisposeProvider<SignOut>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SignOutRef = AutoDisposeProviderRef<SignOut>;
 String _$uploadProfilePictureHash() =>
     r'cf12acafe6536988c6f91e64bc2dac22f7a146a5';
@@ -71,6 +77,8 @@ final uploadProfilePictureProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UploadProfilePictureRef = AutoDisposeProviderRef<UploadProfilePicture>;
 String _$settingsHash() => r'1cb8f4be983245b1a331b00f51ab5adcb2ed753d';
 
@@ -87,4 +95,4 @@ final settingsProvider = AutoDisposeNotifierProvider<Settings, void>.internal(
 
 typedef _$Settings = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

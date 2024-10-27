@@ -22,6 +22,8 @@ final pomodoroTechniqueDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef PomodoroTechniqueDataSourceRef
     = AutoDisposeProviderRef<PomodoroRemoteDataSource>;
 String _$pomodoroTechniqueRepositoryHash() =>
@@ -40,6 +42,8 @@ final pomodoroTechniqueRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef PomodoroTechniqueRepositoryRef
     = AutoDisposeProviderRef<PomodoroTechniqueRepository>;
 String _$saveQuizResultsHash() => r'02e9cbd10c99ddca395b2b8a855169262ff3cc6e';
@@ -56,6 +60,8 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$pomodoroHash() => r'8b067960f1babbeae6fbe5e0e6d57179a00bc2c8';
 
@@ -72,4 +78,4 @@ final pomodoroProvider = NotifierProvider<Pomodoro, PomodoroState>.internal(
 
 typedef _$Pomodoro = Notifier<PomodoroState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

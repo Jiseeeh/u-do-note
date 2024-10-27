@@ -22,6 +22,8 @@ final activeRecallRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ActiveRecallRemoteDataSourceRef
     = AutoDisposeProviderRef<ActiveRecallRemoteDataSource>;
 String _$activeRecallRepositoryHash() =>
@@ -40,6 +42,8 @@ final activeRecallRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ActiveRecallRepositoryRef
     = AutoDisposeProviderRef<ActiveRecallRepository>;
 String _$saveQuizResultsHash() => r'2f4b7071a7a1702b9bb01557129d54a194275267';
@@ -56,6 +60,8 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$getActiveRecallFeedbackHash() =>
     r'61e3bac5bfef6612df303896c0ad558084d96231';
@@ -73,6 +79,8 @@ final getActiveRecallFeedbackProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetActiveRecallFeedbackRef
     = AutoDisposeProviderRef<GetActiveRecallFeedback>;
 String _$updateFirestoreModelHash() =>
@@ -91,6 +99,8 @@ final updateFirestoreModelProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UpdateFirestoreModelRef = AutoDisposeProviderRef<UpdateFirestoreModel>;
 String _$activeRecallHash() => r'15713c9e26b5c082707d6fc935a2be05aa1e57e0';
 
@@ -108,4 +118,4 @@ final activeRecallProvider =
 
 typedef _$ActiveRecall = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -22,6 +22,8 @@ final blurtingRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef BlurtingRemoteDataSourceRef
     = AutoDisposeProviderRef<BlurtingRemoteDataSource>;
 String _$blurtingRepositoryHash() =>
@@ -40,6 +42,8 @@ final blurtingRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef BlurtingRepositoryRef = AutoDisposeProviderRef<BlurtingRepository>;
 String _$applyBlurtingHash() => r'6b88ccdd4e438111d862722dfa06077592f44873';
 
@@ -55,6 +59,8 @@ final applyBlurtingProvider = AutoDisposeProvider<ApplyBlurting>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ApplyBlurtingRef = AutoDisposeProviderRef<ApplyBlurting>;
 String _$saveQuizResultsHash() => r'cf0adb30f8afe061e4388a0ef0547c64e8d40ffe';
 
@@ -70,6 +76,8 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$blurtingHash() => r'2aaaf47c26a65ad1d8c8c0e6a629c734852cbb2d';
 
@@ -86,4 +94,4 @@ final blurtingProvider = AutoDisposeNotifierProvider<Blurting, void>.internal(
 
 typedef _$Blurting = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

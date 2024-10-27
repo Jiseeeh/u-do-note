@@ -22,6 +22,8 @@ final sq3rRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef Sq3rRemoteDataSourceRef = AutoDisposeProviderRef<Sq3rRemoteDataSource>;
 String _$sq3rRepositoryHash() => r'df0ae4734eab13c3f91ac12acaab03d44555543d';
 
@@ -37,6 +39,8 @@ final sq3rRepositoryProvider = AutoDisposeProvider<Sq3rRepository>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef Sq3rRepositoryRef = AutoDisposeProviderRef<Sq3rRepository>;
 String _$saveQuizResultsHash() => r'38403f33908abc5a15f66ca01123886d8fa8be5a';
 
@@ -52,6 +56,8 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$sq3rHash() => r'32d40efe44571872fdf5766ba86820b9465a6d24';
 
@@ -68,4 +74,4 @@ final sq3rProvider = AutoDisposeNotifierProvider<Sq3r, void>.internal(
 
 typedef _$Sq3r = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

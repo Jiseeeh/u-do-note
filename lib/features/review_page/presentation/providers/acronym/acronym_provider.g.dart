@@ -22,6 +22,8 @@ final acronymRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AcronymRemoteDataSourceRef
     = AutoDisposeProviderRef<AcronymRemoteDataSource>;
 String _$acronymRepositoryHash() => r'f37317205c7b3037cf1a4fca87f1df55752969a8';
@@ -39,6 +41,8 @@ final acronymRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AcronymRepositoryRef = AutoDisposeProviderRef<AcronymRepository>;
 String _$generateAcronymMnemonicsHash() =>
     r'9fa1a7da991c040419d76eedeee3141a3250df86';
@@ -56,6 +60,8 @@ final generateAcronymMnemonicsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GenerateAcronymMnemonicsRef
     = AutoDisposeProviderRef<GenerateAcronymMnemonics>;
 String _$saveQuizResultsHash() => r'1b26bac6dfece9222636f90139ef7636801ecacd';
@@ -72,6 +78,8 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$acronymHash() => r'd8e56e645030ac18a65e13e66cc94297ea6d653b';
 
@@ -88,4 +96,4 @@ final acronymProvider = AutoDisposeNotifierProvider<Acronym, void>.internal(
 
 typedef _$Acronym = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

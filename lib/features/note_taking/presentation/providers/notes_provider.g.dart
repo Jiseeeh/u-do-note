@@ -22,6 +22,8 @@ final noteRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef NoteRemoteDataSourceRef = AutoDisposeProviderRef<NoteRemoteDataSource>;
 String _$noteRepositoryHash() => r'3da53f2770b68e899afc872990136e13879f4f92';
 
@@ -37,6 +39,8 @@ final noteRepositoryProvider = AutoDisposeProvider<NoteRepository>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef NoteRepositoryRef = AutoDisposeProviderRef<NoteRepository>;
 String _$createNotebookHash() => r'c4b233fc758bd45a673f8f8e8fa2569847d97173';
 
@@ -52,6 +56,8 @@ final createNotebookProvider = AutoDisposeProvider<CreateNotebook>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef CreateNotebookRef = AutoDisposeProviderRef<CreateNotebook>;
 String _$getNotebooksHash() => r'8161c604c39e93812146a67d0c2a506b63df0d40';
 
@@ -66,6 +72,8 @@ final getNotebooksProvider = AutoDisposeProvider<GetNotebooks>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetNotebooksRef = AutoDisposeProviderRef<GetNotebooks>;
 String _$updateNoteHash() => r'e84248c06816e2e9d1768531b6fa1cd256ca325d';
 
@@ -80,6 +88,8 @@ final updateNoteProvider = AutoDisposeProvider<UpdateNote>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UpdateNoteRef = AutoDisposeProviderRef<UpdateNote>;
 String _$updateMultipleNotesHash() =>
     r'b72dad75379e6cdda5cc621490e7c98c14afebc4';
@@ -97,6 +107,8 @@ final updateMultipleNotesProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UpdateMultipleNotesRef = AutoDisposeProviderRef<UpdateMultipleNotes>;
 String _$updateNotebookHash() => r'd9003158329bb13f5b3effed8fe743f74c877d01';
 
@@ -112,6 +124,8 @@ final updateNotebookProvider = AutoDisposeProvider<UpdateNotebook>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UpdateNotebookRef = AutoDisposeProviderRef<UpdateNotebook>;
 String _$deleteNoteHash() => r'8edc023c660ee54b0d662d699406de75b77072c9';
 
@@ -126,6 +140,8 @@ final deleteNoteProvider = AutoDisposeProvider<DeleteNote>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DeleteNoteRef = AutoDisposeProviderRef<DeleteNote>;
 String _$createNoteHash() => r'3e267d1ef655a98cb83c56682ffc5ffab8548ffa';
 
@@ -140,6 +156,8 @@ final createNoteProvider = AutoDisposeProvider<CreateNote>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef CreateNoteRef = AutoDisposeProviderRef<CreateNote>;
 String _$getNoteHash() => r'688987cc5b2b28985bf18d433a48e6c3794f0439';
 
@@ -154,6 +172,8 @@ final getNoteProvider = AutoDisposeProvider<GetNote>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetNoteRef = AutoDisposeProviderRef<GetNote>;
 String _$uploadNotebookCoverHash() =>
     r'463d0b698b07097f89700ae1327751d7c4d6cfcf';
@@ -171,6 +191,8 @@ final uploadNotebookCoverProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UploadNotebookCoverRef = AutoDisposeProviderRef<UploadNotebookCover>;
 String _$deleteNotebookHash() => r'4415607be4b3945f25f0377aaa5745cd8cfee4b1';
 
@@ -186,6 +208,8 @@ final deleteNotebookProvider = AutoDisposeProvider<DeleteNotebook>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DeleteNotebookRef = AutoDisposeProviderRef<DeleteNotebook>;
 String _$analyzeImageTextHash() => r'ffdb7475911e55334ae93918ebf52af73e95832c';
 
@@ -201,6 +225,8 @@ final analyzeImageTextProvider = AutoDisposeProvider<AnalyzeImageText>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AnalyzeImageTextRef = AutoDisposeProviderRef<AnalyzeImageText>;
 String _$analyzeNoteHash() => r'8c6cf3d2cf9d16a002c8a88c0974c95523861fe3';
 
@@ -215,6 +241,8 @@ final analyzeNoteProvider = AutoDisposeProvider<AnalyzeNote>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AnalyzeNoteRef = AutoDisposeProviderRef<AnalyzeNote>;
 String _$summarizeNoteHash() => r'd127b9d823a2fa10d16fe24371f9055bab395d1e';
 
@@ -230,6 +258,8 @@ final summarizeNoteProvider = AutoDisposeProvider<SummarizeNote>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SummarizeNoteRef = AutoDisposeProviderRef<SummarizeNote>;
 String _$updateNoteTitleHash() => r'99d967da67822b4bbad0d227995df5ef04aef734';
 
@@ -245,6 +275,8 @@ final updateNoteTitleProvider = AutoDisposeProvider<UpdateNoteTitle>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UpdateNoteTitleRef = AutoDisposeProviderRef<UpdateNoteTitle>;
 String _$formatScannedTextHash() => r'8f76a71a02518c46ecc0c3514927786fc8496cb7';
 
@@ -261,6 +293,8 @@ final formatScannedTextProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FormatScannedTextRef = AutoDisposeProviderRef<FormatScannedText>;
 String _$notebooksStreamHash() => r'8a56340033c814a39b83775c3f2a379016856f13';
 
@@ -277,8 +311,10 @@ final notebooksStreamProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'b78579e406fcdc3a55b00b241fd8507096d254fd';
+String _$notebooksHash() => r'eae20ed6342785fbf37a9d24e6ea43ea260be6af';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)
@@ -293,4 +329,4 @@ final notebooksProvider = AutoDisposeNotifierProvider<Notebooks, void>.internal(
 
 typedef _$Notebooks = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

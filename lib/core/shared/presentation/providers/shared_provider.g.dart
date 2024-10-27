@@ -19,6 +19,8 @@ final firebaseAuthProvider = AutoDisposeProvider<FirebaseAuth>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FirebaseAuthRef = AutoDisposeProviderRef<FirebaseAuth>;
 String _$firestoreHash() => r'ef4a6b0737caace50a6d79dd3e4e2aa1bc3031d5';
 
@@ -33,6 +35,8 @@ final firestoreProvider = AutoDisposeProvider<FirebaseFirestore>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
 String _$firebaseStorageHash() => r'9ece783a064077980d64000c5d6f0b1846ff5c4c';
 
@@ -48,6 +52,8 @@ final firebaseStorageProvider = AutoDisposeProvider<FirebaseStorage>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FirebaseStorageRef = AutoDisposeProviderRef<FirebaseStorage>;
 String _$sharedRemoteDataSourceHash() =>
     r'8cdac29bcd0b2f34b0e01f1de07ae2869f6484be';
@@ -65,6 +71,8 @@ final sharedRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SharedRemoteDataSourceRef
     = AutoDisposeProviderRef<SharedRemoteDataSource>;
 String _$sharedRepositoryHash() => r'3701c81f259fdc78db86863b92e8872000f2eaf5';
@@ -81,6 +89,8 @@ final sharedRepositoryProvider = AutoDisposeProvider<SharedRepository>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SharedRepositoryRef = AutoDisposeProviderRef<SharedRepository>;
 String _$generateQuizQuestionsHash() =>
     r'b58913008bf63a09c779c29241c42eafcaa3f315';
@@ -98,6 +108,8 @@ final generateQuizQuestionsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GenerateQuizQuestionsRef
     = AutoDisposeProviderRef<GenerateQuizQuestions>;
 String _$getOldSessionsHash() => r'6d505c8a2f13e730cd7e30c8330706ca8dacee0b';
@@ -114,6 +126,8 @@ final getOldSessionsProvider = AutoDisposeProvider<GetOldSessions>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetOldSessionsRef = AutoDisposeProviderRef<GetOldSessions>;
 String _$generateContentWithAssistHash() =>
     r'a77f44cdf6f5277fe0e49b44a72b0a1b5713c977';
@@ -131,6 +145,8 @@ final generateContentWithAssistProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GenerateContentWithAssistRef
     = AutoDisposeProviderRef<GenerateContentWithAssist>;
 String _$generateXqrFeedbackHash() =>
@@ -149,6 +165,8 @@ final generateXqrFeedbackProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GenerateXqrFeedbackRef = AutoDisposeProviderRef<GenerateXqrFeedback>;
 String _$selectNotificationStreamHash() =>
     r'e28e3494324886142dd4fb3ef4eb5284405cbb67';
@@ -166,6 +184,8 @@ final selectNotificationStreamProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SelectNotificationStreamRef = ProviderRef<StreamController<String?>>;
 String _$getLaunchPayloadHash() => r'd60ef8490cad576229a551428a28b9c761586fac';
 
@@ -181,6 +201,8 @@ final getLaunchPayloadProvider = AutoDisposeFutureProvider<String?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetLaunchPayloadRef = AutoDisposeFutureProviderRef<String?>;
 String _$localNotificationHash() => r'40d9c4c5bdb421795534d8a7ee48bb6fdaf507da';
 
@@ -213,4 +235,4 @@ final sharedProvider = AutoDisposeNotifierProvider<Shared, void>.internal(
 
 typedef _$Shared = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

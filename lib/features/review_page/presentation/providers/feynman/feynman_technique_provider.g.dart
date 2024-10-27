@@ -22,6 +22,8 @@ final feynmanRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FeynmanRemoteDataSourceRef
     = AutoDisposeProviderRef<FeynmanRemoteDataSource>;
 String _$feynmanTechniqueRepositoryHash() =>
@@ -40,6 +42,8 @@ final feynmanTechniqueRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FeynmanTechniqueRepositoryRef
     = AutoDisposeProviderRef<FeynmanTechniqueRepository>;
 String _$getChatResponseHash() => r'8df9d00b00a47b8991f765bea6247011329bbde6';
@@ -56,6 +60,8 @@ final getChatResponseProvider = AutoDisposeProvider<GetChatResponse>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetChatResponseRef = AutoDisposeProviderRef<GetChatResponse>;
 String _$saveSessionHash() => r'cb845d9dafb8c6d535dedf7cf2765da803fd52fa';
 
@@ -70,6 +76,8 @@ final saveSessionProvider = AutoDisposeProvider<SaveSession>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveSessionRef = AutoDisposeProviderRef<SaveSession>;
 String _$saveQuizResultsHash() => r'0f4609705679d52ebeb2c0e39f78915bc46824c0';
 
@@ -85,6 +93,8 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$feynmanTechniqueHash() => r'1a51eb207d1fae654abe27824c2059a6b2bcbef7';
 
@@ -103,4 +113,4 @@ final feynmanTechniqueProvider =
 
 typedef _$FeynmanTechnique = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

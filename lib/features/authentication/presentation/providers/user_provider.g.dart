@@ -22,6 +22,8 @@ final userRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UserRemoteDataSourceRef = AutoDisposeProviderRef<UserRemoteDataSource>;
 String _$userRepositoryHash() => r'3f0eef45a2e663c0a972b97d7e08aa760a16d95e';
 
@@ -37,6 +39,8 @@ final userRepositoryProvider = AutoDisposeProvider<UserRepository>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UserRepositoryRef = AutoDisposeProviderRef<UserRepository>;
 String _$signInWithEmailAndPasswordHash() =>
     r'ffce0ca8bb6d15deacd5290b8c7b912a259a9688';
@@ -54,6 +58,8 @@ final signInWithEmailAndPasswordProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SignInWithEmailAndPasswordRef
     = AutoDisposeProviderRef<SignInWithEmailAndPassword>;
 String _$signUpWithEmailAndPasswordHash() =>
@@ -72,6 +78,8 @@ final signUpWithEmailAndPasswordProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SignUpWithEmailAndPasswordRef
     = AutoDisposeProviderRef<SignUpWithEmailAndPassword>;
 String _$resetPasswordHash() => r'30feb504406a54febe50586108b450edd1f1ce74';
@@ -88,6 +96,8 @@ final resetPasswordProvider = AutoDisposeProvider<ResetPassword>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ResetPasswordRef = AutoDisposeProviderRef<ResetPassword>;
 String _$userNotifierHash() => r'2f24c9f2dbe51e37b6f8fd1ba680b9ef117ae12c';
 
@@ -104,4 +114,4 @@ final userNotifierProvider = NotifierProvider<UserNotifier, void>.internal(
 
 typedef _$UserNotifier = Notifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

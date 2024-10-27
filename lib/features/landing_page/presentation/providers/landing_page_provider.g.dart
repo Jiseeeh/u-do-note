@@ -22,6 +22,8 @@ final landingPageRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LandingPageRemoteDataSourceRef
     = AutoDisposeProviderRef<LandingPageRemoteDataSource>;
 String _$landingPageRepositoryHash() =>
@@ -40,6 +42,8 @@ final landingPageRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LandingPageRepositoryRef
     = AutoDisposeProviderRef<LandingPageRepository>;
 String _$getOnGoingReviewsHash() => r'4fac24ecb78f6181f4a5e402fe4455bee91f4078';
@@ -57,6 +61,8 @@ final getOnGoingReviewsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetOnGoingReviewsRef = AutoDisposeProviderRef<GetOnGoingReviews>;
 String _$landingPageHash() => r'b2f7613db7cfefd36490d9c2d2a012896dd0f9bf';
 
@@ -74,4 +80,4 @@ final landingPageProvider =
 
 typedef _$LandingPage = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

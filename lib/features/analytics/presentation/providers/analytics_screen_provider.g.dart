@@ -22,6 +22,8 @@ final remarkRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef RemarkRemoteDataSourceRef
     = AutoDisposeProviderRef<RemarkRemoteDataSource>;
 String _$remarkRepositoryHash() => r'67cc37b1037dbd011238cb3d1c97ca8ef6dceecd';
@@ -38,6 +40,8 @@ final remarkRepositoryProvider = AutoDisposeProvider<RemarkRepository>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef RemarkRepositoryRef = AutoDisposeProviderRef<RemarkRepository>;
 String _$getRemarksHash() => r'1f5f71efc09d5166338fc5406a5920238f0f617f';
 
@@ -52,6 +56,8 @@ final getRemarksProvider = AutoDisposeProvider<GetRemarks>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetRemarksRef = AutoDisposeProviderRef<GetRemarks>;
 String _$getFlashcardsToReviewHash() =>
     r'3de7a0a857f6b1732a95952e5c02521e56fe0400';
@@ -69,6 +75,8 @@ final getFlashcardsToReviewProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetFlashcardsToReviewRef
     = AutoDisposeProviderRef<GetFlashcardsToReview>;
 String _$getQuizzesToTakeHash() => r'fb104e6c7841f0d1a839b1bbfc331ebafff1544d';
@@ -85,6 +93,8 @@ final getQuizzesToTakeProvider = AutoDisposeProvider<GetQuizzesToTake>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetQuizzesToTakeRef = AutoDisposeProviderRef<GetQuizzesToTake>;
 String _$getAnalysisHash() => r'872ef6fc6314a9fffe007abf9e64bc73be951bcd';
 
@@ -99,6 +109,8 @@ final getAnalysisProvider = AutoDisposeProvider<GetAnalysis>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetAnalysisRef = AutoDisposeProviderRef<GetAnalysis>;
 String _$analyticsScreenHash() => r'221a9393f670d6ed5e6d702229258fa6b0be8ce3';
 
@@ -117,4 +129,4 @@ final analyticsScreenProvider =
 
 typedef _$AnalyticsScreen = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

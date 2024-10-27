@@ -1,3 +1,27 @@
+# [3.0.0](https://github.com/Jiseeeh/u-do-note/compare/v2.0.0...v3.0.0) (2024-10-27)
+
+
+### Bug Fixes
+
+* landing and notebooks screen does not get updated on switch acc ([2fca009](https://github.com/Jiseeeh/u-do-note/commit/2fca009cd283c8f42599d6f8a8cd61eb886417ca))
+* model responding in md syntax ([387a2e8](https://github.com/Jiseeeh/u-do-note/commit/387a2e838363f17984775e07d30b5b089c2abdf5))
+
+
+### chore
+
+* bump dependencies ([978c59e](https://github.com/Jiseeeh/u-do-note/commit/978c59e487c4bb44950e844e00c2ccb607b1a5de))
+
+
+### Features
+
+* add formatting of text on scan ([82ab14d](https://github.com/Jiseeeh/u-do-note/commit/82ab14dfb669b730e6f2067efbedc6858efcec65))
+* add question if user wants to format ([ff19390](https://github.com/Jiseeeh/u-do-note/commit/ff193907190c46cbd137f9b2be5c586de1d5aa30))
+
+
+### BREAKING CHANGES
+
+* use on popInvokedWithResult with pop scope, might not work accordingly.
+
 # [2.0.0](https://github.com/Jiseeeh/u-do-note/compare/v1.10.0...v2.0.0) (2024-10-26)
 
 

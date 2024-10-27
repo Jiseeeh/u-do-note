@@ -19,6 +19,8 @@ final firestoreProvider = AutoDisposeProvider<FirebaseFirestore>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
 String _$leitnerSystemRemoteDataSourceHash() =>
     r'c904e9781e2ecc3d51b978efdfbfd1c8d91928bd';
@@ -36,6 +38,8 @@ final leitnerSystemRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LeitnerSystemRemoteDataSourceRef
     = AutoDisposeProviderRef<LeitnerRemoteDataSource>;
 String _$leitnerSystemRepositoryHash() =>
@@ -54,6 +58,8 @@ final leitnerSystemRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LeitnerSystemRepositoryRef
     = AutoDisposeProviderRef<LeitnerSystemRepository>;
 String _$generateFlashcardsHash() =>
@@ -72,6 +78,8 @@ final generateFlashcardsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GenerateFlashcardsRef = AutoDisposeProviderRef<GenerateFlashcards>;
 String _$analyzeFlashcardsResultHash() =>
     r'dfd01c2cdaf5eb50ddbc6384aa55e3557d93d9ea';
@@ -89,6 +97,8 @@ final analyzeFlashcardsResultProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AnalyzeFlashcardsResultRef
     = AutoDisposeProviderRef<AnalyzeFlashcardsResult>;
 String _$leitnerSystemHash() => r'27f46771824b47ec0a561357ea5920ff2977bfbc';
@@ -108,4 +118,4 @@ final leitnerSystemProvider =
 
 typedef _$LeitnerSystem = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

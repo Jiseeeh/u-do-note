@@ -20,6 +20,7 @@ import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
+import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
@@ -30,8 +31,7 @@ class NotebookPagesScreen extends ConsumerStatefulWidget {
   final String notebookId;
 
   const NotebookPagesScreen(@PathParam('notebookId') this.notebookId,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -189,17 +189,42 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   EasyLoading.dismiss();
                   document.dispose();
 
-                  var failureOrFormattedText = await ref
-                      .read(notebooksProvider.notifier)
-                      .formatScannedText(scannedText: extractedText);
+                  if (!context.mounted) return;
+                  var tfController = TextEditingController(text: extractedText);
 
-                  if (failureOrFormattedText is Failure) {
-                    logger.e(
-                        "Could not format extracted text: ${failureOrFormattedText.message}");
-                    EasyLoading.showError("Could not format extracted text..",
-                        duration: const Duration(seconds: 2));
-                  } else {
-                    extractedText = failureOrFormattedText;
+                  var willFormat = await CustomDialog.show(context,
+                      title: "Preview",
+                      subTitle: "Do you want us to format this extracted text?",
+                      content: TextField(
+                        controller: tfController,
+                        readOnly: true,
+                        maxLines: 8,
+                      ),
+                      buttons: [
+                        CustomDialogButton(text: "No", value: false),
+                        CustomDialogButton(text: "Yes", value: true),
+                      ]);
+
+                  if (willFormat) {
+                    EasyLoading.show(
+                        status: 'Formatting text...',
+                        maskType: EasyLoadingMaskType.black,
+                        dismissOnTap: false);
+
+                    var failureOrFormattedText = await ref
+                        .read(notebooksProvider.notifier)
+                        .formatScannedText(scannedText: extractedText);
+
+                    EasyLoading.dismiss();
+
+                    if (failureOrFormattedText is Failure) {
+                      logger.e(
+                          "Could not format extracted text: ${failureOrFormattedText.message}");
+                      EasyLoading.showError("Could not format extracted text..",
+                          duration: const Duration(seconds: 2));
+                    } else {
+                      extractedText = failureOrFormattedText;
+                    }
                   }
 
                   if (!context.mounted) return;

@@ -42,7 +42,7 @@ import 'package:u_do_note/routes/intro_screen_guard.dart';
 part 'app_route.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
-class AppRouter extends _$AppRouter {
+class AppRouter extends RootStackRouter {
   @override
   RouteType get defaultRouteType => const RouteType.material();
 

@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/Jiseeeh/u-do-note/compare/v3.0.0...v3.1.0) (2024-10-28)
+
+
+### Features
+
+* add offline mode ([#109](https://github.com/Jiseeeh/u-do-note/issues/109)) ([ffda74e](https://github.com/Jiseeeh/u-do-note/commit/ffda74e7519fb73e558c8993a05e20a5d4550f58))
+
 # [3.0.0](https://github.com/Jiseeeh/u-do-note/compare/v2.0.0...v3.0.0) (2024-10-27)
 
 

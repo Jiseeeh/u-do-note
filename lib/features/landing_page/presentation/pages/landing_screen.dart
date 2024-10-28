@@ -20,6 +20,7 @@ import 'package:u_do_note/features/landing_page/presentation/widgets/learning_me
 import 'package:u_do_note/features/landing_page/presentation/widgets/on_going_review.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
@@ -44,6 +45,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   late List<AcronymModel> _onGoingAcronymReviews = [];
   late List<BlurtingModel> _onGoingBlurtingReviews = [];
   late List<SpacedRepetitionModel> _onGoingSpacedRepetitionReviews = [];
+  late List<ActiveRecallModel> _onGoingActiveRecallReviews = [];
   late List<Widget> _onGoingReviews = [];
   late final List<LearningMethod> _featuredMethods = [];
   late StreamSubscription<InternetStatus> _internetListener;
@@ -127,6 +129,12 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
         .getOnGoingReviews(
             methodName: SpacedRepetitionModel.name,
             fromFirestore: SpacedRepetitionModel.fromFirestore);
+
+    _onGoingActiveRecallReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: ActiveRecallModel.name,
+            fromFirestore: ActiveRecallModel.fromFirestore);
 
     setState(() {
       _onGoingReviews = _buildOnGoingReviews(context);
@@ -373,6 +381,57 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
         dateStarted: DateFormat.yMd()
             .format(_onGoingSpacedRepetitionReviews[i].createdAt.toDate()),
         onPressed: spacedRepetitionOnPressed,
+      ));
+    }
+
+    for (var i = 0; i < _onGoingActiveRecallReviews.length; i++) {
+      activeRecallOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingActiveRecallReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        var activeRecallModel = _onGoingActiveRecallReviews[i];
+
+        ref.read(reviewScreenProvider).setIsFromOldActiveRecall(true);
+
+        EasyLoading.show(
+          status: 'Please wait...',
+          maskType: EasyLoadingMaskType.black,
+          dismissOnTap: false,
+        );
+
+        if (activeRecallModel.questions == null ||
+            activeRecallModel.questions!.isEmpty) {
+          var resOrQuestions = await ref
+              .read(sharedProvider.notifier)
+              .generateQuizQuestions(content: activeRecallModel.content);
+
+          if (resOrQuestions is Failure) {
+            throw "Cannot create your quiz, please try again later.";
+          }
+
+          activeRecallModel =
+              activeRecallModel.copyWith(questions: resOrQuestions);
+        }
+
+        EasyLoading.dismiss();
+
+        if (context.mounted) {
+          context.router
+              .push(ActiveRecallRoute(activeRecallModel: activeRecallModel));
+        }
+      }
+
+      onPressedCallbacks.add(activeRecallOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingActiveRecallReviews[i].sessionName,
+        learningMethod: ActiveRecallModel.name,
+        imagePath: ActiveRecallModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingActiveRecallReviews[i].createdAt.toDate()),
+        onPressed: activeRecallOnPressed,
       ));
     }
 

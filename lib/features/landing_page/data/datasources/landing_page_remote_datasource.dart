@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
@@ -32,9 +33,11 @@ class LandingPageRemoteDataSource {
           .collection(FirestoreCollection.remarks.name)
           .where('review_method', isEqualTo: methodName);
 
+      // TODO: use enum [ReviewMethods]
       switch (methodName) {
         case LeitnerSystemModel.name:
         case SpacedRepetitionModel.name:
+        case ActiveRecallModel.name:
           query =
               query.where('next_review', isLessThanOrEqualTo: Timestamp.now());
           break;

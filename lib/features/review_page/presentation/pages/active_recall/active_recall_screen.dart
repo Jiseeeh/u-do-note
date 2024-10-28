@@ -3,6 +3,7 @@ import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/review_methods.dart';
@@ -146,6 +147,14 @@ class _ActiveRecallScreenState extends ConsumerState<ActiveRecallScreen> {
 
               if (activeRecallModel.questions == null ||
                   activeRecallModel.questions!.isEmpty) {
+                bool hasNet = await InternetConnection().hasInternetAccess;
+
+                if (!hasNet) {
+                  EasyLoading.showError(
+                      "Please connect to the internet for us to make your quiz.");
+                  return;
+                }
+
                 var resOrQuestions = await ref
                     .read(sharedProvider.notifier)
                     .generateQuizQuestions(content: activeRecallModel.content);

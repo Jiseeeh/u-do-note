@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:u_do_note/core/constant.dart' as constant;
@@ -65,7 +66,11 @@ FirebaseAuth firebaseAuth(Ref ref) {
 
 @riverpod
 FirebaseFirestore firestore(Ref ref) {
-  return FirebaseFirestore.instance;
+  var firestoreInstance = FirebaseFirestore.instance;
+  firestoreInstance.settings = const Settings(
+      persistenceEnabled: true, cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
+
+  return firestoreInstance;
 }
 
 @riverpod
@@ -327,6 +332,14 @@ class Shared extends _$Shared {
         context: context,
         barrierDismissible: false,
         builder: (dialogContext) => notice);
+
+    bool hasNet = await InternetConnection().hasInternetAccess;
+
+    if (!hasNet) {
+      EasyLoading.showError(
+          "Please connect to the internet to use this feature.");
+      return;
+    }
 
     if (!willContinue || !context.mounted) return;
 

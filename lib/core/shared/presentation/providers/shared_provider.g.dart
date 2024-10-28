@@ -22,7 +22,7 @@ final firebaseAuthProvider = AutoDisposeProvider<FirebaseAuth>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirebaseAuthRef = AutoDisposeProviderRef<FirebaseAuth>;
-String _$firestoreHash() => r'0e25e335c5657f593fc1baf3d9fd026e70bca7fa';
+String _$firestoreHash() => r'10c3cf62afeda7a7111a0d1950986844162c6715';
 
 /// See also [firestore].
 @ProviderFor(firestore)

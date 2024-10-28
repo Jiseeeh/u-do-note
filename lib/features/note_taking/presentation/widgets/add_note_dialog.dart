@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:u_do_note/core/constant.dart' as constants;
 import 'package:u_do_note/core/error/failures.dart';
@@ -74,6 +75,23 @@ class AddNotebookDialogState extends ConsumerState<AddNoteDialog> {
                           status: 'Creating Page...',
                           maskType: EasyLoadingMaskType.black,
                           dismissOnTap: false);
+
+                      bool hasNet =
+                          await InternetConnection().hasInternetAccess;
+
+                      if (!hasNet) {
+                        ref.read(notebooksProvider.notifier).createNote(
+                            notebookId: widget.notebookId,
+                            title: _titleController.text,
+                            initialContent: widget.initialContent);
+
+                        EasyLoading.dismiss();
+                        _titleController.clear();
+
+                        if (context.mounted) Navigator.of(context).pop();
+
+                        return;
+                      }
 
                       var res = await ref
                           .read(notebooksProvider.notifier)

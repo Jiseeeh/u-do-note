@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -41,7 +42,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     nameController.text = user.displayName!;
     currentName = user.displayName!;
 
-    nameFocusNode.addListener(() {
+    nameFocusNode.addListener(() async {
       if (!nameFocusNode.hasFocus) {
         if (nameController.text.isEmpty) {
           EasyLoading.showError('Name cannot be empty!');
@@ -57,6 +58,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           EasyLoading.showError('Name must be at most 16 characters long!');
           return;
         }
+
+        bool hasNet = await InternetConnection().hasInternetAccess;
+
+        if (!hasNet) return;
 
         if (nameController.text != currentName) {
           logger.w('updating name');
@@ -114,13 +119,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: SizedBox(
-              width: 100.w,
-              child: Text('Settings',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontSize: 20.sp,
-                      ))),
+          centerTitle: true,
+          title: Text('Settings',
+              // textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                    fontSize: 20.sp,
+                  )),
         ),
         body: Column(
           children: [
@@ -143,6 +147,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   Theme.of(context).scaffoldBackgroundColor,
                               child: IconButton(
                                 onPressed: () async {
+                                  bool hasNet = await InternetConnection()
+                                      .hasInternetAccess;
+
+                                  if (!hasNet) {
+                                    EasyLoading.showError(
+                                        "Please connect to the internet to change your profile.");
+                                    return;
+                                  }
+
                                   EasyLoading.show(
                                       status: 'Loading image picker...',
                                       maskType: EasyLoadingMaskType.black,

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
@@ -83,6 +84,20 @@ class NotebookCard extends ConsumerWidget {
                                 status: context.tr("delete_notebook_loading"),
                                 maskType: EasyLoadingMaskType.black,
                                 dismissOnTap: false);
+
+                            bool hasNet =
+                                await InternetConnection().hasInternetAccess;
+
+                            if (!hasNet) {
+                              ref
+                                  .read(notebooksProvider.notifier)
+                                  .deleteNotebook(
+                                      notebookId: notebook.id,
+                                      coverFileName: notebook.coverFileName);
+
+                              EasyLoading.dismiss();
+                              return;
+                            }
 
                             var res = await ref
                                 .read(notebooksProvider.notifier)

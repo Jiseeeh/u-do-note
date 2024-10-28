@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
@@ -487,6 +488,16 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                       status: 'loading...',
                       maskType: EasyLoadingMaskType.black,
                       dismissOnTap: false);
+
+                  bool hasNet = await InternetConnection().hasInternetAccess;
+
+                  if (!hasNet) {
+                    ref.read(notebooksProvider.notifier).deleteNote(
+                        notebookId: widget.notebookId, noteId: note.id);
+
+                    EasyLoading.dismiss();
+                    return;
+                  }
 
                   var res = await ref
                       .read(notebooksProvider.notifier)

@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -125,6 +126,15 @@ class _MainAppState extends ConsumerState<MainApp> {
 
         if (spacedRepModel.questions == null ||
             spacedRepModel.questions!.isEmpty) {
+          bool hasNet = await InternetConnection().hasInternetAccess;
+
+          if (!hasNet) {
+            // idk, re-sched notif?
+            EasyLoading.showError(
+                "Please connect to the internet for us to make your quiz.");
+            return;
+          }
+
           var resOrQuestions = await ref
               .read(sharedProvider.notifier)
               .generateQuizQuestions(content: spacedRepModel.content);

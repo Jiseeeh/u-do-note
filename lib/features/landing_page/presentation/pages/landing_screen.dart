@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
@@ -36,7 +38,6 @@ class LandingScreen extends ConsumerStatefulWidget {
 
 class _LandingScreenState extends ConsumerState<LandingScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final _username = FirebaseAuth.instance.currentUser!.displayName!;
   late List<LeitnerSystemModel> _onGoingLeitnerReviews = [];
   late List<FeynmanModel> _onGoingFeynmanReviews = [];
   late List<ElaborationModel> _onGoingElaborationReviews = [];
@@ -45,6 +46,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   late List<SpacedRepetitionModel> _onGoingSpacedRepetitionReviews = [];
   late List<Widget> _onGoingReviews = [];
   late final List<LearningMethod> _featuredMethods = [];
+  late StreamSubscription<InternetStatus> _internetListener;
   VoidCallback? _heroReviewOnPressed;
   String _heroText =
       "Please wait!\nWe are checking if you have something to review.";
@@ -54,12 +56,42 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   void initState() {
     super.initState();
 
-    _populateOnGoingReviews();
     // ? workaround when accessing getReviewMethods idk why as of writing...
     Future.delayed(Duration.zero, _populateFeaturedMethods);
+
+    _internetListener =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      switch (status) {
+        case InternetStatus.connected:
+          _populateOnGoingReviews();
+          break;
+        case InternetStatus.disconnected:
+          setState(() {
+            _isLoading = false;
+            _heroText =
+                "You are not connected to the internet!\nconnect to see your on-going reviews.";
+            _heroReviewOnPressed = () {
+              return;
+            };
+            _onGoingReviews = [];
+          });
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _internetListener.cancel();
   }
 
   void _populateOnGoingReviews() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     _onGoingLeitnerReviews = await ref
         .read(landingPageProvider.notifier)
         .getOnGoingReviews(
@@ -411,7 +443,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
               ),
               Align(
                 alignment: const AlignmentDirectional(-1, 0),
-                child: Text(_username,
+                child: Text(FirebaseAuth.instance.currentUser!.displayName!,
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge

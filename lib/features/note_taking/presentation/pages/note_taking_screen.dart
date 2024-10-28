@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fleather/fleather.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -96,6 +97,17 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         var text = _noteTitleController.text.trim();
 
         if (text.isEmpty) return;
+
+        bool hasNet = await InternetConnection().hasInternetAccess;
+
+        if (!hasNet) {
+          ref.read(notebooksProvider.notifier).updateNoteTitle(
+              notebookId: widget.notebookId,
+              noteId: widget.note.id,
+              newTitle: text);
+
+          return;
+        }
 
         var res = await ref.read(notebooksProvider.notifier).updateNoteTitle(
             notebookId: widget.notebookId,
@@ -355,7 +367,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
     var prefs = await ref.read(sharedPreferencesProvider.future);
 
-    _analyzeNoteTimer = Timer(const Duration(seconds: 5), () {
+    _analyzeNoteTimer = Timer(const Duration(seconds: 5), () async {
+      bool hasNet = await InternetConnection().hasInternetAccess;
+
+      if (!hasNet) return;
+
       ref
           .read(notebooksProvider.notifier)
           .analyzeNote(_fleatherController!.document.toPlainText())
@@ -448,6 +464,17 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         .toEntity();
 
     _lastSavedContent = _fleatherController!.document.toPlainText();
+
+    bool hasNet = await InternetConnection().hasInternetAccess;
+
+    if (!hasNet) {
+      ref
+          .read(notebooksProvider.notifier)
+          .updateNote(widget.notebookId, newNoteEntity);
+
+      if (showLoading) EasyLoading.dismiss();
+      return;
+    }
 
     var res = await ref
         .read(notebooksProvider.notifier)
@@ -611,6 +638,14 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     return () async {
       if (_fleatherController!.document.toPlainText().trim().isEmpty) {
         EasyLoading.showError('Note is empty. Please write something first.');
+        return;
+      }
+
+      bool hasNet = await InternetConnection().hasInternetAccess;
+
+      if (!hasNet) {
+        EasyLoading.showError(
+            'Please connect to the internet to use this feature.');
         return;
       }
 

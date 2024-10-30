@@ -500,12 +500,19 @@ class NoteRemoteDataSource {
         content: [
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
             """
-            You are a helpful assistant that wants to help students to analyze their notes and determine what learning technique is best for their notes.
-            Use these guidelines to help the user:
+            You are a helpful assistant that guides students in analyzing their notes and determining the best learning technique. Use these guidelines to assist the user:
 
-            1. Respond in JSON format with the properties learningTechnique, isValid, topic, and reason. The reason should be in 2nd person perspective.
-            2. isValid will be true if the note is understandable and false if it is gibberish or the note does not make sense.
-            3. For now, the available learning techniques are Leitner System, Feynman Technique, and Pomodoro Technique. It is up to you to determine which technique suits the note.
+            Respond in JSON format with the properties:
+                learningTechnique: The most suitable learning method for the notes.
+                isValid: Set to true if the notes are understandable; set to false if they are gibberish or lack coherence.
+                topic: Briefly identify the main topic of the notes.
+                reason: Explain in the 2nd person why the selected technique is the best fit.
+            
+            Consider the following learning techniques and their suitability:
+                Leitner System: Choose this if the notes primarily consist of factual information, vocabulary, or discrete items that can be memorized effectively with spaced repetition.
+                Feynman Technique: Recommend this if the notes involve complex concepts, theories, or processes that would benefit from simplification and deep understanding.
+                Pomodoro Technique: Use this for notes involving lengthy tasks or extensive reading/writing that requires time management and sustained focus.
+                Based on these guidelines, determine and suggest the best learning technique
             """,
           ),
         ]);
@@ -529,7 +536,7 @@ class NoteRemoteDataSource {
 
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-0125", // gpt-4o much better here
+      model: "gpt-4o-mini",
       responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,

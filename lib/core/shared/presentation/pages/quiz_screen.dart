@@ -142,72 +142,75 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         case ReviewMethods.feynmanTechnique:
           var feynmanModel = widget.model as FeynmanModel;
 
-          ref
+          await ref
               .read(feynmanTechniqueProvider.notifier)
               .onQuizFinish(context, feynmanModel, selectedAnswersIndex, score);
           break;
         case ReviewMethods.pomodoroTechnique:
           var pomodoroModel = widget.model as PomodoroModel;
 
-          ref.read(pomodoroProvider.notifier).onQuizFinish(
+          await ref.read(pomodoroProvider.notifier).onQuizFinish(
               context, pomodoroModel, selectedAnswersIndex, score);
           break;
         case ReviewMethods.elaboration:
           var elaborationModel = widget.model as ElaborationModel;
 
-          ref.read(elaborationProvider.notifier).onQuizFinish(
+          await ref.read(elaborationProvider.notifier).onQuizFinish(
               context, elaborationModel, selectedAnswersIndex, score);
           break;
         case ReviewMethods.acronymMnemonics:
           var acronymModel = widget.model as AcronymModel;
 
-          ref
+          await ref
               .read(acronymProvider.notifier)
               .onQuizFinish(context, acronymModel, selectedAnswersIndex, score);
           break;
         case ReviewMethods.blurting:
           var blurtingModel = widget.model as BlurtingModel;
 
-          ref.read(blurtingProvider.notifier).onQuizFinish(
+          await ref.read(blurtingProvider.notifier).onQuizFinish(
               context, blurtingModel, selectedAnswersIndex, score);
           break;
         case ReviewMethods.spacedRepetition:
           var spacedRepetitionModel = widget.model as SpacedRepetitionModel;
 
-          ref.read(spacedRepetitionProvider.notifier).onQuizFinish(
+          await ref.read(spacedRepetitionProvider.notifier).onQuizFinish(
               context, spacedRepetitionModel, selectedAnswersIndex, score);
           break;
         case ReviewMethods.activeRecall:
           var activeRecallModel = widget.model as ActiveRecallModel;
 
-          ref.read(activeRecallProvider.notifier).onQuizFinish(
+          await ref.read(activeRecallProvider.notifier).onQuizFinish(
               context, activeRecallModel, selectedAnswersIndex, score);
           break;
         case ReviewMethods.sq3r:
           var sq3rModel = widget.model as Sq3rModel;
 
-          ref
+          await ref
               .read(sq3rProvider.notifier)
               .onQuizFinish(context, sq3rModel, selectedAnswersIndex, score);
           break;
         case ReviewMethods.pq4r:
           var pq4rModel = widget.model as Pq4rModel;
 
-          ref
+          await ref
               .read(pq4rProvider.notifier)
               .onQuizFinish(context, pq4rModel, selectedAnswersIndex, score);
           break;
       }
 
-      context.router.replace(QuizResultsRoute(
-          questions:
-              widget.questions.map((question) => question.toEntity()).toList(),
-          correctAnswersIndex: widget.questions
-              .map((question) => question.correctAnswerIndex)
-              .toList(),
-          selectedAnswersIndex: selectedAnswersIndex));
+      if (context.mounted) {
+        context.router.replace(QuizResultsRoute(
+            questions: widget.questions
+                .map((question) => question.toEntity())
+                .toList(),
+            correctAnswersIndex: widget.questions
+                .map((question) => question.correctAnswerIndex)
+                .toList(),
+            selectedAnswersIndex: selectedAnswersIndex));
 
-      logger.d('Score: $score');
+        logger.d('Score: $score');
+      }
     };
   }
 

@@ -16,7 +16,7 @@ import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/landing_page/presentation/providers/landing_page_provider.dart';
-import 'package:u_do_note/features/landing_page/presentation/widgets/learning_method.dart';
+import 'package:u_do_note/features/landing_page/presentation/widgets/small_box.dart';
 import 'package:u_do_note/features/landing_page/presentation/widgets/on_going_review.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
@@ -47,12 +47,13 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   late List<SpacedRepetitionModel> _onGoingSpacedRepetitionReviews = [];
   late List<ActiveRecallModel> _onGoingActiveRecallReviews = [];
   late List<Widget> _onGoingReviews = [];
-  late final List<LearningMethod> _featuredMethods = [];
+  late final List<SmallBox> _featuredMethods = [];
   late StreamSubscription<InternetStatus> _internetListener;
   VoidCallback? _heroReviewOnPressed;
   String _heroText =
       "Please wait!\nWe are checking if you have something to review.";
   bool _isLoading = true;
+  bool _willRepopulate = true;
 
   @override
   void initState() {
@@ -61,11 +62,16 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
     // ? workaround when accessing getReviewMethods idk why as of writing...
     Future.delayed(Duration.zero, _populateFeaturedMethods);
 
+    _populateOnGoingReviews();
+    _willRepopulate = false;
+
     _internetListener =
         InternetConnection().onStatusChange.listen((InternetStatus status) {
       switch (status) {
         case InternetStatus.connected:
-          _populateOnGoingReviews();
+          if (_willRepopulate) {
+            _populateOnGoingReviews();
+          }
           break;
         case InternetStatus.disconnected:
           setState(() {
@@ -76,6 +82,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
               return;
             };
             _onGoingReviews = [];
+            _willRepopulate = true;
           });
           break;
       }
@@ -156,12 +163,12 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
     var firstMethod = reviewMethodEntities[firstMethodIndex];
     var secondMethod = reviewMethodEntities[secondMethodIndex];
 
-    _featuredMethods.add(LearningMethod(
+    _featuredMethods.add(SmallBox(
         title: firstMethod.title,
         description: firstMethod.description,
         onLearnMore: firstMethod.onPressed));
 
-    _featuredMethods.add(LearningMethod(
+    _featuredMethods.add(SmallBox(
         title: secondMethod.title,
         description: secondMethod.description,
         onLearnMore: secondMethod.onPressed));

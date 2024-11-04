@@ -22,7 +22,8 @@ class NoteRemoteDataSource {
 
   const NoteRemoteDataSource(this._firestore, this._auth);
 
-  Future<String> createNotebook(String name, XFile? coverImg, String category) async {
+  Future<String> createNotebook(
+      String name, XFile? coverImg, String category) async {
     logger.i('Creating notebook...');
 
     var userId = _auth.currentUser!.uid;
@@ -62,7 +63,7 @@ class NoteRemoteDataSource {
       'cover_file_name': coverImgFileName,
       'techniques_usage': constant.defaultTechniquesUsage,
       'created_at': FieldValue.serverTimestamp(),
-      'categories': FieldValue.serverTimestamp(),
+      'category': category
     });
 
     logger.i(response);
@@ -319,6 +320,7 @@ class NoteRemoteDataSource {
         'cover_url': updatedModel.coverUrl,
         'cover_file_name': updatedModel.coverFileName,
         'updated_at': FieldValue.serverTimestamp(),
+        'category': updatedModel.category
       });
 
       logger.i('Notebook updated successfully.');
@@ -333,6 +335,7 @@ class NoteRemoteDataSource {
           .update({
         'subject': notebook.subject,
         'updated_at': FieldValue.serverTimestamp(),
+        'category': notebook.category
       });
 
       logger.i('Notebook updated successfully.');
@@ -602,5 +605,91 @@ class NoteRemoteDataSource {
         .get();
 
     return List.from(user.data()!['categories']);
+  }
+
+  Future<String> addCategory(String categoryName) async {
+    logger.i('Adding category...');
+    var userId = _auth.currentUser!.uid;
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .update({
+      'categories': FieldValue.arrayUnion([categoryName]),
+    });
+
+    logger.i('Category added successfully.');
+    return categoryName;
+  }
+
+  Future<String> deleteCategory({required String categoryName}) async {
+    logger.i('Deleting category: $categoryName...');
+
+    var userId = _auth.currentUser!.uid;
+
+    var collection = _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name);
+    var querySnapshots =
+        await collection.where('category', isEqualTo: categoryName).get();
+    for (var doc in querySnapshots.docs) {
+      await doc.reference.update({
+        'category': 'Uncategorized',
+      });
+    }
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .update({
+      'categories': FieldValue.arrayRemove([categoryName]),
+    });
+
+    const response = 'Category deleted successfully.';
+
+    logger.i(response);
+
+    return response;
+  }
+
+  Future<String> updateCategory(
+      {required String oldCategoryName,
+      required String newCategoryName}) async {
+    logger.i('Updating category...');
+
+    var userId = _auth.currentUser!.uid;
+
+    var collection = _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name);
+    var querySnapshots =
+        await collection.where('category', isEqualTo: oldCategoryName).get();
+    for (var doc in querySnapshots.docs) {
+      await doc.reference.update({
+        'category': newCategoryName,
+      });
+    }
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .update({
+      'categories': FieldValue.arrayRemove([oldCategoryName]),
+    });
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .update({
+      'categories': FieldValue.arrayUnion([newCategoryName]),
+    });
+
+    const response = 'Category edited successfully.';
+
+    logger.i(response);
+
+    return response;
   }
 }

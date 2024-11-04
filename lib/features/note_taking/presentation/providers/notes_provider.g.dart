@@ -261,6 +261,50 @@ final getCategoriesProvider = AutoDisposeProvider<GetCategories>.internal(
 );
 
 typedef GetCategoriesRef = AutoDisposeProviderRef<GetCategories>;
+String _$addCategoryHash() => r'18a548685d809af2d3739450d029aa19e6c48a1c';
+
+/// See also [addCategory].
+@ProviderFor(addCategory)
+final addCategoryProvider = AutoDisposeProvider<CreateCategory>.internal(
+  addCategory,
+  name: r'addCategoryProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$addCategoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AddCategoryRef = AutoDisposeProviderRef<CreateCategory>;
+String _$deleteCategoryHash() => r'8a6ff26a9683b50f717cbdfc19e9c16b66796668';
+
+/// See also [deleteCategory].
+@ProviderFor(deleteCategory)
+final deleteCategoryProvider = AutoDisposeProvider<DeleteCategory>.internal(
+  deleteCategory,
+  name: r'deleteCategoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deleteCategoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DeleteCategoryRef = AutoDisposeProviderRef<DeleteCategory>;
+String _$updateCategoryHash() => r'007b072ea94534c7c9f3bab8dda0325a48a86b55';
+
+/// See also [updateCategory].
+@ProviderFor(updateCategory)
+final updateCategoryProvider = AutoDisposeProvider<UpdateCategory>.internal(
+  updateCategory,
+  name: r'updateCategoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$updateCategoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef UpdateCategoryRef = AutoDisposeProviderRef<UpdateCategory>;
 String _$notebooksStreamHash() => r'8a56340033c814a39b83775c3f2a379016856f13';
 
 /// See also [notebooksStream].
@@ -277,7 +321,7 @@ final notebooksStreamProvider =
 );
 
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'5ac33e1757a06a6c1f5fdc1aff800fedb70561c8';
+String _$notebooksHash() => r'915bd83afb255aa7d3798e82ef27b0abdb3437ba';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

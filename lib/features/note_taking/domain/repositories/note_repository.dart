@@ -13,7 +13,8 @@ abstract class NoteRepository {
 
   Future<Either<Failure, NoteModel>> getNote(String notebookId, String noteId);
 
-  Future<Either<Failure, String>> createNotebook(String name, XFile? coverImg, String category);
+  Future<Either<Failure, String>> createNotebook(
+      String name, XFile? coverImg, String category);
 
   Future<Either<Failure, List<NotebookModel>>> getNotebooks();
 
@@ -45,5 +46,12 @@ abstract class NoteRepository {
 
   Future<Either<Failure, List<String>>> getCategories();
 
+  Future<Either<Failure, String>> addCategory(String categoryName);
+
+  Future<Either<Failure, String>> deleteCategory(
+      {required String categoryName});
+
+  Future<Either<Failure, String>> updateCategory(
+      {required String oldCategoryName, required String newCategoryName});
 }
 // TODO: remove braces from params

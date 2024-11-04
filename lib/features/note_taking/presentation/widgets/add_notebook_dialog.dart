@@ -13,8 +13,10 @@ import 'package:u_do_note/features/note_taking/presentation/providers/notes_prov
 // TODO: rename this file to match its functionality
 class AddNotebookDialog extends ConsumerStatefulWidget {
   final NotebookEntity? notebookEntity;
-
-  const AddNotebookDialog({this.notebookEntity, Key? key}) : super(key: key);
+  final List<String> categories;
+  const AddNotebookDialog(
+      {this.notebookEntity, required this.categories, Key? key})
+      : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -30,7 +32,8 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   // var _notebookCoverFileName = "";
   var _notebookCoverUrl = "";
   XFile? _notebookCoverImg;
-
+  String dropdownValue = 'Uncategorized';
+  
   @override
   void initState() {
     super.initState();
@@ -62,7 +65,9 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
             dismissOnTap: false);
 
         var res = await ref.read(notebooksProvider.notifier).createNotebook(
-            name: _nameController.text, coverImg: _notebookCoverImg, category: 'Uncategorized');
+            name: _nameController.text,
+            coverImg: _notebookCoverImg,
+            category: dropdownValue);
 
         EasyLoading.dismiss();
 
@@ -90,7 +95,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
         // ? user has selected a new cover image
         if (_notebookCoverImg != null) {
           var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
-              .copyWith(subject: _nameController.text);
+              .copyWith(subject: _nameController.text, category: dropdownValue);
 
           EasyLoading.show(
               status: 'Updating Notebook...',
@@ -108,7 +113,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
           isSuccess = res as bool;
         } else {
           var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
-              .copyWith(subject: _nameController.text);
+              .copyWith(subject: _nameController.text, category: dropdownValue);
 
           var res = await ref
               .read(notebooksProvider.notifier)
@@ -201,6 +206,21 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                       icon: const Icon(Icons.add_a_photo)),
                 ],
               ),
+            ),
+            const SizedBox(height: 10),
+            DropdownMenu<String>(
+              hintText: 'Category',
+              initialSelection: widget.notebookEntity?.category ?? 'Uncategorized',
+              onSelected: (String? value) {
+                // This is called when the user selects an item.
+                setState(() {
+                  dropdownValue = value!;
+                });
+              },
+              dropdownMenuEntries: widget.categories
+                  .map<DropdownMenuEntry<String>>((String value) {
+                return DropdownMenuEntry<String>(value: value, label: value);
+              }).toList(),
             ),
             const SizedBox(height: 10),
             Row(

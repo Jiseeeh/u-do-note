@@ -17,14 +17,17 @@ import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/repositories/note_repository.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/analyze_image_text.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/analyze_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/create_category.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/delete_category.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_categories.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/summarize_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/update_category.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_multiple_notes.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note_title.dart';
@@ -151,6 +154,27 @@ GetCategories getCategories(GetCategoriesRef ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return GetCategories(repository);
+}
+
+@riverpod
+CreateCategory addCategory(AddCategoryRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return CreateCategory(repository);
+}
+
+@riverpod
+DeleteCategory deleteCategory(DeleteCategoryRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return DeleteCategory(repository);
+}
+
+@riverpod
+UpdateCategory updateCategory(UpdateCategoryRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return UpdateCategory(repository);
 }
 
 @riverpod
@@ -366,5 +390,32 @@ class Notebooks extends _$Notebooks {
 
     return failureOrNotebooks.fold(
         (failure) => failure, (notebooks) => notebooks);
+  }
+
+  Future<dynamic> addCategory({required String categoryName}) async {
+    var addCategory = ref.read(addCategoryProvider);
+
+    var failureOrBool = await addCategory(categoryName, categoryName);
+
+    return failureOrBool.fold((failure) => failure, (res) => res);
+  }
+
+  Future<dynamic> deleteCategory({required String categoryName}) async {
+    var deleteCategory = ref.read(deleteCategoryProvider);
+
+    var failureOrString = await deleteCategory(categoryName);
+
+    return failureOrString.fold((failure) => failure, (res) => res);
+  }
+
+  Future<dynamic> updateCategory(
+      {required String oldCategoryName,
+      required String newCategoryName}) async {
+    var updateCategory = ref.read(updateCategoryProvider);
+
+    var failureOrString =
+        await updateCategory(oldCategoryName, newCategoryName);
+
+    return failureOrString.fold((failure) => failure, (res) => res);
   }
 }

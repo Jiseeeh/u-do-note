@@ -48,7 +48,8 @@ class NoteRepositoryImpl implements NoteRepository {
   Future<Either<Failure, String>> createNotebook(
       String name, XFile? coverImg, String category) async {
     try {
-      var res = await _noteRemoteDataSource.createNotebook(name, coverImg, category);
+      var res =
+          await _noteRemoteDataSource.createNotebook(name, coverImg, category);
 
       return Right(res);
     } catch (e) {
@@ -205,13 +206,56 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
-  
+
   @override
   Future<Either<Failure, List<String>>> getCategories() async {
-   try {
+    try {
       var categories = await _noteRemoteDataSource.getCategories();
 
       return Right(categories);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> addCategory(String categoryName) async {
+    try {
+      var res = await _noteRemoteDataSource.addCategory(categoryName);
+
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteCategory(
+      {required String categoryName}) async {
+    try {
+      var res = await _noteRemoteDataSource.deleteCategory(
+          categoryName: categoryName);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> updateCategory({
+    required String oldCategoryName,
+    required String newCategoryName,
+  }) async {
+    try {
+      var res = await _noteRemoteDataSource.updateCategory(
+          oldCategoryName: oldCategoryName, newCategoryName: newCategoryName);
+
+      return Right(res);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

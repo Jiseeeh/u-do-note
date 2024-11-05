@@ -33,6 +33,9 @@ import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_s
 import 'package:u_do_note/features/review_page/presentation/pages/feynman/feynman_quiz_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/strategy_details_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/about_settings_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/language_settings_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/profile_settings_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/theme_settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
@@ -70,7 +73,9 @@ class AppRouter extends _$AppRouter {
         ]),
         AutoRoute(page: SettingsRoute.page, path: '/settings'),
         AutoRoute(page: ThemeSettingsRoute.page, path: '/theme-settings'),
-
+        AutoRoute(page: LanguageSettingsRoute.page, path: '/language-settings'),
+        AutoRoute(page: AboutSettingsRoute.page, path: '/about-settings'),
+        AutoRoute(page: ProfileSettingsRoute.page, path: '/profile-settings'),
         AutoRoute(
             page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
         AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note'),

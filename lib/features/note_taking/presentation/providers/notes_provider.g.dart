@@ -321,7 +321,7 @@ final notebooksStreamProvider =
 );
 
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'915bd83afb255aa7d3798e82ef27b0abdb3437ba';
+String _$notebooksHash() => r'ca5917bdc4797d30a9b530dab918b17bd07b923b';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

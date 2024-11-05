@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AboutSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AboutSettingsScreen(),
+      );
+    },
     AcronymQuizRoute.name: (routeData) {
       final args = routeData.argsAs<AcronymQuizRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -112,6 +118,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LandingScreen(),
       );
     },
+    LanguageSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LanguageSettingsScreen(),
+      );
+    },
     LeitnerSystemRoute.name: (routeData) {
       final args = routeData.argsAs<LeitnerSystemRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -176,6 +188,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const PomodoroScreen(),
       );
     },
+    ProfileSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileSettingsScreen(),
+      );
+    },
     QuizResultsRoute.name: (routeData) {
       final args = routeData.argsAs<QuizResultsRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -236,6 +254,20 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [AboutSettingsScreen]
+class AboutSettingsRoute extends PageRouteInfo<void> {
+  const AboutSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          AboutSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AboutSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -582,6 +614,20 @@ class LandingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [LanguageSettingsScreen]
+class LanguageSettingsRoute extends PageRouteInfo<void> {
+  const LanguageSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          LanguageSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LanguageSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [LeitnerSystemScreen]
 class LeitnerSystemRoute extends PageRouteInfo<LeitnerSystemRouteArgs> {
   LeitnerSystemRoute({
@@ -787,6 +833,20 @@ class PomodoroRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'PomodoroRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileSettingsScreen]
+class ProfileSettingsRoute extends PageRouteInfo<void> {
+  const ProfileSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileSettingsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

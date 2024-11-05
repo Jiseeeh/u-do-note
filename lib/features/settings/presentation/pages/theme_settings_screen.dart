@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -18,11 +19,7 @@ class ThemeSettingsScreen extends ConsumerStatefulWidget {
 enum ThemeMode { light, dark, system }
 
 class _ThemeSettingsScreenState extends ConsumerState<ThemeSettingsScreen> {
-  Image? profile;
   bool isLoading = true;
-  var nameController = TextEditingController();
-  var nameFocusNode = FocusNode();
-  var currentName = '';
   late String theme;
 
   ThemeMode? _name;
@@ -86,7 +83,7 @@ class _ThemeSettingsScreenState extends ConsumerState<ThemeSettingsScreen> {
           ),
         ),
         title: Text(
-          'Change Theme',
+          context.tr('change_theme'),
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         centerTitle: false,

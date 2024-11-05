@@ -1,15 +1,12 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:u_do_note/core/error/failures.dart';
-import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_theme_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/features/settings/presentation/providers/settings_screen_provider.dart';
@@ -34,63 +31,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   var currentName = '';
   late String theme;
 
-  ThemeMode? _name = ThemeMode.light;
-
   @override
   void initState() {
     super.initState();
-    var user = FirebaseAuth.instance.currentUser!;
-
-    nameController.text = user.displayName!;
-    currentName = user.displayName!;
-
-    nameFocusNode.addListener(() {
-      if (!nameFocusNode.hasFocus) {
-        if (nameController.text.isEmpty) {
-          EasyLoading.showError('Name cannot be empty!');
-          return;
-        }
-
-        if (nameController.text.length < 3) {
-          EasyLoading.showError('Name must be at least 3 characters long!');
-          return;
-        }
-
-        if (nameController.text.length > 20) {
-          EasyLoading.showError('Name must be at most 16 characters long!');
-          return;
-        }
-
-        if (nameController.text != currentName) {
-          logger.w('updating name');
-
-          FirebaseAuth.instance.currentUser!
-              .updateDisplayName(nameController.text);
-          currentName = nameController.text;
-        }
-      }
-    });
-
-    if (user.photoURL != null) {
-      profile = Image.network(user.photoURL!);
-    } else {
-      profile = Image.asset('assets/images/default_avatar.png');
-    }
-
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         isLoading = false;
       });
     });
-
-    initTheme();
-  }
-
-  void initTheme() async {
-    var themeMode = ref.read(themeNotifierProvider);
-
-    theme = themeMode.name.substring(0, 1).toUpperCase() +
-        themeMode.name.substring(1);
   }
 
   @override
@@ -127,7 +75,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             hoverColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () async {
-              context.back();
+              context.router.pop();
             },
             child: Icon(
               Icons.chevron_left_rounded,
@@ -136,7 +84,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ),
           title: Text(
-            'Settings',
+            context.tr('settings'),
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           centerTitle: false,
@@ -150,145 +98,79 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Skeleton.ignore(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    width: 90,
-                                    height: 90,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF1181C7),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        width: 2,
+                    InkWell(
+                      onTap: () {
+                        context.router.push(const ProfileSettingsRoute());
+                      },
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Skeleton.ignore(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 90,
+                                      height: 90,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF1181C7),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          width: 2,
+                                        ),
                                       ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: InkWell(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(2.0),
                                         child: CircleAvatar(
                                           radius: 10.h,
                                           backgroundImage: profile!.image,
                                         ),
-                                        onTap: () async {
-                                          EasyLoading.show(
-                                              status: 'Loading image picker...',
-                                              maskType:
-                                                  EasyLoadingMaskType.black,
-                                              dismissOnTap: false);
-
-                                          var img = await ImagePicker()
-                                              .pickImage(
-                                                  source: ImageSource.gallery);
-
-                                          EasyLoading.dismiss();
-
-                                          if (img == null) return;
-
-                                          var res = await ref
-                                              .read(settingsProvider.notifier)
-                                              .uploadProfilePicture(image: img);
-
-                                          if (res is Failure) {
-                                            EasyLoading.showError(res.message);
-                                            return;
-                                          }
-
-                                          profile =
-                                              Image.network(res as String);
-
-                                          setState(() {});
-                                        },
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 60.w,
-                              child: FittedBox(
-                                alignment: Alignment.topLeft,
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  textAlign: TextAlign.start,
-                                  user.displayName!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 60.w,
+                                child: FittedBox(
+                                  alignment: Alignment.topLeft,
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    textAlign: TextAlign.start,
+                                    user.displayName!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                  ),
                                 ),
                               ),
-                            ),
-                            // TextField(
-                            //   decoration: InputDecoration(
-                            //     constraints: BoxConstraints(
-                            //       maxHeight: 3.h,
-                            //       maxWidth: 60.w,
-                            //     ),
-                            //     hintText: 'testtestetestest teste tetetett',
-                            //     border: InputBorder.none,
-                            //   ),
-                            //   // controller: nameController,
-                            //   // focusNode: nameFocusNode,
-                            //   textAlign: TextAlign.start,
-                            //   style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 6.w),
-                            // ),
-                            SizedBox(
-                              width: 60.w,
-                              child: FittedBox(
-                                alignment: Alignment.topLeft,
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  textAlign: TextAlign.start,
-                                  user.email!,
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                              SizedBox(
+                                width: 60.w,
+                                child: FittedBox(
+                                  alignment: Alignment.topLeft,
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    textAlign: TextAlign.start,
+                                    user.email!,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        //  Padding(
-                        //   padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                        //   child: Column(
-                        //     mainAxisSize: MainAxisSize.max,
-                        //     mainAxisAlignment: MainAxisAlignment.center,
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //      TextField(
-                        //     controller: nameController,
-                        //     focusNode: nameFocusNode,
-                        //     textAlign: TextAlign.center,
-                        //     decoration:
-                        //         const InputDecoration.collapsed(hintText: ''),
-                        //     style: Theme.of(context)
-                        //         .textTheme
-                        //         .displayMedium
-                        //         ?.copyWith(fontSize: 20.sp)),
-                        //       Padding(
-                        //         padding:
-                        //             EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                        //         child: Text(
-                        //           'Dummy Email',
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -301,7 +183,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       SizedBox(
                         height: 4.h,
                         child: Text(
-                          'General',
+                          context.tr('general'),
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
@@ -313,36 +195,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         physics: const NeverScrollableScrollPhysics(),
-                        children: const [
+                        children: [
                           SettingsCard(
-                            title: 'Change Theme',
+                            title: context.tr('change_theme'),
                             icon: Icons.color_lens_outlined,
-                            // onPressed: () {},
+                            onSettingPressed: () {
+                              context.router.push(const ThemeSettingsRoute());
+                            },
                           ),
                           SettingsCard(
-                            title: 'Language',
+                            title: context.tr('language'),
                             icon: Icons.language_outlined,
-                            // onPressed: () {},
+                            onSettingPressed: () {
+                              context.router
+                                  .push(const LanguageSettingsRoute());
+                            },
                           ),
                           SettingsCard(
-                            title: 'About',
+                            title: context.tr('about'),
                             icon: Icons.info_outline_rounded,
-                            // onPressed: () {},
+                            onSettingPressed: () {
+                              context.router.push(const AboutSettingsRoute());
+                            },
                           ),
                           SettingsCard(
-                            title: 'Support',
+                            title: context.tr('support'),
                             icon: Icons.help_outline_outlined,
-                            // onPressed: () {},
+                            onSettingPressed: () {
+                              null;
+                            },
                           ),
                           SettingsCard(
-                            title: 'Terms of Service',
+                            title: context.tr('terms_of_service'),
                             icon: Icons.privacy_tip_outlined,
-                            // onPressed: () {},
+                            onSettingPressed: () {
+                              null;
+                            },
                           ),
                           SettingsCard(
-                            title: 'Invite Friends',
+                            title: context.tr('invite_friends'),
                             icon: Icons.share_outlined,
-                            // onPressed: () {},
+                            onSettingPressed: () {
+                              null;
+                            },
                           ),
                         ],
                       ),
@@ -361,15 +256,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         scrollDirection: Axis.vertical,
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
-                          const SettingsCard(
-                            title: 'Edit Profile',
+                          SettingsCard(
+                            title: context.tr('edit_profile'),
                             icon: Icons.account_circle_outlined,
-                            // onPressed: () {},
+                            onSettingPressed: () {
+                              context.router.push(const ProfileSettingsRoute());
+                            },
                           ),
-                          const SettingsCard(
-                            title: 'Change Password',
+                          SettingsCard(
+                            title: context.tr('change_password'),
                             icon: Icons.security_outlined,
-                            // onPressed: () {},
+                            onSettingPressed: () {
+                              null;
+                            },
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
@@ -385,9 +284,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                     context: context,
                                     builder: (dialogContext) {
                                       return AlertDialog(
-                                        title: const Text('Sign Out'),
-                                        content: const Text(
-                                            'Are you sure you want to sign out?'),
+                                        title: Text(
+                                          context.tr('sign_out'),
+                                        ),
+                                        content: Text(
+                                          context.tr('sign_out_desc'),
+                                        ),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
@@ -460,7 +362,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       ),
                                       const SizedBox(width: 10),
                                       Text(
-                                        'Sign Out',
+                                        context.tr('sign_out'),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall
@@ -479,237 +381,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           )
                         ],
                       ),
-                      // ExpansionTile(
-                      //   title: Row(
-                      //     children: [
-                      //       const Icon(Icons.visibility_rounded),
-                      //       SizedBox(width: 1.w),
-                      //       Text(context.tr('theme')),
-                      //     ],
-                      //   ),
-                      //   children: [
-                      //     Column(
-                      //       children: [
-                      //         Padding(
-                      //           padding: const EdgeInsets.symmetric(
-                      //               horizontal: 16.0),
-                      //           child: Row(
-                      //             mainAxisAlignment:
-                      //                 MainAxisAlignment.spaceBetween,
-                      //             children: [
-                      //               Text(context.tr('current_theme'),
-                      //                   style: Theme.of(context)
-                      //                       .textTheme
-                      //                       .labelLarge
-                      //                       ?.copyWith(fontSize: 14.sp)),
-                      //               DropdownButton<String>(
-                      //                 value: theme,
-                      //                 onChanged: (String? newValue) {
-                      //                   setState(() {
-                      //                     if (newValue != null) {
-                      //                       var themeNotifier = ref.read(
-                      //                           themeNotifierProvider.notifier);
-
-                      //                       themeNotifier.setTheme(
-                      //                           newValue.toLowerCase());
-                      //                     }
-                      //                   });
-                      //                 },
-                      //                 items: <String>['Light', 'Dark', 'System']
-                      //                     .map<DropdownMenuItem<String>>(
-                      //                         (String value) {
-                      //                   return DropdownMenuItem<String>(
-                      //                     value: value,
-                      //                     child: Text(value,
-                      //                         style: Theme.of(context)
-                      //                             .textTheme
-                      //                             .labelLarge
-                      //                             ?.copyWith(fontSize: 14.sp)),
-                      //                   );
-                      //                 }).toList(),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ],
-                      // ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                var themeNotifier =
-                                    ref.read(themeNotifierProvider.notifier);
-
-                                themeNotifier.setTheme('light');
-                                _name = ThemeMode.light;
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/images/themes/theme-light.svg',
-                                  semanticsLabel: 'Light Theme',
-                                  height: 20.h,
-                                  width: 80,
-                                ),
-                                Radio<ThemeMode>(
-                                  value: ThemeMode.light,
-                                  groupValue: _name,
-                                  onChanged: (ThemeMode? newValue) {
-                                    setState(() {
-                                      if (newValue != null) {
-                                        var themeNotifier = ref.read(
-                                            themeNotifierProvider.notifier);
-
-                                        themeNotifier.setTheme('light');
-                                      }
-                                      _name = newValue;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
+                      SizedBox(
+                        height: 4.h,
+                        child: Center(
+                          child: Text(
+                            'Version %',
+                            style: Theme.of(context).textTheme.bodySmall,
+                            textAlign: TextAlign.center,
                           ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                var themeNotifier =
-                                    ref.read(themeNotifierProvider.notifier);
-
-                                themeNotifier.setTheme('dark');
-                                _name = ThemeMode.dark;
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/images/themes/theme-dark.svg',
-                                  semanticsLabel: 'Dark Theme',
-                                  height: 20.h,
-                                  width: 80,
-                                ),
-                                Radio<ThemeMode>(
-                                  value: ThemeMode.dark,
-                                  groupValue: _name,
-                                  onChanged: (ThemeMode? newValue) {
-                                    setState(() {
-                                      if (newValue != null) {
-                                        var themeNotifier = ref.read(
-                                            themeNotifierProvider.notifier);
-
-                                        themeNotifier.setTheme('dark');
-                                      }
-                                      _name = newValue;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            var themeNotifier =
-                                ref.read(themeNotifierProvider.notifier);
-
-                            themeNotifier.setTheme('system');
-                            _name = ThemeMode.system;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/images/themes/theme-system.svg',
-                              semanticsLabel: 'System Theme',
-                              height: 20.h,
-                              width: 80,
-                            ),
-                            Radio<ThemeMode>(
-                              value: ThemeMode.system,
-                              groupValue: _name,
-                              onChanged: (ThemeMode? newValue) {
-                                setState(() {
-                                  if (newValue != null) {
-                                    var themeNotifier = ref
-                                        .read(themeNotifierProvider.notifier);
-
-                                    themeNotifier.setTheme('system');
-                                  }
-                                  _name = newValue;
-                                });
-                              },
-                            ),
-                          ],
                         ),
                       ),
                     ],
                   ),
-
-                  // ExpansionTile(
-                  //   title: Row(
-                  //     children: [
-                  //       const Icon(Icons.language_rounded),
-                  //       SizedBox(width: 1.w),
-                  //       Text(context.tr("language")),
-                  //     ],
-                  //   ),
-                  //   children: [
-                  //     Column(
-                  //       children: [
-                  //         Padding(
-                  //           padding: const EdgeInsets.symmetric(
-                  //               horizontal: 16.0),
-                  //           child: Row(
-                  //             mainAxisAlignment:
-                  //                 MainAxisAlignment.spaceBetween,
-                  //             children: [
-                  //               Text(context.tr("current_language"),
-                  //                   style: Theme.of(context)
-                  //                       .textTheme
-                  //                       .labelLarge
-                  //                       ?.copyWith(fontSize: 14.sp)),
-                  //               DropdownButton<String>(
-                  //                 value: context.locale.toString() == 'en'
-                  //                     ? 'English'
-                  //                     : 'Filipino',
-                  //                 onChanged: (String? newValue) {
-                  //                   switch (newValue) {
-                  //                     case 'English':
-                  //                       context.setLocale(
-                  //                           constants.defaultLocale);
-                  //                       break;
-                  //                     case 'Filipino':
-                  //                       context
-                  //                           .setLocale(constants.filLocale);
-                  //                       break;
-                  //                   }
-                  //                 },
-                  //                 items: <String>['English', 'Filipino']
-                  //                     .map<DropdownMenuItem<String>>(
-                  //                         (String value) {
-                  //                   return DropdownMenuItem<String>(
-                  //                     value: value,
-                  //                     child: Text(value,
-                  //                         style: Theme.of(context)
-                  //                             .textTheme
-                  //                             .labelLarge
-                  //                             ?.copyWith(fontSize: 14.sp)),
-                  //                   );
-                  //                 }).toList(),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
                 ),
               ),
             ],

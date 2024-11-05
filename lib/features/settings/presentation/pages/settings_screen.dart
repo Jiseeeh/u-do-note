@@ -34,11 +34,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+    var user = FirebaseAuth.instance.currentUser!;
+
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         isLoading = false;
       });
     });
+    
+    if (user.photoURL != null) {
+      profile = Image.network(user.photoURL!);
+    } else {
+      profile = Image.asset('assets/images/default_avatar.png');
+    }
   }
 
   @override

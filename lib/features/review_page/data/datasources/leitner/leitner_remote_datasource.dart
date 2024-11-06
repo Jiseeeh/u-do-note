@@ -99,8 +99,8 @@ class LeitnerRemoteDataSource {
       'flashcards': flashcards.map((flashcard) => flashcard.toJson()).toList(),
       'next_review': now,
       'notebook_id': userNotebookId,
-      'score': '',
-      'remark': '',
+      'score': null,
+      'remark': null,
     });
 
     var leitnerSystemModel = LeitnerSystemModel(

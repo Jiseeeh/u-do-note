@@ -89,7 +89,10 @@ class ElaborationRemoteDataSource {
           .collection(FirestoreCollection.user_notes.name)
           .doc(notebookId)
           .collection(FirestoreCollection.remarks.name)
-          .add(updatedElaborationModel.toFirestore());
+          .add({
+        ...updatedElaborationModel.toFirestore(),
+        'notebook_id': notebookId,
+      });
 
       Helper.updateTechniqueUsage(
           _firestore, userId, notebookId, ElaborationModel.name);

@@ -1,16 +1,22 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:collection/collection.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/features/analytics/data/models/chart_data.dart';
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
-import 'package:u_do_note/features/analytics/data/models/remark_data.dart';
+import 'package:u_do_note/features/analytics/data/models/scores_data.dart';
+import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
+import 'package:u_do_note/features/review_page/data/models/blurting.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
 import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+import 'package:u_do_note/features/review_page/data/models/score.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 
 class RemarkRemoteDataSource {
   final FirebaseFirestore _firestore;
@@ -18,10 +24,10 @@ class RemarkRemoteDataSource {
 
   RemarkRemoteDataSource(this._firestore, this._auth);
 
-  Future<List<RemarkModel>> getRemarks() async {
+  Future<Map<String, List<RemarkModel>>> getRemarks() async {
     var userId = _auth.currentUser!.uid;
 
-    var userNotes = await _firestore
+    var userNotebooks = await _firestore
         .collection(FirestoreCollection.users.name)
         .doc(userId)
         .collection(FirestoreCollection.user_notes.name)
@@ -29,55 +35,141 @@ class RemarkRemoteDataSource {
 
     List<RemarkModel> remarkModels = [];
 
-    // ? get all leitner remarks
+    for (var nb in userNotebooks.docs) {
+      var remarks = await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(nb.id)
+          .collection(FirestoreCollection.remarks.name)
+          .where('remark', isNull: false)
+          .get();
 
-    for (var userNote in userNotes.docs) {
-      var leitnerRemarkSnaps = await _getRemarkSnapshots(
-          noteId: userNote.id, reviewMethod: LeitnerSystemModel.name);
+      for (var remark in remarks.docs) {
+        var remarkData = remark.data();
 
-      var feynmanRemarkSnaps = await _getRemarkSnapshots(
-          noteId: userNote.id, reviewMethod: FeynmanModel.name);
+        var score = 0;
+        var scores = remarkData['scores'];
 
-      var pomodoroRemarkSnaps = await _getRemarkSnapshots(
-          noteId: userNote.id, reviewMethod: PomodoroModel.name);
+        if (scores == null) {
+          score = remarkData['score'];
+        } else {
+          var scores = (remarkData['scores'] as List)
+              .map((score) => ScoreModel.fromJson(score))
+              .toList();
 
-      var leitnerRemarksData =
-          _getRemarkModels(remarkSnapshot: leitnerRemarkSnaps);
+          int totalScore = scores.fold(0, (acc, e) => acc + e.score);
+          score = scores.isNotEmpty ? (totalScore / scores.length).ceil() : 0;
+        }
 
-      var feynmanRemarksData =
-          _getRemarkModels(remarkSnapshot: feynmanRemarkSnaps);
-
-      var pomodoroRemarksData =
-          _getRemarkModels(remarkSnapshot: pomodoroRemarkSnaps);
-
-      var length = [
-        leitnerRemarksData.length,
-        feynmanRemarksData.length,
-        pomodoroRemarksData.length
-      ].reduce(max);
-
-      for (var i = 0; i < length; i++) {
-        RemarkDataModel? leitnerRemarkData =
-            i < leitnerRemarksData.length ? leitnerRemarksData[i] : null;
-        RemarkDataModel? feynmanRemarkData =
-            i < feynmanRemarksData.length ? feynmanRemarksData[i] : null;
-        RemarkDataModel? pomodoroRemarkData =
-            i < pomodoroRemarksData.length ? pomodoroRemarksData[i] : null;
-
-        var remarkModel = RemarkModel(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          leitnerRemark: leitnerRemarkData,
-          feynmanRemark: feynmanRemarkData,
-          pomodoroRemark: pomodoroRemarkData,
-        );
-
-        remarkModels.add(remarkModel);
+        remarkModels.add(RemarkModel(
+            id: remark.id,
+            notebookName: nb.data()['subject'],
+            notebookId: remarkData['notebook_id'],
+            createdAt: remarkData['created_at'],
+            reviewMethod: remarkData['review_method'],
+            score: score));
       }
     }
 
-    logger.i("Done fetching remarks..");
+    var groupedRemarks =
+        groupBy(remarkModels, (RemarkModel remark) => remark.notebookId);
 
-    return remarkModels;
+    logger.d("Grouped: $groupedRemarks");
+
+    return groupedRemarks;
+  }
+
+  Future<String> getTechniquesUsageInterpretation(
+      List<ChartData> chartData) async {
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(
+          """
+          You are an analyst. You will be given data representing a column chart, where review methods are on the x-axis and their usage frequency on the y-axis. Your task is to interpret the chart in a concise summary of 3-4 sentences. Highlight the most and least frequently used methods, as well as any notable patterns in the data.
+          
+          Note that this learning method usage are tied to a single user not the overall usage of all users. 
+          """,
+        ),
+      ],
+      role: OpenAIChatMessageRole.system,
+    );
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text("""
+          Here is the chart data of my column chart.
+
+          $chartData
+          """),
+      ],
+      role: OpenAIChatMessageRole.user,
+    );
+
+    var requestMessages = [
+      systemMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-4o-mini",
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 800,
+    );
+
+    String? completionContent =
+        chatCompletion.choices.first.message.content!.first.text;
+
+    return completionContent!;
+  }
+
+  Future<String> getLearningMethodScoresInterpretation(
+      List<ScoresData> scoresData) async {
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(
+          """
+          You are an analyst. You will be given data representing a line chart, where dates are on the x-axis and their corresponding score is on the y-axis. Your task is to interpret the chart in a concise summary of 3-4 sentences.  
+          
+          Note that this learning method usage are tied to a single user not the overall usage of all users so use second-person language alongside the interpretation. 
+          """,
+        ),
+      ],
+      role: OpenAIChatMessageRole.system,
+    );
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text("""
+          Here is the chart data of my scores by learning method line chart.
+
+          $scoresData
+          """),
+      ],
+      role: OpenAIChatMessageRole.user,
+    );
+
+    var requestMessages = [
+      systemMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-4o-mini",
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 800,
+    );
+
+    String? completionContent =
+        chatCompletion.choices.first.message.content!.first.text;
+
+    logger.d("PUTANGINA $completionContent");
+
+    return completionContent!;
   }
 
   Future<int> getFlashcardsToReview() async {
@@ -134,14 +226,20 @@ class RemarkRemoteDataSource {
           .collection(FirestoreCollection.user_notes.name)
           .doc(userNote.id)
           .collection(FirestoreCollection.remarks.name)
-          .where('review_method',
-              whereIn: [FeynmanModel.name, LeitnerSystemModel.name]).get();
+          .where('review_method', whereIn: [
+        FeynmanModel.name,
+        PomodoroModel.name,
+        ElaborationModel.name,
+        AcronymModel.name,
+        BlurtingModel.name,
+        SpacedRepetitionModel.name,
+        ActiveRecallModel.name,
+      ]).get();
 
       for (var remarkSnap in remarkSnaps.docs) {
         var doc = remarkSnap.data();
 
-        if (doc['score'].toString().isEmpty ||
-            doc['remark'].toString().isEmpty) {
+        if (doc['remark'] == null || doc['remark'].toString().isEmpty) {
           quizzesToTake++;
         }
       }
@@ -150,36 +248,26 @@ class RemarkRemoteDataSource {
     return quizzesToTake;
   }
 
-  Future<String> getAnalysis(List<RemarkModel> remarksModel) async {
-    String remarks = "";
-
-    for (var i = 0; i < remarksModel.length; i++) {
-      remarks += "${remarksModel[i].toString()}\n";
-    }
-
+  Future<String> getAnalysis(Map<String, List<RemarkModel>> remarks) async {
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
-          You are an analyst. You will be given a set of remarks of each learning strategy of the student.
-          Your task is to analyze the remarks and provide a summary, of the student's learning progress and also predict the student's future performance.
-          Your response should be in json format with the properties 'content' which includes the summary and the prediction or insight. Next is the 'state' that determines if the student is 'improving', 'stagnant' or 'declining'.
+          You are an educational analyst. You will be given a set of learning strategy remarks for a student, with each strategy evaluated by method, score, and frequency. Your task is to analyze the remarks and generate a JSON response that summarizes the student's learning progress and provides a forecast of future performance. Assess strengths, areas for improvement, and trends in engagement or success across different methods.
+          
+          Output Requirements
+          Your response should be in JSON format with the following properties:
+  
+          "content": A summary of the student’s progress and a prediction or insight into their future performance based on the observed trends. Highlight any methods where the student excels or struggles, use second-person language and make it concise as 3-4 sentences only.
+          "state": A single-word evaluation of the student's learning progress
+           Choose from:
+              "Improving" if there’s a positive trend across scores.
+              "Stagnant" if there’s minimal or inconsistent change.
+              "Declining" if there’s a negative trend in scores.
           """,
         ),
       ],
       role: OpenAIChatMessageRole.system,
-    );
-
-    final assistantMessage = OpenAIChatCompletionChoiceMessageModel(
-      content: [
-        OpenAIChatCompletionChoiceMessageContentItemModel.text("""
-          {
-            "content": "You are doing great in Leitner System but it seems you have have some challenges with Feynman Technique. You should try to improve on that. You are on the right track. Keep it up!",
-            "state": "improving"  
-          }
-          """),
-      ],
-      role: OpenAIChatMessageRole.assistant,
     );
 
     final userMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -195,23 +283,17 @@ class RemarkRemoteDataSource {
 
     var requestMessages = [
       systemMessage,
-      assistantMessage,
       userMessage,
     ];
 
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-0125",
-      seed: 6,
+      model: "gpt-4o-mini",
+      responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,
-      maxTokens: 500,
+      maxTokens: 800,
     );
-
-    logger.d(chatCompletion.choices.first.message);
-    logger.d(chatCompletion.systemFingerprint);
-    logger.d(chatCompletion.usage.promptTokens);
-    logger.d(chatCompletion.id);
 
     String json = chatCompletion.choices.first.message.content!.first.text!;
 
@@ -231,27 +313,5 @@ class RemarkRemoteDataSource {
         .where('review_method', isEqualTo: reviewMethod)
         .orderBy('created_at', descending: false)
         .get();
-  }
-
-  List<RemarkDataModel?> _getRemarkModels(
-      {required QuerySnapshot<Map<String, dynamic>> remarkSnapshot}) {
-    return remarkSnapshot.docs
-        .map((remarkDoc) {
-          var doc = remarkDoc.data();
-
-          // ? instances where the user did not finish a leitner session
-          if (doc['remark'].toString().isEmpty ||
-              doc['score'].toString().isEmpty) {
-            return null;
-          }
-
-          return RemarkDataModel(
-              reviewMethod: doc['review_method'],
-              remark: doc['remark'],
-              score: doc['score'],
-              timestamp: doc['created_at']);
-        })
-        .where((remark) => remark != null)
-        .toList();
   }
 }

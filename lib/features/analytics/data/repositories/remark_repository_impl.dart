@@ -2,7 +2,9 @@ import 'package:dartz/dartz.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/analytics/data/datasources/remark_remote_datasource.dart';
+import 'package:u_do_note/features/analytics/data/models/chart_data.dart';
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
+import 'package:u_do_note/features/analytics/data/models/scores_data.dart';
 import 'package:u_do_note/features/analytics/domain/repositories/remark_repository.dart';
 
 class RemarkRepositoryImpl implements RemarkRepository {
@@ -11,11 +13,11 @@ class RemarkRepositoryImpl implements RemarkRepository {
   RemarkRepositoryImpl(this._remarkDataSource);
 
   @override
-  Future<Either<Failure, List<RemarkModel>>> getRemarks() async {
+  Future<Either<Failure, Map<String, List<RemarkModel>>>> getRemarks() async {
     try {
-      var leitnerRemarkModel = await _remarkDataSource.getRemarks();
+      var remarks = await _remarkDataSource.getRemarks();
 
-      return Right(leitnerRemarkModel);
+      return Right(remarks);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }
@@ -45,11 +47,37 @@ class RemarkRepositoryImpl implements RemarkRepository {
 
   @override
   Future<Either<Failure, String>> getAnalysis(
-      List<RemarkModel> remarksModel) async {
+      Map<String, List<RemarkModel>> remarks) async {
     try {
-      var analysis = await _remarkDataSource.getAnalysis(remarksModel);
+      var analysis = await _remarkDataSource.getAnalysis(remarks);
 
       return Right(analysis);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> getTechniquesUsageInterpretation(
+      List<ChartData> chartData) async {
+    try {
+      var interpretation =
+          await _remarkDataSource.getTechniquesUsageInterpretation(chartData);
+
+      return Right(interpretation);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> getLearningMethodScoresInterpretation(
+      List<ScoresData> scoresData) async {
+    try {
+      var interpretation = await _remarkDataSource
+          .getLearningMethodScoresInterpretation(scoresData);
+
+      return Right(interpretation);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

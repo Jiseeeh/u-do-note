@@ -112,7 +112,47 @@ final getAnalysisProvider = AutoDisposeProvider<GetAnalysis>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetAnalysisRef = AutoDisposeProviderRef<GetAnalysis>;
-String _$analyticsScreenHash() => r'221a9393f670d6ed5e6d702229258fa6b0be8ce3';
+String _$getTechniquesUsageInterpretationHash() =>
+    r'623fc62dabbea2fd361a2871bda1baed4c38dc10';
+
+/// See also [getTechniquesUsageInterpretation].
+@ProviderFor(getTechniquesUsageInterpretation)
+final getTechniquesUsageInterpretationProvider =
+    AutoDisposeProvider<GetTechniquesUsageInterpretation>.internal(
+  getTechniquesUsageInterpretation,
+  name: r'getTechniquesUsageInterpretationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getTechniquesUsageInterpretationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetTechniquesUsageInterpretationRef
+    = AutoDisposeProviderRef<GetTechniquesUsageInterpretation>;
+String _$getLearningMethodScoresInterpretationHash() =>
+    r'11034e9cb93d42c3d0388440c5ba21d78b00ac03';
+
+/// See also [getLearningMethodScoresInterpretation].
+@ProviderFor(getLearningMethodScoresInterpretation)
+final getLearningMethodScoresInterpretationProvider =
+    AutoDisposeProvider<GetLearningMethodScoresInterpretation>.internal(
+  getLearningMethodScoresInterpretation,
+  name: r'getLearningMethodScoresInterpretationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getLearningMethodScoresInterpretationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetLearningMethodScoresInterpretationRef
+    = AutoDisposeProviderRef<GetLearningMethodScoresInterpretation>;
+String _$analyticsScreenHash() => r'd5dd049fd0d3f687c7dafd27956bd57b33791c37';
 
 /// See also [AnalyticsScreen].
 @ProviderFor(AnalyticsScreen)

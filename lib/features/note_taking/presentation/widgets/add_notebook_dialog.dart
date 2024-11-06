@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -86,8 +87,8 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
         EasyLoading.dismiss();
 
         if (res is Failure) {
-          EasyLoading.showToast(
-              'Something went wrong, please try again later.');
+          logger.e("res: ${res.message}");
+          EasyLoading.showError(res.message);
           return;
         }
 

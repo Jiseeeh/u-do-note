@@ -8,10 +8,10 @@ class Onboard extends ConsumerWidget {
   final String description;
 
   const Onboard({
-    Key? key,
+    super.key,
     required this.label,
     required this.description,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

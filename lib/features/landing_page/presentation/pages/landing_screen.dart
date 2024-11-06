@@ -1,10 +1,32 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
+import 'package:u_do_note/core/shared/data/models/note.dart';
+import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
+import 'package:u_do_note/core/utility.dart';
+import 'package:u_do_note/features/landing_page/presentation/providers/landing_page_provider.dart';
+import 'package:u_do_note/features/landing_page/presentation/widgets/small_box.dart';
 import 'package:u_do_note/features/landing_page/presentation/widgets/on_going_review.dart';
+import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
+import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
+import 'package:u_do_note/features/review_page/data/models/blurting.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
@@ -16,12 +38,440 @@ class LandingScreen extends ConsumerStatefulWidget {
 }
 
 class _LandingScreenState extends ConsumerState<LandingScreen> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  var username = FirebaseAuth.instance.currentUser!.displayName!;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late List<LeitnerSystemModel> _onGoingLeitnerReviews = [];
+  late List<FeynmanModel> _onGoingFeynmanReviews = [];
+  late List<ElaborationModel> _onGoingElaborationReviews = [];
+  late List<AcronymModel> _onGoingAcronymReviews = [];
+  late List<BlurtingModel> _onGoingBlurtingReviews = [];
+  late List<SpacedRepetitionModel> _onGoingSpacedRepetitionReviews = [];
+  late List<ActiveRecallModel> _onGoingActiveRecallReviews = [];
+  late List<Widget> _onGoingReviews = [];
+  late final List<SmallBox> _featuredMethods = [];
+  late StreamSubscription<InternetStatus> _internetListener;
+  VoidCallback? _heroReviewOnPressed;
+  String _heroText =
+      "Please wait!\nWe are checking if you have something to review.";
+  bool _isLoading = true;
+  bool _willRepopulate = true;
 
   @override
   void initState() {
     super.initState();
+
+    // ? workaround when accessing getReviewMethods idk why as of writing...
+    Future.delayed(Duration.zero, _populateFeaturedMethods);
+
+    _populateOnGoingReviews();
+    _willRepopulate = false;
+
+    _internetListener =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      switch (status) {
+        case InternetStatus.connected:
+          if (_willRepopulate) {
+            _populateOnGoingReviews();
+          }
+          break;
+        case InternetStatus.disconnected:
+          setState(() {
+            _isLoading = false;
+            _heroText =
+                "You are not connected to the internet!\nconnect to see your on-going reviews.";
+            _heroReviewOnPressed = () {
+              return;
+            };
+            _onGoingReviews = [];
+            _willRepopulate = true;
+          });
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _internetListener.cancel();
+  }
+
+  void _populateOnGoingReviews() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    _onGoingLeitnerReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: LeitnerSystemModel.name,
+            fromFirestore: LeitnerSystemModel.fromFirestore);
+
+    _onGoingFeynmanReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: FeynmanModel.name,
+            fromFirestore: FeynmanModel.fromFirestore);
+
+    _onGoingElaborationReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: ElaborationModel.name,
+            fromFirestore: ElaborationModel.fromFirestore);
+
+    _onGoingAcronymReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: AcronymModel.name,
+            fromFirestore: AcronymModel.fromFirestore);
+
+    _onGoingBlurtingReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: BlurtingModel.name,
+            fromFirestore: BlurtingModel.fromFirestore);
+
+    _onGoingSpacedRepetitionReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: SpacedRepetitionModel.name,
+            fromFirestore: SpacedRepetitionModel.fromFirestore);
+
+    _onGoingActiveRecallReviews = await ref
+        .read(landingPageProvider.notifier)
+        .getOnGoingReviews(
+            methodName: ActiveRecallModel.name,
+            fromFirestore: ActiveRecallModel.fromFirestore);
+
+    setState(() {
+      _onGoingReviews = _buildOnGoingReviews(context);
+      _isLoading = false;
+    });
+  }
+
+  void _populateFeaturedMethods() {
+    var reviewMethodEntities =
+        ref.read(sharedProvider.notifier).getReviewMethods(context);
+
+    var firstMethodIndex = Random().nextInt(reviewMethodEntities.length);
+    var secondMethodIndex = Random().nextInt(reviewMethodEntities.length);
+
+    while (secondMethodIndex == firstMethodIndex) {
+      secondMethodIndex = Random().nextInt(reviewMethodEntities.length);
+    }
+
+    var firstMethod = reviewMethodEntities[firstMethodIndex];
+    var secondMethod = reviewMethodEntities[secondMethodIndex];
+
+    _featuredMethods.add(SmallBox(
+        title: firstMethod.title,
+        description: firstMethod.description,
+        onLearnMore: firstMethod.onPressed));
+
+    _featuredMethods.add(SmallBox(
+        title: secondMethod.title,
+        description: secondMethod.description,
+        onLearnMore: secondMethod.onPressed));
+
+    setState(() {});
+  }
+
+  List<Widget> _buildOnGoingReviews(BuildContext context) {
+    List<Widget> widgets = [];
+    List<VoidCallback?> onPressedCallbacks = [];
+
+    for (var i = 0; i < _onGoingLeitnerReviews.length; i++) {
+      leitnerOnPressed() async {
+        var willReview = await _willReviewOld(_onGoingLeitnerReviews[i].title);
+
+        if (!willReview || !context.mounted) return;
+
+        context.router.push(LeitnerSystemRoute(
+            notebookId: _onGoingLeitnerReviews[i].userNotebookId!,
+            leitnerSystemModel: _onGoingLeitnerReviews[i]));
+      }
+
+      onPressedCallbacks.add(leitnerOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingLeitnerReviews[i].title,
+        learningMethod: LeitnerSystemModel.name,
+        imagePath: LeitnerSystemModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingLeitnerReviews[i].createdAt.toDate()),
+        onPressed: leitnerOnPressed,
+      ));
+    }
+
+    for (var i = 0; i < _onGoingFeynmanReviews.length; i++) {
+      feynmanOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingFeynmanReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        context.router.push(FeynmanTechniqueRoute(
+            contentFromPages: _onGoingFeynmanReviews[i].contentFromPagesUsed,
+            sessionName: _onGoingFeynmanReviews[i].sessionName,
+            feynmanEntity: _onGoingFeynmanReviews[i].toEntity()));
+      }
+
+      onPressedCallbacks.add(feynmanOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingFeynmanReviews[i].sessionName,
+        learningMethod: FeynmanModel.name,
+        imagePath: FeynmanModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingFeynmanReviews[i].createdAt.toDate()),
+        onPressed: feynmanOnPressed,
+      ));
+    }
+
+    for (var i = 0; i < _onGoingElaborationReviews.length; i++) {
+      elaborationOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingElaborationReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        context.router.push(
+            ElaborationRoute(elaborationModel: _onGoingElaborationReviews[i]));
+      }
+
+      onPressedCallbacks.add(elaborationOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingElaborationReviews[i].sessionName,
+        learningMethod: ElaborationModel.name,
+        imagePath: ElaborationModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingElaborationReviews[i].createdAt.toDate()),
+        onPressed: elaborationOnPressed,
+      ));
+    }
+
+    for (var i = 0; i < _onGoingAcronymReviews.length; i++) {
+      acronymOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingAcronymReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        context.router
+            .push(AcronymRoute(acronymModel: _onGoingAcronymReviews[i]));
+      }
+
+      onPressedCallbacks.add(acronymOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingAcronymReviews[i].sessionName,
+        learningMethod: AcronymModel.name,
+        imagePath: AcronymModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingAcronymReviews[i].createdAt.toDate()),
+        onPressed: acronymOnPressed,
+      ));
+    }
+
+    for (var i = 0; i < _onGoingBlurtingReviews.length; i++) {
+      blurtingOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingBlurtingReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        EasyLoading.show(
+            status: 'Please wait...',
+            maskType: EasyLoadingMaskType.black,
+            dismissOnTap: false);
+
+        var res = await ref.read(notebooksProvider.notifier).getNote(
+            notebookId: _onGoingBlurtingReviews[i].notebookId,
+            noteId: _onGoingBlurtingReviews[i].noteId);
+
+        if (!context.mounted) return;
+
+        EasyLoading.dismiss();
+
+        if (res is Failure) {
+          logger.d("error: ${res.message}");
+          EasyLoading.showError(context.tr("general_e"));
+          return;
+        }
+
+        res = res as NoteModel;
+
+        ref.read(reviewScreenProvider).setIsFromOldBlurtingSession(true);
+        ref
+            .read(reviewScreenProvider)
+            .setNotebookId(_onGoingBlurtingReviews[i].notebookId);
+
+        context.router.push(NoteTakingRoute(
+            notebookId: _onGoingBlurtingReviews[i].notebookId,
+            note: res.toEntity(),
+            blurtingModel: _onGoingBlurtingReviews[i]));
+      }
+
+      onPressedCallbacks.add(blurtingOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingBlurtingReviews[i].sessionName,
+        learningMethod: BlurtingModel.name,
+        imagePath: BlurtingModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingBlurtingReviews[i].createdAt.toDate()),
+        onPressed: blurtingOnPressed,
+      ));
+    }
+
+    for (var i = 0; i < _onGoingSpacedRepetitionReviews.length; i++) {
+      spacedRepetitionOnPressed() async {
+        var willReview = await _willReviewOld(
+            _onGoingSpacedRepetitionReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        try {
+          ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
+          ref
+              .read(reviewScreenProvider)
+              .setNotebookId(_onGoingSpacedRepetitionReviews[i].notebookId);
+
+          if (_onGoingSpacedRepetitionReviews[i].questions!.isEmpty ||
+              _onGoingSpacedRepetitionReviews[i].questions == null) {
+            EasyLoading.show(
+                status: 'Please wait...',
+                maskType: EasyLoadingMaskType.black,
+                dismissOnTap: false);
+
+            var resOrQuestions = await ref
+                .read(sharedProvider.notifier)
+                .generateQuizQuestions(
+                    content: _onGoingSpacedRepetitionReviews[i].content);
+
+            if (resOrQuestions is Failure) {
+              throw "Cannot create your quiz, please try again later.";
+            }
+
+            var updatedModel = _onGoingSpacedRepetitionReviews[i]
+                .copyWith(questions: resOrQuestions);
+
+            if (context.mounted) {
+              context.router.push(QuizRoute(
+                  questions: updatedModel.questions!,
+                  model: updatedModel,
+                  reviewMethod: ReviewMethods.spacedRepetition));
+            }
+          } else {
+            if (context.mounted) {
+              context.router.push(QuizRoute(
+                  questions: _onGoingSpacedRepetitionReviews[i].questions!,
+                  model: _onGoingSpacedRepetitionReviews[i],
+                  reviewMethod: ReviewMethods.spacedRepetition));
+            }
+          }
+        } catch (e) {
+          EasyLoading.showError("Something went wrong when starting the quiz.");
+          logger.w(e);
+        } finally {
+          EasyLoading.dismiss();
+        }
+      }
+
+      onPressedCallbacks.add(spacedRepetitionOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingSpacedRepetitionReviews[i].sessionName,
+        learningMethod: SpacedRepetitionModel.name,
+        imagePath: SpacedRepetitionModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingSpacedRepetitionReviews[i].createdAt.toDate()),
+        onPressed: spacedRepetitionOnPressed,
+      ));
+    }
+
+    for (var i = 0; i < _onGoingActiveRecallReviews.length; i++) {
+      activeRecallOnPressed() async {
+        var willReview =
+            await _willReviewOld(_onGoingActiveRecallReviews[i].sessionName);
+
+        if (!willReview || !context.mounted) return;
+
+        var activeRecallModel = _onGoingActiveRecallReviews[i];
+
+        ref.read(reviewScreenProvider).setIsFromOldActiveRecall(true);
+
+        EasyLoading.show(
+          status: 'Please wait...',
+          maskType: EasyLoadingMaskType.black,
+          dismissOnTap: false,
+        );
+
+        if (activeRecallModel.questions == null ||
+            activeRecallModel.questions!.isEmpty) {
+          var resOrQuestions = await ref
+              .read(sharedProvider.notifier)
+              .generateQuizQuestions(content: activeRecallModel.content);
+
+          if (resOrQuestions is Failure) {
+            throw "Cannot create your quiz, please try again later.";
+          }
+
+          activeRecallModel =
+              activeRecallModel.copyWith(questions: resOrQuestions);
+        }
+
+        EasyLoading.dismiss();
+
+        if (context.mounted) {
+          context.router
+              .push(ActiveRecallRoute(activeRecallModel: activeRecallModel));
+        }
+      }
+
+      onPressedCallbacks.add(activeRecallOnPressed);
+
+      widgets.add(OnGoingReview(
+        notebookName: _onGoingActiveRecallReviews[i].sessionName,
+        learningMethod: ActiveRecallModel.name,
+        imagePath: ActiveRecallModel.coverImagePath,
+        dateStarted: DateFormat.yMd()
+            .format(_onGoingActiveRecallReviews[i].createdAt.toDate()),
+        onPressed: activeRecallOnPressed,
+      ));
+    }
+
+    if (widgets.isNotEmpty) {
+      setState(() {
+        _heroText = "You have on-going reviews!\nGet started now.";
+      });
+    } else {
+      setState(() {
+        _heroText = "All caught up!\nNo reviews at the moment.";
+      });
+    }
+
+    widgets.shuffle();
+
+    if (onPressedCallbacks.isNotEmpty) {
+      onPressedCallbacks.shuffle();
+
+      _heroReviewOnPressed =
+          onPressedCallbacks[Random().nextInt(onPressedCallbacks.length)];
+    }
+
+    return widgets;
+  }
+
+  Future<bool> _willReviewOld(String title) async {
+    return await CustomDialog.show(context,
+        title: "Notice",
+        subTitle: "Do you want to review $title?",
+        buttons: [
+          CustomDialogButton(text: "No", value: false),
+          CustomDialogButton(text: "Yes", value: true),
+        ]);
   }
 
   String _getGreeting(BuildContext context) {
@@ -40,479 +490,228 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
   Widget build(
     BuildContext context,
   ) {
-    return GestureDetector(
-      child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
-            scrolledUnderElevation: 0.0,
-            toolbarHeight: 80,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            automaticallyImplyLeading: false,
-            title: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Align(
-                    alignment: const AlignmentDirectional(-1, 0),
-                    child: Text(_getGreeting(context),
-                        style: Theme.of(context).textTheme.bodyLarge),
-                  ),
-                  Align(
-                    alignment: const AlignmentDirectional(-1, 0),
-                    child: Text(username,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(fontSize: 28)),
-                  ),
-                ],
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        toolbarHeight: 80,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Align(
+                alignment: const AlignmentDirectional(-1, 0),
+                child: Text(_getGreeting(context),
+                    style: Theme.of(context).textTheme.bodyLarge),
               ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 16, 0),
-                child: IconButton(
-                  icon: Icon(Icons.account_circle_outlined,
-                      color: Theme.of(context).colorScheme.primary, size: 32),
-                  onPressed: () {
-                    context.router.push(const SettingsRoute());
-                  },
-                ),
+              Align(
+                alignment: const AlignmentDirectional(-1, 0),
+                child: Text(FirebaseAuth.instance.currentUser!.displayName!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontSize: 28)),
               ),
             ],
-            centerTitle: false,
-            elevation: 0,
           ),
-          body: SafeArea(
-              top: true,
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                  child: SingleChildScrollView(
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 16, 0),
+            child: IconButton(
+              icon: Icon(Icons.account_circle_outlined,
+                  color: Theme.of(context).colorScheme.primary, size: 32),
+              onPressed: () {
+                context.router.push(const SettingsRoute());
+              },
+            ),
+          ),
+        ],
+        centerTitle: false,
+        elevation: 0,
+      ),
+      body: SafeArea(
+        top: true,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                            blurRadius: 3,
+                            color: Color(0x33000000),
+                            offset: Offset(0, 1))
+                      ],
+                      gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).colorScheme.primary,
+                            Theme.of(context).colorScheme.secondary,
+                          ],
+                          stops: const [
+                            0,
+                            1
+                          ],
+                          begin: const AlignmentDirectional(0.94, -1),
+                          end: const AlignmentDirectional(-0.94, 1)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
-                              16, 12, 16, 0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              boxShadow: const [
-                                BoxShadow(
-                                    blurRadius: 3,
-                                    color: Color(0x33000000),
-                                    offset: Offset(0, 1))
-                              ],
-                              gradient: LinearGradient(
-                                  colors: [
-                                    Theme.of(context).colorScheme.primary,
-                                    Theme.of(context).colorScheme.secondary,
-                                  ],
-                                  stops: const [
-                                    0,
-                                    1
-                                  ],
-                                  begin: const AlignmentDirectional(0.94, -1),
-                                  end: const AlignmentDirectional(-0.94, 1)),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 0, 0, 8),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 12, 0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(16, 12, 12, 0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsetsDirectional
-                                                        .fromSTEB(0, 0, 0, 12),
-                                                child: Text(
-                                                    'Excellent, Pending Review \nis almost done',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium
-                                                        ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .scaffoldBackgroundColor)),
-                                              ),
-                                              TextButton(
-                                                onPressed: null,
-                                                style: ButtonStyle(
-                                                    shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12))),
-                                                    backgroundColor:
-                                                        WidgetStateProperty.all(Theme.of(
-                                                                    context)
-                                                                .scaffoldBackgroundColor)),
-                                                child: Text('Review',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleSmall
-                                                        ?.copyWith(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .secondary)),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                              16, 12, 12, 0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(_heroText.split("\n")[0],
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: Theme.of(context)
+                                              .scaffoldBackgroundColor)),
+                              const SizedBox(height: 2),
+                              Text(_heroText.split("\n")[1],
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: Theme.of(context)
+                                              .scaffoldBackgroundColor)),
+                              _heroReviewOnPressed != null
+                                  ? TextButton(
+                                      onPressed: () {
+                                        if (_isLoading) return;
+
+                                        _heroReviewOnPressed!.call();
+                                      },
+                                      style: ButtonStyle(
+                                          shape: WidgetStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12))),
+                                          backgroundColor: WidgetStateProperty
+                                              .all(Theme.of(context)
+                                                  .scaffoldBackgroundColor)),
+                                      child: Text('Review',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall
+                                              ?.copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary)),
+                                    )
+                                  : const SizedBox(height: 10),
+                              const SizedBox(height: 10)
+                            ],
                           ),
-                        ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              16, 12, 16, 0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 0, 5),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Align(
-                                        alignment:
-                                            const AlignmentDirectional(-1, 0),
-                                        child: Text('Learning Strategies',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineSmall),
-                                      ),
-                                      const Expanded(
-                                          child: Align(
-                                        alignment: AlignmentDirectional(1, 0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          child: Text(
-                                            'See All',
-                                          ),
-                                        ),
-                                      )),
-                                    ],
-                                  ),
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Learning Methods',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall),
+                              InkWell(
+                                splashColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                child: const Text(
+                                  'See All',
                                 ),
-                                Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.46,
-                                        decoration: const BoxDecoration(),
-                                        child: Card(
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          color: Theme.of(context).cardColor,
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsetsDirectional
-                                                .fromSTEB(10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      const AlignmentDirectional(
-                                                          -1, 0),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                            0, 0, 0, 10),
-                                                    child: Text(
-                                                        'Feynman Technique',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .titleSmall),
-                                                  ),
-                                                ),
-                                                const Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          -1, 0),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 0, 0, 10),
-                                                    child: Text(
-                                                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                                                    ),
-                                                  ),
-                                                ),
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          const AlignmentDirectional(
-                                                              -1, 0),
-                                                      child: Text('Learn More',
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .bodyMedium
-                                                              ?.copyWith(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .secondary)),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                              10, 0, 0, 0),
-                                                      child: Icon(
-                                                        Icons.arrow_forward,
-                                                        color: Theme.of(context)
-                                                            .textTheme
-                                                            .headlineLarge
-                                                            ?.color,
-                                                        size: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.46,
-                                        decoration: const BoxDecoration(),
-                                        child: Card(
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          color: Theme.of(context).cardColor,
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsetsDirectional
-                                                .fromSTEB(10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      const AlignmentDirectional(
-                                                          -1, 0),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                            0, 0, 0, 10),
-                                                    child: Text(
-                                                        'Pomodoro Technique',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .titleSmall),
-                                                  ),
-                                                ),
-                                                const Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          -1, 0),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 0, 0, 10),
-                                                    child: Text(
-                                                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                                                    ),
-                                                  ),
-                                                ),
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          const AlignmentDirectional(
-                                                              -1, 0),
-                                                      child: Text('Learn More',
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .bodyMedium
-                                                              ?.copyWith(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .secondary)),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                              10, 0, 0, 0),
-                                                      child: Icon(
-                                                        Icons.arrow_forward,
-                                                        color: Theme.of(context)
-                                                            .textTheme
-                                                            .headlineLarge
-                                                            ?.color,
-                                                        size: 14,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ])
-                              ],
-                            ),
+                                onTap: () {
+                                  context.router.push(const ReviewRoute());
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                        Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                16, 12, 16, 0),
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 0, 5),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Align(
-                                          alignment:
-                                              const AlignmentDirectional(-1, 0),
-                                          child: Text('On Going Review',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headlineSmall),
-                                        ),
-                                        const Expanded(
-                                          child: Align(
-                                            alignment:
-                                                AlignmentDirectional(1, 0),
-                                            child: InkWell(
-                                              splashColor: Colors.transparent,
-                                              focusColor: Colors.transparent,
-                                              hoverColor: Colors.transparent,
-                                              highlightColor:
-                                                  Colors.transparent,
-                                              onTap: null,
-                                              child: Text(
-                                                'See All',
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 0, 8),
-                                    child: ListView(
+                        Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: _featuredMethods)
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text('On Going Review',
+                              style: Theme.of(context).textTheme.headlineSmall),
+                          const SizedBox(height: 5),
+                          _isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : _onGoingReviews.isNotEmpty
+                                  ? ListView(
                                       padding: EdgeInsets.zero,
                                       shrinkWrap: true,
                                       scrollDirection: Axis.vertical,
                                       physics:
                                           const NeverScrollableScrollPhysics(),
-                                      children: const [
-                                        OnGoingReview(
-                                          notebookName: 'Notebook Name',
-                                          learningStrategy: 'Learning Strategy',
-                                          imagePath:
-                                              'assets/images/feynman.png',
-                                          dateStarted: 'Today, 7:30pm',
-                                        ),
-                                        OnGoingReview(
-                                          notebookName: 'Notebook Name',
-                                          learningStrategy: 'Learning Strategy',
-                                          imagePath:
-                                              'assets/images/flashcard.png',
-                                          dateStarted: 'Today, 6:20pm',
-                                        ),
-                                        OnGoingReview(
-                                          notebookName: 'Notebook Name',
-                                          learningStrategy: 'Learning Strategy',
-                                          imagePath:
-                                              'assets/images/blurting.webp',
-                                          dateStarted: 'Yesterday, 1:00pm',
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ))
-                      ],
+                                      children: _onGoingReviews,
+                                    )
+                                  : const Text(
+                                      "Looking good! You don't have anything to review."),
+                        ],
+                      ),
                     ),
-                  )))),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -42,15 +42,16 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
     return OnBoardingSlider(
       finishButtonText: 'Register',
       onFinish: () {
-        context.router.push(const SignUpRoute());
+        context.router.replace(const SignUpRoute());
       },
       finishButtonStyle: FinishButtonStyle(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.secondary,),
-      skipTextButton: const Text('Skip', style: AppTextStyles.body),
-      trailing: const Text('Login', style: AppTextStyles.body),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.secondary,
+      ),
+      skipTextButton: Text('Skip', style: AppTextStyles.body),
+      trailing: Text('Login', style: AppTextStyles.body),
       trailingFunction: () {
-        context.router.push(const LoginRoute());
+        context.router.replace(const LoginRoute());
       },
       controllerColor: colorScheme.primary,
       totalPage: 5,

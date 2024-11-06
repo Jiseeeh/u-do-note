@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/data/models/question.dart';
@@ -14,4 +15,10 @@ abstract class SharedRepository {
       String methodName,
       T Function(String, Map<String, dynamic>) fromFirestore,
       List<QueryFilter>? filters);
+
+  Future<Either<Failure, String>> generateContentWithAssist(
+      AssistanceType type, String content);
+
+  Future<Either<Failure, String>> generateXqrFeedback(
+      String noteContextWithSummary, String questionAndAnswers);
 }

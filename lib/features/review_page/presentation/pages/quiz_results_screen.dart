@@ -18,8 +18,7 @@ class QuizResultsScreen extends ConsumerWidget {
       {required this.questions,
       required this.correctAnswersIndex,
       required this.selectedAnswersIndex,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +33,7 @@ class QuizResultsScreen extends ConsumerWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (didPop, _) {
         var pomodoro = ref.read(pomodoroProvider);
 
         pomodoro.resetState();
@@ -118,15 +117,21 @@ class QuizResultsScreen extends ConsumerWidget {
                                 padding: const EdgeInsets.all(16),
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: choiceIndex ==
-                                                correctAnswersIndex[index]
-                                            ? Colors.green
-                                            : choiceIndex ==
-                                                    selectedAnswersIndex[index]
-                                                ? Colors.red
-                                                : Theme.of(context).cardColor),
-                                    borderRadius: BorderRadius.circular(8)),
+                                  border: Border.all(
+                                      color: choiceIndex ==
+                                              correctAnswersIndex[index]
+                                          ? Colors.green
+                                          : choiceIndex ==
+                                                  selectedAnswersIndex[index]
+                                              ? Colors.red
+                                              : selectedAnswersIndex[index] ==
+                                                      -1
+                                                  ? Colors
+                                                      .grey // Gray border for unanswered
+                                                  : Theme.of(context)
+                                                      .cardColor),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -144,7 +149,10 @@ class QuizResultsScreen extends ConsumerWidget {
                                         : choiceIndex ==
                                                 selectedAnswersIndex[index]
                                             ? buildIncorrectIcon()
-                                            : const SizedBox.shrink(),
+                                            : selectedAnswersIndex[index] == -1
+                                                ? const Icon(Icons.remove,
+                                                    color: Colors.grey)
+                                                : const SizedBox.shrink(),
                                   ],
                                 ),
                               ),

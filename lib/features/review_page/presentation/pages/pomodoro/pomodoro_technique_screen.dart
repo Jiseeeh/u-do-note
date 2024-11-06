@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,7 +9,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 import 'package:u_do_note/features/review_page/domain/entities/pomodoro/pomodoro_state.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
@@ -90,9 +93,23 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
         if (!context.mounted) return;
 
-        context.router.replace(PomodoroQuizRoute(questions: quizQuestions));
-
         EasyLoading.dismiss();
+
+        var reviewScreenState = ref.read(reviewScreenProvider);
+        var pomodoro = ref.read(pomodoroProvider);
+
+        var pomodoroModel = PomodoroModel(
+            title: reviewScreenState.sessionTitle!,
+            focusedMinutes: (pomodoro.pomodoroTime ~/ 60) *
+                (pomodoro.pomodoroInSet) *
+                (pomodoro.numberOfSets),
+            questions: quizQuestions,
+            createdAt: Timestamp.now());
+
+        context.router.replace(QuizRoute(
+            questions: pomodoroModel.questions!,
+            model: pomodoroModel,
+            reviewMethod: ReviewMethods.pomodoroTechnique));
       }
     }
   }
@@ -231,7 +248,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (didPop, _) {
         var pomodoro = ref.watch(pomodoroProvider);
 
         if (pomodoro.pomodoroTimer == null) {

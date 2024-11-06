@@ -22,8 +22,7 @@ class LeitnerSystemScreen extends ConsumerStatefulWidget {
   final String notebookId;
   final LeitnerSystemModel leitnerSystemModel;
   const LeitnerSystemScreen(this.notebookId, this.leitnerSystemModel,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -200,8 +199,7 @@ class Flashcard extends ConsumerStatefulWidget {
   final int index;
   final OnFlipCallBack onFlipCallback;
   const Flashcard(this.front, this.back, this.index, this.onFlipCallback,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _FlashCardState();

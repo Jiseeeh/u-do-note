@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -29,6 +31,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   final _maxNotebookNameLength = 13;
   final _minNotebookNameLength = 1;
   var _notebookCoverLocalPath = "";
+
   // var _notebookCoverFileName = "";
   var _notebookCoverUrl = "";
   XFile? _notebookCoverImg;
@@ -64,6 +67,23 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
             maskType: EasyLoadingMaskType.black,
             dismissOnTap: false);
 
+        bool hasNet = await InternetConnection().hasInternetAccess;
+
+        if (!hasNet) {
+          ref.read(notebooksProvider.notifier).createNotebook(
+              name: _nameController.text, coverImg: _notebookCoverImg);
+
+          _nameController.clear();
+
+          EasyLoading.dismiss();
+
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
+
+          return;
+        }
+
         var res = await ref.read(notebooksProvider.notifier).createNotebook(
             name: _nameController.text,
             coverImg: _notebookCoverImg,
@@ -72,8 +92,8 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
         EasyLoading.dismiss();
 
         if (res is Failure) {
-          EasyLoading.showToast(
-              'Something went wrong, please try again later.');
+          logger.e("res: ${res.message}");
+          EasyLoading.showError(res.message);
           return;
         }
 
@@ -92,6 +112,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
       var isSuccess = false;
 
       if (_formKey.currentState!.validate()) {
+        bool hasNet = await InternetConnection().hasInternetAccess;
         // ? user has selected a new cover image
         if (_notebookCoverImg != null) {
           var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
@@ -101,6 +122,12 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
               status: 'Updating Notebook...',
               maskType: EasyLoadingMaskType.black,
               dismissOnTap: false);
+
+          if (!hasNet) {
+            EasyLoading.showError(
+                "Please connect to the internet to update your notebook's cover.");
+            return;
+          }
 
           var res = await ref.read(notebooksProvider.notifier).updateNotebook(
               coverImg: _notebookCoverImg, notebook: notebookModel);
@@ -114,6 +141,13 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
         } else {
           var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
               .copyWith(subject: _nameController.text, category: dropdownValue);
+
+          if (!hasNet) {
+            ref
+                .read(notebooksProvider.notifier)
+                .updateNotebook(coverImg: null, notebook: notebookModel);
+            return;
+          }
 
           var res = await ref
               .read(notebooksProvider.notifier)

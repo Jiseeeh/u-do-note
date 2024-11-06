@@ -14,6 +14,7 @@ class PomodoroModel {
   // ? might be needed if users are allowed to review all quizzes
   final List<QuestionModel>? questions;
   final List<int>? selectedAnswersIndex;
+  static const coverImagePath = "assets/images/pomodoro.png";
   static const name = "Pomodoro Technique";
 
   PomodoroModel({

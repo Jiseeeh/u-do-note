@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,7 +20,7 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 class PreReview extends ConsumerStatefulWidget {
   final void Function(BuildContext context) handler;
 
-  const PreReview({required this.handler, Key? key}) : super(key: key);
+  const PreReview({required this.handler, super.key});
 
   @override
   ConsumerState<PreReview> createState() => _PreReviewState();
@@ -125,11 +128,22 @@ class _PreReviewState extends ConsumerState<PreReview> {
             }
 
             var contentFromPages = "";
+            ParchmentDocument? documentContent;
             notebooks
                 .firstWhere((notebook) => notebook.id == _notebookId)
                 .notes
                 .forEach((note) {
               if (reviewScreenState.getNotebookPagesIds.contains(note.id)) {
+                final jsonContent = jsonDecode(note.content);
+                if (documentContent == null) {
+                  documentContent = ParchmentDocument.fromJson(jsonContent);
+                } else {
+                  var newDocumentContent =
+                      ParchmentDocument.fromJson(jsonContent);
+
+                  documentContent!.insert(documentContent!.length - 1,
+                      newDocumentContent.toDelta());
+                }
                 contentFromPages += note.plainTextContent;
               }
             });
@@ -142,6 +156,7 @@ class _PreReviewState extends ConsumerState<PreReview> {
             // ? for the handler to use
             reviewScreenState.setSessionTitle(_titleController.text);
             reviewScreenState.setContentFromPages(contentFromPages);
+            reviewScreenState.setDocumentContent(documentContent);
             reviewScreenState.setNotebookId(_notebookId);
             reviewScreenState.setNotebookPagesIds(
                 _pagesController.items.map((item) => item.value).toList());
@@ -176,10 +191,10 @@ class _PreReviewState extends ConsumerState<PreReview> {
 
                 return null;
               },
-              decoration: InputDecoration(
-                labelText: context.tr("title"),
-                hintText: "Enter a title for the session.",
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                labelText: "Session Title",
+                hintText: "Enter a title for this session.",
+                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 10),

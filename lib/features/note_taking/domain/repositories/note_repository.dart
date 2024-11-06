@@ -53,5 +53,7 @@ abstract class NoteRepository {
 
   Future<Either<Failure, String>> updateCategory(
       {required String oldCategoryName, required String newCategoryName});
+  
+  Future<Either<Failure, String>> formatScannedText(String scannedText);
 }
 // TODO: remove braces from params

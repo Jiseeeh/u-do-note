@@ -7,7 +7,8 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class TimerWidget extends ConsumerStatefulWidget {
   final Stopwatch stopwatch;
-  const TimerWidget({required this.stopwatch, Key? key}) : super(key: key);
+
+  const TimerWidget({required this.stopwatch, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TimerWidgetState();

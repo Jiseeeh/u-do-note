@@ -13,14 +13,14 @@ class AuthField extends ConsumerWidget {
   final Widget? suffixIcon;
 
   const AuthField({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.isObscuredText,
     required this.keyboardType,
     required this.validator,
     this.suffixIcon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

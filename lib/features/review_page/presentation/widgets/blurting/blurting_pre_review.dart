@@ -9,11 +9,13 @@ import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:u_do_note/core/constant.dart' as constants;
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/firestore_filter_enum.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/core/utility.dart';
+import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
@@ -161,6 +163,8 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
     if (res is Failure) {
       EasyLoading.showError(context.tr("general_e"));
+      logger.w(res.message);
+      return;
     }
 
     res = res as NoteModel;
@@ -168,6 +172,7 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
     var blurtingModel = BlurtingModel(
         content: '',
         noteId: res.id,
+        notebookId: _notebookId,
         sessionName: _sessionTitleController.text,
         createdAt: Timestamp.now());
 
@@ -179,124 +184,125 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: ref.read(notebooksStreamProvider.future),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
-            );
-          }
+    var asyncNotebooks = ref.watch(notebooksStreamProvider);
 
-          return AlertDialog(
-            scrollable: true,
-            title: Text(context.tr('blurting_pre_rev_title')),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  ref.read(reviewScreenProvider).resetState();
+    return switch (asyncNotebooks) {
+      AsyncData(value: final notebooks) => _buildDialog(context, notebooks),
+      AsyncError(:final error) => Center(child: Text(error.toString())),
+      _ => const Center(child: CircularProgressIndicator()),
+    };
+  }
 
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                  onPressed: () {
-                    handleBlurting(context);
-                  },
-                  child: const Text('Continue'))
-            ],
-            content: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    maxLength: constants.maxTitleLen,
-                    controller: _sessionTitleController,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return context.tr("title_field_notice");
-                      }
+  Widget _buildDialog(BuildContext context, List<NotebookEntity> notebooks) {
+    return AlertDialog(
+      scrollable: true,
+      title: Text(context.tr('blurting_pre_rev_title')),
+      actions: [
+        TextButton(
+          onPressed: () {
+            ref.read(reviewScreenProvider).resetState();
 
-                      if (value.length < constants.minTitleLen) {
-                        return context.tr("title_length_min", namedArgs: {
-                          "min": constants.minTitleLen.toString()
-                        });
-                      }
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+            onPressed: () {
+              if (!_formKey.currentState!.validate()) {
+                return;
+              }
 
-                      if (value.length > constants.maxTitleLen) {
-                        return context.tr("title_length_max", namedArgs: {
-                          "max": constants.maxTitleLen.toString()
-                        });
-                      }
+              ref
+                  .read(reviewScreenProvider)
+                  .setSessionTitle(_sessionTitleController.text);
+              handleBlurting(context);
+            },
+            child: const Text('Continue'))
+      ],
+      content: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              maxLength: constants.maxTitleLen,
+              controller: _sessionTitleController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return context.tr("title_field_notice");
+                }
 
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: context.tr("title"),
-                      hintText: "Enter a title for the session.",
-                      border: const OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  MultiSelect(
-                    items: snapshot.data!
-                        .map((notebook) => DropdownItem(
-                            label: notebook.subject, value: notebook.id))
-                        .toList(),
-                    hintText: "Notebooks",
-                    title: "Select one notebook",
-                    validationText: "Please select a notebook",
-                    prefixIcon: Icons.book,
-                    singleSelect: true,
-                    onSelectionChanged: (items) {
-                      if (items.isEmpty) {
-                        setState(() {
-                          _notebookId = "";
-                        });
-                        return;
-                      }
+                if (value.length < constants.minTitleLen) {
+                  return context.tr("title_length_min",
+                      namedArgs: {"min": constants.minTitleLen.toString()});
+                }
 
-                      setState(() {
-                        _notebookId = items.first;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    maxLength: constants.maxTitleLen,
-                    controller: _pageTitleController,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return context.tr("title_field_notice");
-                      }
+                if (value.length > constants.maxTitleLen) {
+                  return context.tr("title_length_max",
+                      namedArgs: {"max": constants.maxTitleLen.toString()});
+                }
 
-                      if (value.length < constants.minTitleLen) {
-                        return context.tr("title_length_min", namedArgs: {
-                          "min": constants.minTitleLen.toString()
-                        });
-                      }
-
-                      if (value.length > constants.maxTitleLen) {
-                        return context.tr("title_length_max", namedArgs: {
-                          "max": constants.maxTitleLen.toString()
-                        });
-                      }
-
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: context.tr("title"),
-                      hintText: "Page Title",
-                      border: const OutlineInputBorder(),
-                    ),
-                  ),
-                ],
+                return null;
+              },
+              decoration: const InputDecoration(
+                labelText: "Session Title",
+                hintText: "Physics-1",
+                border: OutlineInputBorder(),
               ),
             ),
-          );
-        });
+            const SizedBox(height: 10),
+            MultiSelect(
+              items: notebooks
+                  .map((notebook) =>
+                      DropdownItem(label: notebook.subject, value: notebook.id))
+                  .toList(),
+              hintText: "Notebooks",
+              title: "Select one notebook",
+              validationText: "Please select a notebook",
+              prefixIcon: Icons.book,
+              singleSelect: true,
+              onSelectionChanged: (items) {
+                if (items.isEmpty) {
+                  setState(() {
+                    _notebookId = "";
+                  });
+                  return;
+                }
+
+                setState(() {
+                  _notebookId = items.first;
+                });
+              },
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              maxLength: constants.maxTitleLen,
+              controller: _pageTitleController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return context.tr("title_field_notice");
+                }
+
+                if (value.length < constants.minTitleLen) {
+                  return context.tr("title_length_min",
+                      namedArgs: {"min": constants.minTitleLen.toString()});
+                }
+
+                if (value.length > constants.maxTitleLen) {
+                  return context.tr("title_length_max",
+                      namedArgs: {"max": constants.maxTitleLen.toString()});
+                }
+
+                return null;
+              },
+              decoration: const InputDecoration(
+                labelText: "Page Title",
+                hintText: "Physics",
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

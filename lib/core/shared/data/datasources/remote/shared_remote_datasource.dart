@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/firestore_filter_enum.dart';
 
@@ -20,9 +21,13 @@ class SharedRemoteDataSource {
       String content, String? customPrompt,
       {bool appendPrompt = false}) async {
     var prompt = """
-          As a helpful assistant, you will create a 10 question quiz based on the content that the user will give.
-          The choices must be in random order.
-          The response must be an array of json called "questions" with the properties "question", "choices" as an array of choice, and "correctAnswerIndex" as the index of the correct answer.
+        As a helpful assistant, generate a 10-question quiz based on the content provided by the user. Each question should include four answer choices presented in random order.
+
+        Return the result as an array named questions, where each entry is a JSON object containing:
+
+        question (string): the quiz question.
+        choices (array of strings): the answer choices in random order.
+        correctAnswerIndex (integer): the index of the correct answer within the choices array.
           """;
 
     if (customPrompt != null) {
@@ -38,75 +43,11 @@ class SharedRemoteDataSource {
       role: OpenAIChatMessageRole.system,
     );
 
-    final assistantMessage = OpenAIChatCompletionChoiceMessageModel(
-      content: [
-        OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          """
-          {
-            "questions": [
-              {
-                "question": "What is the capital of France?",
-                "choices": ["Paris", "London", "Berlin", "Madrid"],
-                "correctAnswerIndex": 0
-              },
-              {
-                "question": "What is the largest planet in our solar system?",
-                "choices": ["Earth", "Mars", "Jupiter", "Saturn"],
-                "correctAnswerIndex": 2
-              },
-              {
-                "question": "What is the largest mammal?",
-                "choices": ["Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
-                "correctAnswerIndex": 1
-              },
-              {
-                "question": "What is the largest ocean?",
-                "choices": ["Atlantic", "Indian", "Arctic", "Pacific"],
-                "correctAnswerIndex": 3
-              },
-              {
-                "question": "What is the largest country by land area?",
-                "choices": ["Russia", "Canada", "China", "United States"],
-                "correctAnswerIndex": 0
-              },
-              {
-                "question": "What is the largest desert?",
-                "choices": ["Sahara", "Arabian", "Gobi", "Kalahari"],
-                "correctAnswerIndex": 0
-              },
-              {
-                "question": "What is the largest mountain?",
-                "choices": ["Mount Everest", "K2", "Kangchenjunga", "Lhotse"],
-                "correctAnswerIndex": 0
-              },
-              {
-                "question": "What is the largest lake?",
-                "choices": ["Caspian Sea", "Superior", "Victoria", "Huron"],
-                "correctAnswerIndex": 0
-              },
-              {
-                "question": "What is the largest island?",
-                "choices": ["Greenland", "New Guinea", "Borneo", "Madagascar"],
-                "correctAnswerIndex": 0
-              },
-              {
-                "question": "What is the largest forest?",
-                "choices": ["Amazon", "Congo", "Daintree", "Taiga"],
-                "correctAnswerIndex": 0
-              }
-            ]
-          }
-          """,
-        ),
-      ],
-      role: OpenAIChatMessageRole.assistant,
-    );
-
     final userMessage = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
-          Given the content: "$content", create a 10 question quiz.
+          Given the content: "$content", create a 10 question quiz and the correct answer indices should be in random order.
           """,
         ),
       ],
@@ -115,13 +56,12 @@ class SharedRemoteDataSource {
 
     final requestMessages = [
       systemMessage,
-      assistantMessage,
       userMessage,
     ];
 
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-4o-mini",
       responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,
@@ -204,5 +144,140 @@ class SharedRemoteDataSource {
     var res = await query.get();
 
     return res.docs.map((doc) => fromFirestore(doc.id, doc.data())).toList();
+  }
+
+  Future<String> generateContentWithAssist(
+      AssistanceType type, String content) async {
+    String systemPrompt = "";
+    String userPrompt = "";
+
+    switch (type) {
+      case AssistanceType.summarize:
+        systemPrompt =
+            "As a helpful assistant, your task is to help the student by providing concise and clear summary of the notes they provide, ensuring the key points are easily digestible.";
+        userPrompt = """
+        Summarize my note below:
+        
+        $content
+                     """;
+        break;
+      case AssistanceType.guide:
+        systemPrompt =
+            "As a helpful assistant, your task is to help the student by creating thoughtful guide questions based on the notes they provide. These questions should encourage deeper understanding and critical thinking.";
+        userPrompt = """
+        Generate guide questions based on the following notes, separate it by a newline
+        
+        $content
+                     """;
+        break;
+    }
+
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(
+          "$systemPrompt\nThe response should be in JSON format containing the only the properties 'content' as string, and 'isValid' as boolean that is depending on the given content.",
+        ),
+      ],
+      role: OpenAIChatMessageRole.system,
+    );
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(userPrompt),
+      ],
+      role: OpenAIChatMessageRole.user,
+    );
+
+    final requestMessages = [
+      systemMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-4o-mini",
+      responseFormat: {"type": "json_object"},
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 600,
+    );
+
+    String? completionContent =
+        chatCompletion.choices.first.message.content!.first.text;
+
+    var decodedJson = json.decode(completionContent!);
+
+    if (!decodedJson['isValid']) throw "The content is not valid.";
+
+    return decodedJson['content'];
+  }
+
+  Future<String> generateXqrFeedback(
+      String noteContextWithSummary, String questionAndAnswers) async {
+    final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(
+          """
+           As a helpful assistant you will help the student analyze his/her given answers.
+           Give constructive feedback and return a JSON with the properties:
+           
+           "acknowledgement" as a string
+           "missed" as as string
+           "suggestions" as string
+           "isValid" as boolean 
+          """,
+        ),
+      ],
+      role: OpenAIChatMessageRole.system,
+    );
+
+    final userMessage = OpenAIChatCompletionChoiceMessageModel(
+      content: [
+        OpenAIChatCompletionChoiceMessageContentItemModel.text(
+          """
+          Provide constructive feedback for a student based on the following context:
+
+          The student's note with his/her summary/key points made: $noteContextWithSummary
+          Student's Answers to Questions: $questionAndAnswers
+          
+          Based on the above information, generate feedback in JSON that:
+          
+          Acknowledges the student's correct points as "acknowledgement".
+          Identifies any key points or details the student missed or misunderstood as "missed".
+          Offers suggestions for improvement, including specific areas to review or additional context for better understanding as "suggestions".
+          And include a property "isValid" if the content given is valid and not just random letters or gibberish.
+          
+          
+          Structure the feedback to be encouraging and actionable, guiding the student toward refining their understanding of the material.
+          """,
+        ),
+      ],
+      role: OpenAIChatMessageRole.user,
+    );
+
+    final requestMessages = [
+      systemMessage,
+      userMessage,
+    ];
+
+    OpenAIChatCompletionModel chatCompletion =
+        await OpenAI.instance.chat.create(
+      model: "gpt-4o-mini",
+      responseFormat: {"type": "json_object"},
+      messages: requestMessages,
+      temperature: 0.2,
+      maxTokens: 600,
+    );
+
+    String? completionContent =
+        chatCompletion.choices.first.message.content!.first.text;
+
+    var decodedJson = json.decode(completionContent!);
+
+    if (!decodedJson['isValid']) {
+      throw "Given note is not valid, Please try again.";
+    }
+
+    return completionContent;
   }
 }

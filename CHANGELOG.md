@@ -1,3 +1,108 @@
+# [3.1.0](https://github.com/Jiseeeh/u-do-note/compare/v3.0.0...v3.1.0) (2024-10-28)
+
+
+### Features
+
+* add offline mode ([#109](https://github.com/Jiseeeh/u-do-note/issues/109)) ([ffda74e](https://github.com/Jiseeeh/u-do-note/commit/ffda74e7519fb73e558c8993a05e20a5d4550f58))
+
+# [3.0.0](https://github.com/Jiseeeh/u-do-note/compare/v2.0.0...v3.0.0) (2024-10-27)
+
+
+### Bug Fixes
+
+* landing and notebooks screen does not get updated on switch acc ([2fca009](https://github.com/Jiseeeh/u-do-note/commit/2fca009cd283c8f42599d6f8a8cd61eb886417ca))
+* model responding in md syntax ([387a2e8](https://github.com/Jiseeeh/u-do-note/commit/387a2e838363f17984775e07d30b5b089c2abdf5))
+
+
+### chore
+
+* bump dependencies ([978c59e](https://github.com/Jiseeeh/u-do-note/commit/978c59e487c4bb44950e844e00c2ccb607b1a5de))
+
+
+### Features
+
+* add formatting of text on scan ([82ab14d](https://github.com/Jiseeeh/u-do-note/commit/82ab14dfb669b730e6f2067efbedc6858efcec65))
+* add question if user wants to format ([ff19390](https://github.com/Jiseeeh/u-do-note/commit/ff193907190c46cbd137f9b2be5c586de1d5aa30))
+
+
+### BREAKING CHANGES
+
+* use on popInvokedWithResult with pop scope, might not work accordingly.
+
+# [2.0.0](https://github.com/Jiseeeh/u-do-note/compare/v1.10.0...v2.0.0) (2024-10-26)
+
+
+### Code Refactoring
+
+* make quiz screens into one reusable screen ([#105](https://github.com/Jiseeeh/u-do-note/issues/105)) ([eb23d34](https://github.com/Jiseeeh/u-do-note/commit/eb23d3471f0dce00ea0ff8f6ab40546b4887e151))
+
+
+### BREAKING CHANGES
+
+* remove repeated quiz screens and move handlers into their respective providers
+
+# [1.10.0](https://github.com/Jiseeeh/u-do-note/compare/v1.9.0...v1.10.0) (2024-10-25)
+
+
+### Bug Fixes
+
+* blurting on screen pop crash ([842896a](https://github.com/Jiseeeh/u-do-note/commit/842896a3ac86eb728f16f4383e889a5f3894e760))
+* disconnect google sign in on available devices only ([6fbc67d](https://github.com/Jiseeeh/u-do-note/commit/6fbc67d63075bb4386266be84af497fbbef61553))
+* error on using expanded with wrong parent ([62e5155](https://github.com/Jiseeeh/u-do-note/commit/62e5155b34bb427f3b5bce14d8be50d3e8855c95))
+* google sign in could not disconnect on older devices ([cc8117e](https://github.com/Jiseeeh/u-do-note/commit/cc8117ec4d5f61557270a2a7046e3dc61b4f02fc))
+* infinite on going review loading ([ff5ddb3](https://github.com/Jiseeeh/u-do-note/commit/ff5ddb3c2be1b7f12d0cc443377344663f7f3de1))
+* invalid value not inclusive on quiz finish ([0880931](https://github.com/Jiseeeh/u-do-note/commit/088093100f2b75a705d4a179211552a5fb890268))
+* landing screen remove automatically imply leading ([4e7f73b](https://github.com/Jiseeeh/u-do-note/commit/4e7f73b2546164c78ac3ae964154d02aed5399d0))
+* screen will go back on onboarding after pressing back on login ([608c03e](https://github.com/Jiseeeh/u-do-note/commit/608c03e86840ec64095a70e08ab4c887c23bb1c4))
+* signing out dialog hanging ([768b9cd](https://github.com/Jiseeeh/u-do-note/commit/768b9cdd4271f0319d05f7e7498ef0d777ce834b))
+* tutorial not showing on review cards ([3b9763e](https://github.com/Jiseeeh/u-do-note/commit/3b9763e87d2c1f54838da48fad546f80907c6e58))
+
+
+### Features
+
+* add check if google play services is available on login ([82ae690](https://github.com/Jiseeeh/u-do-note/commit/82ae690d62a40e2ab463cb9de9ea1d5ce9ada0c6))
+* add google api availability ([7cde92f](https://github.com/Jiseeeh/u-do-note/commit/7cde92fe8bf3299aa310f8ba80503637d6ac9d1f))
+* add pq4r ([#95](https://github.com/Jiseeeh/u-do-note/issues/95)) ([53d8ce1](https://github.com/Jiseeeh/u-do-note/commit/53d8ce15534093ef01b39534db5d8a53cf038500))
+* add sq3r ([#94](https://github.com/Jiseeeh/u-do-note/issues/94)) ([7fee5b0](https://github.com/Jiseeeh/u-do-note/commit/7fee5b0e8dfe8bc1c347a929807b7889010941c2))
+* improve quiz generation ([6b1cd5e](https://github.com/Jiseeeh/u-do-note/commit/6b1cd5ecea3f8efd6610022f02b4aecd7fd1334d))
+
+# [1.9.0](https://github.com/Jiseeeh/u-do-note/compare/v1.8.0...v1.9.0) (2024-10-17)
+
+
+### Features
+
+* add active recall ([#93](https://github.com/Jiseeeh/u-do-note/issues/93)) ([8e75a19](https://github.com/Jiseeeh/u-do-note/commit/8e75a198560ee1fb6fa2e1d17bf10122f1b3bd68))
+
+# [1.8.0](https://github.com/Jiseeeh/u-do-note/compare/v1.7.0...v1.8.0) (2024-10-06)
+
+
+### Bug Fixes
+
+* cleanup unnecessary padding ([4c2f5de](https://github.com/Jiseeeh/u-do-note/commit/4c2f5de2355ef5d363adfdfd488bc03bda12ab92))
+* old sessions that has remark getting fetched ([a37f3fb](https://github.com/Jiseeeh/u-do-note/commit/a37f3fb94e9149204ac35e2e2244a3ea6d9a02d5))
+* remove unused gesture detector ([1274246](https://github.com/Jiseeeh/u-do-note/commit/127424643399978b380dbf996259bd6e4c76c407))
+* session id being the label ([d5ff38c](https://github.com/Jiseeeh/u-do-note/commit/d5ff38c3efab5532c1f1b0f9a7e344d566ced6ef))
+
+
+### Features
+
+* add scrolled under elevation on dark theme ([d351115](https://github.com/Jiseeeh/u-do-note/commit/d35111550412c1849496fdfb1161ba8240c00e9c))
+* add spaced repetition ([#92](https://github.com/Jiseeeh/u-do-note/issues/92)) ([cc7e5c1](https://github.com/Jiseeeh/u-do-note/commit/cc7e5c1858d1bd093d4f66a4169f195e193afd5b))
+
+# [1.7.0](https://github.com/Jiseeeh/u-do-note/compare/v1.6.0...v1.7.0) (2024-09-20)
+
+
+### Bug Fixes
+
+* reduce splash screen animation ([#88](https://github.com/Jiseeeh/u-do-note/issues/88)) ([6ac2f70](https://github.com/Jiseeeh/u-do-note/commit/6ac2f70bed1da343922ce48b6b59aba385f7b8fb))
+
+
+### Features
+
+* add landing page ([#89](https://github.com/Jiseeeh/u-do-note/issues/89)) ([9d81c2b](https://github.com/Jiseeeh/u-do-note/commit/9d81c2b4350e4067a1352efd2acf678e6634bb05))
+* cleanup ([#90](https://github.com/Jiseeeh/u-do-note/issues/90)) ([25e48ee](https://github.com/Jiseeeh/u-do-note/commit/25e48ee2dec881f8ed0c54b027cdd9ffe49b1de3))
+* integrate landing screen with firestore ([#91](https://github.com/Jiseeeh/u-do-note/issues/91)) ([a8d440b](https://github.com/Jiseeeh/u-do-note/commit/a8d440b6d180d82fb54f26fdd6e85d4a8a1e296d))
+
 # [1.6.0](https://github.com/Jiseeeh/u-do-note/compare/v1.5.0...v1.6.0) (2024-09-06)
 
 

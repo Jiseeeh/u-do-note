@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+
 class LeitnerSystemNotice extends ConsumerWidget {
   const LeitnerSystemNotice({super.key});
 
@@ -12,8 +14,9 @@ class LeitnerSystemNotice extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            context.tr("leitner_notice"),
-            style: Theme.of(context).textTheme.displaySmall,
+            context.tr("pre_review_notice",
+                namedArgs: {"reviewMethod": LeitnerSystemModel.name}),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           Text(
             context.tr('leitner_desc'),

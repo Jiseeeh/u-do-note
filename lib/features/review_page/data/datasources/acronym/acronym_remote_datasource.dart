@@ -150,7 +150,10 @@ class AcronymRemoteDataSource {
           .collection(FirestoreCollection.user_notes.name)
           .doc(notebookId)
           .collection(FirestoreCollection.remarks.name)
-          .add(updatedAcronymModel.toFirestore());
+          .add({
+        ...updatedAcronymModel.toFirestore(),
+        'notebook_id': notebookId,
+      });
 
       Helper.updateTechniqueUsage(
           _firestore, userId, notebookId, AcronymModel.name);

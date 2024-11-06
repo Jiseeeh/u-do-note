@@ -90,10 +90,11 @@ class ReviewMethod extends ConsumerWidget {
                         ),
                       ),
                       child: Text(
+                        key: buttonKey,
                         'Learn More',
                         style: Theme.of(context)
                             .textTheme
-                            .bodySmall
+                            .bodyMedium
                             ?.copyWith(color: Theme.of(context).cardColor),
                       ),
                     ),
@@ -102,8 +103,6 @@ class ReviewMethod extends ConsumerWidget {
               ),
             ),
           ),
-          // ?IDK WHY THIS WORKS, BUT IT DOES. I'M NOT GONNA QUESTION IT
-          // ?MONKEY PATCHING FTW
         ],
       ),
     );

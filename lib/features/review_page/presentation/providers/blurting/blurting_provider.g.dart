@@ -7,7 +7,7 @@ part of 'blurting_provider.dart';
 // **************************************************************************
 
 String _$blurtingRemoteDataSourceHash() =>
-    r'0f1827d0483edeb2b3329191b249e50b67b10626';
+    r'd044d2d5328db99728f6df189b3fb4126540836a';
 
 /// See also [blurtingRemoteDataSource].
 @ProviderFor(blurtingRemoteDataSource)
@@ -22,10 +22,12 @@ final blurtingRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef BlurtingRemoteDataSourceRef
     = AutoDisposeProviderRef<BlurtingRemoteDataSource>;
 String _$blurtingRepositoryHash() =>
-    r'594381ad240b32a9a86acca4639105641e4fe652';
+    r'889001d89c562313f24d5413daf689f37b9696e6';
 
 /// See also [blurtingRepository].
 @ProviderFor(blurtingRepository)
@@ -40,8 +42,10 @@ final blurtingRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef BlurtingRepositoryRef = AutoDisposeProviderRef<BlurtingRepository>;
-String _$applyBlurtingHash() => r'6b88ccdd4e438111d862722dfa06077592f44873';
+String _$applyBlurtingHash() => r'527e6221e417e9beedc6ccd25fefa90c95a3fe6f';
 
 /// See also [applyBlurting].
 @ProviderFor(applyBlurting)
@@ -55,8 +59,10 @@ final applyBlurtingProvider = AutoDisposeProvider<ApplyBlurting>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ApplyBlurtingRef = AutoDisposeProviderRef<ApplyBlurting>;
-String _$saveQuizResultsHash() => r'cf0adb30f8afe061e4388a0ef0547c64e8d40ffe';
+String _$saveQuizResultsHash() => r'627489cecdb901516cf64f37185eadc227ba01f2';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)
@@ -70,8 +76,10 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$blurtingHash() => r'f2fc730cdd1e5952b4b3c16d975e99069d30962f';
+String _$blurtingHash() => r'2aaaf47c26a65ad1d8c8c0e6a629c734852cbb2d';
 
 /// See also [Blurting].
 @ProviderFor(Blurting)
@@ -86,4 +94,4 @@ final blurtingProvider = AutoDisposeNotifierProvider<Blurting, void>.internal(
 
 typedef _$Blurting = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

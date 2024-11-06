@@ -49,7 +49,8 @@ class AppTheme {
         secondary: AppColors.darkSecondary,
         error: AppColors.error,
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
+        scrolledUnderElevation: 0,
         elevation: 0,
         backgroundColor: AppColors.primary,
         titleTextStyle: AppTextStyles.h2,

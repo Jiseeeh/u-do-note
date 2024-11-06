@@ -256,8 +256,16 @@ class NoteRepositoryImpl implements NoteRepository {
       return Right(res);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: e.code));
+    }
+  }
+  
+  Future<Either<Failure, String>> formatScannedText(String scannedText) async {
+    try {
+      var formattedText =
+          await _noteRemoteDataSource.formatScannedText(scannedText);
+
+      return Right(formattedText);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }
   }
-}

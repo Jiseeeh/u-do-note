@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
@@ -21,6 +22,7 @@ import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_
 import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_note_dialog.dart';
@@ -31,8 +33,7 @@ class NotebookPagesScreen extends ConsumerStatefulWidget {
   final String notebookId;
 
   const NotebookPagesScreen(@PathParam('notebookId') this.notebookId,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -70,20 +71,23 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var notebooks = ref.watch(notebooksStreamProvider).value;
+    var asyncNotebooks = ref.watch(notebooksStreamProvider);
 
-    if (notebooks != null && notebooks.isEmpty) {
-      return Center(
-        child: Text(context.tr("no_notebook")),
-      );
-    }
+    return switch (asyncNotebooks) {
+      AsyncData(value: final notebooks) => _buildScaffold(context, notebooks),
+      AsyncError(:final error) => Center(child: Text(error.toString())),
+      _ => const Center(child: CircularProgressIndicator()),
+    };
+  }
 
+  Scaffold _buildScaffold(
+      BuildContext context, List<NotebookEntity> notebooks) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         scrolledUnderElevation: 0,
         title: Text(
-          notebooks!.firstWhere((nb) => nb.id == widget.notebookId).subject,
+          notebooks.firstWhere((nb) => nb.id == widget.notebookId).subject,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -151,11 +155,11 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                 if (result != null) {
                   var first = result.files.first;
 
-                  if (first.size > 4 * 1024 * 1024) {
-                    EasyLoading.showError(context.tr("file_size_e"),
-                        duration: const Duration(seconds: 2));
-                    return;
-                  }
+                  // if (first.size > 4 * 1024 * 1024) {
+                  //   EasyLoading.showError(context.tr("file_size_e"),
+                  //       duration: const Duration(seconds: 2));
+                  //   return;
+                  // }
 
                   if (!extensions.contains(first.extension)) {
                     EasyLoading.showError(context.tr("allowed_files"),
@@ -188,8 +192,46 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   document.dispose();
 
                   if (!context.mounted) return;
+                  var tfController = TextEditingController(text: extractedText);
 
-                  showDialog(
+                  var willFormat = await CustomDialog.show(context,
+                      title: "Preview",
+                      subTitle: "Do you want us to format this extracted text?",
+                      content: TextField(
+                        controller: tfController,
+                        readOnly: true,
+                        maxLines: 8,
+                      ),
+                      buttons: [
+                        CustomDialogButton(text: "No", value: false),
+                        CustomDialogButton(text: "Yes", value: true),
+                      ]);
+
+                  if (willFormat) {
+                    EasyLoading.show(
+                        status: 'Formatting text...',
+                        maskType: EasyLoadingMaskType.black,
+                        dismissOnTap: false);
+
+                    var failureOrFormattedText = await ref
+                        .read(notebooksProvider.notifier)
+                        .formatScannedText(scannedText: extractedText);
+
+                    EasyLoading.dismiss();
+
+                    if (failureOrFormattedText is Failure) {
+                      logger.e(
+                          "Could not format extracted text: ${failureOrFormattedText.message}");
+                      EasyLoading.showError("Could not format extracted text..",
+                          duration: const Duration(seconds: 2));
+                    } else {
+                      extractedText = failureOrFormattedText;
+                    }
+                  }
+
+                  if (!context.mounted) return;
+
+                  await showDialog(
                       barrierDismissible: false,
                       context: context,
                       builder: (dialogContext) => AlertDialog(
@@ -453,9 +495,20 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                     maskType: EasyLoadingMaskType.black,
                     dismissOnTap: false);
 
-                var res = await ref
-                    .read(notebooksProvider.notifier)
-                    .deleteNote(notebookId: widget.notebookId, noteId: note.id);
+                  bool hasNet = await InternetConnection().hasInternetAccess;
+
+                  if (!hasNet) {
+                    ref.read(notebooksProvider.notifier).deleteNote(
+                        notebookId: widget.notebookId, noteId: note.id);
+
+                    EasyLoading.dismiss();
+                    return;
+                  }
+
+                  var res = await ref
+                      .read(notebooksProvider.notifier)
+                      .deleteNote(
+                          notebookId: widget.notebookId, noteId: note.id);
 
                 EasyLoading.dismiss();
 

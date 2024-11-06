@@ -5,8 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class AnalyzeTextImageDialog extends ConsumerStatefulWidget {
   final TextEditingController textFieldController;
 
-  const AnalyzeTextImageDialog({required this.textFieldController, Key? key})
-      : super(key: key);
+  const AnalyzeTextImageDialog({required this.textFieldController, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>

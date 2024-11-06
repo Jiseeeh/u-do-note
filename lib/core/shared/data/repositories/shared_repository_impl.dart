@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/shared/data/datasources/remote/shared_remote_datasource.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
@@ -40,6 +41,32 @@ class SharedImpl extends SharedRepository {
       return Right(res);
     } on FirebaseAuthException catch (e) {
       return Left(AuthenticationException(message: e.message!, code: ''));
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> generateContentWithAssist(
+      AssistanceType type, String content) async {
+    try {
+      var res = await _sharedRemoteDataSource.generateContentWithAssist(
+          type, content);
+
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> generateXqrFeedback(
+      String noteContextWithSummary, String questionAndAnswers) async {
+    try {
+      var res = await _sharedRemoteDataSource.generateXqrFeedback(
+          noteContextWithSummary, questionAndAnswers);
+
+      return Right(res);
     } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }

@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/domain/entities/feynman/feynman.dart';
@@ -22,12 +23,12 @@ import 'package:u_do_note/routes/app_route.dart';
 class FeynmanTechniqueScreen extends ConsumerStatefulWidget {
   final String contentFromPages;
   final String sessionName;
+
   // ? used when the user will review old sessions
   final FeynmanEntity? feynmanEntity;
 
   const FeynmanTechniqueScreen(this.contentFromPages, this.sessionName,
-      {this.feynmanEntity, Key? key})
-      : super(key: key);
+      {this.feynmanEntity, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -124,35 +125,6 @@ class _FeynmanTechniqueScreenState
     });
   }
 
-  void _onFeynmanFinish(
-      FeynmanModel feynmanModel,
-      List<int> selectedAnswersIndex,
-      int score,
-      bool isFromOldSessionWithoutQuiz,
-      String? newSessionName) async {
-    // ? save the quiz results
-    EasyLoading.show(
-        status: 'Saving quiz results...',
-        maskType: EasyLoadingMaskType.black,
-        dismissOnTap: false);
-
-    var updatedFeynmanModel = feynmanModel.copyWith(
-        score: score, selectedAnswersIndex: selectedAnswersIndex);
-
-    var res = await ref.read(feynmanTechniqueProvider.notifier).saveQuizResults(
-        feynmanModel: updatedFeynmanModel,
-        notebookId: ref.read(reviewScreenProvider).notebookId!,
-        isFromOldSessionWithoutQuiz: isFromOldSessionWithoutQuiz,
-        newSessionName: newSessionName);
-
-    EasyLoading.dismiss();
-
-    if (res is Failure) {
-      EasyLoading.showError(res.message);
-      return;
-    }
-  }
-
   void _handleSendPressed(BuildContext context, types.PartialText message,
       bool isFromPeriodicTimer) async {
     FocusScope.of(context).requestFocus(FocusNode());
@@ -219,14 +191,15 @@ class _FeynmanTechniqueScreenState
               .copyWith(
                   questions: quizQuestions,
                   recentRobotMessages: recentRobotMessages,
-                  recentUserMessages: recentUserMessages);
+                  recentUserMessages: recentUserMessages,
+                  isFromSessionWithoutQuiz: true,
+                  newSessionName: null);
 
-          context.router.push(FeynmanQuizRoute(
+          context.router.push(QuizRoute(
               questions: feynmanModel.questions!,
-              onQuizFinish: (selectedAnswersIndex, score) async {
-                _onFeynmanFinish(
-                    feynmanModel, selectedAnswersIndex, score, true, null);
-              }));
+              model: feynmanModel,
+              reviewMethod: ReviewMethods.feynmanTechnique));
+
           return;
         }
 
@@ -235,29 +208,30 @@ class _FeynmanTechniqueScreenState
         if (newSessionName == null) return;
         if (!context.mounted) return;
 
-        var feynmanModel = FeynmanModel.fromEntity(widget.feynmanEntity!)
-            .copyWith(
-                questions: quizQuestions,
-                recentRobotMessages: recentRobotMessages,
-                recentUserMessages: recentUserMessages);
+        var feynmanModel =
+            FeynmanModel.fromEntity(widget.feynmanEntity!).copyWith(
+          questions: quizQuestions,
+          recentRobotMessages: recentRobotMessages,
+          recentUserMessages: recentUserMessages,
+          newSessionName: newSessionName,
+        );
 
-        context.router.push(FeynmanQuizRoute(
+        context.router.push(QuizRoute(
             questions: feynmanModel.questions!,
-            onQuizFinish: (selectedAnswersIndex, score) async {
-              _onFeynmanFinish(feynmanModel, selectedAnswersIndex, score, false,
-                  newSessionName);
-            }));
+            model: feynmanModel,
+            reviewMethod: ReviewMethods.feynmanTechnique));
+
         return;
       }
 
-      feynmanModel = feynmanModel!.copyWith(questions: quizQuestions);
+      feynmanModel = feynmanModel!
+          .copyWith(questions: quizQuestions, newSessionName: null);
 
-      context.router.push(FeynmanQuizRoute(
+      context.router.push(QuizRoute(
           questions: feynmanModel!.questions!,
-          onQuizFinish: (selectedAnswersIndex, score) async {
-            _onFeynmanFinish(
-                feynmanModel!, selectedAnswersIndex, score, false, null);
-          }));
+          model: feynmanModel!,
+          reviewMethod: ReviewMethods.feynmanTechnique));
+
       return;
     }
 
@@ -454,7 +428,7 @@ class _FeynmanTechniqueScreenState
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (didPop, _) {
         // ? This is to prevent the app from assuming that the user
         // ? has come from the analyze notes
         ref.read(reviewScreenProvider).resetState();

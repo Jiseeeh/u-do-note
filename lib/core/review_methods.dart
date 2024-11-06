@@ -4,5 +4,9 @@ enum ReviewMethods {
   pomodoroTechnique,
   elaboration,
   acronymMnemonics,
-  blurting
+  blurting,
+  spacedRepetition,
+  activeRecall,
+  sq3r,
+  pq4r,
 }

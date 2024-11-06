@@ -11,8 +11,7 @@ class RemainingCards extends ConsumerStatefulWidget {
   final int totalCards; // for initial value
 
   const RemainingCards(
-      {required this.totalCards, required this.controller, Key? key})
-      : super(key: key);
+      {required this.totalCards, required this.controller, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RemainingCardsState();

@@ -1,3 +1,4 @@
+import 'package:fleather/fleather.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 
@@ -15,6 +16,15 @@ class ReviewScreenState {
   /// Specific for blurting method
   bool isFromOldBlurtingSession;
 
+  /// Specific for spaced repetition
+  bool isFromOldSpacedRepetition;
+
+  /// Specific for active recall
+  bool isFromOldActiveRecall;
+
+  /// Specific for Sq3r method
+  ParchmentDocument? documentContent;
+
   ReviewScreenState(
       {this.reviewMethod,
       // ? defaults to "" as accessing it at first where on multi selects throws bad state
@@ -24,7 +34,10 @@ class ReviewScreenState {
       this.isFromAutoAnalysis = false,
       this.notebookPagesIds,
       this.noteId,
-      this.isFromOldBlurtingSession = false});
+      this.isFromOldBlurtingSession = false,
+      this.isFromOldSpacedRepetition = false,
+    this.isFromOldActiveRecall = false,
+  });
 
   get getReviewMethod => reviewMethod;
 
@@ -41,6 +54,12 @@ class ReviewScreenState {
   get getNotebookPagesIds => notebookPagesIds;
 
   get getIsFromOldBlurtingSession => isFromOldBlurtingSession;
+
+  get getIsFromOldSpacedRepetition => isFromOldSpacedRepetition;
+
+  get getIsFromOldActiveRecall => isFromOldActiveRecall;
+
+  get getDocumentContent => documentContent;
 
   void setReviewMethod(ReviewMethods reviewMethod) {
     this.reviewMethod = reviewMethod;
@@ -79,6 +98,21 @@ class ReviewScreenState {
     isFromOldBlurtingSession = value;
   }
 
+  void setIsFromOldSpacedRepetition(bool value) {
+    logger.d('Setting isFromOldSpacedRepetition to: $value');
+    isFromOldSpacedRepetition = value;
+  }
+
+  void setIsFromOldActiveRecall(bool value) {
+    logger.d('Setting isFromOldActiveRecall to: $value');
+    isFromOldActiveRecall = value;
+  }
+
+  void setDocumentContent(ParchmentDocument? doc) {
+    logger.d('Setting documentContent to: $doc');
+    documentContent = doc;
+  }
+
   void resetState() {
     logger.w('Resetting state...');
     reviewMethod = null;
@@ -89,6 +123,9 @@ class ReviewScreenState {
     isFromAutoAnalysis = false;
     noteId = null;
     isFromOldBlurtingSession = false;
+    isFromOldSpacedRepetition = false;
+    isFromOldActiveRecall = false;
+    documentContent = null;
   }
 
   @override

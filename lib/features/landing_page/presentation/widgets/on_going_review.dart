@@ -3,19 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnGoingReview extends ConsumerWidget {
   final String notebookName;
-  final String learningStrategy;
+  final String learningMethod;
   final String imagePath;
   final String dateStarted;
-  // final Function() onPressed;
+  final VoidCallback onPressed;
 
-  const OnGoingReview({
-    super.key,
-    required this.notebookName,
-    required this.learningStrategy,
-    required this.imagePath,
-    required this.dateStarted,
-    // required this.onPressed
-  });
+  const OnGoingReview(
+      {super.key,
+      required this.notebookName,
+      required this.learningMethod,
+      required this.imagePath,
+      required this.dateStarted,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +67,7 @@ class OnGoingReview extends ConsumerWidget {
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
                         child: Text(
-                          learningStrategy,
+                          learningMethod,
                         ),
                       ),
                     ),
@@ -101,9 +100,12 @@ class OnGoingReview extends ConsumerWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Icon(Icons.chevron_right),
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                icon: const Icon(Icons.chevron_right),
+                onPressed: onPressed,
+              ),
             )
           ],
         ),

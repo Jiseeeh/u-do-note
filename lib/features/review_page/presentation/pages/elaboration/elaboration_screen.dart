@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/elaboration/elaboration_provider.dart';
@@ -14,46 +15,57 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 import 'package:u_do_note/routes/app_route.dart';
 
 @RoutePage()
-class ElaborationScreen extends ConsumerWidget {
-  final ElaborationModel _elaborationModel;
+class ElaborationScreen extends ConsumerStatefulWidget {
+  final ElaborationModel elaborationModel;
 
-  const ElaborationScreen(this._elaborationModel, {Key? key}) : super(key: key);
+  const ElaborationScreen(this.elaborationModel, {super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    Future.delayed(
-        const Duration(seconds: 3),
-        () => showDialog(
-            context: context,
-            builder: (dialogContext) {
-              return AlertDialog(
-                title: Text(context.tr('notice')),
-                content: Text(context.tr('review_remind')),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                      },
-                      child: const Text("Okay"))
-                ],
-              );
-            }));
+  ConsumerState<ElaborationScreen> createState() => _ElaborationScreenState();
+}
 
+class _ElaborationScreenState extends ConsumerState<ElaborationScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      showDialog(
+          context: context,
+          builder: (dialogContext) {
+            return AlertDialog(
+              title: Text(context.tr('notice')),
+              content: Text(context.tr('review_remind')),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: const Text("Okay"))
+              ],
+            );
+          });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
 
         if (context.mounted) {
           var reviewState = ref.read(reviewScreenProvider);
 
-          if (_elaborationModel.id == null) {
+          if (widget.elaborationModel.id == null) {
             logger.i('Saving empty quiz');
 
             var elaborationModel = ElaborationModel(
                 sessionName: reviewState.getSessionTitle,
                 createdAt: Timestamp.now(),
-                content: _elaborationModel.content);
+                content: widget.elaborationModel.content);
 
             var res = await ref
                 .read(elaborationProvider.notifier)
@@ -109,7 +121,7 @@ class ElaborationScreen extends ConsumerWidget {
                             dismissOnTap: false);
 
                         var res = await sharedRepository.generateQuizQuestions(
-                            content: _elaborationModel.content);
+                            content: widget.elaborationModel.content);
 
                         EasyLoading.dismiss();
 
@@ -122,12 +134,15 @@ class ElaborationScreen extends ConsumerWidget {
                           Navigator.of(dialogContext).pop();
                         } else {
                           var updatedElaborationModel =
-                              _elaborationModel.copyWith(
+                              widget.elaborationModel.copyWith(
                             questions: res,
                           );
 
-                          context.router.replace(ElaborationQuizRoute(
-                              elaborationModel: updatedElaborationModel));
+                          context.router.replace(QuizRoute(
+                            questions: updatedElaborationModel.questions!,
+                            model: updatedElaborationModel,
+                            reviewMethod: ReviewMethods.elaboration,
+                          ));
                         }
                       },
                       child: const Text('Yes'),
@@ -144,7 +159,7 @@ class ElaborationScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Text(_elaborationModel.content,
+                Text(widget.elaborationModel.content,
                     style: Theme.of(context).textTheme.bodyLarge),
               ],
             ),

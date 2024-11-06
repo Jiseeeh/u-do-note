@@ -13,6 +13,7 @@ class LeitnerSystemModel {
   final Timestamp createdAt;
   final Timestamp nextReview;
   final List<FlashcardModel> flashcards;
+  static const String coverImagePath = "assets/images/flashcard.png";
   static const String name = "Leitner System";
 
   LeitnerSystemModel(
@@ -28,7 +29,7 @@ class LeitnerSystemModel {
   /// Converts from model to json
   Map<String, dynamic> toFirestore() => {
         'id': id,
-        'user_notebook_id': userNotebookId,
+        'notebook_id': userNotebookId,
         'title': title,
         'remark': remark,
         'score': score,
@@ -90,6 +91,7 @@ class LeitnerSystemModel {
         createdAt: data['created_at'],
         remark: remark,
         score: score,
+        userNotebookId: data['notebook_id'],
         nextReview: data['next_review'],
         flashcards: (data['flashcards'] as List)
             .map(

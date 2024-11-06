@@ -17,6 +17,9 @@ class FeynmanModel {
   final List<types.Message> messages;
   final List<String> recentRobotMessages;
   final List<String> recentUserMessages;
+  final bool isFromSessionWithoutQuiz;
+  final String? newSessionName;
+  static const coverImagePath = "assets/images/feynman.png";
   static const name = "Feynman Technique";
 
   const FeynmanModel({
@@ -25,6 +28,8 @@ class FeynmanModel {
     this.score,
     this.questions,
     this.selectedAnswersIndex,
+    this.isFromSessionWithoutQuiz = false,
+    this.newSessionName,
     required this.sessionName,
     required this.createdAt,
     required this.contentFromPagesUsed,
@@ -36,27 +41,25 @@ class FeynmanModel {
   /// Converts from firestore to model
   factory FeynmanModel.fromFirestore(String id, Map<String, dynamic> data) {
     var remark = data['remark'];
-    var score = data['score'];
 
-    if (remark.toString().isEmpty && score.toString().isEmpty) {
-      // ? if these two fields are empty, then questions is also empty
-      // ? additional info in feynman_remote_datasource.dart at saveQuizResults
-      remark = "";
-      score = 0;
-    }
+    // if (remark.toString().isEmpty && score.toString().isEmpty) {
+    //   // ? if these two fields are empty, then questions is also empty
+    //   // ? additional info in feynman_remote_datasource.dart at saveQuizResults
+    //   remark = "";
+    //   score = 0;
+    // }
 
     return FeynmanModel(
       id: id,
       remark: remark,
-      score: score,
-      questions: remark.isNotEmpty
+      score: data['score'],
+      questions: remark != null
           ? (data['questions'] as List)
               .map((question) => QuestionModel.fromJson(question))
               .toList()
           : [],
-      selectedAnswersIndex: remark.isNotEmpty
-          ? List<int>.from(data['selected_answers_index'])
-          : [],
+      selectedAnswersIndex:
+          remark != null ? List<int>.from(data['selected_answers_index']) : [],
       sessionName: data['title'],
       createdAt: data['created_at'],
       contentFromPagesUsed: data['content_from_pages'],
@@ -117,20 +120,24 @@ class FeynmanModel {
     List<types.Message>? messages,
     List<String>? recentRobotMessages,
     List<String>? recentUserMessages,
+    bool? isFromSessionWithoutQuiz,
+    String? newSessionName,
   }) {
     return FeynmanModel(
-      id: id ?? this.id,
-      remark: remark ?? this.remark,
-      score: score ?? this.score,
-      questions: questions ?? this.questions,
-      selectedAnswersIndex: selectedAnswersIndex ?? this.selectedAnswersIndex,
-      sessionName: sessionName ?? this.sessionName,
-      createdAt: createdAt ?? this.createdAt,
-      contentFromPagesUsed: contentFromPagesUsed ?? this.contentFromPagesUsed,
-      messages: messages ?? this.messages,
-      recentRobotMessages: recentRobotMessages ?? this.recentRobotMessages,
-      recentUserMessages: recentUserMessages ?? this.recentUserMessages,
-    );
+        id: id ?? this.id,
+        remark: remark ?? this.remark,
+        score: score ?? this.score,
+        questions: questions ?? this.questions,
+        selectedAnswersIndex: selectedAnswersIndex ?? this.selectedAnswersIndex,
+        sessionName: sessionName ?? this.sessionName,
+        createdAt: createdAt ?? this.createdAt,
+        contentFromPagesUsed: contentFromPagesUsed ?? this.contentFromPagesUsed,
+        messages: messages ?? this.messages,
+        recentRobotMessages: recentRobotMessages ?? this.recentRobotMessages,
+        recentUserMessages: recentUserMessages ?? this.recentUserMessages,
+        isFromSessionWithoutQuiz:
+            isFromSessionWithoutQuiz ?? this.isFromSessionWithoutQuiz,
+        newSessionName: newSessionName ?? this.newSessionName);
   }
 }
 
@@ -143,4 +150,3 @@ class ChatMessage {
     required this.role,
   });
 }
-

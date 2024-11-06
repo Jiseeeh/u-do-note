@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fleather/fleather.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -24,9 +25,11 @@ import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dar
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/analyze_image_text_dialog.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
 import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/blurting/blurting_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
@@ -36,13 +39,17 @@ class NoteTakingScreen extends ConsumerStatefulWidget {
   final String notebookId;
   final NoteEntity note;
   final BlurtingModel? blurtingModel;
+  final SpacedRepetitionModel? spacedRepetitionModel;
+  final ActiveRecallModel? activeRecallModel;
 
   const NoteTakingScreen({
     required this.notebookId,
     required this.note,
+    this.spacedRepetitionModel,
     this.blurtingModel,
-    Key? key,
-  }) : super(key: key);
+    this.activeRecallModel,
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -91,6 +98,17 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
         if (text.isEmpty) return;
 
+        bool hasNet = await InternetConnection().hasInternetAccess;
+
+        if (!hasNet) {
+          ref.read(notebooksProvider.notifier).updateNoteTitle(
+              notebookId: widget.notebookId,
+              noteId: widget.note.id,
+              newTitle: text);
+
+          return;
+        }
+
         var res = await ref.read(notebooksProvider.notifier).updateNoteTitle(
             notebookId: widget.notebookId,
             noteId: widget.note.id,
@@ -105,7 +123,6 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
       }
     });
 
-    // ? to update the character count on ui
     _fleatherController!.addListener(() {
       setState(() {});
 
@@ -129,33 +146,91 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     checkIfAnalyzed(context);
 
     if (widget.blurtingModel != null) {
-      Future.delayed(
-          Duration.zero,
-          () => showDialog(
-              context: context,
-              builder: (dialogContext) {
-                return AlertDialog(
-                  scrollable: true,
-                  title: const Text("Blurting tips"),
-                  content: const Column(
-                    children: [
-                      Text(
-                          "\u2022 Write anything that comes to your mind about the topic, don't worry about organizing it. You can also use the mic if you want to.\n"),
-                      Text(
-                          "\u2022 If nothing comes to mind, just take a 5-10 minute break and come back.\n"),
-                      Text(
-                          "\u2022 We will ask after some time if you are done, or you can also tap the plus button in the bottom right of the screen and choose Done.")
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop();
-                        },
-                        child: const Text("Okay"))
+      Future.delayed(Duration.zero, () {
+        if (!mounted) return;
+        showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                scrollable: true,
+                title: const Text("Blurting tips"),
+                content: const Column(
+                  children: [
+                    Text(
+                        "\u2022 Write anything that comes to your mind about the topic, don't worry about organizing it. You can also use the mic if you want to.\n"),
+                    Text(
+                        "\u2022 If nothing comes to mind, just take a 5-10 minute break and come back.\n"),
+                    Text(
+                        "\u2022 We will ask after some time if you are done, or you can also tap the plus button in the bottom right of the screen and choose Done.")
                   ],
-                );
-              }));
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text("Okay"))
+                ],
+              );
+            });
+      });
+    } else if (widget.spacedRepetitionModel != null) {
+      String content =
+          "Review this note and come back after an hour or wait for the notification to start your initial quiz.";
+
+      var nextQuiz = widget.spacedRepetitionModel!.nextReview;
+
+      if (ref.read(reviewScreenProvider).getIsFromOldSpacedRepetition) {
+        content =
+            "Your next quiz will be on ${DateFormat("EEE, dd MMM yyyy").format(nextQuiz!.toDate())}.";
+      }
+
+      Future.delayed(Duration.zero, () {
+        if (!mounted) return;
+        showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                scrollable: true,
+                title: const Text("Spaced Repetition tips"),
+                content: Column(
+                  children: [Text(content)],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text("Okay"))
+                ],
+              );
+            });
+      });
+    } else if (widget.activeRecallModel != null) {
+      String content =
+          "Review this note and come back after 2 hours or wait for the notification to start your initial quiz. You will be asked to input what you can remember about your note.";
+
+      Future.delayed(Duration.zero, () {
+        if (!mounted) return;
+        showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                scrollable: true,
+                title: const Text("Active Recall tips"),
+                content: Column(
+                  children: [Text(content)],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text("Okay"))
+                ],
+              );
+            });
+      });
     }
   }
 
@@ -292,7 +367,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
     var prefs = await ref.read(sharedPreferencesProvider.future);
 
-    _analyzeNoteTimer = Timer(const Duration(seconds: 5), () {
+    _analyzeNoteTimer = Timer(const Duration(seconds: 5), () async {
+      bool hasNet = await InternetConnection().hasInternetAccess;
+
+      if (!hasNet) return;
+
       ref
           .read(notebooksProvider.notifier)
           .analyzeNote(_fleatherController!.document.toPlainText())
@@ -316,7 +395,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
         setState(() {});
 
-        showAnalysisDialog(context);
+        if (mounted) {
+          showAnalysisDialog(context);
+        }
       });
     });
   }
@@ -384,6 +465,17 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
     _lastSavedContent = _fleatherController!.document.toPlainText();
 
+    bool hasNet = await InternetConnection().hasInternetAccess;
+
+    if (!hasNet) {
+      ref
+          .read(notebooksProvider.notifier)
+          .updateNote(widget.notebookId, newNoteEntity);
+
+      if (showLoading) EasyLoading.dismiss();
+      return;
+    }
+
     var res = await ref
         .read(notebooksProvider.notifier)
         .updateNote(widget.notebookId, newNoteEntity);
@@ -445,7 +537,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                         TextSpan(
                             text: _learningTechniqueAnalyzed,
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 16.sp)),
                       ],
                     ),
                   ),
@@ -462,7 +555,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                         TextSpan(
                             text: _reasonAnalyzed,
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 16.sp)),
                       ],
                     ),
                   ),
@@ -480,7 +574,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                             text:
                                 'If you want to get started with the suggested learning technique, click ',
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary, fontSize: 16.sp)),
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 16.sp)),
                         TextSpan(
                             text: 'Go button below',
                             style: TextStyle(
@@ -546,6 +641,14 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         return;
       }
 
+      bool hasNet = await InternetConnection().hasInternetAccess;
+
+      if (!hasNet) {
+        EasyLoading.showError(
+            'Please connect to the internet to use this feature.');
+        return;
+      }
+
       EasyLoading.show(
           status: 'Summarizing your note...',
           maskType: EasyLoadingMaskType.black,
@@ -586,17 +689,18 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
 
         if (context.mounted) {
           onSave(showLoading: false);
 
-          if (widget.blurtingModel != null && !_isFromOldBlurtingSession) {
-            var reviewScreenState = ref.read(reviewScreenProvider);
+          var reviewScreenState = ref.read(reviewScreenProvider);
 
+          if (widget.blurtingModel != null && !_isFromOldBlurtingSession) {
             var blurtingModel = BlurtingModel(
                 noteId: widget.note.id,
+                notebookId: widget.notebookId,
                 sessionName: reviewScreenState.getSessionTitle,
                 createdAt: Timestamp.now(),
                 content: _fleatherController!.document.toPlainText());
@@ -605,8 +709,10 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                 notebookId: reviewScreenState.getNotebookId,
                 blurtingModel: blurtingModel);
           }
+
           if (context.mounted) {
-            context.router.replace(const ReviewRoute());
+            context.router.replace(NotebookPagesRoute(
+                notebookId: ref.read(reviewScreenProvider).getNotebookId));
           }
         }
       },
@@ -668,8 +774,11 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
 
                                   if (!context.mounted) return;
 
-                                  context.router.replace(BlurtingQuizRoute(
-                                      blurtingModel: updatedBlurtingModel));
+                                  context.router.replace(QuizRoute(
+                                    questions: updatedBlurtingModel.questions!,
+                                    model: updatedBlurtingModel,
+                                    reviewMethod: ReviewMethods.blurting,
+                                  ));
                                 })
                             : SpeedDialChild(
                                 elevation: 0,
@@ -871,7 +980,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
           hintText: 'Your note title.',
           border: InputBorder.none,
         ),
-        style: TextStyle(color: Theme.of(context).colorScheme.secondary,),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
       ),
       scrolledUnderElevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

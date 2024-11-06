@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,8 +13,7 @@ import 'package:u_do_note/features/settings/domain/usecases/upload_profile_pictu
 part 'settings_screen_provider.g.dart';
 
 @riverpod
-SettingsRemoteDataSource settingsRemoteDataSource(
-    SettingsRemoteDataSourceRef ref) {
+SettingsRemoteDataSource settingsRemoteDataSource(Ref ref) {
   var firebaseAuth = ref.read(firebaseAuthProvider);
   var firestore = ref.read(firestoreProvider);
   var firebaseStorage = ref.read(firebaseStorageProvider);
@@ -22,20 +22,20 @@ SettingsRemoteDataSource settingsRemoteDataSource(
 }
 
 @riverpod
-SettingsRepository settingsRepository(SettingsRepositoryRef ref) {
+SettingsRepository settingsRepository(Ref ref) {
   var dataSource = ref.read(settingsRemoteDataSourceProvider);
   return SettingsRepositoryImpl(dataSource);
 }
 
 @riverpod
-SignOut signOut(SignOutRef ref) {
+SignOut signOut(Ref ref) {
   var settingsRepository = ref.read(settingsRepositoryProvider);
 
   return SignOut(settingsRepository);
 }
 
 @riverpod
-UploadProfilePicture uploadProfilePicture(UploadProfilePictureRef ref) {
+UploadProfilePicture uploadProfilePicture(Ref ref) {
   var settingsRepository = ref.read(settingsRepositoryProvider);
 
   return UploadProfilePicture(settingsRepository);

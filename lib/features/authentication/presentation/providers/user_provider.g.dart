@@ -7,7 +7,7 @@ part of 'user_provider.dart';
 // **************************************************************************
 
 String _$userRemoteDataSourceHash() =>
-    r'78dcf7f204ba62fdaa5656daaf2640dbb403c874';
+    r'8d5e894ac120d576a1597b7d66206cd8369b506a';
 
 /// See also [userRemoteDataSource].
 @ProviderFor(userRemoteDataSource)
@@ -22,8 +22,10 @@ final userRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UserRemoteDataSourceRef = AutoDisposeProviderRef<UserRemoteDataSource>;
-String _$userRepositoryHash() => r'3f0eef45a2e663c0a972b97d7e08aa760a16d95e';
+String _$userRepositoryHash() => r'494b92bed4c9172cab88661dcd686f070d875cbf';
 
 /// See also [userRepository].
 @ProviderFor(userRepository)
@@ -37,9 +39,11 @@ final userRepositoryProvider = AutoDisposeProvider<UserRepository>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef UserRepositoryRef = AutoDisposeProviderRef<UserRepository>;
 String _$signInWithEmailAndPasswordHash() =>
-    r'ffce0ca8bb6d15deacd5290b8c7b912a259a9688';
+    r'e918c8ed9b386415949e7197f18b4368880b8b94';
 
 /// See also [signInWithEmailAndPassword].
 @ProviderFor(signInWithEmailAndPassword)
@@ -54,10 +58,12 @@ final signInWithEmailAndPasswordProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SignInWithEmailAndPasswordRef
     = AutoDisposeProviderRef<SignInWithEmailAndPassword>;
 String _$signUpWithEmailAndPasswordHash() =>
-    r'c96fe8cf006770ea2bf89be883b774a01be289f4';
+    r'f044d70a1a15c7f00aa132e54d91c8b7169bc5fa';
 
 /// See also [signUpWithEmailAndPassword].
 @ProviderFor(signUpWithEmailAndPassword)
@@ -72,9 +78,11 @@ final signUpWithEmailAndPasswordProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SignUpWithEmailAndPasswordRef
     = AutoDisposeProviderRef<SignUpWithEmailAndPassword>;
-String _$resetPasswordHash() => r'30feb504406a54febe50586108b450edd1f1ce74';
+String _$resetPasswordHash() => r'5f49de40af396bd4661a193bdb0aadc16d6c4e5d';
 
 /// See also [resetPassword].
 @ProviderFor(resetPassword)
@@ -88,6 +96,8 @@ final resetPasswordProvider = AutoDisposeProvider<ResetPassword>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ResetPasswordRef = AutoDisposeProviderRef<ResetPassword>;
 String _$userNotifierHash() => r'2f24c9f2dbe51e37b6f8fd1ba680b9ef117ae12c';
 
@@ -104,4 +114,4 @@ final userNotifierProvider = NotifierProvider<UserNotifier, void>.internal(
 
 typedef _$UserNotifier = Notifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

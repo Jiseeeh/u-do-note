@@ -9,8 +9,7 @@ class SummaryScreen extends ConsumerWidget {
   final String topic;
   final String summary;
 
-  const SummaryScreen({required this.topic, required this.summary, Key? key})
-      : super(key: key);
+  const SummaryScreen({required this.topic, required this.summary, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

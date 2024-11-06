@@ -7,7 +7,7 @@ part of 'pomodoro_technique_provider.dart';
 // **************************************************************************
 
 String _$pomodoroTechniqueDataSourceHash() =>
-    r'cddbddf1812e2e5ee288cd0e4f5b9339b1b44aa8';
+    r'5431f0cc229d33cf50545d960d0b52e69c8fa24e';
 
 /// See also [pomodoroTechniqueDataSource].
 @ProviderFor(pomodoroTechniqueDataSource)
@@ -22,10 +22,12 @@ final pomodoroTechniqueDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef PomodoroTechniqueDataSourceRef
     = AutoDisposeProviderRef<PomodoroRemoteDataSource>;
 String _$pomodoroTechniqueRepositoryHash() =>
-    r'bcc98341d1bafbbaf72bad5cc4b3a1e3eda6a442';
+    r'bd348ae63cd5ad447c9a9eeefa37829e71714725';
 
 /// See also [pomodoroTechniqueRepository].
 @ProviderFor(pomodoroTechniqueRepository)
@@ -40,9 +42,11 @@ final pomodoroTechniqueRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef PomodoroTechniqueRepositoryRef
     = AutoDisposeProviderRef<PomodoroTechniqueRepository>;
-String _$saveQuizResultsHash() => r'02e9cbd10c99ddca395b2b8a855169262ff3cc6e';
+String _$saveQuizResultsHash() => r'2e3fd489fe28d0494c11d90620930f010044819a';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)
@@ -56,8 +60,10 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$pomodoroHash() => r'e139406d95aba70798af6af4ce24114647077937';
+String _$pomodoroHash() => r'8b067960f1babbeae6fbe5e0e6d57179a00bc2c8';
 
 /// See also [Pomodoro].
 @ProviderFor(Pomodoro)
@@ -72,4 +78,4 @@ final pomodoroProvider = NotifierProvider<Pomodoro, PomodoroState>.internal(
 
 typedef _$Pomodoro = Notifier<PomodoroState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

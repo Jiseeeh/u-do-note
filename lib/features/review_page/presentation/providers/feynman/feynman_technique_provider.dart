@@ -1,5 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/review_page/data/datasources/feynman/feynman_remote_datasource.dart';
 import 'package:u_do_note/features/review_page/data/models/feynman.dart';
@@ -8,12 +13,12 @@ import 'package:u_do_note/features/review_page/domain/repositories/feynman/feynm
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/get_chat_response.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/save_quiz_results.dart';
 import 'package:u_do_note/features/review_page/domain/usecases/feynman/save_session.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 
 part 'feynman_technique_provider.g.dart';
 
 @riverpod
-FeynmanRemoteDataSource feynmanRemoteDataSource(
-    FeynmanRemoteDataSourceRef ref) {
+FeynmanRemoteDataSource feynmanRemoteDataSource(Ref ref) {
   var firebaseAuth = ref.read(firebaseAuthProvider);
   var firestore = ref.read(firestoreProvider);
 
@@ -21,28 +26,27 @@ FeynmanRemoteDataSource feynmanRemoteDataSource(
 }
 
 @riverpod
-FeynmanTechniqueRepository feynmanTechniqueRepository(
-    FeynmanTechniqueRepositoryRef ref) {
+FeynmanTechniqueRepository feynmanTechniqueRepository(Ref ref) {
   final remoteDataSource = ref.read(feynmanRemoteDataSourceProvider);
   return FeynmanTechniqueImpl(remoteDataSource);
 }
 
 @riverpod
-GetChatResponse getChatResponse(GetChatResponseRef ref) {
+GetChatResponse getChatResponse(Ref ref) {
   final repository = ref.read(feynmanTechniqueRepositoryProvider);
 
   return GetChatResponse(repository);
 }
 
 @riverpod
-SaveSession saveSession(SaveSessionRef ref) {
+SaveSession saveSession(Ref ref) {
   final repository = ref.read(feynmanTechniqueRepositoryProvider);
 
   return SaveSession(repository);
 }
 
 @riverpod
-SaveQuizResults saveQuizResults(SaveQuizResultsRef ref) {
+SaveQuizResults saveQuizResults(Ref ref) {
   final repository = ref.read(feynmanTechniqueRepositoryProvider);
 
   return SaveQuizResults(repository);
@@ -95,5 +99,29 @@ class FeynmanTechnique extends _$FeynmanTechnique {
         feynmanModel, notebookId, isFromOldSessionWithoutQuiz, newSessionName);
 
     return failureOrRes.fold((failure) => failure, (res) => res);
+  }
+
+  Future<void> onQuizFinish(BuildContext context, FeynmanModel feynmanModel,
+      List<int> selectedAnswersIndex, int score) async {
+    EasyLoading.show(
+        status: 'Saving quiz results...',
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false);
+
+    var updatedFeynmanModel = feynmanModel.copyWith(
+        score: score, selectedAnswersIndex: selectedAnswersIndex);
+
+    var res = await ref.read(feynmanTechniqueProvider.notifier).saveQuizResults(
+        feynmanModel: updatedFeynmanModel,
+        notebookId: ref.read(reviewScreenProvider).getNotebookId,
+        isFromOldSessionWithoutQuiz: feynmanModel.isFromSessionWithoutQuiz,
+        newSessionName: feynmanModel.newSessionName);
+
+    EasyLoading.dismiss();
+
+    if (res is Failure) {
+      logger.e("Error saving: ${res.message}");
+      EasyLoading.showError(res.message);
+    }
   }
 }

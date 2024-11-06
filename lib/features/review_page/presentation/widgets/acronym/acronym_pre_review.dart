@@ -10,8 +10,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/firestore_filter_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
+import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/core/utility.dart';
@@ -54,7 +56,11 @@ class _AcronymPreReviewState extends ConsumerState<AcronymPreReview> {
         .getOldSessions(
             notebookId: reviewScreenState.getNotebookId,
             methodName: AcronymModel.name,
-            fromFirestore: AcronymModel.fromFirestore);
+            fromFirestore: AcronymModel.fromFirestore,
+            filters: [
+          QueryFilter(
+              field: "remark", operation: FirestoreFilter.isNull, value: true)
+        ]);
 
     EasyLoading.dismiss();
 
@@ -87,11 +93,13 @@ class _AcronymPreReviewState extends ConsumerState<AcronymPreReview> {
         title: "Old Mnemonics Sessions",
         subTitle: "old_session_notice",
         buttons: [
-          CustomDialogButton(text: "Cancel", onPressed: () {
-            setState(() {
-              _oldAcronymSessionId = "";
-            });
-          }),
+          CustomDialogButton(
+              text: "Cancel",
+              onPressed: () {
+                setState(() {
+                  _oldAcronymSessionId = "";
+                });
+              }),
           CustomDialogButton(text: "Continue")
         ],
         content: MultiSelect(

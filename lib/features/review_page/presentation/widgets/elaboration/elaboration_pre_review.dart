@@ -92,7 +92,7 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
         ],
         content: MultiSelect(
           items: oldElaborationModels
-              .map((el) => DropdownItem(label: el.id!, value: el.sessionName))
+              .map((el) => DropdownItem(label: el.sessionName, value: el.id!))
               .toList(),
           hintText: "Notice",
           title: "notice",

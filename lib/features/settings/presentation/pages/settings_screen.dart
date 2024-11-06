@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -36,10 +38,43 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     super.initState();
     var user = FirebaseAuth.instance.currentUser!;
 
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        isLoading = false;
-      });
+//     Future.delayed(const Duration(seconds: 1), () {
+//       setState(() {
+//         isLoading = false;
+//       });
+      
+    nameController.text = user.displayName!;
+    currentName = user.displayName!;
+
+    nameFocusNode.addListener(() async {
+      if (!nameFocusNode.hasFocus) {
+        if (nameController.text.isEmpty) {
+          EasyLoading.showError('Name cannot be empty!');
+          return;
+        }
+
+        if (nameController.text.length < 3) {
+          EasyLoading.showError('Name must be at least 3 characters long!');
+          return;
+        }
+
+        if (nameController.text.length > 20) {
+          EasyLoading.showError('Name must be at most 16 characters long!');
+          return;
+        }
+
+        bool hasNet = await InternetConnection().hasInternetAccess;
+
+        if (!hasNet) return;
+
+        if (nameController.text != currentName) {
+          logger.w('updating name');
+
+          FirebaseAuth.instance.currentUser!
+              .updateDisplayName(nameController.text);
+          currentName = nameController.text;
+        }
+      }
     });
     
     if (user.photoURL != null) {
@@ -89,6 +124,102 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Icons.chevron_left_rounded,
               color: Theme.of(context).textTheme.bodyLarge?.color,
               size: 32,
+          centerTitle: true,
+          title: Text('Settings',
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                    fontSize: 20.sp,
+                  )),
+        ),
+        body: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 2.h),
+              height: 30.h,
+              width: 100.w,
+              child: Column(
+                children: [
+                  Skeleton.ignore(
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                            radius: 10.h, backgroundImage: profile!.image),
+                        Positioned(
+                            bottom: 0,
+                            right: 5.w,
+                            child: CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              child: IconButton(
+                                onPressed: () async {
+                                  bool hasNet = await InternetConnection()
+                                      .hasInternetAccess;
+
+                                  if (!hasNet) {
+                                    EasyLoading.showError(
+                                        "Please connect to the internet to change your profile.");
+                                    return;
+                                  }
+
+                                  EasyLoading.show(
+                                      status: 'Loading image picker...',
+                                      maskType: EasyLoadingMaskType.black,
+                                      dismissOnTap: false);
+
+                                  var img = await ImagePicker()
+                                      .pickImage(source: ImageSource.gallery);
+
+                                  EasyLoading.dismiss();
+
+                                  if (img == null) return;
+
+                                  var res = await ref
+                                      .read(settingsProvider.notifier)
+                                      .uploadProfilePicture(image: img);
+
+                                  if (res is Failure) {
+                                    EasyLoading.showError(res.message);
+                                    return;
+                                  }
+
+                                  profile = Image.network(res as String);
+
+                                  setState(() {});
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  size: 16.sp, // Adjust the size as needed
+                                  color: AppColors
+                                      .primary, // Adjust the color as needed
+                                ),
+                              ),
+                            ))
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35.0.w),
+                    child: SizedBox(
+                      width: 100.w,
+                      child: TextField(
+                          controller: nameController,
+                          focusNode: nameFocusNode,
+                          textAlign: TextAlign.center,
+                          decoration:
+                              const InputDecoration.collapsed(hintText: ''),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium
+                              ?.copyWith(fontSize: 20.sp)),
+                    ),
+                  ),
+                  SizedBox(height: 1.h),
+                  Text(user.email!,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontSize: 14.sp)),
+                ],
+              ),
             ),
           ),
           title: Text(
@@ -346,10 +477,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                                     if (hasSeenIntro != null && hasSeenIntro) {
                                       context.router
-                                          .replace(const LoginRoute());
+                                              .replaceAll([const LoginRoute()]);
                                     } else {
-                                      context.router
-                                          .replace(const IntroRoute());
+                                       context.router
+                                              .replaceAll([const IntroRoute()]);
                                     }
                                   }
                                 },
@@ -371,6 +502,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       const SizedBox(width: 10),
                                       Text(
                                         context.tr('sign_out'),
+                                    child: Text('Sign Out',
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall

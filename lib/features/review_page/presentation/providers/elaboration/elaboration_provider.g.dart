@@ -7,7 +7,7 @@ part of 'elaboration_provider.dart';
 // **************************************************************************
 
 String _$elaborationRemoteDataSourceHash() =>
-    r'c50d35c764063781371dbb062162e6981ca1d84c';
+    r'99b0d8f053e70bab79c574e6130f17b0fe238ac5';
 
 /// See also [elaborationRemoteDataSource].
 @ProviderFor(elaborationRemoteDataSource)
@@ -22,10 +22,12 @@ final elaborationRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ElaborationRemoteDataSourceRef
     = AutoDisposeProviderRef<ElaborationRemoteDataSource>;
 String _$elaborationRepositoryHash() =>
-    r'857892d9507190c867913685b9022124bde4db45';
+    r'9d69f5dade2ab5064ed2a99c3553ee3869d19eba';
 
 /// See also [elaborationRepository].
 @ProviderFor(elaborationRepository)
@@ -40,9 +42,11 @@ final elaborationRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ElaborationRepositoryRef
     = AutoDisposeProviderRef<ElaborationRepository>;
-String _$saveQuizResultsHash() => r'c8939482e07f726b7f555b48aff57dffa6f4a1a3';
+String _$saveQuizResultsHash() => r'7bd5a6aa0937b6ec5a77e13fa7ee55fac56f5fa6';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)
@@ -56,9 +60,11 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
 String _$getElaboratedContentHash() =>
-    r'b737b75a1fdc838cb7e53612a4654deadeb578d4';
+    r'174c7b561c4b709bd594a59ba494201049a88986';
 
 /// See also [getElaboratedContent].
 @ProviderFor(getElaboratedContent)
@@ -73,8 +79,10 @@ final getElaboratedContentProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetElaboratedContentRef = AutoDisposeProviderRef<GetElaboratedContent>;
-String _$elaborationHash() => r'9dad5ffd6847f987a31be914fbc7523a8954558f';
+String _$elaborationHash() => r'4af1d304529bca55292d8e535d3a7350268e48b9';
 
 /// See also [Elaboration].
 @ProviderFor(Elaboration)
@@ -90,4 +98,4 @@ final elaborationProvider =
 
 typedef _$Elaboration = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

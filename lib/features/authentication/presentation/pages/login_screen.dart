@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_api_availability/google_api_availability.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 import '../widgets/social_icon.dart';
 import '../widgets/auth_field.dart';
@@ -99,7 +101,8 @@ class _LoginState extends ConsumerState<LoginScreen> {
                             color: Theme.of(context).colorScheme.secondary,
                             spreadRadius: 5,
                             blurRadius: 7,
-                            offset: const Offset(0, -3), // changes position of shadow
+                            offset: const Offset(
+                                0, -3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -117,34 +120,61 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                 TextButton(
                                   onPressed: () async {
                                     try {
-                                      final GoogleSignIn googleSignIn =
-                                          GoogleSignIn();
+                                      GooglePlayServicesAvailability
+                                          availability =
+                                          await GoogleApiAvailability.instance
+                                              .checkGooglePlayServicesAvailability();
 
-                                      final GoogleSignInAccount? googleUser =
-                                          await googleSignIn.signIn();
+                                      if (availability ==
+                                          GooglePlayServicesAvailability
+                                              .success) {
+                                        final GoogleSignIn googleSignIn =
+                                            GoogleSignIn();
 
-                                      final GoogleSignInAuthentication?
-                                          googleAuth =
-                                          await googleUser?.authentication;
+                                        final GoogleSignInAccount? googleUser =
+                                            await googleSignIn.signIn();
 
-                                      final AuthCredential credential =
-                                          GoogleAuthProvider.credential(
-                                        accessToken: googleAuth!.accessToken,
-                                        idToken: googleAuth.idToken,
-                                      );
+                                        final GoogleSignInAuthentication?
+                                            googleAuth =
+                                            await googleUser?.authentication;
 
-                                      await FirebaseAuth.instance
-                                          .signInWithCredential(credential);
+                                        if (googleAuth != null) {
+                                          final AuthCredential credential =
+                                              GoogleAuthProvider.credential(
+                                            accessToken: googleAuth.accessToken,
+                                            idToken: googleAuth.idToken,
+                                          );
 
-                                      if (!context.mounted) return;
+                                          await FirebaseAuth.instance
+                                              .signInWithCredential(credential);
 
-                                      context.router.replaceNamed('/home');
+                                          if (!context.mounted) return;
+
+                                          context.router.replaceAll(
+                                              [const HomepageRoute()]);
+                                        }
+                                      } else {
+                                        Future.delayed(
+                                            const Duration(seconds: 1),
+                                            () => EasyLoading.showToast(
+                                                  "Google Play Services are outdated. Update to use google sign in.",
+                                                  duration: const Duration(
+                                                      seconds: 2),
+                                                  toastPosition:
+                                                      EasyLoadingToastPosition
+                                                          .bottom,
+                                                ));
+
+                                        await GoogleApiAvailability.instance
+                                            .showErrorDialogFragment();
+                                      }
                                     } catch (e) {
                                       EasyLoading.showToast(
-                                          "Error signing in with Google, please try again later",
-                                          duration: const Duration(seconds: 2),
-                                          toastPosition:
-                                              EasyLoadingToastPosition.bottom);
+                                        "Error signing in with Google, please try again later",
+                                        duration: const Duration(seconds: 2),
+                                        toastPosition:
+                                            EasyLoadingToastPosition.bottom,
+                                      );
                                     }
                                   },
                                   child: const SocialIcon(
@@ -163,7 +193,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                       const SizedBox(
                                         height: 20,
                                       ),
-                                      const Align(
+                                      Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           "Email Address",
@@ -182,7 +212,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      const Align(
+                                      Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           "Password",
@@ -278,7 +308,8 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                         EasyLoading.showSuccess(
                                             'Login success!');
 
-                                        context.router.replaceNamed('/home');
+                                        context.router.replaceAll(
+                                            [const HomepageRoute()]);
                                       });
                                     }
                                   },
@@ -303,8 +334,11 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text('Don\'t have an account?',
-                                        style:
-                                            TextStyle(color: Theme.of(context).colorScheme.secondary,)),
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        )),
                                     TextButton(
                                       onPressed: () {
                                         context.router.replaceNamed('/sign-up');

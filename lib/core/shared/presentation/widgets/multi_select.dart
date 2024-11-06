@@ -25,8 +25,7 @@ class MultiSelect<T extends Object> extends ConsumerWidget {
       this.singleSelect = false,
       this.customKey,
       this.onSelectionChanged,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

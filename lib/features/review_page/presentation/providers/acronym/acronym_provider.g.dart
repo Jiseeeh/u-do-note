@@ -7,7 +7,7 @@ part of 'acronym_provider.dart';
 // **************************************************************************
 
 String _$acronymRemoteDataSourceHash() =>
-    r'1fb0a324e739ea59e5519249c1bbb68743efbad8';
+    r'ef5f807c2897e35b1a27d2cdd73d11e92c92fa3d';
 
 /// See also [acronymRemoteDataSource].
 @ProviderFor(acronymRemoteDataSource)
@@ -22,9 +22,11 @@ final acronymRemoteDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AcronymRemoteDataSourceRef
     = AutoDisposeProviderRef<AcronymRemoteDataSource>;
-String _$acronymRepositoryHash() => r'f37317205c7b3037cf1a4fca87f1df55752969a8';
+String _$acronymRepositoryHash() => r'7d58f4d01534d2df0f6f4467cb2dfda81b3a430b';
 
 /// See also [acronymRepository].
 @ProviderFor(acronymRepository)
@@ -39,9 +41,11 @@ final acronymRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AcronymRepositoryRef = AutoDisposeProviderRef<AcronymRepository>;
 String _$generateAcronymMnemonicsHash() =>
-    r'9fa1a7da991c040419d76eedeee3141a3250df86';
+    r'60b56e054e2fa5d16fd764b6a5cb23fd1477f6af';
 
 /// See also [generateAcronymMnemonics].
 @ProviderFor(generateAcronymMnemonics)
@@ -56,9 +60,11 @@ final generateAcronymMnemonicsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GenerateAcronymMnemonicsRef
     = AutoDisposeProviderRef<GenerateAcronymMnemonics>;
-String _$saveQuizResultsHash() => r'1b26bac6dfece9222636f90139ef7636801ecacd';
+String _$saveQuizResultsHash() => r'c8af524c1fadfabe16a2eb3338610c516e755448';
 
 /// See also [saveQuizResults].
 @ProviderFor(saveQuizResults)
@@ -72,8 +78,10 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$acronymHash() => r'7e7ba5c63d92a6f4c1e6b8ac26259d3f09b59622';
+String _$acronymHash() => r'd8e56e645030ac18a65e13e66cc94297ea6d653b';
 
 /// See also [Acronym].
 @ProviderFor(Acronym)
@@ -88,4 +96,4 @@ final acronymProvider = AutoDisposeNotifierProvider<Acronym, void>.internal(
 
 typedef _$Acronym = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

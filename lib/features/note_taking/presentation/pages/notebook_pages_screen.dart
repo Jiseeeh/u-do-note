@@ -21,6 +21,7 @@ import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -434,60 +435,65 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiary,
+        color: AppColors.darkHeadlineText,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
           // position icon on the bottom right
           Expanded(
-              child: FleatherEditor(
-            controller: fleatherController,
-            padding: const EdgeInsets.all(10),
-            readOnly: true,
-          )),
+            child: FleatherEditor(
+              controller: fleatherController,
+              padding: const EdgeInsets.all(10),
+              readOnly: true,
+            ),
+          ),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             IconButton(
-                onPressed: () {
-                  // TODO: pending for deletion (unused)
-                  ref.read(appStateProvider.notifier).setCurrentNoteId(note.id);
+              onPressed: () {
+                // TODO: pending for deletion (unused)
+                ref.read(appStateProvider.notifier).setCurrentNoteId(note.id);
 
-                  context.router.replace(NoteTakingRoute(
-                      notebookId: widget.notebookId, note: note));
-                },
-                icon: const Icon(Icons.edit)),
+                context.router.push(
+                    NoteTakingRoute(notebookId: widget.notebookId, note: note));
+              },
+              icon: const Icon(
+                Icons.edit,
+                color: AppColors.primaryBackground,
+              ),
+            ),
             IconButton(
-                onPressed: () async {
-                  // show dialog to confirm delete
-                  var userChoice = await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Delete Note'),
-                          content: Text(context.tr("delete_note_confirm")),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context, false);
-                                },
-                                child: const Text('No')),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context, true);
-                                },
-                                child: const Text('Yes')),
-                          ],
-                        );
-                      });
+              onPressed: () async {
+                // show dialog to confirm delete
+                var userChoice = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Delete Note'),
+                        content: Text(context.tr("delete_note_confirm")),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                              child: const Text('No')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: const Text('Yes')),
+                        ],
+                      );
+                    });
 
-                  if (userChoice == null || userChoice == false) {
-                    return;
-                  }
+                if (userChoice == null || userChoice == false) {
+                  return;
+                }
 
-                  EasyLoading.show(
-                      status: 'loading...',
-                      maskType: EasyLoadingMaskType.black,
-                      dismissOnTap: false);
+                EasyLoading.show(
+                    status: 'loading...',
+                    maskType: EasyLoadingMaskType.black,
+                    dismissOnTap: false);
 
                   bool hasNet = await InternetConnection().hasInternetAccess;
 
@@ -504,17 +510,21 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                       .deleteNote(
                           notebookId: widget.notebookId, noteId: note.id);
 
-                  EasyLoading.dismiss();
+                EasyLoading.dismiss();
 
-                  if (res is Failure) {
-                    logger.w('Encountered error: ${res.message}');
-                    EasyLoading.showError(res.message);
-                    return;
-                  }
+                if (res is Failure) {
+                  logger.w('Encountered error: ${res.message}');
+                  EasyLoading.showError(res.message);
+                  return;
+                }
 
-                  EasyLoading.showSuccess(res);
-                },
-                icon: const Icon(Icons.delete)),
+                EasyLoading.showSuccess(res);
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: AppColors.primaryBackground,
+              ),
+            ),
           ]),
         ],
       ),

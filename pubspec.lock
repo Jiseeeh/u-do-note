@@ -333,7 +333,7 @@ packages:
       sha256: "5e74883aedf87f3b703cb85e815bdc1ed9208b33501556e4a8a5572af9845c81"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "3.0.0"
   dots_indicator:
     dependency: transitive
     description:
@@ -587,6 +587,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.5"
+  flutter_filter_dialog:
+    dependency: "direct main"
+    description:
+      name: flutter_filter_dialog
+      sha256: "1420b5303ce2b1c7677c3a8bd61a43af0a0849d8dce408ffda98ee220bb4fdc4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -890,6 +898,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  grouped_list:
+    dependency: "direct main"
+    description:
+      name: grouped_list
+      sha256: c52551bc17699e304634d4653b824a1aa7c6b1d3a2c1a0da1a80839f867353fb
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0"
   hive:
     dependency: "direct main"
     description:
@@ -1583,6 +1599,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  sticky_headers:
+    dependency: transitive
+    description:
+      name: sticky_headers
+      sha256: "9b3dd2cb0fd6a7038170af3261f855660cbb241cb56c501452cb8deed7023ede"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0+2"
   stream_channel:
     dependency: transitive
     description:

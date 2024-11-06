@@ -52,6 +52,8 @@ dependencies:
   parchment_delta: ^1.0.0
   multi_dropdown: ^3.0.1
   flutter_native_splash: ^2.4.1
+  flutter_filter_dialog: ^1.2.0
+  grouped_list: ^6.0.0
   flutter_local_notifications: ^17.2.3
   timezone: ^0.9.4
   flutter_timezone: ^3.0.1
@@ -75,6 +77,7 @@ flutter:
     - assets/images/
     - assets/images/onboard/
     - assets/images/logo/
+    - assets/images/themes/
     - assets/translations/
   uses-material-design: true
 

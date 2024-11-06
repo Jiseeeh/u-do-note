@@ -278,6 +278,61 @@ final updateNoteTitleProvider = AutoDisposeProvider<UpdateNoteTitle>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UpdateNoteTitleRef = AutoDisposeProviderRef<UpdateNoteTitle>;
+String _$getCategoriesHash() => r'2ee22af257b52b564184379a7d5de5c1ef9d086e';
+
+/// See also [getCategories].
+@ProviderFor(getCategories)
+final getCategoriesProvider = AutoDisposeProvider<GetCategories>.internal(
+  getCategories,
+  name: r'getCategoriesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getCategoriesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetCategoriesRef = AutoDisposeProviderRef<GetCategories>;
+String _$addCategoryHash() => r'18a548685d809af2d3739450d029aa19e6c48a1c';
+
+/// See also [addCategory].
+@ProviderFor(addCategory)
+final addCategoryProvider = AutoDisposeProvider<CreateCategory>.internal(
+  addCategory,
+  name: r'addCategoryProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$addCategoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AddCategoryRef = AutoDisposeProviderRef<CreateCategory>;
+String _$deleteCategoryHash() => r'8a6ff26a9683b50f717cbdfc19e9c16b66796668';
+
+/// See also [deleteCategory].
+@ProviderFor(deleteCategory)
+final deleteCategoryProvider = AutoDisposeProvider<DeleteCategory>.internal(
+  deleteCategory,
+  name: r'deleteCategoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deleteCategoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DeleteCategoryRef = AutoDisposeProviderRef<DeleteCategory>;
+String _$updateCategoryHash() => r'007b072ea94534c7c9f3bab8dda0325a48a86b55';
+
+/// See also [updateCategory].
+@ProviderFor(updateCategory)
+final updateCategoryProvider = AutoDisposeProvider<UpdateCategory>.internal(
+  updateCategory,
+  name: r'updateCategoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$updateCategoryHash);
+
 String _$formatScannedTextHash() => r'b549880decbb17df4107e14b6def1af906678870';
 
 /// See also [formatScannedText].
@@ -292,6 +347,9 @@ final formatScannedTextProvider =
   dependencies: null,
   allTransitiveDependencies: null,
 );
+
+typedef UpdateCategoryRef = AutoDisposeProviderRef<UpdateCategory>;
+String _$notebooksStreamHash() => r'8a56340033c814a39b83775c3f2a379016856f13';
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element

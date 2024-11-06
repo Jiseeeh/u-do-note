@@ -18,14 +18,18 @@ import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/repositories/note_repository.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/analyze_image_text.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/analyze_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/create_category.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/delete_category.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/get_categories.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/format_scanned_text.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/summarize_note.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/update_category.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_multiple_notes.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_note_title.dart';
@@ -145,6 +149,34 @@ UpdateNoteTitle updateNoteTitle(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateNoteTitle(repository);
+}
+
+@riverpod
+GetCategories getCategories(GetCategoriesRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return GetCategories(repository);
+}
+
+@riverpod
+CreateCategory addCategory(AddCategoryRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return CreateCategory(repository);
+}
+
+@riverpod
+DeleteCategory deleteCategory(DeleteCategoryRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return DeleteCategory(repository);
+}
+
+@riverpod
+UpdateCategory updateCategory(UpdateCategoryRef ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return UpdateCategory(repository);
 }
 
 @riverpod
@@ -277,10 +309,10 @@ class Notebooks extends _$Notebooks {
 
   /// Creates a notebook from the given [name]
   Future<dynamic> createNotebook(
-      {required String name, XFile? coverImg}) async {
+      {required String name, XFile? coverImg, required String category}) async {
     var createNotebook = ref.read(createNotebookProvider);
 
-    var failureOrString = await createNotebook(name, coverImg);
+    var failureOrString = await createNotebook(name, coverImg, category);
 
     return failureOrString.fold((failure) => failure, (res) => res);
   }
@@ -351,6 +383,51 @@ class Notebooks extends _$Notebooks {
     return failureOrJsonStr.fold((failure) => failure, (jsonStr) => jsonStr);
   }
 
+  Future<dynamic> getCategories() async {
+    final getCategories = ref.read(getCategoriesProvider);
+
+    var failureOrCategories = await getCategories();
+
+    return failureOrCategories.fold(
+        (failure) => failure, (categories) => categories);
+  }
+
+  Future<dynamic> getNotebooks() async {
+    final getNotebooks = ref.read(getNotebooksProvider);
+
+    var failureOrNotebooks = await getNotebooks();
+
+    return failureOrNotebooks.fold(
+        (failure) => failure, (notebooks) => notebooks);
+  }
+
+  Future<dynamic> addCategory({required String categoryName}) async {
+    var addCategory = ref.read(addCategoryProvider);
+
+    var failureOrBool = await addCategory(categoryName, categoryName);
+
+    return failureOrBool.fold((failure) => failure, (res) => res);
+  }
+
+  Future<dynamic> deleteCategory({required String categoryName}) async {
+    var deleteCategory = ref.read(deleteCategoryProvider);
+
+    var failureOrString = await deleteCategory(categoryName);
+
+    return failureOrString.fold((failure) => failure, (res) => res);
+  }
+
+  Future<dynamic> updateCategory(
+      {required String oldCategoryName,
+      required String newCategoryName}) async {
+    var updateCategory = ref.read(updateCategoryProvider);
+
+    var failureOrString =
+        await updateCategory(oldCategoryName, newCategoryName);
+
+    return failureOrString.fold((failure) => failure, (res) => res);
+  }
+  
   Future<dynamic> formatScannedText({required String scannedText}) async {
     final formatScannedText = ref.read(formatScannedTextProvider);
 
@@ -359,4 +436,3 @@ class Notebooks extends _$Notebooks {
     return failureOrScannedText.fold(
         (failure) => failure, (formattedText) => formattedText);
   }
-}

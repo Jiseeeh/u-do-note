@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 336.68 457.33">
+  <g style="isolation: isolate;">
+    <g id="b" data-name="Layer 2">
+      <g id="c" data-name="OBJECTS">
+        <g>
+          <path d="m324.21,21.67h-4.93v93.14h4.93c6.89,0,12.47-5.59,12.47-12.47V34.15c0-6.89-5.58-12.47-12.47-12.47Z" style="fill: #28efcf; stroke-width: 0px;"/>
+          <path d="m324.21,97.64h-4.93v93.14h4.93c6.89,0,12.47-5.59,12.47-12.47v-68.19c0-6.89-5.58-12.47-12.47-12.47Z" style="fill: #efb635; stroke-width: 0px;"/>
+          <path d="m324.21,173.62h-4.93v93.14h4.93c6.89,0,12.47-5.58,12.47-12.47v-68.19c0-6.89-5.58-12.47-12.47-12.47Z" style="fill: #e65c5a; stroke-width: 0px;"/>
+          <path d="m324.21,249.59h-4.93v93.14h4.93c6.89,0,12.47-5.59,12.47-12.47v-68.19c0-6.89-5.58-12.47-12.47-12.47Z" style="fill: #bdb81a; stroke-width: 0px;"/>
+          <path d="m324.21,325.57h-4.93v93.14h4.93c6.89,0,12.47-5.59,12.47-12.47v-68.19c0-6.89-5.58-12.47-12.47-12.47Z" style="fill: #f28500; stroke-width: 0px;"/>
+          <path d="m307.49.44H.43v456.89h307.06c8.26,0,14.96-6.7,14.96-14.96V15.41c0-8.26-6.7-14.96-14.96-14.96Z" style="fill: #14181b; stroke-width: 0px;"/>
+          <rect width="35" height="457" style="fill: #1d2428; stroke-width: 0px;"/>
+          <rect x="276" width="16" height="457" style="fill: #1684cb; stroke-width: 0px;"/>
+          <rect x="278" width="2" height="457" style="fill: #fff; mix-blend-mode: soft-light; stroke-width: 0px;"/>
+          <rect x="283" width="2" height="457" style="fill: #fff; mix-blend-mode: soft-light; stroke-width: 0px;"/>
+          <rect x="287" width="2" height="457" style="fill: #fff; mix-blend-mode: soft-light; stroke-width: 0px;"/>
+          <g>
+            <rect x="101" y="78" width="121" height="68" rx="12.6" ry="12.6" style="fill: #f7f7f7; stroke-width: 0px;"/>
+            <g>
+              <line x1="116" y1="97.5" x2="206" y2="97.5" style="fill: none; opacity: .2; stroke: #063; stroke-miterlimit: 10;"/>
+              <line x1="116" y1="112.5" x2="206" y2="112.5" style="fill: none; opacity: .2; stroke: #063; stroke-miterlimit: 10;"/>
+              <line x1="116" y1="127.5" x2="206" y2="127.5" style="fill: none; opacity: .2; stroke: #063; stroke-miterlimit: 10;"/>
+            </g>
+          </g>
+          <path d="m101.43,406h119.14c5.2,0,9.43,4.23,9.43,9.43v.14c0,5.21-4.23,9.43-9.43,9.43h-119.14c-5.2,0-9.43-4.23-9.43-9.43v-.14c0-5.21,4.23-9.43,9.43-9.43Z" style="fill: #f7f7f7; stroke-width: 0px;"/>
+          <g id="d" data-name="Layer 2-2">
+            <path d="m93.09,230.19s-26.08,26.49-20.36,38.44c0,0,4.57,6.33,16.52-15.37,5.51-9.66,18.81-22.34,18.81-22.34,0,0-20.88,29.19-16.93,37.92" style="fill: none; stroke: #f7f7f7; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"/>
+            <path d="m132.68,235.07l-14.44,32.41s-1.56,5.3,5.92,2.28,21.3-16.52,22.34-30.34c1.04-13.82-10.91-9.04-17.66-6.03" style="fill: none; stroke: #f7f7f7; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"/>
+            <path d="m152.21,258.44s5.81-4.88,3.84-8.1-7.79,2.18-12.16,9.56c-4.37,7.37,2.18,7.48,6.24,4.05s4.57-10.39,4.57-10.39" style="fill: none; stroke: #f7f7f7; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"/>
+            <path d="m211.11,258.44s5.81-4.88,3.84-8.1-7.79,2.18-12.16,9.56,2.18,7.48,6.24,4.05,4.57-10.39,4.57-10.39" style="fill: none; stroke: #f7f7f7; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"/>
+            <path d="m172.47,269.14s13.3-33.66,22.13-38.75-9.87,18.81-5.3,37.61c4.57,18.8,8.62-34.49,20.57-39.48" style="fill: none; stroke: #f7f7f7; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"/>
+            <path d="m220.05,248.05s11.22-3.64,13.72-3.12" style="fill: none; stroke: #f7f7f7; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"/>
+            <path d="m230.34,239.64s-13.81,17.25-11.84,26.18c0,0,3.84,5.2,9.04-4.78" style="fill: none; stroke: #f7f7f7; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"/>
+            <path d="m230.86,260.73s7.89-.83,10.08-9.35c2.18-8.52-12.88,2.6-11.74,12.05s15.06-3.53,15.06-3.53" style="fill: none; stroke: #f7f7f7; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

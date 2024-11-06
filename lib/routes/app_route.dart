@@ -35,8 +35,13 @@ import 'package:u_do_note/features/review_page/presentation/pages/pomodoro/pomod
 import 'package:u_do_note/features/review_page/presentation/pages/pq4r/pq4r_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/quiz_results_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/review_screen.dart';
+import 'package:u_do_note/features/review_page/presentation/pages/strategy_details_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/about_settings_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/language_settings_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/profile_settings_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/sq3r/sq3r_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/theme_settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
 
 part 'app_route.gr.dart';
@@ -70,6 +75,10 @@ class AppRouter extends RootStackRouter {
               path: 'note-taking') // test if this should be here
         ]),
         AutoRoute(page: SettingsRoute.page, path: '/settings'),
+        AutoRoute(page: ThemeSettingsRoute.page, path: '/theme-settings'),
+        AutoRoute(page: LanguageSettingsRoute.page, path: '/language-settings'),
+        AutoRoute(page: AboutSettingsRoute.page, path: '/about-settings'),
+        AutoRoute(page: ProfileSettingsRoute.page, path: '/profile-settings'),
         AutoRoute(
             page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
         AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note'),
@@ -81,6 +90,7 @@ class AppRouter extends RootStackRouter {
             page: PomodoroRoute.page, path: '/pomodoro', maintainState: false),
         AutoRoute(page: ElaborationRoute.page, path: '/elaboration'),
         AutoRoute(page: AcronymRoute.page, path: '/acronym'),
+        AutoRoute(page: StrategyDetailsRoute.page, path: '/strategy-details'),
         AutoRoute(page: ActiveRecallRoute.page, path: '/active-recall'),
         AutoRoute(page: Sq3rRoute.page, path: '/sq3r'),
         AutoRoute(page: Pq4rRoute.page, path: '/pq4r'),

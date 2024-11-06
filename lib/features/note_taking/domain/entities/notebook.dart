@@ -9,6 +9,7 @@ class NotebookEntity {
   final Timestamp createdAt;
   final Map<String, dynamic> techniquesUsage;
   final List<NoteEntity> notes;
+  final String category;
 
   NotebookEntity({
     required this.id,
@@ -18,6 +19,7 @@ class NotebookEntity {
     required this.createdAt,
     required this.techniquesUsage,
     required this.notes,
+    required this.category,
   });
 
   @override

@@ -118,12 +118,12 @@ class NotebookCard extends ConsumerWidget {
                             EasyLoading.showSuccess(res);
                           }
 
-                          if (isEdit && context.mounted) {
-                            showDialog(
-                                context: context,
-                                builder: (dialogContext) => AddNotebookDialog(
-                                    notebookEntity: notebook));
-                          }
+                          // if (isEdit && context.mounted) {
+                          //   showDialog(
+                          //       context: context,
+                          //       builder: (dialogContext) => AddNotebookDialog(
+                          //           notebookEntity: notebook, categories: _categories.cast<String>(),));
+                          // }
                         },
                         icon: const Icon(Icons.more_vert)),
                   )

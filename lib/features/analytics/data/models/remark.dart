@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:u_do_note/features/analytics/data/models/remark_data.dart';
 
 class RemarkModel {
@@ -46,5 +48,28 @@ class RemarkModel {
            ${feynmanRemark != null ? 'Feynman Remark at ${feynmanRemark!.timestamp.toDate().toIso8601String()}: is ${feynmanRemark!.remark} with a score of ${feynmanRemark!.score}' : ''}
            ${pomodoroRemark != null ? 'Pomodoro Remark at ${pomodoroRemark!.timestamp.toDate().toIso8601String()}: is ${pomodoroRemark!.remark} with a score of ${pomodoroRemark!.score}' : ''}
            """;
+  }
+}
+
+class TempRemark {
+  final String? id;
+  final String notebookName;
+  final String notebookId;
+  final Timestamp createdAt;
+  final String reviewMethod;
+  final int score;
+
+  const TempRemark({
+    this.id,
+    required this.notebookName,
+    required this.notebookId,
+    required this.createdAt,
+    required this.reviewMethod,
+    required this.score,
+  });
+
+  @override
+  String toString() {
+    return "Notebook name: $notebookName\n score: $score\n method: $reviewMethod\n timestamp: ${DateFormat('MMM d, y').format(createdAt.toDate())}";
   }
 }

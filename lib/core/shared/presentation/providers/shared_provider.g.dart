@@ -220,7 +220,7 @@ final localNotificationProvider = NotifierProvider<LocalNotification,
 );
 
 typedef _$LocalNotification = Notifier<FlutterLocalNotificationsPlugin>;
-String _$sharedHash() => r'81f1b801babed2f2e73af02fe5b7d22a60bec210';
+String _$sharedHash() => r'85591538795a02747d197f4f2758c58ff8005162';
 
 /// See also [Shared].
 @ProviderFor(Shared)

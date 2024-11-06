@@ -10,7 +10,7 @@ class GetAnalysis {
   GetAnalysis(this._remarkRepository);
 
   Future<Either<Failure, String>> call(
-      Map<String, List<TempRemark>> remarks) async {
+      Map<String, List<RemarkModel>> remarks) async {
     return await _remarkRepository.getAnalysis(remarks);
   }
 }

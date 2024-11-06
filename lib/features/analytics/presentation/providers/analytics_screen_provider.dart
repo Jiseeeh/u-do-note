@@ -84,7 +84,7 @@ class AnalyticsScreen extends _$AnalyticsScreen {
   }
 
   /// Returns the remarks in all learning strategies.
-  Future<Map<String, List<TempRemark>>> getRemarks() async {
+  Future<Map<String, List<RemarkModel>>> getRemarks() async {
     final getRemarks = ref.read(getRemarksProvider);
 
     var failureOrRemarksModel = await getRemarks();
@@ -113,7 +113,7 @@ class AnalyticsScreen extends _$AnalyticsScreen {
 
   /// Analyzes the [remarksModel] and returns the analysis in json format.
   /// With the properties 'content' and 'state'.
-  Future<dynamic> getAnalysis(Map<String, List<TempRemark>> remarks) async {
+  Future<dynamic> getAnalysis(Map<String, List<RemarkModel>> remarks) async {
     final getAnalysis = ref.read(getAnalysisProvider);
 
     var failureOrAnalysis = await getAnalysis(remarks);

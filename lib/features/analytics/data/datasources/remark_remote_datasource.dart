@@ -24,7 +24,7 @@ class RemarkRemoteDataSource {
 
   RemarkRemoteDataSource(this._firestore, this._auth);
 
-  Future<Map<String, List<TempRemark>>> getRemarks() async {
+  Future<Map<String, List<RemarkModel>>> getRemarks() async {
     var userId = _auth.currentUser!.uid;
 
     var userNotebooks = await _firestore
@@ -33,7 +33,7 @@ class RemarkRemoteDataSource {
         .collection(FirestoreCollection.user_notes.name)
         .get();
 
-    List<TempRemark> remarkModels = [];
+    List<RemarkModel> remarkModels = [];
 
     for (var nb in userNotebooks.docs) {
       var remarks = await _firestore
@@ -62,7 +62,7 @@ class RemarkRemoteDataSource {
           score = scores.isNotEmpty ? (totalScore / scores.length).ceil() : 0;
         }
 
-        remarkModels.add(TempRemark(
+        remarkModels.add(RemarkModel(
             id: remark.id,
             notebookName: nb.data()['subject'],
             notebookId: remarkData['notebook_id'],
@@ -73,7 +73,7 @@ class RemarkRemoteDataSource {
     }
 
     var groupedRemarks =
-        groupBy(remarkModels, (TempRemark remark) => remark.notebookId);
+        groupBy(remarkModels, (RemarkModel remark) => remark.notebookId);
 
     logger.d("Grouped: $groupedRemarks");
 
@@ -248,7 +248,7 @@ class RemarkRemoteDataSource {
     return quizzesToTake;
   }
 
-  Future<String> getAnalysis(Map<String, List<TempRemark>> remarks) async {
+  Future<String> getAnalysis(Map<String, List<RemarkModel>> remarks) async {
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(

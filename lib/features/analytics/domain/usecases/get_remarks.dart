@@ -9,7 +9,7 @@ class GetRemarks {
 
   GetRemarks(this._remarkRepository);
 
-  Future<Either<Failure, Map<String, List<TempRemark>>>> call() async {
+  Future<Either<Failure, Map<String, List<RemarkModel>>>> call() async {
     return await _remarkRepository.getRemarks();
   }
 }

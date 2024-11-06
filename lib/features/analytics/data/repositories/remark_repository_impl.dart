@@ -13,7 +13,7 @@ class RemarkRepositoryImpl implements RemarkRepository {
   RemarkRepositoryImpl(this._remarkDataSource);
 
   @override
-  Future<Either<Failure, Map<String, List<TempRemark>>>> getRemarks() async {
+  Future<Either<Failure, Map<String, List<RemarkModel>>>> getRemarks() async {
     try {
       var remarks = await _remarkDataSource.getRemarks();
 
@@ -47,7 +47,7 @@ class RemarkRepositoryImpl implements RemarkRepository {
 
   @override
   Future<Either<Failure, String>> getAnalysis(
-      Map<String, List<TempRemark>> remarks) async {
+      Map<String, List<RemarkModel>> remarks) async {
     try {
       var analysis = await _remarkDataSource.getAnalysis(remarks);
 

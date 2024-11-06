@@ -6,14 +6,14 @@ import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/analytics/data/models/scores_data.dart';
 
 abstract class RemarkRepository {
-  Future<Either<Failure, Map<String, List<TempRemark>>>> getRemarks();
+  Future<Either<Failure, Map<String, List<RemarkModel>>>> getRemarks();
 
   Future<Either<Failure, int>> getFlashcardsToReview();
 
   Future<Either<Failure, int>> getQuizzesToTake();
 
   Future<Either<Failure, String>> getAnalysis(
-      Map<String, List<TempRemark>> remarks);
+      Map<String, List<RemarkModel>> remarks);
 
   Future<Either<Failure, String>> getTechniquesUsageInterpretation(
       List<ChartData> chartData);

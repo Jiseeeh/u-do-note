@@ -59,7 +59,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   String _lastLearningMethodInterpreted = "";
   dynamic _flashcardsToReview;
   dynamic _quizzesToTake;
-  Map<String, List<TempRemark>> _remarks = {};
+  Map<String, List<RemarkModel>> _remarks = {};
   final List<String> _reviewMethods = [
     LeitnerSystemModel.name,
     FeynmanModel.name,

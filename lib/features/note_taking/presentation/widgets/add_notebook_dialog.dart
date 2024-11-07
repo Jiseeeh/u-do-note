@@ -16,9 +16,9 @@ import 'package:u_do_note/features/note_taking/presentation/providers/notes_prov
 class AddNotebookDialog extends ConsumerStatefulWidget {
   final NotebookEntity? notebookEntity;
   final List<String> categories;
+
   const AddNotebookDialog(
-      {this.notebookEntity, required this.categories, Key? key})
-      : super(key: key);
+      {this.notebookEntity, required this.categories, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -32,11 +32,10 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
   final _minNotebookNameLength = 1;
   var _notebookCoverLocalPath = "";
 
-  // var _notebookCoverFileName = "";
   var _notebookCoverUrl = "";
   XFile? _notebookCoverImg;
-  String dropdownValue = 'Uncategorized';
-  
+  String _dropdownValue = 'Uncategorized';
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +43,6 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
     if (widget.notebookEntity != null) {
       _nameController.text = widget.notebookEntity!.subject;
       _notebookCoverUrl = widget.notebookEntity!.coverUrl;
-      // _notebookCoverFileName = widget.notebookEntity!.coverFileName;
     }
   }
 
@@ -71,7 +69,9 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
 
         if (!hasNet) {
           ref.read(notebooksProvider.notifier).createNotebook(
-              name: _nameController.text, coverImg: _notebookCoverImg);
+              name: _nameController.text,
+              coverImg: _notebookCoverImg,
+              category: _dropdownValue);
 
           _nameController.clear();
 
@@ -87,7 +87,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
         var res = await ref.read(notebooksProvider.notifier).createNotebook(
             name: _nameController.text,
             coverImg: _notebookCoverImg,
-            category: dropdownValue);
+            category: _dropdownValue);
 
         EasyLoading.dismiss();
 
@@ -116,7 +116,8 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
         // ? user has selected a new cover image
         if (_notebookCoverImg != null) {
           var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
-              .copyWith(subject: _nameController.text, category: dropdownValue);
+              .copyWith(
+                  subject: _nameController.text, category: _dropdownValue);
 
           EasyLoading.show(
               status: 'Updating Notebook...',
@@ -130,7 +131,9 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
           }
 
           var res = await ref.read(notebooksProvider.notifier).updateNotebook(
-              coverImg: _notebookCoverImg, notebook: notebookModel);
+                coverImg: _notebookCoverImg,
+                notebook: notebookModel,
+              );
 
           if (res is Failure) {
             isSuccess = false;
@@ -140,7 +143,8 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
           isSuccess = res as bool;
         } else {
           var notebookModel = NotebookModel.fromEntity(widget.notebookEntity!)
-              .copyWith(subject: _nameController.text, category: dropdownValue);
+              .copyWith(
+                  subject: _nameController.text, category: _dropdownValue);
 
           if (!hasNet) {
             ref
@@ -244,11 +248,12 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
             const SizedBox(height: 10),
             DropdownMenu<String>(
               hintText: 'Category',
-              initialSelection: widget.notebookEntity?.category ?? 'Uncategorized',
+              initialSelection:
+                  widget.notebookEntity?.category ?? 'Uncategorized',
               onSelected: (String? value) {
                 // This is called when the user selects an item.
                 setState(() {
-                  dropdownValue = value!;
+                  _dropdownValue = value!;
                 });
               },
               dropdownMenuEntries: widget.categories

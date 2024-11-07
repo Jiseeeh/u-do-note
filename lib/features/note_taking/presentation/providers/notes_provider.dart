@@ -152,28 +152,28 @@ UpdateNoteTitle updateNoteTitle(Ref ref) {
 }
 
 @riverpod
-GetCategories getCategories(GetCategoriesRef ref) {
+GetCategories getCategories(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return GetCategories(repository);
 }
 
 @riverpod
-CreateCategory addCategory(AddCategoryRef ref) {
+CreateCategory addCategory(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return CreateCategory(repository);
 }
 
 @riverpod
-DeleteCategory deleteCategory(DeleteCategoryRef ref) {
+DeleteCategory deleteCategory(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return DeleteCategory(repository);
 }
 
 @riverpod
-UpdateCategory updateCategory(UpdateCategoryRef ref) {
+UpdateCategory updateCategory(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return UpdateCategory(repository);

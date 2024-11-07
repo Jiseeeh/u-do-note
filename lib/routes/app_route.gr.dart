@@ -9,253 +9,6 @@
 
 part of 'app_route.dart';
 
-abstract class _$AppRouter extends RootStackRouter {
-  // ignore: unused_element
-  _$AppRouter({super.navigatorKey});
-
-  @override
-  final Map<String, PageFactory> pagesMap = {
-    AboutSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AboutSettingsScreen(),
-      );
-    },
-    AcronymQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<AcronymQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: AcronymQuizScreen(
-          acronymModel: args.acronymModel,
-          key: args.key,
-        ),
-      );
-    },
-    AcronymRoute.name: (routeData) {
-      final args = routeData.argsAs<AcronymRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: AcronymScreen(
-          args.acronymModel,
-          key: args.key,
-        ),
-      );
-    },
-    AnalyticsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AnalyticsScreen(),
-      );
-    },
-    BlurtingQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<BlurtingQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: BlurtingQuizScreen(
-          blurtingModel: args.blurtingModel,
-          key: args.key,
-        ),
-      );
-    },
-    ElaborationQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<ElaborationQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ElaborationQuizScreen(
-          elaborationModel: args.elaborationModel,
-          key: args.key,
-        ),
-      );
-    },
-    ElaborationRoute.name: (routeData) {
-      final args = routeData.argsAs<ElaborationRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ElaborationScreen(
-          args.elaborationModel,
-          key: args.key,
-        ),
-      );
-    },
-    FeynmanQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<FeynmanQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: FeynmanQuizScreen(
-          onQuizFinish: args.onQuizFinish,
-          questions: args.questions,
-          key: args.key,
-        ),
-      );
-    },
-    FeynmanTechniqueRoute.name: (routeData) {
-      final args = routeData.argsAs<FeynmanTechniqueRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: FeynmanTechniqueScreen(
-          args.contentFromPages,
-          args.sessionName,
-          feynmanEntity: args.feynmanEntity,
-          key: args.key,
-        ),
-      );
-    },
-    HomepageRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const HomepageScreen(),
-      );
-    },
-    IntroRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const IntroScreen(),
-      );
-    },
-    LandingRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const LandingScreen(),
-      );
-    },
-    LanguageSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const LanguageSettingsScreen(),
-      );
-    },
-    LeitnerSystemRoute.name: (routeData) {
-      final args = routeData.argsAs<LeitnerSystemRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: LeitnerSystemScreen(
-          args.notebookId,
-          args.leitnerSystemModel,
-          key: args.key,
-        ),
-      );
-    },
-    LoginRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const LoginScreen(),
-      );
-    },
-    NoteTakingRoute.name: (routeData) {
-      final args = routeData.argsAs<NoteTakingRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: NoteTakingScreen(
-          notebookId: args.notebookId,
-          note: args.note,
-          blurtingModel: args.blurtingModel,
-          key: args.key,
-        ),
-      );
-    },
-    NotebookPagesRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<NotebookPagesRouteArgs>(
-          orElse: () => NotebookPagesRouteArgs(
-              notebookId: pathParams.getString('notebookId')));
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: NotebookPagesScreen(
-          args.notebookId,
-          key: args.key,
-        ),
-      );
-    },
-    NotebooksRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const NotebooksScreen(),
-      );
-    },
-    PomodoroQuizRoute.name: (routeData) {
-      final args = routeData.argsAs<PomodoroQuizRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: PomodoroQuizScreen(
-          questions: args.questions,
-          key: args.key,
-        ),
-      );
-    },
-    PomodoroRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const PomodoroScreen(),
-      );
-    },
-    ProfileSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileSettingsScreen(),
-      );
-    },
-    QuizResultsRoute.name: (routeData) {
-      final args = routeData.argsAs<QuizResultsRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: QuizResultsScreen(
-          questions: args.questions,
-          correctAnswersIndex: args.correctAnswersIndex,
-          selectedAnswersIndex: args.selectedAnswersIndex,
-          key: args.key,
-        ),
-      );
-    },
-    ReviewRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ReviewScreen(),
-      );
-    },
-    SettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SettingsScreen(),
-      );
-    },
-    SignUpRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SignUpScreen(),
-      );
-    },
-    SplashRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SplashScreen(),
-      );
-    },
-    StrategyDetailsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const StrategyDetailsScreen(),
-      );
-    },
-    SummaryRoute.name: (routeData) {
-      final args = routeData.argsAs<SummaryRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: SummaryScreen(
-          topic: args.topic,
-          summary: args.summary,
-          key: args.key,
-        ),
-      );
-    },
-    ThemeSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ThemeSettingsScreen(),
-      );
-    },
-  };
-}
-
 /// generated route for
 /// [AboutSettingsScreen]
 class AboutSettingsRoute extends PageRouteInfo<void> {
@@ -267,45 +20,12 @@ class AboutSettingsRoute extends PageRouteInfo<void> {
 
   static const String name = 'AboutSettingsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [AcronymQuizScreen]
-class AcronymQuizRoute extends PageRouteInfo<AcronymQuizRouteArgs> {
-  AcronymQuizRoute({
-    required AcronymModel acronymModel,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          AcronymQuizRoute.name,
-          args: AcronymQuizRouteArgs(
-            acronymModel: acronymModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'AcronymQuizRoute';
-
-  static const PageInfo<AcronymQuizRouteArgs> page =
-      PageInfo<AcronymQuizRouteArgs>(name);
-}
-
-class AcronymQuizRouteArgs {
-  const AcronymQuizRouteArgs({
-    required this.acronymModel,
-    this.key,
-  });
-
-  final AcronymModel acronymModel;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AcronymQuizRouteArgs{acronymModel: $acronymModel, key: $key}';
-  }
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AboutSettingsScreen();
+    },
+  );
 }
 
 /// generated route for
@@ -591,7 +311,12 @@ class LanguageSettingsRoute extends PageRouteInfo<void> {
 
   static const String name = 'LanguageSettingsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LanguageSettingsScreen();
+    },
+  );
 }
 
 /// generated route for
@@ -876,20 +601,6 @@ class Pq4rRouteArgs {
 }
 
 /// generated route for
-/// [PomodoroScreen]
-class PomodoroRoute extends PageRouteInfo<void> {
-  const PomodoroRoute({List<PageRouteInfo>? children})
-      : super(
-          PomodoroRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'PomodoroRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [ProfileSettingsScreen]
 class ProfileSettingsRoute extends PageRouteInfo<void> {
   const ProfileSettingsRoute({List<PageRouteInfo>? children})
@@ -900,7 +611,12 @@ class ProfileSettingsRoute extends PageRouteInfo<void> {
 
   static const String name = 'ProfileSettingsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ProfileSettingsScreen();
+    },
+  );
 }
 
 /// generated route for
@@ -1158,7 +874,12 @@ class StrategyDetailsRoute extends PageRouteInfo<void> {
 
   static const String name = 'StrategyDetailsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const StrategyDetailsScreen();
+    },
+  );
 }
 
 /// generated route for
@@ -1224,5 +945,10 @@ class ThemeSettingsRoute extends PageRouteInfo<void> {
 
   static const String name = 'ThemeSettingsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ThemeSettingsScreen();
+    },
+  );
 }

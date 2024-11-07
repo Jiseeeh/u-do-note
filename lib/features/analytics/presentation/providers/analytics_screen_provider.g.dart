@@ -152,7 +152,7 @@ final getLearningMethodScoresInterpretationProvider =
 // ignore: unused_element
 typedef GetLearningMethodScoresInterpretationRef
     = AutoDisposeProviderRef<GetLearningMethodScoresInterpretation>;
-String _$analyticsScreenHash() => r'd5dd049fd0d3f687c7dafd27956bd57b33791c37';
+String _$analyticsScreenHash() => r'd39756b7d149b1c1873f40250bea179ed40e6655';
 
 /// See also [AnalyticsScreen].
 @ProviderFor(AnalyticsScreen)

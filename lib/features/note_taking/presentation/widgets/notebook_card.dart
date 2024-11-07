@@ -7,6 +7,8 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
@@ -14,175 +16,248 @@ import 'package:u_do_note/features/review_page/presentation/providers/review_scr
 
 class NotebookCard extends ConsumerWidget {
   final NotebookEntity notebook;
+  final ValueChanged<String> update;
+  final List<String> _categories;
 
-  const NotebookCard(this.notebook, {super.key});
+  const NotebookCard(this.notebook, this.update, this._categories, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        Expanded(
-            child: Ink(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: InkWell(
+        onTap: () {
+          ref.read(reviewScreenProvider).setNotebookId(notebook.id);
+
+          context.router.pushNamed('/notebook/pages/${notebook.id}');
+        },
+        onLongPress: () async {
+          // intent to edit or delete
+          // true for edit, false for delete
+          var isEdit = await getIntent(context, 'Notebook');
+          bool hasNet = await InternetConnection().hasInternetAccess;
+
+          // user cancelled
+          if (isEdit == null) return;
+
+          // user wants to delete
+          if (isEdit == false && context.mounted) {
+            var userChoice = await getUserConfirmation(context, 'Notebook');
+
+            if (userChoice == null || userChoice == false) {
+              return;
+            }
+
+            if (!context.mounted) return;
+
+            EasyLoading.show(
+                status: context.tr("delete_notebook_loading"),
+                maskType: EasyLoadingMaskType.black,
+                dismissOnTap: false);
+
+            if (!hasNet) {
+              ref.read(notebooksProvider.notifier).deleteNotebook(
+                  notebookId: notebook.id, coverFileName: notebook.coverUrl);
+
+              return;
+            }
+
+            var res = await ref.read(notebooksProvider.notifier).deleteNotebook(
+                notebookId: notebook.id, coverFileName: notebook.coverUrl);
+
+            EasyLoading.dismiss();
+
+            if (res is Failure) {
+              logger.w(
+                  'Encountered an error while deleting notebook: ${res.message}');
+
+              EasyLoading.showError(res.message);
+              return;
+            }
+
+            EasyLoading.showSuccess(res);
+          }
+
+          if (isEdit && context.mounted) {
+            if (!hasNet) {
+              EasyLoading.showError(
+                  "Connect to the internet to edit your notebook.");
+              return;
+            }
+            await showDialog(
+                context: context,
+                builder: (dialogContext) => AddNotebookDialog(
+                      notebookEntity: notebook,
+                      categories: _categories,
+                    ));
+          }
+
+          // ? to show updated grouped list
+          update('All');
+        },
+        child: Container(
+          width: double.infinity,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            // TODO: check for internet connection
-            image: DecorationImage(
-              image: notebook.coverUrl.isNotEmpty
-                  ? NetworkImage(notebook.coverUrl) as ImageProvider
-                  // TODO: replace with default one
-                  : const AssetImage('assets/images/default.png'),
-              fit: BoxFit.cover,
-            ),
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(8),
           ),
-          child: InkWell(
-            // ? InkWell is for the ripple effect
-            onTap: () {
-              ref.read(reviewScreenProvider).setNotebookId(notebook.id);
-
-              context.router.pushNamed('/notebook/pages/${notebook.id}');
-            },
-          ),
-        )),
-        Padding(
-          padding: const EdgeInsets.only(top: 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          alignment: const AlignmentDirectional(-1, 0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(notebook.subject,
-                        style: Theme.of(context).textTheme.headlineSmall),
-                  ),
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: IconButton(
-                        iconSize: 20,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        onPressed: () async {
-                          // intent to edit or delete
-                          // true for edit, false for delete
-                          var isEdit = await getIntent(context);
-
-                          // user cancelled
-                          if (isEdit == null) return;
-
-                          // user wants to delete
-                          if (isEdit == false && context.mounted) {
-                            var userChoice = await getUserConfirmation(context);
-
-                            if (userChoice == null || userChoice == false) {
-                              return;
-                            }
-
-                            if (!context.mounted) return;
-
-                            EasyLoading.show(
-                                status: context.tr("delete_notebook_loading"),
-                                maskType: EasyLoadingMaskType.black,
-                                dismissOnTap: false);
-
-                            bool hasNet =
-                                await InternetConnection().hasInternetAccess;
-
-                            if (!hasNet) {
-                              ref
-                                  .read(notebooksProvider.notifier)
-                                  .deleteNotebook(
-                                      notebookId: notebook.id,
-                                      coverFileName: notebook.coverFileName);
-
-                              EasyLoading.dismiss();
-                              return;
-                            }
-
-                            var res = await ref
-                                .read(notebooksProvider.notifier)
-                                .deleteNotebook(
-                                    notebookId: notebook.id,
-                                    coverFileName: notebook.coverFileName);
-
-                            EasyLoading.dismiss();
-
-                            if (res is Failure) {
-                              logger.w(
-                                  'Encountered an error while deleting notebook: ${res.message}');
-
-                              EasyLoading.showError(res.message);
-                              return;
-                            }
-
-                            EasyLoading.showSuccess(res);
-                          }
-
-                          // if (isEdit && context.mounted) {
-                          //   showDialog(
-                          //       context: context,
-                          //       builder: (dialogContext) => AddNotebookDialog(
-                          //           notebookEntity: notebook, categories: _categories.cast<String>(),));
-                          // }
-                        },
-                        icon: const Icon(Icons.more_vert)),
-                  )
-                ],
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(0),
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(0),
+                ),
+                child: buildCoverImage(
+                  notebook.coverUrl,
+                ),
               ),
-              Text(
-                  DateFormat("EEE, dd MMM yyyy")
-                      .format(notebook.createdAt.toDate()),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith())
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 16, 12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: const AlignmentDirectional(-1, 0),
+                        child: Text(notebook.subject,
+                            style: Theme.of(context).textTheme.titleSmall),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 4, 0),
+                            child: Text(
+                              'Created On:',
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              DateFormat("EEE, dd MMM yyyy")
+                                  .format(notebook.createdAt.toDate()),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headlineLarge
+                                          ?.color),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    // TODO: pending for deletion (unused)
+                    ref
+                        .read(appStateProvider.notifier)
+                        .setCurrentNotebookId(notebook.id);
+
+                    context.router.pushNamed('/notebook/pages/${notebook.id}');
+                  },
+                ),
+              )
             ],
           ),
         ),
-      ],
+      ),
     );
   }
+}
 
-  Future<dynamic> getUserConfirmation(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (dialogContext) {
-          return AlertDialog(
-            title: const Text('Notebook deletion'),
-            content: Text(context.tr("delete_notebook_confirm")),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(dialogContext, false);
-                  },
-                  child: const Text('No')),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(dialogContext, true);
-                  },
-                  child: const Text('Yes')),
-            ],
-          );
-        });
-  }
+Future<dynamic> getUserConfirmation(
+    BuildContext context, String notebookOrCategory) {
+  var deleteConfirm = (notebookOrCategory == "Notebook")
+      ? context.tr("delete_notebook_confirm")
+      : context.tr("delete_category_confirm");
 
-  Future<dynamic> getIntent(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (dialogContext) {
-          return AlertDialog(
-            title: const Text('Notebook Actions'),
-            content: Text(context.tr("notebook_action")),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(dialogContext, false);
-                  },
-                  child: Text(context.tr("delete_action"))),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(dialogContext, true);
-                  },
-                  child: Text(context.tr("edit_action"))),
-            ],
-          );
-        });
+  return showDialog(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        title: Text('$notebookOrCategory deletion'),
+        content: Text(deleteConfirm),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, false);
+              },
+              child: const Text('No')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext, true);
+            },
+            child: const Text(
+              'Yes',
+              style: TextStyle(color: AppColors.error),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Widget buildCoverImage(String coverFileName) {
+  if (coverFileName != "") {
+    return Image.network(
+      coverFileName,
+      width: 80,
+      height: 100,
+      fit: BoxFit.cover,
+    );
+  } else {
+    return Image.asset(
+      'assets/images/default.png',
+      width: 80,
+      height: 100,
+      fit: BoxFit.cover,
+    );
   }
+}
+
+Future<dynamic> getIntent(BuildContext context, String notebookOrCategory) {
+  var action = (notebookOrCategory == "Notebook")
+      ? context.tr("notebook_action")
+      : context.tr("category_action");
+
+  return showDialog(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        title: Text('$notebookOrCategory Actions'),
+        content: Text(action),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, false);
+              },
+              child: Text(
+                context.tr("delete_action"),
+                style: const TextStyle(color: AppColors.error),
+              )),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, true);
+              },
+              child: Text(context.tr("edit_action"))),
+        ],
+      );
+    },
+  );
 }

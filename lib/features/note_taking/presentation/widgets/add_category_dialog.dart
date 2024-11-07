@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
@@ -8,7 +9,7 @@ import 'package:u_do_note/features/note_taking/presentation/providers/notes_prov
 class AddCategoryDialog extends ConsumerStatefulWidget {
   final String? categoryName;
 
-  const AddCategoryDialog({this.categoryName, Key? key}) : super(key: key);
+  const AddCategoryDialog({this.categoryName, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -40,19 +41,30 @@ class AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
             maskType: EasyLoadingMaskType.black,
             dismissOnTap: false);
 
-        var res = await ref
-            .read(notebooksProvider.notifier)
-            .addCategory(categoryName: _nameController.text);
+        bool hasNet = await InternetConnection().hasInternetAccess;
 
-        EasyLoading.dismiss();
+        if (!hasNet) {
+          ref
+              .read(notebooksProvider.notifier)
+              .addCategory(categoryName: _nameController.text);
 
-        if (res is Failure) {
-          EasyLoading.showToast(
-              'Something went wrong, please try again later.');
+          EasyLoading.dismiss();
           return;
+        } else {
+          var res = await ref
+              .read(notebooksProvider.notifier)
+              .addCategory(categoryName: _nameController.text);
+
+          EasyLoading.dismiss();
+
+          if (res is Failure) {
+            EasyLoading.showToast(
+                'Something went wrong, please try again later.');
+            return;
+          }
+          EasyLoading.showSuccess(res);
         }
 
-        EasyLoading.showSuccess(res);
         _nameController.clear();
 
         if (context.mounted) {
@@ -73,13 +85,24 @@ class AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
             maskType: EasyLoadingMaskType.black,
             dismissOnTap: false);
 
-        var res = await ref.read(notebooksProvider.notifier).updateCategory(
-            oldCategoryName: _categoryName,
-            newCategoryName: _nameController.text);
+        bool hasNet = await InternetConnection().hasInternetAccess;
 
-        if (res is Failure) {
-          isSuccess = false;
-          return;
+        if (!hasNet) {
+          ref.read(notebooksProvider.notifier).updateCategory(
+              oldCategoryName: _categoryName,
+              newCategoryName: _nameController.text);
+
+          if (context.mounted) Navigator.pop(context);
+
+          isSuccess = false; // Set isSuccess to false for failed attempt
+        } else {
+          var res = await ref.read(notebooksProvider.notifier).updateCategory(
+              oldCategoryName: _categoryName,
+              newCategoryName: _nameController.text);
+
+          if (res is Failure) {
+            isSuccess = false;
+          }
         }
       }
 

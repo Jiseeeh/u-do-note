@@ -18,7 +18,7 @@ class _AnalyzeTextImageDialogState
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text(
-        'Please review the scanned text below, if the result is good, click Continue to add it to the note. You can also edit the text before adding it to the note.',
+        'Please review the text below, if everything is good, click Continue to add it to the note. You can also edit the text before adding it to the note.',
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       scrollable: true,

@@ -79,11 +79,6 @@ class NotebookCard extends ConsumerWidget {
           }
 
           if (isEdit && context.mounted) {
-            if (!hasNet) {
-              EasyLoading.showError(
-                  "Connect to the internet to edit your notebook.");
-              return;
-            }
             await showDialog(
                 context: context,
                 builder: (dialogContext) => AddNotebookDialog(

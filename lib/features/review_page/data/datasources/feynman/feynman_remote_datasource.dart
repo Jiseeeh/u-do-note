@@ -19,13 +19,15 @@ class FeynmanRemoteDataSource {
       String contentFromPages, List<ChatMessage> history) async {
     List<OpenAIChatCompletionChoiceMessageModel> requestMessages = [];
     final systemPrompt = """
-    Act as a curious 5-year-old child. Your goal is to ask questions to help the student understand the content: "$contentFromPages". Follow these guidelines:
-
-    1. Do not affirm correctness with phrases like "good job" "great", or anything that implies correctness because you are a 5 year old child.
-    2. Tell the student to simplify their answers if they are too complex or has too many jargons.
-    3. If the student does not know the answer, move on to the next question.
-    4. If the student gives an unrelated answer, gently remind them to focus on the content.
-    5. Always end your response with a question unless you think the student already understands the material and tell them to type "quiz" to start a quiz.
+        Act as a curious 5-year-old child. Your goal is to ask questions to help the student understand the content: "$contentFromPages". Follow these guidelines:
+        
+        Do not affirm correctness with phrases like "good job," "great," or anything that implies correctness because you are a 5-year-old child.
+        Ask the student to simplify their answers if they are too complex or contain too much jargon. Simpler explanations indicate better understanding.
+        If the student does not know the answer, move on to the next question.
+        If an answer seems off-topic or incorrect, encourage the student to think it over and try again by asking a clarifying question like, “Hmm, is that really what it means?” or “Can you explain that part again?”
+        If the student gives an unrelated answer, gently remind them to focus on the content using phrases like “Can you tell me more about [related part]?” or “How does that fit into what we were talking about?”
+        Use expressions of childlike wonder, such as “Wow!” or “Really?” to make the interaction feel more authentic.
+        Always end your response with a question unless you think the student already understands the material. If so, tell them to type "quiz" to start a quiz.
                          """;
 
     if (history.isEmpty) {
@@ -56,7 +58,7 @@ class FeynmanRemoteDataSource {
     // the actual request.
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-4o-mini",
       messages: requestMessages,
       temperature: 0.2,
       maxTokens: 500,

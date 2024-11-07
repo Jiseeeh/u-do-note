@@ -28,7 +28,9 @@ class Onboard extends ConsumerWidget {
           SizedBox(
             height: height / 10,
           ),
-          Text(label, textAlign: TextAlign.center, style: AppTextStyles.h1),
+          Text(label,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge),
           SizedBox(
             height: MediaQuery.of(context).size.width / 1.1,
           ),

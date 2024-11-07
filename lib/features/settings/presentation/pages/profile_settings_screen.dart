@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -153,14 +154,21 @@ class _ProfileSettingsScreen extends ConsumerState<ProfileSettingsScreen> {
                                 backgroundImage: profile!.image,
                               ),
                               onTap: () async {
+                                bool hasNet = await InternetConnection()
+                                    .hasInternetAccess;
+
+                                if (!hasNet) {
+                                  EasyLoading.showError(
+                                      "Please connect to the internet to change your profile.");
+                                  return;
+                                }
+
                                 EasyLoading.show(
                                     status: 'Loading image picker...',
-                                    maskType: EasyLoadingMaskType.black,
-                                    dismissOnTap: false);
+                                    maskType: EasyLoadingMaskType.black);
 
                                 var img = await ImagePicker()
                                     .pickImage(source: ImageSource.gallery);
-
                                 EasyLoading.dismiss();
 
                                 if (img == null) return;

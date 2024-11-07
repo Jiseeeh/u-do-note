@@ -278,7 +278,7 @@ final updateNoteTitleProvider = AutoDisposeProvider<UpdateNoteTitle>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UpdateNoteTitleRef = AutoDisposeProviderRef<UpdateNoteTitle>;
-String _$getCategoriesHash() => r'2ee22af257b52b564184379a7d5de5c1ef9d086e';
+String _$getCategoriesHash() => r'2daf186aac801211b68b3b2b809c0b5da1f4d7fa';
 
 /// See also [getCategories].
 @ProviderFor(getCategories)
@@ -295,7 +295,7 @@ final getCategoriesProvider = AutoDisposeProvider<GetCategories>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetCategoriesRef = AutoDisposeProviderRef<GetCategories>;
-String _$addCategoryHash() => r'18a548685d809af2d3739450d029aa19e6c48a1c';
+String _$addCategoryHash() => r'54815b5a3d093f1bfdff959f7d79f105cc02cea4';
 
 /// See also [addCategory].
 @ProviderFor(addCategory)
@@ -311,7 +311,7 @@ final addCategoryProvider = AutoDisposeProvider<CreateCategory>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AddCategoryRef = AutoDisposeProviderRef<CreateCategory>;
-String _$deleteCategoryHash() => r'8a6ff26a9683b50f717cbdfc19e9c16b66796668';
+String _$deleteCategoryHash() => r'30834186407407b0fa32b3c2f7ae5c1325247fb2';
 
 /// See also [deleteCategory].
 @ProviderFor(deleteCategory)
@@ -328,7 +328,7 @@ final deleteCategoryProvider = AutoDisposeProvider<DeleteCategory>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteCategoryRef = AutoDisposeProviderRef<DeleteCategory>;
-String _$updateCategoryHash() => r'007b072ea94534c7c9f3bab8dda0325a48a86b55';
+String _$updateCategoryHash() => r'874f7452bd4420027bf42861786af62e34f99a76';
 
 /// See also [updateCategory].
 @ProviderFor(updateCategory)

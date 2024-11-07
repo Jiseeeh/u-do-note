@@ -258,7 +258,8 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(AuthenticationException(message: e.message!, code: e.code));
     }
   }
-  
+
+  @override
   Future<Either<Failure, String>> formatScannedText(String scannedText) async {
     try {
       var formattedText =
@@ -269,3 +270,4 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+}

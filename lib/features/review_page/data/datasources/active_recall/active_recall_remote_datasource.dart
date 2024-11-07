@@ -105,7 +105,7 @@ class ActiveRecallRemoteDataSource {
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
           The student is studying using the Active Recall method, your task is to analyze the student's recalled information from the given topic
-          and provide a feedback and the number of days when will be his/her next quiz on this topic in json.
+          and provide a feedback using second-person language and the number of days when will be his/her next quiz on this topic in json.
           The JSON consists of properties "feedback", and "days". 
           """,
         ),

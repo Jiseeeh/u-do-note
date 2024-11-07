@@ -8,8 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:u_do_note/core/shared/presentation/widgets/custom_error.dart';
 
+import 'package:u_do_note/core/shared/presentation/widgets/custom_error.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/analytics/data/models/chart_data.dart';
 import 'package:u_do_note/features/analytics/data/models/remark.dart';
@@ -80,18 +80,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         coverFileName: "",
         createdAt: Timestamp.now(),
         techniquesUsage: {
-          "Method 1": 9,
-          "Method 2": 21,
-          "Method 3": 32,
-          "Method 4": 2,
-          "Method 5": 10,
-          "Method 6": 49,
-          "Method 7": 4,
-          "Method 8": 9,
-          "Method 9": 19,
-          "Method 10": 50,
+          "Method 1": 0,
+          "Method 2": 0,
+          "Method 3": 0,
+          "Method 4": 0,
+          "Method 5": 0,
+          "Method 6": 0,
+          "Method 7": 0,
+          "Method 8": 0,
+          "Method 9": 0,
+          "Method 10": 0,
         },
-        notes: [])
+        notes: [],
+        category: 'Uncategorized')
   ];
   late TooltipBehavior _usageTooltip;
   late TooltipBehavior _scoresTooltip;

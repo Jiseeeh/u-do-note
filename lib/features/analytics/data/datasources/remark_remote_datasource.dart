@@ -88,7 +88,7 @@ class RemarkRemoteDataSource {
           """
           You are an analyst. You will be given data representing a column chart, where review methods are on the x-axis and their usage frequency on the y-axis. Your task is to interpret the chart in a concise summary of 3-4 sentences. Highlight the most and least frequently used methods, as well as any notable patterns in the data.
           
-          Note that this learning method usage are tied to a single user not the overall usage of all users. 
+          Note that this learning method usage are tied to a single user not the overall usage of all users so use second-person language alongside the interpretation.
           """,
         ),
       ],
@@ -133,7 +133,7 @@ class RemarkRemoteDataSource {
           """
           You are an analyst. You will be given data representing a line chart, where dates are on the x-axis and their corresponding score is on the y-axis. Your task is to interpret the chart in a concise summary of 3-4 sentences.  
           
-          Note that this learning method usage are tied to a single user not the overall usage of all users so use second-person language alongside the interpretation. 
+          Note that this learning method scores are tied to a single user not the overall usage of all users so use second-person language alongside the interpretation. 
           """,
         ),
       ],

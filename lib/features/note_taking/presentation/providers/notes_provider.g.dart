@@ -292,6 +292,8 @@ final getCategoriesProvider = AutoDisposeProvider<GetCategories>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetCategoriesRef = AutoDisposeProviderRef<GetCategories>;
 String _$addCategoryHash() => r'18a548685d809af2d3739450d029aa19e6c48a1c';
 
@@ -306,6 +308,8 @@ final addCategoryProvider = AutoDisposeProvider<CreateCategory>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AddCategoryRef = AutoDisposeProviderRef<CreateCategory>;
 String _$deleteCategoryHash() => r'8a6ff26a9683b50f717cbdfc19e9c16b66796668';
 
@@ -321,6 +325,8 @@ final deleteCategoryProvider = AutoDisposeProvider<DeleteCategory>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DeleteCategoryRef = AutoDisposeProviderRef<DeleteCategory>;
 String _$updateCategoryHash() => r'007b072ea94534c7c9f3bab8dda0325a48a86b55';
 
@@ -331,8 +337,14 @@ final updateCategoryProvider = AutoDisposeProvider<UpdateCategory>.internal(
   name: r'updateCategoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$updateCategoryHash);
+      : _$updateCategoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UpdateCategoryRef = AutoDisposeProviderRef<UpdateCategory>;
 String _$formatScannedTextHash() => r'b549880decbb17df4107e14b6def1af906678870';
 
 /// See also [formatScannedText].
@@ -347,9 +359,6 @@ final formatScannedTextProvider =
   dependencies: null,
   allTransitiveDependencies: null,
 );
-
-typedef UpdateCategoryRef = AutoDisposeProviderRef<UpdateCategory>;
-String _$notebooksStreamHash() => r'8a56340033c814a39b83775c3f2a379016856f13';
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -372,7 +381,7 @@ final notebooksStreamProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'eae20ed6342785fbf37a9d24e6ea43ea260be6af';
+String _$notebooksHash() => r'a1c32e4b393f54f959bff9a3c0bd3ad2aeeee7d3';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

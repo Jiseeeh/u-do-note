@@ -200,7 +200,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                       content: TextField(
                         controller: tfController,
                         readOnly: true,
-                        maxLines: 8,
+                        maxLines: 10,
                       ),
                       buttons: [
                         CustomDialogButton(text: "No", value: false),
@@ -495,20 +495,19 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                     maskType: EasyLoadingMaskType.black,
                     dismissOnTap: false);
 
-                  bool hasNet = await InternetConnection().hasInternetAccess;
+                bool hasNet = await InternetConnection().hasInternetAccess;
 
-                  if (!hasNet) {
-                    ref.read(notebooksProvider.notifier).deleteNote(
-                        notebookId: widget.notebookId, noteId: note.id);
+                if (!hasNet) {
+                  ref.read(notebooksProvider.notifier).deleteNote(
+                      notebookId: widget.notebookId, noteId: note.id);
 
-                    EasyLoading.dismiss();
-                    return;
-                  }
+                  EasyLoading.dismiss();
+                  return;
+                }
 
-                  var res = await ref
-                      .read(notebooksProvider.notifier)
-                      .deleteNote(
-                          notebookId: widget.notebookId, noteId: note.id);
+                var res = await ref
+                    .read(notebooksProvider.notifier)
+                    .deleteNote(notebookId: widget.notebookId, noteId: note.id);
 
                 EasyLoading.dismiss();
 

@@ -101,47 +101,37 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
       _isLoading = true;
     });
 
-    _onGoingLeitnerReviews = await ref
-        .read(landingPageProvider.notifier)
-        .getOnGoingReviews(
-            methodName: LeitnerSystemModel.name,
-            fromFirestore: LeitnerSystemModel.fromFirestore);
+    var results = await Future.wait([
+      ref.read(landingPageProvider.notifier).getOnGoingReviews(
+          methodName: LeitnerSystemModel.name,
+          fromFirestore: LeitnerSystemModel.fromFirestore),
+      ref.read(landingPageProvider.notifier).getOnGoingReviews(
+          methodName: FeynmanModel.name,
+          fromFirestore: FeynmanModel.fromFirestore),
+      ref.read(landingPageProvider.notifier).getOnGoingReviews(
+          methodName: ElaborationModel.name,
+          fromFirestore: ElaborationModel.fromFirestore),
+      ref.read(landingPageProvider.notifier).getOnGoingReviews(
+          methodName: AcronymModel.name,
+          fromFirestore: AcronymModel.fromFirestore),
+      ref.read(landingPageProvider.notifier).getOnGoingReviews(
+          methodName: BlurtingModel.name,
+          fromFirestore: BlurtingModel.fromFirestore),
+      ref.read(landingPageProvider.notifier).getOnGoingReviews(
+          methodName: SpacedRepetitionModel.name,
+          fromFirestore: SpacedRepetitionModel.fromFirestore),
+      ref.read(landingPageProvider.notifier).getOnGoingReviews(
+          methodName: ActiveRecallModel.name,
+          fromFirestore: ActiveRecallModel.fromFirestore),
+    ]);
 
-    _onGoingFeynmanReviews = await ref
-        .read(landingPageProvider.notifier)
-        .getOnGoingReviews(
-            methodName: FeynmanModel.name,
-            fromFirestore: FeynmanModel.fromFirestore);
-
-    _onGoingElaborationReviews = await ref
-        .read(landingPageProvider.notifier)
-        .getOnGoingReviews(
-            methodName: ElaborationModel.name,
-            fromFirestore: ElaborationModel.fromFirestore);
-
-    _onGoingAcronymReviews = await ref
-        .read(landingPageProvider.notifier)
-        .getOnGoingReviews(
-            methodName: AcronymModel.name,
-            fromFirestore: AcronymModel.fromFirestore);
-
-    _onGoingBlurtingReviews = await ref
-        .read(landingPageProvider.notifier)
-        .getOnGoingReviews(
-            methodName: BlurtingModel.name,
-            fromFirestore: BlurtingModel.fromFirestore);
-
-    _onGoingSpacedRepetitionReviews = await ref
-        .read(landingPageProvider.notifier)
-        .getOnGoingReviews(
-            methodName: SpacedRepetitionModel.name,
-            fromFirestore: SpacedRepetitionModel.fromFirestore);
-
-    _onGoingActiveRecallReviews = await ref
-        .read(landingPageProvider.notifier)
-        .getOnGoingReviews(
-            methodName: ActiveRecallModel.name,
-            fromFirestore: ActiveRecallModel.fromFirestore);
+    _onGoingLeitnerReviews = results[0] as List<LeitnerSystemModel>;
+    _onGoingFeynmanReviews = results[1] as List<FeynmanModel>;
+    _onGoingElaborationReviews = results[2] as List<ElaborationModel>;
+    _onGoingAcronymReviews = results[3] as List<AcronymModel>;
+    _onGoingBlurtingReviews = results[4] as List<BlurtingModel>;
+    _onGoingSpacedRepetitionReviews = results[5] as List<SpacedRepetitionModel>;
+    _onGoingActiveRecallReviews = results[6] as List<ActiveRecallModel>;
 
     setState(() {
       _onGoingReviews = _buildOnGoingReviews(context);
@@ -180,267 +170,190 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
     List<Widget> widgets = [];
     List<VoidCallback?> onPressedCallbacks = [];
 
-    for (var i = 0; i < _onGoingLeitnerReviews.length; i++) {
-      leitnerOnPressed() async {
-        var willReview = await _willReviewOld(_onGoingLeitnerReviews[i].title);
+    List<Widget> buildReviewWidgets(
+        List<dynamic> reviews, String coverImagePath, String methodName) {
+      List<Widget> reviewWidgets = [];
 
-        if (!willReview || !context.mounted) return;
+      String title = "";
+      for (var i = 0; i < reviews.length; i++) {
+        onPressed() async {
+          switch (methodName) {
+            case LeitnerSystemModel.name:
+              title = reviews[i].title;
+            default:
+              title = reviews[i].sessionName;
+          }
 
-        context.router.push(LeitnerSystemRoute(
-            notebookId: _onGoingLeitnerReviews[i].userNotebookId!,
-            leitnerSystemModel: _onGoingLeitnerReviews[i]));
-      }
+          var willReview = await _willReviewOld(title);
+          if (!willReview || !context.mounted) return;
 
-      onPressedCallbacks.add(leitnerOnPressed);
+          switch (methodName) {
+            case LeitnerSystemModel.name:
+              context.router.push(LeitnerSystemRoute(
+                notebookId: reviews[i].userNotebookId!,
+                leitnerSystemModel: reviews[i],
+              ));
+              break;
+            case FeynmanModel.name:
+              context.router.push(FeynmanTechniqueRoute(
+                  contentFromPages:
+                      _onGoingFeynmanReviews[i].contentFromPagesUsed,
+                  sessionName: _onGoingFeynmanReviews[i].sessionName,
+                  feynmanEntity: _onGoingFeynmanReviews[i].toEntity()));
+              break;
+            case ElaborationModel.name:
+              context.router.push(ElaborationRoute(
+                  elaborationModel: _onGoingElaborationReviews[i]));
+              break;
+            case AcronymModel.name:
+              context.router
+                  .push(AcronymRoute(acronymModel: _onGoingAcronymReviews[i]));
+              break;
+            case BlurtingModel.name:
+              EasyLoading.show(
+                  status: 'Please wait...',
+                  maskType: EasyLoadingMaskType.black,
+                  dismissOnTap: false);
 
-      widgets.add(OnGoingReview(
-        notebookName: _onGoingLeitnerReviews[i].title,
-        learningMethod: LeitnerSystemModel.name,
-        imagePath: LeitnerSystemModel.coverImagePath,
-        dateStarted: DateFormat.yMd()
-            .format(_onGoingLeitnerReviews[i].createdAt.toDate()),
-        onPressed: leitnerOnPressed,
-      ));
-    }
+              var res = await ref.read(notebooksProvider.notifier).getNote(
+                  notebookId: _onGoingBlurtingReviews[i].notebookId,
+                  noteId: _onGoingBlurtingReviews[i].noteId);
 
-    for (var i = 0; i < _onGoingFeynmanReviews.length; i++) {
-      feynmanOnPressed() async {
-        var willReview =
-            await _willReviewOld(_onGoingFeynmanReviews[i].sessionName);
+              if (!context.mounted) return;
 
-        if (!willReview || !context.mounted) return;
+              EasyLoading.dismiss();
 
-        context.router.push(FeynmanTechniqueRoute(
-            contentFromPages: _onGoingFeynmanReviews[i].contentFromPagesUsed,
-            sessionName: _onGoingFeynmanReviews[i].sessionName,
-            feynmanEntity: _onGoingFeynmanReviews[i].toEntity()));
-      }
+              if (res is Failure) {
+                logger.d("error: ${res.message}");
+                EasyLoading.showError(context.tr("general_e"));
+                return;
+              }
 
-      onPressedCallbacks.add(feynmanOnPressed);
+              res = res as NoteModel;
 
-      widgets.add(OnGoingReview(
-        notebookName: _onGoingFeynmanReviews[i].sessionName,
-        learningMethod: FeynmanModel.name,
-        imagePath: FeynmanModel.coverImagePath,
-        dateStarted: DateFormat.yMd()
-            .format(_onGoingFeynmanReviews[i].createdAt.toDate()),
-        onPressed: feynmanOnPressed,
-      ));
-    }
+              ref.read(reviewScreenProvider).setIsFromOldBlurtingSession(true);
+              ref
+                  .read(reviewScreenProvider)
+                  .setNotebookId(_onGoingBlurtingReviews[i].notebookId);
 
-    for (var i = 0; i < _onGoingElaborationReviews.length; i++) {
-      elaborationOnPressed() async {
-        var willReview =
-            await _willReviewOld(_onGoingElaborationReviews[i].sessionName);
+              context.router.push(NoteTakingRoute(
+                  notebookId: _onGoingBlurtingReviews[i].notebookId,
+                  note: res.toEntity(),
+                  blurtingModel: _onGoingBlurtingReviews[i]));
+              break;
+            case SpacedRepetitionModel.name:
+              try {
+                ref
+                    .read(reviewScreenProvider)
+                    .setIsFromOldSpacedRepetition(true);
+                ref.read(reviewScreenProvider).setNotebookId(
+                    _onGoingSpacedRepetitionReviews[i].notebookId);
 
-        if (!willReview || !context.mounted) return;
+                if (_onGoingSpacedRepetitionReviews[i].questions!.isEmpty ||
+                    _onGoingSpacedRepetitionReviews[i].questions == null) {
+                  EasyLoading.show(
+                      status: 'Please wait...',
+                      maskType: EasyLoadingMaskType.black,
+                      dismissOnTap: false);
 
-        context.router.push(
-            ElaborationRoute(elaborationModel: _onGoingElaborationReviews[i]));
-      }
+                  var resOrQuestions = await ref
+                      .read(sharedProvider.notifier)
+                      .generateQuizQuestions(
+                          content: _onGoingSpacedRepetitionReviews[i].content);
 
-      onPressedCallbacks.add(elaborationOnPressed);
+                  if (resOrQuestions is Failure) {
+                    throw "Cannot create your quiz, please try again later.";
+                  }
 
-      widgets.add(OnGoingReview(
-        notebookName: _onGoingElaborationReviews[i].sessionName,
-        learningMethod: ElaborationModel.name,
-        imagePath: ElaborationModel.coverImagePath,
-        dateStarted: DateFormat.yMd()
-            .format(_onGoingElaborationReviews[i].createdAt.toDate()),
-        onPressed: elaborationOnPressed,
-      ));
-    }
+                  var updatedModel = _onGoingSpacedRepetitionReviews[i]
+                      .copyWith(questions: resOrQuestions);
 
-    for (var i = 0; i < _onGoingAcronymReviews.length; i++) {
-      acronymOnPressed() async {
-        var willReview =
-            await _willReviewOld(_onGoingAcronymReviews[i].sessionName);
+                  if (context.mounted) {
+                    context.router.push(QuizRoute(
+                        questions: updatedModel.questions!,
+                        model: updatedModel,
+                        reviewMethod: ReviewMethods.spacedRepetition));
+                  }
+                } else {
+                  if (context.mounted) {
+                    context.router.push(QuizRoute(
+                        questions:
+                            _onGoingSpacedRepetitionReviews[i].questions!,
+                        model: _onGoingSpacedRepetitionReviews[i],
+                        reviewMethod: ReviewMethods.spacedRepetition));
+                  }
+                }
+              } catch (e) {
+                EasyLoading.showError(
+                    "Something went wrong when starting the quiz.");
+                logger.w(e);
+              } finally {
+                EasyLoading.dismiss();
+              }
+              break;
+            case ActiveRecallModel.name:
+              var activeRecallModel = _onGoingActiveRecallReviews[i];
 
-        if (!willReview || !context.mounted) return;
+              ref.read(reviewScreenProvider).setIsFromOldActiveRecall(true);
 
-        context.router
-            .push(AcronymRoute(acronymModel: _onGoingAcronymReviews[i]));
-      }
-
-      onPressedCallbacks.add(acronymOnPressed);
-
-      widgets.add(OnGoingReview(
-        notebookName: _onGoingAcronymReviews[i].sessionName,
-        learningMethod: AcronymModel.name,
-        imagePath: AcronymModel.coverImagePath,
-        dateStarted: DateFormat.yMd()
-            .format(_onGoingAcronymReviews[i].createdAt.toDate()),
-        onPressed: acronymOnPressed,
-      ));
-    }
-
-    for (var i = 0; i < _onGoingBlurtingReviews.length; i++) {
-      blurtingOnPressed() async {
-        var willReview =
-            await _willReviewOld(_onGoingBlurtingReviews[i].sessionName);
-
-        if (!willReview || !context.mounted) return;
-
-        EasyLoading.show(
-            status: 'Please wait...',
-            maskType: EasyLoadingMaskType.black,
-            dismissOnTap: false);
-
-        var res = await ref.read(notebooksProvider.notifier).getNote(
-            notebookId: _onGoingBlurtingReviews[i].notebookId,
-            noteId: _onGoingBlurtingReviews[i].noteId);
-
-        if (!context.mounted) return;
-
-        EasyLoading.dismiss();
-
-        if (res is Failure) {
-          logger.d("error: ${res.message}");
-          EasyLoading.showError(context.tr("general_e"));
-          return;
-        }
-
-        res = res as NoteModel;
-
-        ref.read(reviewScreenProvider).setIsFromOldBlurtingSession(true);
-        ref
-            .read(reviewScreenProvider)
-            .setNotebookId(_onGoingBlurtingReviews[i].notebookId);
-
-        context.router.push(NoteTakingRoute(
-            notebookId: _onGoingBlurtingReviews[i].notebookId,
-            note: res.toEntity(),
-            blurtingModel: _onGoingBlurtingReviews[i]));
-      }
-
-      onPressedCallbacks.add(blurtingOnPressed);
-
-      widgets.add(OnGoingReview(
-        notebookName: _onGoingBlurtingReviews[i].sessionName,
-        learningMethod: BlurtingModel.name,
-        imagePath: BlurtingModel.coverImagePath,
-        dateStarted: DateFormat.yMd()
-            .format(_onGoingBlurtingReviews[i].createdAt.toDate()),
-        onPressed: blurtingOnPressed,
-      ));
-    }
-
-    for (var i = 0; i < _onGoingSpacedRepetitionReviews.length; i++) {
-      spacedRepetitionOnPressed() async {
-        var willReview = await _willReviewOld(
-            _onGoingSpacedRepetitionReviews[i].sessionName);
-
-        if (!willReview || !context.mounted) return;
-
-        try {
-          ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
-          ref
-              .read(reviewScreenProvider)
-              .setNotebookId(_onGoingSpacedRepetitionReviews[i].notebookId);
-
-          if (_onGoingSpacedRepetitionReviews[i].questions!.isEmpty ||
-              _onGoingSpacedRepetitionReviews[i].questions == null) {
-            EasyLoading.show(
+              EasyLoading.show(
                 status: 'Please wait...',
                 maskType: EasyLoadingMaskType.black,
-                dismissOnTap: false);
+                dismissOnTap: false,
+              );
 
-            var resOrQuestions = await ref
-                .read(sharedProvider.notifier)
-                .generateQuizQuestions(
-                    content: _onGoingSpacedRepetitionReviews[i].content);
+              if (activeRecallModel.questions == null ||
+                  activeRecallModel.questions!.isEmpty) {
+                var resOrQuestions = await ref
+                    .read(sharedProvider.notifier)
+                    .generateQuizQuestions(content: activeRecallModel.content);
 
-            if (resOrQuestions is Failure) {
-              throw "Cannot create your quiz, please try again later.";
-            }
+                if (resOrQuestions is Failure) {
+                  throw "Cannot create your quiz, please try again later.";
+                }
 
-            var updatedModel = _onGoingSpacedRepetitionReviews[i]
-                .copyWith(questions: resOrQuestions);
+                activeRecallModel =
+                    activeRecallModel.copyWith(questions: resOrQuestions);
+              }
 
-            if (context.mounted) {
-              context.router.push(QuizRoute(
-                  questions: updatedModel.questions!,
-                  model: updatedModel,
-                  reviewMethod: ReviewMethods.spacedRepetition));
-            }
-          } else {
-            if (context.mounted) {
-              context.router.push(QuizRoute(
-                  questions: _onGoingSpacedRepetitionReviews[i].questions!,
-                  model: _onGoingSpacedRepetitionReviews[i],
-                  reviewMethod: ReviewMethods.spacedRepetition));
-            }
+              EasyLoading.dismiss();
+
+              if (context.mounted) {
+                context.router.push(
+                    ActiveRecallRoute(activeRecallModel: activeRecallModel));
+              }
+              break;
           }
-        } catch (e) {
-          EasyLoading.showError("Something went wrong when starting the quiz.");
-          logger.w(e);
-        } finally {
-          EasyLoading.dismiss();
         }
+
+        reviewWidgets.add(OnGoingReview(
+          notebookName: title,
+          learningMethod: methodName,
+          imagePath: coverImagePath,
+          dateStarted: DateFormat.yMd().format(reviews[i].createdAt.toDate()),
+          onPressed: onPressed,
+        ));
+
+        onPressedCallbacks.add(onPressed);
       }
 
-      onPressedCallbacks.add(spacedRepetitionOnPressed);
-
-      widgets.add(OnGoingReview(
-        notebookName: _onGoingSpacedRepetitionReviews[i].sessionName,
-        learningMethod: SpacedRepetitionModel.name,
-        imagePath: SpacedRepetitionModel.coverImagePath,
-        dateStarted: DateFormat.yMd()
-            .format(_onGoingSpacedRepetitionReviews[i].createdAt.toDate()),
-        onPressed: spacedRepetitionOnPressed,
-      ));
+      return reviewWidgets;
     }
 
-    for (var i = 0; i < _onGoingActiveRecallReviews.length; i++) {
-      activeRecallOnPressed() async {
-        var willReview =
-            await _willReviewOld(_onGoingActiveRecallReviews[i].sessionName);
-
-        if (!willReview || !context.mounted) return;
-
-        var activeRecallModel = _onGoingActiveRecallReviews[i];
-
-        ref.read(reviewScreenProvider).setIsFromOldActiveRecall(true);
-
-        EasyLoading.show(
-          status: 'Please wait...',
-          maskType: EasyLoadingMaskType.black,
-          dismissOnTap: false,
-        );
-
-        if (activeRecallModel.questions == null ||
-            activeRecallModel.questions!.isEmpty) {
-          var resOrQuestions = await ref
-              .read(sharedProvider.notifier)
-              .generateQuizQuestions(content: activeRecallModel.content);
-
-          if (resOrQuestions is Failure) {
-            throw "Cannot create your quiz, please try again later.";
-          }
-
-          activeRecallModel =
-              activeRecallModel.copyWith(questions: resOrQuestions);
-        }
-
-        EasyLoading.dismiss();
-
-        if (context.mounted) {
-          context.router
-              .push(ActiveRecallRoute(activeRecallModel: activeRecallModel));
-        }
-      }
-
-      onPressedCallbacks.add(activeRecallOnPressed);
-
-      widgets.add(OnGoingReview(
-        notebookName: _onGoingActiveRecallReviews[i].sessionName,
-        learningMethod: ActiveRecallModel.name,
-        imagePath: ActiveRecallModel.coverImagePath,
-        dateStarted: DateFormat.yMd()
-            .format(_onGoingActiveRecallReviews[i].createdAt.toDate()),
-        onPressed: activeRecallOnPressed,
-      ));
-    }
+    widgets.addAll(buildReviewWidgets(_onGoingLeitnerReviews,
+        LeitnerSystemModel.coverImagePath, LeitnerSystemModel.name));
+    widgets.addAll(buildReviewWidgets(_onGoingFeynmanReviews,
+        FeynmanModel.coverImagePath, FeynmanModel.name));
+    widgets.addAll(buildReviewWidgets(_onGoingElaborationReviews,
+        ElaborationModel.coverImagePath, ElaborationModel.name));
+    widgets.addAll(buildReviewWidgets(_onGoingAcronymReviews,
+        AcronymModel.coverImagePath, AcronymModel.name));
+    widgets.addAll(buildReviewWidgets(_onGoingBlurtingReviews,
+        BlurtingModel.coverImagePath, BlurtingModel.name));
+    widgets.addAll(buildReviewWidgets(_onGoingSpacedRepetitionReviews,
+        SpacedRepetitionModel.coverImagePath, SpacedRepetitionModel.name));
+    widgets.addAll(buildReviewWidgets(_onGoingActiveRecallReviews,
+        ActiveRecallModel.coverImagePath, ActiveRecallModel.name));
 
     if (widgets.isNotEmpty) {
       setState(() {

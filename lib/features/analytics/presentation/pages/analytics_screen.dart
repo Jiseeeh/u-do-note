@@ -126,13 +126,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   }
 
   void initGridStats() async {
-    _flashcardsToReview = await ref
-        .read(analyticsScreenProvider.notifier)
-        .getFlashcardsToReview();
-    _quizzesToTake =
-        await ref.read(analyticsScreenProvider.notifier).getQuizzesToTake();
+    var results = await Future.wait([
+      ref.read(analyticsScreenProvider.notifier).getFlashcardsToReview(),
+      ref.read(analyticsScreenProvider.notifier).getQuizzesToTake(),
+      ref.read(analyticsScreenProvider.notifier).getRemarks()
+    ]);
 
-    _remarks = await ref.read(analyticsScreenProvider.notifier).getRemarks();
+    _flashcardsToReview = results[0];
+    _quizzesToTake = results[1];
+    _remarks = results[2];
 
     setState(() {
       _hasNoRemarks = _remarks.isEmpty;

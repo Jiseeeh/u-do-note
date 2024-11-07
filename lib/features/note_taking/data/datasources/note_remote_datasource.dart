@@ -736,3 +736,4 @@ class NoteRemoteDataSource {
 
     return completionContent!;
   }
+}

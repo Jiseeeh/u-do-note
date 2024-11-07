@@ -711,8 +711,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
           }
 
           if (context.mounted) {
-            context.router.replace(NotebookPagesRoute(
-                notebookId: ref.read(reviewScreenProvider).getNotebookId));
+            context.router.back();
           }
         }
       },
@@ -831,7 +830,55 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                                 return;
                               }
 
-                              _textFieldController.text = text;
+                              String extractedText = text;
+                              var tempController =
+                                  TextEditingController(text: text);
+
+                              var willFormat = await CustomDialog.show(context,
+                                  title: "Preview",
+                                  subTitle:
+                                      "Do you want us to format this extracted text?",
+                                  content: TextField(
+                                    controller: tempController,
+                                    readOnly: true,
+                                    maxLines: 10,
+                                  ),
+                                  buttons: [
+                                    CustomDialogButton(
+                                        text: "No", value: false),
+                                    CustomDialogButton(
+                                        text: "Yes", value: true),
+                                  ]);
+
+                              if (!context.mounted) return;
+
+                              if (willFormat) {
+                                EasyLoading.show(
+                                    status: 'Formatting text...',
+                                    maskType: EasyLoadingMaskType.black,
+                                    dismissOnTap: false);
+
+                                var failureOrFormattedText = await ref
+                                    .read(notebooksProvider.notifier)
+                                    .formatScannedText(
+                                        scannedText: extractedText);
+
+                                EasyLoading.dismiss();
+
+                                if (failureOrFormattedText is Failure) {
+                                  logger.e(
+                                      "Could not format extracted text: ${failureOrFormattedText.message}");
+                                  EasyLoading.showError(
+                                      "Could not format extracted text..",
+                                      duration: const Duration(seconds: 2));
+                                } else {
+                                  extractedText = failureOrFormattedText;
+                                }
+                              }
+
+                              _textFieldController.text = extractedText;
+
+                              if (!context.mounted) return;
 
                               var willContinue = await showDialog(
                                   barrierDismissible: false,
@@ -844,7 +891,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                               if (willContinue) {
                                 _fleatherController!.document.insert(
                                     _fleatherController!.document.length - 1,
-                                    text);
+                                    extractedText);
 
                                 // ?refresh ui
                                 setState(() {});
@@ -870,21 +917,68 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                                 return;
                               }
 
-                              _textFieldController.text = text;
+                              String extractedText = text;
+                              var tempController =
+                                  TextEditingController(text: text);
+
+                              var willFormat = await CustomDialog.show(context,
+                                  title: "Preview",
+                                  subTitle:
+                                      "Do you want us to format this extracted text?",
+                                  content: TextField(
+                                    controller: tempController,
+                                    readOnly: true,
+                                    maxLines: 10,
+                                  ),
+                                  buttons: [
+                                    CustomDialogButton(
+                                        text: "No", value: false),
+                                    CustomDialogButton(
+                                        text: "Yes", value: true),
+                                  ]);
+
+                              if (!context.mounted) return;
+
+                              if (willFormat) {
+                                EasyLoading.show(
+                                    status: 'Formatting text...',
+                                    maskType: EasyLoadingMaskType.black,
+                                    dismissOnTap: false);
+
+                                var failureOrFormattedText = await ref
+                                    .read(notebooksProvider.notifier)
+                                    .formatScannedText(
+                                        scannedText: extractedText);
+
+                                EasyLoading.dismiss();
+
+                                if (failureOrFormattedText is Failure) {
+                                  logger.e(
+                                      "Could not format extracted text: ${failureOrFormattedText.message}");
+                                  EasyLoading.showError(
+                                      "Could not format extracted text..",
+                                      duration: const Duration(seconds: 2));
+                                } else {
+                                  extractedText = failureOrFormattedText;
+                                }
+                              }
+
+                              _textFieldController.text = extractedText;
+
+                              if (!context.mounted) return;
 
                               var willContinue = await showDialog(
                                   barrierDismissible: false,
                                   context: context,
                                   builder: (dialogContext) =>
                                       AnalyzeTextImageDialog(
-                                        textFieldController:
-                                            _textFieldController,
-                                      ));
+                                          textFieldController:
+                                              _textFieldController));
 
                               if (willContinue) {
                                 _fleatherController!.document.insert(
                                     _fleatherController!.document.length - 1,
-                                    text);
+                                    extractedText);
 
                                 // ?refresh ui
                                 setState(() {});

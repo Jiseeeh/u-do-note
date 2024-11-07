@@ -427,7 +427,7 @@ class Notebooks extends _$Notebooks {
 
     return failureOrString.fold((failure) => failure, (res) => res);
   }
-  
+
   Future<dynamic> formatScannedText({required String scannedText}) async {
     final formatScannedText = ref.read(formatScannedTextProvider);
 
@@ -436,3 +436,4 @@ class Notebooks extends _$Notebooks {
     return failureOrScannedText.fold(
         (failure) => failure, (formattedText) => formattedText);
   }
+}

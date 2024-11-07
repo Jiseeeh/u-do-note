@@ -1,3 +1,41 @@
+# [3.2.0](https://github.com/Jiseeeh/u-do-note/compare/v3.1.0...v3.2.0) (2024-11-07)
+
+
+### Bug Fixes
+
+* add missing prop for fake notebook ([0975ab8](https://github.com/Jiseeeh/u-do-note/commit/0975ab8b1548231b929f43f512cc7bc9e8128255))
+* allow delete on offline ([62046b4](https://github.com/Jiseeeh/u-do-note/commit/62046b497abdadf3cd46c8dc4abade80dbbfc129))
+* allow edit on offline ([b6126e5](https://github.com/Jiseeeh/u-do-note/commit/b6126e53dc9f2f8fecedd88bd7e8dfaeca5c5f0b))
+* fix title being too large ([7c6ffaf](https://github.com/Jiseeeh/u-do-note/commit/7c6ffaf2f311d17f6a25347ccb32cf217439079f))
+* intro screen text too big ([12758b3](https://github.com/Jiseeeh/u-do-note/commit/12758b32a5f06f9668a973012167223b7e955fd7))
+* prompts saying "the user" ([6e3f7fc](https://github.com/Jiseeeh/u-do-note/commit/6e3f7fc9291db29cbbfddf4e31e904e6cc1b74a7))
+* rephrase on analyze text ([a35eb45](https://github.com/Jiseeeh/u-do-note/commit/a35eb4504b3c7afb07562d8cd61531a20e829c66))
+* replace deprecated params ([1744a26](https://github.com/Jiseeeh/u-do-note/commit/1744a267fbd310cd1ae6c0d6e24aa19fde902e37))
+* response pertaining to 'the user' ([17b34d6](https://github.com/Jiseeeh/u-do-note/commit/17b34d6ecbc5ba7688607416b0221f1259ebd13f))
+
+
+### Features
+
+* add check before changing profile ([73f76dd](https://github.com/Jiseeeh/u-do-note/commit/73f76ddddd378d0d2c2256ac04aad47a825ff96e))
+* add dropdown for nb category in add nb dialog ([3bf7b9c](https://github.com/Jiseeeh/u-do-note/commit/3bf7b9c3b2aa52672c89d9ad4da46c0aaed49ada))
+* add offline adding and deletion ([198543c](https://github.com/Jiseeeh/u-do-note/commit/198543c9df784cda78dec1195a86724a8729aa3f))
+* add offline deletion ([95cf644](https://github.com/Jiseeeh/u-do-note/commit/95cf6449c6eb3967f998f9c2fbcda91bc6304862))
+* add offline mode ([#110](https://github.com/Jiseeeh/u-do-note/issues/110)) ([27d142d](https://github.com/Jiseeeh/u-do-note/commit/27d142daf78b9eb5a542d79c0c32747851efc8d8))
+* add package info plus and upgrade ver ([befb2ec](https://github.com/Jiseeeh/u-do-note/commit/befb2ec46a32cc99cfcd22e28435e82feade1c00))
+* add question to format text before proceeding ([89f2edc](https://github.com/Jiseeeh/u-do-note/commit/89f2edcf133a2936517bd6221aa39fc67cc2e3ac))
+* improve analytics screen ([#112](https://github.com/Jiseeeh/u-do-note/issues/112)) ([8531c11](https://github.com/Jiseeeh/u-do-note/commit/8531c110c3a2a62e4f64aa07740955a09cde24ab))
+* improve feynman prompt ([5b56b80](https://github.com/Jiseeeh/u-do-note/commit/5b56b80476dd54dab9a839dc2c379989ab034b5f))
+* improve notebook card ([b34c467](https://github.com/Jiseeeh/u-do-note/commit/b34c4679ba7a6ddaefeadd23a1dab2f44ba6a98b))
+* improve settings screen ([bb50e6c](https://github.com/Jiseeeh/u-do-note/commit/bb50e6c39b1eba747e2be7b179f5ac47fec76976))
+* make fragments responsive ([#111](https://github.com/Jiseeeh/u-do-note/issues/111)) ([4eed0df](https://github.com/Jiseeeh/u-do-note/commit/4eed0dfcf4cb7b1b79745cd509cfa57d11c3d33f))
+* upgrade kotlin ver ([21d7375](https://github.com/Jiseeeh/u-do-note/commit/21d7375f1d770a827e4cff93298e15974578dc44))
+
+
+### Performance Improvements
+
+* parallelize async calls for faster load ([168fe73](https://github.com/Jiseeeh/u-do-note/commit/168fe73faeaf73af424b6082a3394c0c5675df6a))
+* parallelize some calls to speed up load ([6736f57](https://github.com/Jiseeeh/u-do-note/commit/6736f574ce3474994b3b5865e60c09bb58e7d07b))
+
 # [3.1.0](https://github.com/Jiseeeh/u-do-note/compare/v3.0.0...v3.1.0) (2024-10-28)
 
 

@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
@@ -15,7 +16,7 @@ import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_category_dialog.dart';
 import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
-import 'package:u_do_note/features/note_taking/presentation/widgets/notebook_card_v2.dart';
+import 'package:u_do_note/features/note_taking/presentation/widgets/notebook_card.dart';
 
 @RoutePage()
 class NotebooksScreen extends ConsumerStatefulWidget {
@@ -28,9 +29,8 @@ class NotebooksScreen extends ConsumerStatefulWidget {
 
 class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
   var gridCols = 2;
-  var sortBy = 'name'; // Default sorting criteria
   List _elements = [], _categories = [];
-  var filterCategory = 'All'; // Default category
+  var filterCategory = 'All';
 
   @override
   void initState() {
@@ -95,7 +95,6 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
     setState(() {});
 
     _categories = failureOrCategories;
-
   }
 
   void _update(String categoryName) {
@@ -105,22 +104,10 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
     });
   }
 
-  void sortNotebooks(List<NotebookEntity>? notebooks) {
-    if (notebooks == null) return;
-    if (sortBy == 'name') {
-      notebooks.sort((a, b) => a.subject.compareTo(b.subject));
-    } else if (sortBy == 'date') {
-      notebooks.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var notebooksAsync = ref.watch(notebooksStreamProvider);
     var notebooksSync = notebooksAsync.value;
-    if (notebooksSync != null) {
-      sortNotebooks(notebooksSync);
-    }
 
     return SafeArea(
       child: Scaffold(
@@ -257,28 +244,6 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
             );
           },
         ),
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            setState(() {
-              _update(filterCategory);
-              sortBy = value;
-            });
-          },
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 'name',
-              child: Text(context.tr("sort_title")),
-            ),
-            PopupMenuItem(
-              value: 'date',
-              child: Text(context.tr("sort_date")),
-            ),
-          ],
-          icon: Icon(
-            Icons.sort_outlined,
-            color: Theme.of(context).primaryColor,
-          ),
-        ),
       ],
       centerTitle: false,
       elevation: 0,
@@ -326,7 +291,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
                 children: [
                   for (var notebook in value)
                     if (notebook.subject == element['subject'])
-                      NotebookCardV2(
+                      NotebookCard(
                           notebook, _update, _categories.cast<String>())
                 ],
               );
@@ -427,24 +392,34 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
       // intent to edit or delete
       // true for edit, false for delete
       var isEdit = await getIntent(context, 'Category');
+      bool hasNet = await InternetConnection().hasInternetAccess;
 
       // user cancelled
       if (isEdit == null) return;
 
       // user wants to delete
-      if (isEdit == false && context.mounted) {
+      if (isEdit == false && mounted) {
         var userChoice = await getUserConfirmation(context, 'Category');
 
         if (userChoice == null || userChoice == false) {
           return;
         }
 
-        if (!context.mounted) return;
+        if (!mounted) return;
 
         EasyLoading.show(
             status: context.tr("delete_category_loading"),
             maskType: EasyLoadingMaskType.black,
             dismissOnTap: false);
+
+        if (!hasNet) {
+          ref
+              .read(notebooksProvider.notifier)
+              .deleteCategory(categoryName: categoryName);
+
+          EasyLoading.dismiss();
+          return;
+        }
 
         var res = await ref
             .read(notebooksProvider.notifier)
@@ -464,7 +439,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
       }
 
       // user wants to edit
-      if (isEdit && context.mounted) {
+      if (isEdit && mounted) {
         await showDialog(
             context: context,
             builder: (dialogContext) =>
@@ -472,7 +447,7 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
       }
 
       _update('All');
-      Navigator.pop(context);
+      if (mounted) Navigator.pop(context);
     }
 
     return InkWell(

@@ -4,7 +4,6 @@ import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
-import 'package:u_do_note/core/shared/theme/text_styles.dart';
 import 'package:u_do_note/features/authentication/presentation/widgets/onboard_container.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
@@ -48,8 +47,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.secondary,
       ),
-      skipTextButton: Text('Skip', style: AppTextStyles.body),
-      trailing: Text('Login', style: AppTextStyles.body),
+      skipTextButton:
+          Text('Skip', style: Theme.of(context).textTheme.titleSmall),
+      trailing: Text('Login', style: Theme.of(context).textTheme.titleSmall),
       trailingFunction: () {
         context.router.replace(const LoginRoute());
       },

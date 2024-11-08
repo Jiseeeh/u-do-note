@@ -249,7 +249,7 @@ class Shared extends _$Shared {
     return failureOrContent.fold((failure) => failure, (res) => res);
   }
 
-  /// Generates feedback based on [noteContextWithSummary]
+  /// Generates feedback based on [noteContext]
   /// and [questionAndAnswers] of the user.
   ///
   /// Returns "acknowledgement" as a string,
@@ -257,12 +257,11 @@ class Shared extends _$Shared {
   /// "suggestions" as string, and
   /// "isValid" as boolean
   Future<dynamic> generateXqrFeedback(
-      {required String noteContextWithSummary,
-      required String questionAndAnswers}) async {
+      {required String noteContext, required String questionAndAnswers}) async {
     var generateXqrFeedback = ref.read(generateXqrFeedbackProvider);
 
     var failureOrContentJson =
-        await generateXqrFeedback(noteContextWithSummary, questionAndAnswers);
+        await generateXqrFeedback(noteContext, questionAndAnswers);
 
     return failureOrContentJson.fold(
         (failure) => failure, (contentJson) => contentJson);

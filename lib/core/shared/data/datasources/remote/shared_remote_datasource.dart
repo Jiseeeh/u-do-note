@@ -213,7 +213,7 @@ class SharedRemoteDataSource {
   }
 
   Future<String> generateXqrFeedback(
-      String noteContextWithSummary, String questionAndAnswers) async {
+      String noteContext, String questionAndAnswers) async {
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
@@ -237,8 +237,8 @@ class SharedRemoteDataSource {
           """
           Provide constructive feedback for a student based on the following context:
 
-          The student's note with his/her summary/key points made: $noteContextWithSummary
-          Student's Answers to Questions: $questionAndAnswers
+          The student's note or topic being used: $noteContext
+          Student's Answers to Questions and his/her own summary: $questionAndAnswers
           
           Based on the above information, generate feedback in JSON that:
           

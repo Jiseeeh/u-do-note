@@ -61,10 +61,10 @@ class SharedImpl extends SharedRepository {
 
   @override
   Future<Either<Failure, String>> generateXqrFeedback(
-      String noteContextWithSummary, String questionAndAnswers) async {
+      String noteContext, String questionAndAnswers) async {
     try {
       var res = await _sharedRemoteDataSource.generateXqrFeedback(
-          noteContextWithSummary, questionAndAnswers);
+          noteContext, questionAndAnswers);
 
       return Right(res);
     } catch (e) {

@@ -27,11 +27,116 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Image? _profile;
   bool _isLoading = true;
+  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _nameFocusNode = FocusNode();
   late String _currentName;
   String _version = "app_version";
-  late String theme;
+  late String _theme;
+
+  Future<void> _changePassword(
+      String currentPassword, String newPassword) async {
+    try {
+      var user = FirebaseAuth.instance.currentUser!;
+
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+
+      await user.updatePassword(newPassword);
+      EasyLoading.showSuccess('Password changed successfully!');
+    } catch (e) {
+      EasyLoading.showError(
+          'Password change unsuccessful. Please ensure your current password is correct.');
+    }
+  }
+
+  void _showChangePasswordDialog() {
+    String currentPassword = '';
+    String newPassword = '';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Change Password'),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  obscureText: true,
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    currentPassword = value;
+                  },
+                  decoration: InputDecoration(
+                      labelText: 'Current password',
+                      border: OutlineInputBorder()),
+                ),
+                SizedBox(height: 1.h),
+                TextFormField(
+                  obscureText: true,
+                  onChanged: (value) {
+                    newPassword = value;
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+
+                    if (value.length < 9) {
+                      return 'Password must be at least 9 characters long';
+                    }
+
+                    if (!value.contains(RegExp(r'[A-Z]'))) {
+                      return 'Password must contain at least one uppercase letter';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      labelText: 'New password', border: OutlineInputBorder()),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  EasyLoading.show(
+                      status: 'Changing password...',
+                      maskType: EasyLoadingMaskType.black,
+                      dismissOnTap: false);
+
+                  await _changePassword(currentPassword, newPassword);
+                  EasyLoading.dismiss();
+
+                  if (!context.mounted) return;
+
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text('Change'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -96,7 +201,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     var currentTheme = ref.watch(themeNotifierProvider);
-    theme = currentTheme.name[0].toUpperCase() + currentTheme.name.substring(1);
+    _theme =
+        currentTheme.name[0].toUpperCase() + currentTheme.name.substring(1);
     var user = FirebaseAuth.instance.currentUser!;
 
     return Skeletonizer(
@@ -203,7 +309,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   title: context.tr('change_password'),
                   icon: Icons.security_outlined,
                   onSettingPressed: () {
-                    EasyLoading.showInfo("Not yet available!");
+                    _showChangePasswordDialog();
                   },
                 ),
                 InkWell(

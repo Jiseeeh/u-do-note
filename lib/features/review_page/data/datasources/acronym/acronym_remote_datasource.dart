@@ -24,7 +24,7 @@ class AcronymRemoteDataSource {
             Give Acronym Mnemonics based the student's note for them to understand it better
                                                 
             Follow these important guidelines when elaborating their notes:
-            - Response should be in JSON format, with the property "content" ,"isValid", and "error".
+            - Response should be in JSON format, with the property "content" as string ,"isValid" as boolean, and "error" as string also only if "isValid" is false, "isValid" will depend on the given content of the student if it is understandable and not just random letters or gibberish.
             - The "content" should be a plaintext without any rich text addons like *bold* and etc. Also it should be in paragraph form explaining acronyms and each paragraph should be in new line.
             - Also at the end of the "content", add a paragraph for summary, just list all the acronyms and their corresponding meaning separated by newline  
             - If the content is gibberish or doesn't make sense, make "isValid" to false and provide relevant "error"

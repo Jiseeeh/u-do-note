@@ -20,5 +20,5 @@ abstract class SharedRepository {
       AssistanceType type, String content);
 
   Future<Either<Failure, String>> generateXqrFeedback(
-      String noteContextWithSummary, String questionAndAnswers);
+      String noteContext, String questionAndAnswers);
 }

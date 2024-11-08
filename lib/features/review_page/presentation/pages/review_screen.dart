@@ -10,7 +10,9 @@ import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 import 'package:u_do_note/features/review_page/domain/entities/review_method.dart';
+import 'package:u_do_note/features/review_page/presentation/providers/pomodoro/pomodoro_technique_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/review_method.dart';
 import 'package:u_do_note/routes/app_route.dart';
@@ -78,7 +80,18 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           description: method.description,
           imagePath: method.imagePath,
           buttonKey: keys[i],
-          onPressed: method.onPressed));
+          onPressed: () {
+            if (method.title == PomodoroModel.name) {
+              var pomodoro = ref.watch(pomodoroProvider);
+              if (pomodoro.pomodoroTimer != null ||
+                  pomodoro.hasFinishedSession) {
+                context.router.push(const PomodoroRoute());
+                return;
+              }
+            }
+
+            method.onPressed();
+          }));
       reviewMethods.add(const SizedBox(height: 16));
       i++;
     }

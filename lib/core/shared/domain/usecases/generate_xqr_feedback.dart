@@ -9,8 +9,8 @@ class GenerateXqrFeedback {
   const GenerateXqrFeedback(this._sharedRepository);
 
   Future<Either<Failure, String>> call(
-      String noteContextWithSummary, String questionAndAnswers) async {
+      String noteContext, String questionAndAnswers) async {
     return await _sharedRepository.generateXqrFeedback(
-        noteContextWithSummary, questionAndAnswers);
+        noteContext, questionAndAnswers);
   }
 }

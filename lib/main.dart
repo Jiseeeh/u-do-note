@@ -147,12 +147,18 @@ class _MainAppState extends ConsumerState<MainApp> {
         }
 
         if (context.mounted) {
-          ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
+          DateTime nextReviewDate = spacedRepModel.nextReview!.toDate();
+          DateTime currentDate = DateTime.now();
 
-          appRouter.push(QuizRoute(
-              questions: spacedRepModel.questions!,
-              model: spacedRepModel,
-              reviewMethod: ReviewMethods.spacedRepetition));
+          if (nextReviewDate.isBefore(currentDate) ||
+              nextReviewDate.isAtSameMomentAs(currentDate)) {
+            ref.read(reviewScreenProvider).setIsFromOldSpacedRepetition(true);
+
+            appRouter.push(QuizRoute(
+                questions: spacedRepModel.questions!,
+                model: spacedRepModel,
+                reviewMethod: ReviewMethods.spacedRepetition));
+          }
         }
         break;
       case ActiveRecallModel.name:

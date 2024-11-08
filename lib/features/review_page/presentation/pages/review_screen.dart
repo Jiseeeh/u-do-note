@@ -216,7 +216,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             ),
             Align(
               alignment: const AlignmentDirectional(-1, 0),
-              child: Text('Learning Strategies',
+              child: Text('Learning Methods',
                   style: Theme.of(context).textTheme.titleLarge),
             ),
           ],

@@ -83,7 +83,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          decoration: const BoxDecoration(color: AppColors.primary),
+          decoration: const BoxDecoration(color: AppColors.secondary),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -97,7 +97,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: AppColors.darkSecondaryText,
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(35),
                         topRight: Radius.circular(35))),
@@ -108,10 +108,10 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                       child: Text(
                         "Create New Account",
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: AppColors.primaryText,
                             fontSize: 18,
                             fontFamily: 'Inter-Bold',
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w700),
                       ),
                     ),
                     Container(
@@ -122,10 +122,11 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                             topRight: Radius.circular(35)),
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: AppColors.secondaryText.withOpacity(.5),
                             spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(0, -3), // changes position of shadow
+                            blurRadius: 10,
+                            offset: const Offset(
+                                0, -3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -194,7 +195,8 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                           child: Text(
                                             "Email Address",
                                             textAlign: TextAlign.left,
-                                            style: AppTextStyles.h5,
+                                            style: AppTextStyles.h5.copyWith(
+                                                color: AppColors.primaryText),
                                           )),
                                       AuthField(
                                         label: 'juandelacruz@example.com',
@@ -212,7 +214,8 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         child: Text(
                                           "Display Name",
                                           textAlign: TextAlign.left,
-                                          style: AppTextStyles.h5,
+                                          style: AppTextStyles.h5.copyWith(
+                                              color: AppColors.primaryText),
                                         ),
                                       ),
                                       AuthField(
@@ -230,7 +233,8 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         child: Text(
                                           "Password",
                                           textAlign: TextAlign.left,
-                                          style: AppTextStyles.h5,
+                                          style: AppTextStyles.h5.copyWith(
+                                              color: AppColors.primaryText),
                                         ),
                                       ),
                                       AuthField(
@@ -259,7 +263,8 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                         child: Text(
                                           "Repeat Password",
                                           textAlign: TextAlign.left,
-                                          style: AppTextStyles.h5,
+                                          style: AppTextStyles.h5.copyWith(
+                                              color: AppColors.primaryText),
                                         ),
                                       ),
                                       AuthField(
@@ -347,10 +352,12 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Text(
-                                                'Already Have an Account?',
+                                            Text('Already Have an Account?',
                                                 style: TextStyle(
-                                                    color: Theme.of(context).colorScheme.secondary,)),
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                )),
                                             TextButton(
                                               onPressed: () {
                                                 context.router

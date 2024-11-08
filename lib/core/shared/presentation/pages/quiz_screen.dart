@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
@@ -248,7 +249,13 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Quiz'),
+          title: Text(
+            'Quiz',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontSize: 20.sp),
+          ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         body: _buildBody(),

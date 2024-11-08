@@ -8,6 +8,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
@@ -437,11 +438,16 @@ class _FeynmanTechniqueScreenState
       },
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Feynman Technique',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontSize: 20.sp),
               ),
               if (isRobotThinking) const LinearProgressIndicator()
             ],
@@ -464,10 +470,17 @@ class _FeynmanTechniqueScreenState
           },
           user: _user,
           theme: DefaultChatTheme(
-              seenIcon: Text(
-            'read',
-            style: Theme.of(context).textTheme.titleMedium,
-          )),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            primaryColor: Theme.of(context).primaryColor,
+            seenIcon: Text(
+              'read',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            secondaryColor: Theme.of(context).cardColor,
+            receivedMessageBodyTextStyle: TextStyle(
+                color: Theme.of(context).textTheme.displayMedium?.color,
+                fontSize: 15),
+          ),
         ),
       ),
     );

@@ -163,7 +163,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ],
                   ),
                 ),
-                const Divider(),
+                // const Divider(),
                 // Settings Section
                 Text(
                   context.tr('general'),
@@ -185,7 +185,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       context.router.push(const LanguageSettingsRoute()),
                 ),
                 // Account Section
-                const Divider(),
+                // const Divider(),
                 Text(
                   'Account',
                   style: Theme.of(context)
@@ -270,7 +270,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ],
                   ),
                 ),
-                const Divider(),
+                // const Divider(),
                 // App Info Section
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),

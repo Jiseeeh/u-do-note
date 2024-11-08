@@ -116,7 +116,7 @@ class QuizBody extends ConsumerWidget {
                             currentQuestionIndex == questions.length - 1
                                 ? 'Finish'
                                 : 'Next',
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.primaryBackground),
                           )))
                 ],
               ),

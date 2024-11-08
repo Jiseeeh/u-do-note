@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/shared/domain/entities/question.dart';
@@ -42,7 +43,13 @@ class QuizResultsScreen extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Quiz Results'),
+          title: Text(
+            'Quiz Results',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontSize: 20.sp),
+          ),
           automaticallyImplyLeading: false,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
@@ -89,13 +96,16 @@ class QuizResultsScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(children: [
             SizedBox(
-                height: 32,
+                height: 40,
                 width: double.infinity,
                 child: Text('Score: $score/${questions.length}',
                     style: Theme.of(context)
                         .textTheme
                         .headlineMedium
                         ?.copyWith(fontWeight: FontWeight.bold))),
+            SizedBox(
+              height: 10,
+            ),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,

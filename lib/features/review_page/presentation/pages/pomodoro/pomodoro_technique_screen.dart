@@ -258,7 +258,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
         showPomodoroToast(pomodoro);
 
-        Navigator.pop(context);
+        context.router.replace(ReviewRoute());
       },
       child: Scaffold(
         appBar: AppBar(

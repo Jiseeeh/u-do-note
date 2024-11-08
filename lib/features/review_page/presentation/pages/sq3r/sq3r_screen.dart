@@ -187,13 +187,13 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
           await CustomDialog.show(context,
               title: "SQ3R -- Recite",
               subTitle:
-                  "Summarize or highlight the key points of your note by writing them down or using the microphone from the menu at the bottom right.",
+                  "Summarize or highlight the key points of your note by writing them down on the bottom editor or using the microphone from the menu at the bottom right.",
               buttons: [CustomDialogButton(text: "Okay")]);
 
           // ? limitation might be when the user removes this header and openai
           // might give a diff response.
-          _topFleatherController!.document.insert(
-              _topFleatherController!.document.length - 1,
+          _bottomFleatherController!.document.insert(
+              _bottomFleatherController!.document.length - 1,
               "Summary/Key points(do not remove for better feedback):\n");
           break;
         }
@@ -221,7 +221,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
           var failureOrJsonContent = await ref
               .read(sharedProvider.notifier)
               .generateXqrFeedback(
-                  noteContextWithSummary:
+                  noteContext:
                       _topFleatherController!.document.toPlainText(),
                   questionAndAnswers:
                       _bottomFleatherController!.document.toPlainText());

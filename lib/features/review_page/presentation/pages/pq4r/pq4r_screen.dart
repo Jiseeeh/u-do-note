@@ -229,10 +229,11 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
               subTitle:
                   "Take a break and reflect on the material. You can ask yourself questions like:",
               content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(q1),
+                  Text("-$q1"),
                   const SizedBox(height: 2),
-                  Text(q2),
+                  Text("-$q2"),
                 ],
               ),
               buttons: [CustomDialogButton(text: "Okay")]);
@@ -259,12 +260,12 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
           await CustomDialog.show(context,
               title: "${Pq4rModel.name} -- Recite",
               subTitle:
-                  "Summarize or highlight the key points of your note by writing them down or using the microphone from the menu at the bottom right.",
+                  "Summarize or highlight the key points of your note by writing them down on the bottom editor or using the microphone from the menu at the bottom right.",
               buttons: [CustomDialogButton(text: "Okay")]);
 
-          _topFleatherController!.document.insert(
-              _topFleatherController!.document.length - 1,
-              "Summary/Key points (do not remove for better feedback):\n");
+          _bottomFleatherController!.document.insert(
+              _bottomFleatherController!.document.length - 1,
+              "\nSummary/Key points (do not remove for better feedback):\n");
         }
         break;
       case Pq4rStatus.recite:
@@ -285,7 +286,7 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
           var failureOrJsonContent = await ref
               .read(sharedProvider.notifier)
               .generateXqrFeedback(
-                  noteContextWithSummary:
+                  noteContext:
                       _topFleatherController!.document.toPlainText(),
                   questionAndAnswers:
                       _bottomFleatherController!.document.toPlainText());

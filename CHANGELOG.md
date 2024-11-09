@@ -1,3 +1,27 @@
+# [3.3.0](https://github.com/Jiseeeh/u-do-note/compare/v3.2.0...v3.3.0) (2024-11-09)
+
+
+### Bug Fixes
+
+* _debuglock pausing execution ([57e7f66](https://github.com/Jiseeeh/u-do-note/commit/57e7f66681ff909d8397191e2a7e3ef00433f7c1))
+* isValid being false even there are values ([1524794](https://github.com/Jiseeeh/u-do-note/commit/1524794919e335251ee84bc860578ec32af1a345))
+* isValid not showing in output ([5537171](https://github.com/Jiseeeh/u-do-note/commit/5537171549993a86cb26a1fb876feb0b875be657))
+* notebooks not showing on new acc ([1183595](https://github.com/Jiseeeh/u-do-note/commit/1183595a2cf05a8be723ff9456b735f94846e43a))
+* pomodoro not continuing while on session ([56376aa](https://github.com/Jiseeeh/u-do-note/commit/56376aa6fc73dc7dd53555a550acbc0dbd0ef4a7))
+* proceeding to review on feedback fail ([34275ce](https://github.com/Jiseeeh/u-do-note/commit/34275ceb8f40e8873ba10f226efe3022df4c3f18))
+* remove sq3r name in pq4r ([42d62c4](https://github.com/Jiseeeh/u-do-note/commit/42d62c4381cc10b4970f13e1b1dfc8ec6cd2e690))
+
+
+### Features
+
+* add change password ([e0d9704](https://github.com/Jiseeeh/u-do-note/commit/e0d9704cedd7f4ffa87a28a871353390687c51b6))
+* add check before quiz ([e47f276](https://github.com/Jiseeeh/u-do-note/commit/e47f276386a64b9c13afb870f53ffb51d9a69e8c))
+* add crashlytics ([#113](https://github.com/Jiseeeh/u-do-note/issues/113)) ([a52004d](https://github.com/Jiseeeh/u-do-note/commit/a52004df99ce2781d0df0c68ae4b1e084648a66c))
+* improve password validation ([e98c704](https://github.com/Jiseeeh/u-do-note/commit/e98c7041b9d9a3240cc44503805ef588bc562288))
+* improve password validation ([cef94a1](https://github.com/Jiseeeh/u-do-note/commit/cef94a141458c919389922ce6ed47ce1263ad5d5))
+* increase paragraph elaboration response ([8899341](https://github.com/Jiseeeh/u-do-note/commit/889934134f730bf15d9b6e69cec8c6b42cc7398d))
+* move summary to bottom editor ([3327128](https://github.com/Jiseeeh/u-do-note/commit/3327128107592adadccb35be613b45fce6d6fcb6))
+
 # [3.2.0](https://github.com/Jiseeeh/u-do-note/compare/v3.1.0...v3.2.0) (2024-11-07)
 
 

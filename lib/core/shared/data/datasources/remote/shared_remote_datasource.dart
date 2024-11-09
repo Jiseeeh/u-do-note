@@ -218,13 +218,16 @@ class SharedRemoteDataSource {
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
-           As a helpful assistant you will help the student analyze his/her given answers.
-           Give constructive feedback and return a JSON with the properties:
-           
-           "acknowledgement" as a string
-           "missed" as as string
-           "suggestions" as string
-           "isValid" as boolean 
+           As a helpful assistant, you will help the student analyze their given answers and summary. Provide constructive feedback and return a JSON with the following properties:
+
+            "acknowledgement" (string): Feedback on correct points noted by the student.
+               - If the summary is empty but answers to questions are provided, acknowledge their responses to the questions.
+               - If there is a summary but no answers to questions, acknowledge the summary.
+               - If both the summary and answers are empty, indicate this with a message like "No answers or summary provided."
+            "missed" (string): Points or details the student may have missed or misunderstood.
+               - Leave this empty if there are no responses provided.
+            "suggestions" (string): Specific areas to review or improve understanding.
+               - Leave this empty if there are no responses provided.
           """,
         ),
       ],
@@ -237,18 +240,16 @@ class SharedRemoteDataSource {
           """
           Provide constructive feedback for a student based on the following context:
 
-          The student's note or topic being used: $noteContext
-          Student's Answers to Questions and his/her own summary: $questionAndAnswers
+          Context: $noteContext
+          Student's Answers and Summary: $questionAndAnswers
+          Based on this information, generate feedback in JSON that:
           
-          Based on the above information, generate feedback in JSON that:
+          Acknowledges correct points as "acknowledgement".
+          Identifies key points missed or misunderstood as "missed".
+          Offers improvement suggestions as "suggestions". 
+          If no answers or summary are provided, simply note this in "acknowledgement" and leave "missed" and "suggestions" empty.
           
-          Acknowledges the student's correct points as "acknowledgement".
-          Identifies any key points or details the student missed or misunderstood as "missed".
-          Offers suggestions for improvement, including specific areas to review or additional context for better understanding as "suggestions".
-          And include a property "isValid" if the content given is valid and not just random letters or gibberish.
-          
-          
-          Structure the feedback to be encouraging and actionable, guiding the student toward refining their understanding of the material.
+          The feedback should encourage and guide the student in refining their understanding of the material.
           """,
         ),
       ],
@@ -270,13 +271,7 @@ class SharedRemoteDataSource {
     );
 
     String? completionContent =
-        chatCompletion.choices.first.message.content!.first.text;
-
-    var decodedJson = json.decode(completionContent!);
-
-    if (!decodedJson['isValid']) {
-      throw "Given note is not valid, Please try again.";
-    }
+        chatCompletion.choices.first.message.content!.first.text!;
 
     return completionContent;
   }

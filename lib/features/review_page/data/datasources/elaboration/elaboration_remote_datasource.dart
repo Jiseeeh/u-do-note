@@ -128,7 +128,7 @@ class ElaborationRemoteDataSource {
         ]);
 
     String prompt = """
-                Elaborate the student's note below using the guidelines provided.
+                Elaborate the student's note below using the guidelines provided in 2-3 paragraphs separated by newline.
                 
                 $content
                 """;

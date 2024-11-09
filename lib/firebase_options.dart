@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,6 +47,7 @@ class DefaultFirebaseOptions {
     projectId: 'u-do-note-0',
     authDomain: 'u-do-note-0.firebaseapp.com',
     storageBucket: 'u-do-note-0.appspot.com',
+    measurementId: 'G-NB42WSNQLQ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -66,17 +64,30 @@ class DefaultFirebaseOptions {
     messagingSenderId: '504837693421',
     projectId: 'u-do-note-0',
     storageBucket: 'u-do-note-0.appspot.com',
+    androidClientId: '504837693421-qrdcclk083gt9bs4di24nhpfo824ae8n.apps.googleusercontent.com',
     iosClientId: '504837693421-5s2665iv83kjir2gbac4hkilrs0nl290.apps.googleusercontent.com',
     iosBundleId: 'com.example.uDoNote',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyABPxnoW_EKl6hDV74PrAUEinoq3a0RRME',
-    appId: '1:504837693421:ios:3b3614c103ea31088391e4',
+    appId: '1:504837693421:ios:9ad4e0a0cb5e014d8391e4',
     messagingSenderId: '504837693421',
     projectId: 'u-do-note-0',
     storageBucket: 'u-do-note-0.appspot.com',
-    iosClientId: '504837693421-apl1hq1gcqfnehu8b2kbsvil6kp0ij9k.apps.googleusercontent.com',
-    iosBundleId: 'com.example.uDoNote.RunnerTests',
+    androidClientId: '504837693421-qrdcclk083gt9bs4di24nhpfo824ae8n.apps.googleusercontent.com',
+    iosClientId: '504837693421-5s2665iv83kjir2gbac4hkilrs0nl290.apps.googleusercontent.com',
+    iosBundleId: 'com.example.uDoNote',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDZuWWeYtks_4giT7YXSGkCtPOJ1KVomwE',
+    appId: '1:504837693421:web:3b2450420e4d2f928391e4',
+    messagingSenderId: '504837693421',
+    projectId: 'u-do-note-0',
+    authDomain: 'u-do-note-0.firebaseapp.com',
+    storageBucket: 'u-do-note-0.appspot.com',
+    measurementId: 'G-KFXJ1JG4CM',
+  );
+
 }

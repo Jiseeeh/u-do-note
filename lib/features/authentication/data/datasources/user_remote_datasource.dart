@@ -43,7 +43,8 @@ class UserRemoteDataSource {
     FirebaseFirestore.instance.collection('users').doc(userId).set({
       'uid': userId,
       'createdAt': FieldValue.serverTimestamp(),
-      'categories' : ["Uncategorized"],
+      'categories': ["Uncategorized"],
+      'email': userCredential.user!.email,
     });
 
     logger.i(

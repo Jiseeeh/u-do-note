@@ -133,16 +133,19 @@ class _PreReviewState extends ConsumerState<PreReview> {
                 .firstWhere((notebook) => notebook.id == _notebookId)
                 .notes
                 .forEach((note) {
-              if (reviewScreenState.getNotebookPagesIds.contains(note.id)) {
+              var notebookPageIds = reviewScreenState.getNotebookPagesIds ?? [];
+
+              if (notebookPageIds.contains(note.id)) {
                 final jsonContent = jsonDecode(note.content);
                 if (documentContent == null) {
                   documentContent = ParchmentDocument.fromJson(jsonContent);
                 } else {
                   var newDocumentContent =
                       ParchmentDocument.fromJson(jsonContent);
-
-                  documentContent!.insert(documentContent!.length - 1,
-                      newDocumentContent.toDelta());
+                  documentContent!.insert(
+                    documentContent!.length - 1,
+                    newDocumentContent.toDelta(),
+                  );
                 }
                 contentFromPages += note.plainTextContent;
               }

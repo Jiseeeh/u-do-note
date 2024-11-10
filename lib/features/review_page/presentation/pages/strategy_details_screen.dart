@@ -14,20 +14,12 @@ class StrategyDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _StrategyDetailsScreenState extends ConsumerState<StrategyDetailsScreen> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(
     BuildContext context,
   ) {
     return GestureDetector(
       child: Scaffold(
-        key: scaffoldKey,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           scrolledUnderElevation: 0.0,

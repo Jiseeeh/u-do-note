@@ -10,7 +10,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
-import 'package:u_do_note/core/shared/presentation/providers/app_theme_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/features/settings/presentation/providers/settings_screen_provider.dart';
 import 'package:u_do_note/features/settings/presentation/widgets/settings_card.dart';
@@ -32,7 +31,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _nameFocusNode = FocusNode();
   late String _currentName;
   String _version = "app_version";
-  late String _theme;
 
   Future<void> _changePassword(
       String currentPassword, String newPassword) async {
@@ -209,9 +207,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var currentTheme = ref.watch(themeNotifierProvider);
-    _theme =
-        currentTheme.name[0].toUpperCase() + currentTheme.name.substring(1);
     var user = FirebaseAuth.instance.currentUser!;
 
     return Skeletonizer(
@@ -278,7 +273,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ],
                   ),
                 ),
-                // const Divider(),
                 // Settings Section
                 Text(
                   context.tr('general'),
@@ -300,7 +294,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       context.router.push(const LanguageSettingsRoute()),
                 ),
                 // Account Section
-                // const Divider(),
                 Text(
                   'Account',
                   style: Theme.of(context)
@@ -385,7 +378,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ],
                   ),
                 ),
-                // const Divider(),
                 // App Info Section
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),

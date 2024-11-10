@@ -346,6 +346,8 @@ class Shared extends _$Shared {
         context: context,
         barrierDismissible: false,
         builder: (dialogContext) => preReview);
+
+    //  TODO: Try pop context so on change screen and back, pre review will not show (idk)
   }
 
   List<ReviewMethodEntity> getReviewMethods(BuildContext context) {

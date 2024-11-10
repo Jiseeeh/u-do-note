@@ -286,8 +286,7 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
           var failureOrJsonContent = await ref
               .read(sharedProvider.notifier)
               .generateXqrFeedback(
-                  noteContext:
-                      _topFleatherController!.document.toPlainText(),
+                  noteContext: _topFleatherController!.document.toPlainText(),
                   questionAndAnswers:
                       _bottomFleatherController!.document.toPlainText());
 

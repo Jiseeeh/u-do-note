@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:dart_openai/dart_openai.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -29,12 +31,14 @@ import 'package:u_do_note/routes/app_route.dart';
 import 'package:u_do_note/env/env.dart';
 
 final appRouter = AppRouter();
+// for testing crashlytics locally
+const _kTestingCrashlytics = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
-  await initDeps();
+  await initDependencies();
 
   runApp(
     EasyLocalization(
@@ -49,12 +53,30 @@ void main() async {
   );
 }
 
-Future<void> initDeps() async {
+Future<void> initDependencies() async {
   final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   OpenAI.apiKey = Env.openAIKey;
   OpenAI.showLogs = true;
+
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
+  if (_kTestingCrashlytics) {
+    // force enable crashlytics collection enabled if we're testing it.
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  } else {
+    // non-debug builds
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
+  }
 
   tz.initializeTimeZones();
   tz.setLocalLocation(tz.getLocation(currentTimeZone));

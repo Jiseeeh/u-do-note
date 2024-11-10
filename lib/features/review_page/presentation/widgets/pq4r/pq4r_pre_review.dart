@@ -13,7 +13,6 @@ import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dar
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/review_page/data/models/pq4r.dart';
-import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
 import 'package:u_do_note/features/review_page/presentation/providers/review_screen_provider.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pre_review.dart';
 import 'package:u_do_note/routes/app_route.dart';
@@ -55,7 +54,7 @@ class _Pq4rPreReviewState extends ConsumerState<Pq4rPreReview> {
         title: "notice",
         subTitle: "old_session_notice_q",
         subTitleArgs: {
-          "reviewMethod": Sq3rModel.name
+          "reviewMethod": Pq4rModel.name
         },
         buttons: [
           CustomDialogButton(text: "No", value: false),

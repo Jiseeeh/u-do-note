@@ -263,7 +263,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 isFullScreen: false,
                 builder: (context, controller) {
                   return SearchBar(
-                    hintText: 'Search for learning strategies...',
+                    hintText: 'Search for learning methods...',
                     hintStyle: Theme.of(context).searchBarTheme.hintStyle,
                     backgroundColor:
                         Theme.of(context).searchBarTheme.backgroundColor,

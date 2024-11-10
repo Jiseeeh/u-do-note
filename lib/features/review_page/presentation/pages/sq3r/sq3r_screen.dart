@@ -194,7 +194,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
           // might give a diff response.
           _bottomFleatherController!.document.insert(
               _bottomFleatherController!.document.length - 1,
-              "Summary/Key points(do not remove for better feedback):\n");
+              "\nSummary/Key points(do not remove for better feedback):\n");
           break;
         }
 
@@ -221,14 +221,11 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
           var failureOrJsonContent = await ref
               .read(sharedProvider.notifier)
               .generateXqrFeedback(
-                  noteContext:
-                      _topFleatherController!.document.toPlainText(),
+                  noteContext: _topFleatherController!.document.toPlainText(),
                   questionAndAnswers:
                       _bottomFleatherController!.document.toPlainText());
 
           EasyLoading.dismiss();
-
-          _sq3rStatus = Sq3rStatus.review;
 
           if (failureOrJsonContent is Failure) {
             logger.w(
@@ -237,6 +234,8 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
             EasyLoading.showError("Sorry we could not generate feedbacks now.");
             break;
           }
+
+          _sq3rStatus = Sq3rStatus.review;
 
           var decodedJson = jsonDecode(failureOrJsonContent);
 

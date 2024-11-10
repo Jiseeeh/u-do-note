@@ -513,7 +513,7 @@ class NoteRemoteDataSource {
                 reason: Explain in the 2nd person why the selected technique is the best fit.
             
             Consider the following learning techniques and their suitability:
-                Leitner System: Choose this if the notes primarily consist of factual information, vocabulary, or discrete items that can be memorized effectively with spaced repetition.
+                Leitner System: Choose this if the notes primarily consist of factual information, vocabulary, or discrete items that can be memorized effectively flashcards.
                 Feynman Technique: Recommend this if the notes involve complex concepts, theories, or processes that would benefit from simplification and deep understanding.
                 Pomodoro Technique: Use this for notes involving lengthy tasks or extensive reading/writing that requires time management and sustained focus.
                 Based on these guidelines, determine and suggest the best learning technique

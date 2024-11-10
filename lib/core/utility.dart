@@ -20,7 +20,8 @@ class CustomDialog {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(context.tr(title, namedArgs: titleArgs)),
+              Text(context.tr(title, namedArgs: titleArgs),
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
               subTitle != null
                   ? Text(context.tr(subTitle, namedArgs: subTitleArgs),
                       style: Theme.of(context).textTheme.bodyMedium)

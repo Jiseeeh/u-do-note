@@ -1,3 +1,10 @@
+## [3.3.1](https://github.com/Jiseeeh/u-do-note/compare/v3.3.0...v3.3.1) (2024-11-10)
+
+
+### Bug Fixes
+
+* oveflows and theme ([#114](https://github.com/Jiseeeh/u-do-note/issues/114)) ([5c8a7bd](https://github.com/Jiseeeh/u-do-note/commit/5c8a7bda299e00edce4a8d7525ca6e795ead05a3))
+
 # [3.3.0](https://github.com/Jiseeeh/u-do-note/compare/v3.2.0...v3.3.0) (2024-11-09)
 
 

@@ -5,5 +5,8 @@ import 'package:u_do_note/core/error/failures.dart';
 
 abstract class SettingsRepository {
   Future<Either<Failure, void>> signOut();
+
   Future<Either<Failure, String>> uploadProfilePicture(XFile? image);
+
+  Future<Either<Failure, bool>> deleteAccount(String? password);
 }

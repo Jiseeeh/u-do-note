@@ -80,7 +80,24 @@ final uploadProfilePictureProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UploadProfilePictureRef = AutoDisposeProviderRef<UploadProfilePicture>;
-String _$settingsHash() => r'1cb8f4be983245b1a331b00f51ab5adcb2ed753d';
+String _$deleteAccountHash() => r'101278a674a30f3e46acb14461d0e8c094427ebf';
+
+/// See also [deleteAccount].
+@ProviderFor(deleteAccount)
+final deleteAccountProvider = AutoDisposeProvider<DeleteAccount>.internal(
+  deleteAccount,
+  name: r'deleteAccountProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deleteAccountHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DeleteAccountRef = AutoDisposeProviderRef<DeleteAccount>;
+String _$settingsHash() => r'31181010074cd4a7467aa083ed7404ef3bdf3838';
 
 /// See also [Settings].
 @ProviderFor(Settings)

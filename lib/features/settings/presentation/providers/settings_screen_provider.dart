@@ -7,6 +7,7 @@ import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dar
 import 'package:u_do_note/features/settings/data/datasources/settings_remote_datasource.dart';
 import 'package:u_do_note/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:u_do_note/features/settings/domain/repositories/settings_repository.dart';
+import 'package:u_do_note/features/settings/domain/usecases/delete_account.dart';
 import 'package:u_do_note/features/settings/domain/usecases/sign_out.dart';
 import 'package:u_do_note/features/settings/domain/usecases/upload_profile_picture.dart';
 
@@ -42,6 +43,13 @@ UploadProfilePicture uploadProfilePicture(Ref ref) {
 }
 
 @riverpod
+DeleteAccount deleteAccount(Ref ref) {
+  var settingsRepository = ref.read(settingsRepositoryProvider);
+
+  return DeleteAccount(settingsRepository);
+}
+
+@riverpod
 class Settings extends _$Settings {
   @override
   void build() {
@@ -64,6 +72,14 @@ class Settings extends _$Settings {
     var uploadProfilePicture = ref.read(uploadProfilePictureProvider);
 
     var failureOrBool = await uploadProfilePicture(image);
+
+    return failureOrBool.fold((failure) => failure, (res) => res);
+  }
+
+  Future<dynamic> deleteAccount({String? password}) async {
+    var deleteAccount = ref.read(deleteAccountProvider);
+
+    var failureOrBool = await deleteAccount(password);
 
     return failureOrBool.fold((failure) => failure, (res) => res);
   }

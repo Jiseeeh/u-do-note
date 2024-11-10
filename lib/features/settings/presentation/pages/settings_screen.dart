@@ -8,9 +8,14 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import 'package:u_do_note/env/env.dart';
+import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/settings/presentation/providers/settings_screen_provider.dart';
 import 'package:u_do_note/features/settings/presentation/widgets/settings_card.dart';
 import 'package:u_do_note/routes/app_route.dart';
@@ -26,9 +31,11 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Image? _profile;
   bool _isLoading = true;
+  bool _passwordVisible = false;
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _nameFocusNode = FocusNode();
+  final Uri _feedbackUrl = Uri.parse(Env.feedbackUrl);
   late String _currentName;
   String _version = "app_version";
 
@@ -293,6 +300,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   onSettingPressed: () =>
                       context.router.push(const LanguageSettingsRoute()),
                 ),
+                SettingsCard(
+                    title: "Feedback",
+                    icon: Icons.feedback,
+                    onSettingPressed: () async {
+                      if (!await launchUrl(_feedbackUrl)) {
+                        throw Exception('Could not launch $_feedbackUrl');
+                      }
+                    }),
                 // Account Section
                 Text(
                   'Account',
@@ -314,6 +329,181 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _showChangePasswordDialog();
                   },
                 ),
+                SettingsCard(
+                  title: context.tr('delete_account'),
+                  icon: Icons.delete,
+                  iconColor: AppColors.error,
+                  onSettingPressed: () async {
+                    var willDelete = await CustomDialog.show(
+                      context,
+                      title: "Account Deletion",
+                      subTitle: "This action is irreversible",
+                      content: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              color: Theme.of(context).primaryColor),
+                          children: [
+                            TextSpan(
+                                text:
+                                    "By proceeding, you agree to permanently "),
+                            TextSpan(
+                              text: "delete",
+                              style: TextStyle(
+                                  color: AppColors.error,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                                text: " your account and all associated data."),
+                          ],
+                        ),
+                      ),
+                      buttons: [
+                        CustomDialogButton(text: "No", value: false),
+                        CustomDialogButton(text: "Yes", value: true),
+                      ],
+                    );
+
+                    if (willDelete && context.mounted) {
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          var passwordController = TextEditingController();
+
+                          return StatefulBuilder(
+                            builder:
+                                (BuildContext context, StateSetter setState) {
+                              return AlertDialog(
+                                scrollable: true,
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Account Deletion",
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                    ),
+                                    Text("This action is irreversible.",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                  ],
+                                ),
+                                content: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                            fontSize: 15.sp,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        children: [
+                                          TextSpan(
+                                              text:
+                                                  "Type your password to finalize your decision or"),
+                                          TextSpan(
+                                              text: " if you signed in using "),
+                                          TextSpan(
+                                              text: "GOOGLE ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: "just leave it blank."),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    TextField(
+                                      keyboardType: TextInputType.text,
+                                      controller: passwordController,
+                                      obscureText: !_passwordVisible,
+                                      decoration: InputDecoration(
+                                        labelText: 'Password',
+                                        hintText: 'Enter your password',
+                                        border: OutlineInputBorder(),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _passwordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Theme.of(context)
+                                                .primaryColorDark,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _passwordVisible =
+                                                  !_passwordVisible;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                    child: Text("Cancel"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      bool hasNet = await InternetConnection()
+                                          .hasInternetAccess;
+
+                                      if (!hasNet) {
+                                        EasyLoading.showError(
+                                            "Please connect to the internet to delete your account.");
+                                        return;
+                                      }
+
+                                      EasyLoading.show(
+                                        status: 'Deleting your account...',
+                                        maskType: EasyLoadingMaskType.black,
+                                        dismissOnTap: false,
+                                      );
+
+                                      var failureOrBool = await ref
+                                          .read(settingsProvider.notifier)
+                                          .deleteAccount(
+                                              password:
+                                                  passwordController.text);
+
+                                      EasyLoading.dismiss();
+
+                                      if (failureOrBool is Failure) {
+                                        EasyLoading.showError(
+                                            "Something went wrong while deleting your account, Please try again later.");
+                                        return;
+                                      }
+
+                                      EasyLoading.showSuccess(
+                                          "Successfully deleted your account!.",
+                                          duration: Duration(seconds: 3));
+
+                                      Future.delayed(Duration(seconds: 3), () {
+                                        if (context.mounted) {
+                                          context.router
+                                              .replaceAll([LoginRoute()]);
+                                        }
+                                      });
+                                    },
+                                    child: Text("Confirm"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+                SizedBox(height: 2.h),
                 InkWell(
                   onTap: () async {
                     bool? willSignOut = await showDialog(

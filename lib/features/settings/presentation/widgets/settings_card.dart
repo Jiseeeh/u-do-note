@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SettingsCard extends ConsumerWidget {
   final String title;
   final IconData icon;
+  final Color? iconColor;
   final Function() onSettingPressed;
 
   const SettingsCard({
@@ -11,6 +12,7 @@ class SettingsCard extends ConsumerWidget {
     required this.title,
     required this.icon,
     required this.onSettingPressed,
+    this.iconColor,
   });
 
   @override
@@ -31,14 +33,16 @@ class SettingsCard extends ConsumerWidget {
               children: [
                 Icon(
                   icon,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  color:
+                      iconColor ?? Theme.of(context).textTheme.bodyLarge?.color,
                 ),
                 const SizedBox(width: 15),
                 Expanded(
                   child: Text(
                     title,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: iconColor ??
+                              Theme.of(context).colorScheme.secondary,
                           fontWeight: FontWeight.w500,
                         ),
                   ),

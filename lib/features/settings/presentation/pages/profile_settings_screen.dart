@@ -25,6 +25,7 @@ class ProfileSettingsScreen extends ConsumerStatefulWidget {
 class _ProfileSettingsScreen extends ConsumerState<ProfileSettingsScreen> {
   Image? profile;
   bool isLoading = true;
+  bool _isUpdatingProfile = false;
   var nameController = TextEditingController();
   var nameFocusNode = FocusNode();
   var currentName = '';
@@ -149,10 +150,12 @@ class _ProfileSettingsScreen extends ConsumerState<ProfileSettingsScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: InkWell(
-                              child: CircleAvatar(
-                                radius: 10.h,
-                                backgroundImage: profile!.image,
-                              ),
+                              child: _isUpdatingProfile
+                                  ? CircularProgressIndicator()
+                                  : CircleAvatar(
+                                      radius: 10.h,
+                                      backgroundImage: profile!.image,
+                                    ),
                               onTap: () async {
                                 bool hasNet = await InternetConnection()
                                     .hasInternetAccess;
@@ -173,9 +176,16 @@ class _ProfileSettingsScreen extends ConsumerState<ProfileSettingsScreen> {
 
                                 if (img == null) return;
 
+                                setState(() {
+                                  _isUpdatingProfile = true;
+                                });
                                 var res = await ref
                                     .read(settingsProvider.notifier)
                                     .uploadProfilePicture(image: img);
+
+                                setState(() {
+                                  _isUpdatingProfile = false;
+                                });
 
                                 if (res is Failure) {
                                   EasyLoading.showError(res.message);
@@ -200,9 +210,12 @@ class _ProfileSettingsScreen extends ConsumerState<ProfileSettingsScreen> {
               SizedBox(
                 width: 100.w,
                 child: TextField(
+                  onTapOutside: (_) {
+                    FocusScope.of(context).unfocus();
+                  },
                   decoration: const InputDecoration(
                     hintText: 'Display Name',
-                    border: InputBorder.none,
+                    border: OutlineInputBorder(),
                   ),
                   controller: nameController,
                   focusNode: nameFocusNode,
@@ -210,7 +223,7 @@ class _ProfileSettingsScreen extends ConsumerState<ProfileSettingsScreen> {
                   style: Theme.of(context)
                       .textTheme
                       .headlineMedium
-                      ?.copyWith(fontSize: 6.w),
+                      ?.copyWith(fontSize: 4.w),
                 ),
               ),
               SizedBox(

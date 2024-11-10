@@ -94,116 +94,100 @@ class _ThemeSettingsScreenState extends ConsumerState<ThemeSettingsScreen> {
           SizedBox(
             height: 3.h,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    var themeNotifier =
-                        ref.read(themeNotifierProvider.notifier);
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      var themeNotifier =
+                          ref.read(themeNotifierProvider.notifier);
 
-                    themeNotifier.setTheme('light');
-                    _name = ThemeMode.light;
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  width: 40.w,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/images/themes/theme-light.svg',
-                          semanticsLabel: 'Light Theme',
-                          height: 20.h,
-                          width: 80,
+                      themeNotifier.setTheme('light');
+                      _name = ThemeMode.light;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(8),
+                      border: _name == ThemeMode.light
+                          ? Border.all(
+                              color: Theme.of(context).primaryColor, width: 2)
+                          : null,
+                    ),
+                    width: 40.w,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/themes/theme-light.svg',
+                              semanticsLabel: 'Light Theme',
+                              height: 20.h,
+                              width: 80,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Light',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            'Light',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ),
-                        Radio<ThemeMode>(
-                          value: ThemeMode.light,
-                          groupValue: _name,
-                          onChanged: (ThemeMode? newValue) {
-                            setState(() {
-                              if (newValue != null) {
-                                var themeNotifier =
-                                    ref.read(themeNotifierProvider.notifier);
-
-                                themeNotifier.setTheme('light');
-                              }
-                              _name = newValue;
-                            });
-                          },
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    var themeNotifier =
-                        ref.read(themeNotifierProvider.notifier);
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      var themeNotifier =
+                          ref.read(themeNotifierProvider.notifier);
 
-                    themeNotifier.setTheme('dark');
-                    _name = ThemeMode.dark;
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  width: 40.w,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/images/themes/theme-dark.svg',
-                          semanticsLabel: 'Dark Theme',
-                          height: 20.h,
-                          width: 80,
+                      themeNotifier.setTheme('dark');
+                      _name = ThemeMode.dark;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(8),
+                      border: _name == ThemeMode.dark
+                          ? Border.all(
+                              color: Theme.of(context).primaryColor, width: 2)
+                          : null,
+                    ),
+                    width: 40.w,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/themes/theme-dark.svg',
+                              semanticsLabel: 'Dark Theme',
+                              height: 20.h,
+                              width: 80,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Dark',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            'Dark',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ),
-                        Radio<ThemeMode>(
-                          value: ThemeMode.dark,
-                          groupValue: _name,
-                          onChanged: (ThemeMode? newValue) {
-                            setState(() {
-                              if (newValue != null) {
-                                var themeNotifier =
-                                    ref.read(themeNotifierProvider.notifier);
-
-                                themeNotifier.setTheme('dark');
-                              }
-                              _name = newValue;
-                            });
-                          },
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           SizedBox(
             height: 5.h,
@@ -221,45 +205,37 @@ class _ThemeSettingsScreenState extends ConsumerState<ThemeSettingsScreen> {
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(8),
+                border: _name == ThemeMode.system
+                    ? Border.all(
+                        color: Theme.of(context).primaryColor, width: 2)
+                    : null,
               ),
               width: 40.w,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/images/themes/theme-system.svg',
-                      semanticsLabel: 'System Theme',
-                      height: 20.h,
-                      width: 80,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        'System',
-                        style: Theme.of(context).textTheme.bodyLarge,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/themes/theme-system.svg',
+                        semanticsLabel: 'System Theme',
+                        height: 20.h,
+                        width: 80,
                       ),
-                    ),
-                    Radio<ThemeMode>(
-                      value: ThemeMode.system,
-                      groupValue: _name,
-                      onChanged: (ThemeMode? newValue) {
-                        setState(() {
-                          if (newValue != null) {
-                            var themeNotifier =
-                                ref.read(themeNotifierProvider.notifier);
-
-                            themeNotifier.setTheme('system');
-                          }
-                          _name = newValue;
-                        });
-                      },
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'System',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
+          SizedBox(height: 5.h)
         ],
       ),
     );

@@ -38,16 +38,16 @@ class AuthField extends ConsumerWidget {
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           suffixIcon: suffixIcon,
-          suffixIconColor: AppColors.secondary,
+          suffixIconColor: AppColors.secondaryText,
           hintText: label,
           hintStyle: AppTextStyles.authFieldHintStyle,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
-            borderSide: const BorderSide(color: AppColors.secondary, width: 2.0),
+            borderSide: const BorderSide(color: AppColors.darkSecondaryText, width: 2.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide:
-                const BorderSide(color: AppColors.secondary, width: 2.0),
+                const BorderSide(color: AppColors.primary, width: 2.0),
             borderRadius: BorderRadius.circular(15.0),
           ),
           errorBorder: OutlineInputBorder(

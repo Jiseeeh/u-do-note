@@ -15,8 +15,9 @@ class MultiSelect<T extends Object> extends ConsumerWidget {
   final GlobalKey<FormFieldState<dynamic>>? customKey;
   final void Function(List<T>)? onSelectionChanged;
 
-  const MultiSelect({required this.items,
-    required this.hintText,
+  const MultiSelect(
+      {required this.items,
+      required this.hintText,
       required this.title,
       required this.validationText,
       required this.prefixIcon,
@@ -38,7 +39,7 @@ class MultiSelect<T extends Object> extends ConsumerWidget {
       onSelectionChange: onSelectionChanged,
       fieldDecoration: FieldDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(color: Colors.black87),
+        hintStyle: Theme.of(context).textTheme.bodyLarge,
         prefixIcon: Icon(prefixIcon),
         showClearIcon: false,
         border: OutlineInputBorder(
@@ -53,6 +54,7 @@ class MultiSelect<T extends Object> extends ConsumerWidget {
         ),
       ),
       dropdownDecoration: DropdownDecoration(
+        backgroundColor: Theme.of(context).cardColor,
         marginTop: 2,
         maxHeight: 500,
         header: Padding(
@@ -77,6 +79,9 @@ class MultiSelect<T extends Object> extends ConsumerWidget {
           ),
         ),
       ),
+      chipDecoration: ChipDecoration(backgroundColor: Theme.of(context).cardColor),
+      dropdownItemDecoration: DropdownItemDecoration(
+          selectedBackgroundColor: Theme.of(context).primaryColor),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return validationText;

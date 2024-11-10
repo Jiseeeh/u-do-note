@@ -74,7 +74,8 @@ class AppRouter extends RootStackRouter {
               page: NoteTakingRoute.page,
               path: 'note-taking') // test if this should be here
         ]),
-        AutoRoute(page: SettingsRoute.page, path: '/settings'),
+        AutoRoute(
+            page: SettingsRoute.page, path: '/settings', maintainState: false),
         AutoRoute(page: ThemeSettingsRoute.page, path: '/theme-settings'),
         AutoRoute(page: LanguageSettingsRoute.page, path: '/language-settings'),
         AutoRoute(page: AboutSettingsRoute.page, path: '/about-settings'),

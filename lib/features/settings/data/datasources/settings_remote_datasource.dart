@@ -43,22 +43,19 @@ class SettingsRemoteDataSource {
     var user = _auth.currentUser!;
     var downloadUrl = "";
 
-    if (image != null && user.photoURL != null) {
+    if (image != null) {
       var documentSnapshot =
           await _firestore.collection('users').doc(user.uid).get();
 
       if (documentSnapshot.exists &&
           documentSnapshot.data()!.containsKey('profile_file_name')) {
         var profileFileName = documentSnapshot['profile_file_name'];
-
         var ref = _firebaseStorage.ref().child('profiles/$profileFileName');
 
-        await user.updatePhotoURL(null);
         await ref.delete();
+        await user.updatePhotoURL(null);
       }
-    }
 
-    if (image != null) {
       final fileNameArr = image.name.split('.');
       final fileName =
           "${DateTime.now().millisecondsSinceEpoch.toString()}_${fileNameArr[0]}.${fileNameArr[1]}";
@@ -71,7 +68,6 @@ class SettingsRemoteDataSource {
       });
 
       downloadUrl = await snapshot.ref.getDownloadURL();
-
       await user.updatePhotoURL(downloadUrl);
     }
 
@@ -166,6 +162,21 @@ class SettingsRemoteDataSource {
         .collection(FirestoreCollection.users.name)
         .doc(userId)
         .delete();
+
+    try {
+      GooglePlayServicesAvailability availability = await GoogleApiAvailability
+          .instance
+          .checkGooglePlayServicesAvailability();
+
+      if (availability == GooglePlayServicesAvailability.success) {
+        GoogleSignIn googleSignIn = GoogleSignIn();
+        await googleSignIn.disconnect();
+
+        logger.d("google sign in disconnected");
+      }
+    } catch (error) {
+      logger.d("could not disconnect google sign in with error: $error");
+    }
 
     await _auth.currentUser!.delete();
     logger.d("Deleted user: $userDisplayName");

@@ -439,7 +439,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     });
   }
 
-  void onSave({required bool showLoading}) async {
+  void onSave({required bool showLoading, bool forceSave = false}) async {
     if (showLoading) {
       EasyLoading.show(
           status: 'loading...',
@@ -447,7 +447,9 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
           dismissOnTap: false);
     }
 
-    if (_fleatherController!.document.toPlainText() == _lastSavedContent) {
+    // ? does not matter if modified or not if will force save
+    if (!forceSave &&
+        _fleatherController!.document.toPlainText() == _lastSavedContent) {
       logger.d('Note has not been modified, skipping save...');
 
       return;
@@ -693,7 +695,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         if (didPop) return;
 
         if (context.mounted) {
-          onSave(showLoading: false);
+          onSave(showLoading: false, forceSave: true);
 
           var reviewScreenState = ref.read(reviewScreenProvider);
 

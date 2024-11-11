@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../details_content.dart';
 
-class LeitnerSystemDetails extends ConsumerWidget {
-  const LeitnerSystemDetails({super.key});
+class AcronymDetails extends ConsumerWidget {
+  const AcronymDetails({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,10 +16,10 @@ class LeitnerSystemDetails extends ConsumerWidget {
           height: 16,
         ),
         Image.asset(
-          'assets/images/instruction_leitner.jpg',
+          'assets/images/acronym.webp',
           width: MediaQuery.sizeOf(context).width,
-          height: 350,
-          fit: BoxFit.fitHeight,
+          height: 230,
+          fit: BoxFit.cover,
         ),
         const SizedBox(
           height: 16,
@@ -36,17 +36,21 @@ class LeitnerSystemDetails extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.tr('leitner_desc')),
+                Text(context.tr('acronym_desc')),
                 const SizedBox(
                   height: 10,
                 ),
                 DetailsContent(
                   title: context.tr("review_grading_q"),
-                  content: context.tr("leitner_grading"),
+                  content: context.tr("review_grading"),
                 ),
                 DetailsContent(
-                  title: context.tr("leitner_new_session_q"),
-                  content: context.tr("leitner_new_session"),
+                  title: context.tr("review_quiz_q"),
+                  content: context.tr("acronym_quiz"),
+                ),
+                DetailsContent(
+                  title: context.tr("acronym_new_session_q"),
+                  content: context.tr("acronym_new_session"),
                 ),
               ],
             ),

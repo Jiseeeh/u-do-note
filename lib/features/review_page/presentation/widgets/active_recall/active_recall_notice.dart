@@ -43,15 +43,15 @@ class ActiveRecallNotice extends ConsumerWidget {
         children: [
           buildNoticeContent(context,
               title: context.tr("review_grading_q"),
-              content: context.tr("You will be graded every quiz you take.")),
+              content: context.tr("active_recall_grading")),
           buildNoticeContent(context,
               title: context.tr("review_quiz_q"),
               content: context.tr(
-                  "You'll take the first quiz 2 hours after starting a session and answering 'What do you remember?' Subsequent quizzes will adjust based on your scores but will continue to ask the same question.")),
+                  "active_recall_quiz")),
           buildNoticeContent(context,
-              title: context.tr("How do I know when it is the time of quiz?"),
+              title: context.tr("quiz_time_q"),
               content: context.tr(
-                  "You'll see your session at on-going reviews in the homepage and receive a notification.")),
+                  "quiz_time")),
         ],
       ),
     );

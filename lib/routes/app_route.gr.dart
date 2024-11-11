@@ -865,10 +865,17 @@ class Sq3rRouteArgs {
 
 /// generated route for
 /// [StrategyDetailsScreen]
-class StrategyDetailsRoute extends PageRouteInfo<void> {
-  const StrategyDetailsRoute({List<PageRouteInfo>? children})
-      : super(
+class StrategyDetailsRoute extends PageRouteInfo<StrategyDetailsRouteArgs> {
+  StrategyDetailsRoute({
+    required String title,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           StrategyDetailsRoute.name,
+          args: StrategyDetailsRouteArgs(
+            title: title,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -877,9 +884,29 @@ class StrategyDetailsRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const StrategyDetailsScreen();
+      final args = data.argsAs<StrategyDetailsRouteArgs>();
+      return StrategyDetailsScreen(
+        args.title,
+        key: args.key,
+      );
     },
   );
+}
+
+class StrategyDetailsRouteArgs {
+  const StrategyDetailsRouteArgs({
+    required this.title,
+    this.key,
+  });
+
+  final String title;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'StrategyDetailsRouteArgs{title: $title, key: $key}';
+  }
 }
 
 /// generated route for

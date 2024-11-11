@@ -43,15 +43,15 @@ class SpacedRepetitionNotice extends ConsumerWidget {
         children: [
           buildNoticeContent(context,
               title: context.tr("review_grading_q"),
-              content: context.tr("You will be graded every quiz you take.")),
+              content: context.tr("spaced_repetition_grading")),
           buildNoticeContent(context,
               title: context.tr("review_quiz_q"),
               content: context.tr(
-                  "You will take the quiz after the first hour, and the next subsequent quizzes will be on intervals")),
+                  "spaced_repetition_quiz")),
           buildNoticeContent(context,
-              title: context.tr("How do I know when it is the time of quiz?"),
+              title: context.tr("quiz_time_q"),
               content: context.tr(
-                  "You'll see your session at on-going reviews in the homepage and receive a notification.")),
+                  "quiz_time")),
         ],
       ),
     );

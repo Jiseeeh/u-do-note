@@ -1,10 +1,13 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_api_availability/google_api_availability.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:u_do_note/core/firestore_collection_enum.dart';
+import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 import '../widgets/social_icon.dart';
@@ -130,10 +133,8 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                               .success) {
                                         final GoogleSignIn googleSignIn =
                                             GoogleSignIn();
-
                                         final GoogleSignInAccount? googleUser =
                                             await googleSignIn.signIn();
-
                                         final GoogleSignInAuthentication?
                                             googleAuth =
                                             await googleUser?.authentication;
@@ -145,8 +146,31 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                             idToken: googleAuth.idToken,
                                           );
 
-                                          await FirebaseAuth.instance
+                                          var userCred = await ref
+                                              .read(firebaseAuthProvider)
                                               .signInWithCredential(credential);
+
+                                          var userDoc = await ref
+                                              .read(firestoreProvider)
+                                              .collection(FirestoreCollection
+                                                  .users.name)
+                                              .doc(userCred.user!.uid)
+                                              .get();
+
+                                          if (!userDoc.exists) {
+                                            await ref
+                                                .read(firestoreProvider)
+                                                .collection(FirestoreCollection
+                                                    .users.name)
+                                                .doc(userCred.user!.uid)
+                                                .set({
+                                              'uid': userCred.user!.uid,
+                                              'createdAt':
+                                                  FieldValue.serverTimestamp(),
+                                              'categories': ["Uncategorized"],
+                                              'email': userCred.user!.email,
+                                            });
+                                          }
 
                                           if (!context.mounted) return;
 

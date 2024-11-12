@@ -176,14 +176,14 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
 
       String title = "";
       for (var i = 0; i < reviews.length; i++) {
-        onPressed() async {
-          switch (methodName) {
-            case LeitnerSystemModel.name:
-              title = reviews[i].title;
-            default:
-              title = reviews[i].sessionName;
-          }
+        switch (methodName) {
+          case LeitnerSystemModel.name:
+            title = reviews[i].title;
+          default:
+            title = reviews[i].sessionName;
+        }
 
+        onPressed() async {
           var willReview = await _willReviewOld(title);
           if (!willReview || !context.mounted) return;
 

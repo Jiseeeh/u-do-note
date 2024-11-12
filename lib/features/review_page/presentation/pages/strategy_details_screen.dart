@@ -1,12 +1,22 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
+import 'package:u_do_note/features/review_page/data/models/blurting.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+import 'package:u_do_note/features/review_page/data/models/pq4r.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
+import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/acronym/acronym_details.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/active_recall/active_recall_details.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/blurting/blurting_details.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/elaboration/elaboration_details.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/feynman/feynman_details.dart';
-
 import 'package:u_do_note/features/review_page/presentation/widgets/leitner/leitner_system_details.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pomodoro/pomodoro_details.dart';
 import 'package:u_do_note/features/review_page/presentation/widgets/pq4r/pq4r_details.dart';
@@ -16,6 +26,7 @@ import 'package:u_do_note/features/review_page/presentation/widgets/sq3r/sq3r_de
 @RoutePage()
 class StrategyDetailsScreen extends ConsumerStatefulWidget {
   final String title;
+
   const StrategyDetailsScreen(this.title, {super.key});
 
   @override
@@ -77,10 +88,7 @@ class _StrategyDetailsScreenState extends ConsumerState<StrategyDetailsScreen> {
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
             ),
-            child: SingleChildScrollView(
-              child:
-                buildDetails(widget.title)
-            ),
+            child: SingleChildScrollView(child: buildDetails(widget.title)),
           ),
         ),
       ),
@@ -88,18 +96,29 @@ class _StrategyDetailsScreenState extends ConsumerState<StrategyDetailsScreen> {
   }
 
   Widget buildDetails(String learningMethodTitle) {
-    switch(learningMethodTitle){
-      case "Leitner System": return LeitnerSystemDetails();
-      case "Feynman Technique": return FeynmanTechniqueDetails();
-      case "Pomodoro Technique": return PomodoroTechniqueDetails();
-      case "Elaboration": return ElaborationDetails();
-      case "Acronym Mnemonics": return AcronymDetails();
-      case "Blurting Method": return BlurtingDetails();
-      case "Spaced Repetition": return SpacedRepetitionDetails();
-      case "Active Recall": return ActiveRecallDetails();
-      case "SQ3R": return Sq3rDetails();
-      case "PQ4R": return Pq4rDetails();
-      default : return LeitnerSystemDetails();
+    switch (learningMethodTitle) {
+      case LeitnerSystemModel.name:
+        return LeitnerSystemDetails();
+      case FeynmanModel.name:
+        return FeynmanTechniqueDetails();
+      case PomodoroModel.name:
+        return PomodoroTechniqueDetails();
+      case ElaborationModel.name:
+        return ElaborationDetails();
+      case AcronymModel.name:
+        return AcronymDetails();
+      case BlurtingModel.name:
+        return BlurtingDetails();
+      case SpacedRepetitionModel.name:
+        return SpacedRepetitionDetails();
+      case ActiveRecallModel.name:
+        return ActiveRecallDetails();
+      case Sq3rModel.name:
+        return Sq3rDetails();
+      case Pq4rModel.name:
+        return Pq4rDetails();
+      default:
+        return SizedBox();
     }
   }
 }

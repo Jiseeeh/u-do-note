@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../routes/app_route.dart';
+import 'package:u_do_note/routes/app_route.dart';
 
 class ReviewMethod extends ConsumerWidget {
   final String title;
@@ -44,7 +44,8 @@ class ReviewMethod extends ConsumerWidget {
               ),
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+                    topLeft: Radius.circular(8),
+                    bottomLeft: Radius.circular(8)),
                 child: Image(
                   image: AssetImage(imagePath),
                   fit: BoxFit.cover,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:u_do_note/core/shared/theme/colors.dart';
 
 class MultiSelect<T extends Object> extends ConsumerWidget {
@@ -81,9 +82,10 @@ class MultiSelect<T extends Object> extends ConsumerWidget {
           ),
         ),
       ),
-      chipDecoration: ChipDecoration(backgroundColor: Theme.of(context).cardColor),
+      chipDecoration:
+          ChipDecoration(backgroundColor: Theme.of(context).cardColor),
       dropdownItemDecoration: DropdownItemDecoration(
-        selectedTextColor: AppColors.primaryBackground,
+          selectedTextColor: AppColors.primaryBackground,
           selectedBackgroundColor: Theme.of(context).primaryColor),
       validator: (value) {
         if (value == null || value.isEmpty) {

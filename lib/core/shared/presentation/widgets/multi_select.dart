@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
 
 class MultiSelect<T extends Object> extends ConsumerWidget {
   final List<DropdownItem<T>> items;
@@ -56,7 +58,7 @@ class MultiSelect<T extends Object> extends ConsumerWidget {
       dropdownDecoration: DropdownDecoration(
         backgroundColor: Theme.of(context).cardColor,
         marginTop: 2,
-        maxHeight: 500,
+        maxHeight: 70.h,
         header: Padding(
           padding: const EdgeInsets.all(8),
           child: RichText(
@@ -81,6 +83,7 @@ class MultiSelect<T extends Object> extends ConsumerWidget {
       ),
       chipDecoration: ChipDecoration(backgroundColor: Theme.of(context).cardColor),
       dropdownItemDecoration: DropdownItemDecoration(
+        selectedTextColor: AppColors.primaryBackground,
           selectedBackgroundColor: Theme.of(context).primaryColor),
       validator: (value) {
         if (value == null || value.isEmpty) {

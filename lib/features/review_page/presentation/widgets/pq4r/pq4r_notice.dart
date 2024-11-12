@@ -44,11 +44,11 @@ class Pq4rNotice extends ConsumerWidget {
           buildNoticeContent(context,
               title: context.tr("review_grading_q"),
               content: context
-                  .tr("You will be graded after your session with a quiz.")),
+                  .tr("pq4r_grading")),
           buildNoticeContent(context,
               title: context.tr("review_quiz_q"),
               content: context
-                  .tr("You will take the quiz after the last step of PQ4R.")),
+                  .tr("pq4r_quiz")),
         ],
       ),
     );

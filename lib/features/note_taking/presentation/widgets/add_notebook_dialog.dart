@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
@@ -260,6 +261,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                   .map<DropdownMenuEntry<String>>((String value) {
                 return DropdownMenuEntry<String>(value: value, label: value);
               }).toList(),
+              menuHeight: 50.h,
             ),
             const SizedBox(height: 10),
             Row(
@@ -271,7 +273,7 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
                   },
                   child: const Text('Cancel'),
                 ),
-                ElevatedButton(
+                TextButton(
                   onPressed: widget.notebookEntity == null
                       ? _onCreate(context)
                       : _onSave(context, ref),

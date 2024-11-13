@@ -2,7 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../details_content.dart';
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/details_content.dart';
 
 class LeitnerSystemDetails extends ConsumerWidget {
   const LeitnerSystemDetails({super.key});
@@ -36,17 +37,21 @@ class LeitnerSystemDetails extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.tr('leitner_desc')),
                 const SizedBox(
                   height: 10,
                 ),
                 DetailsContent(
-                  title: context.tr("review_grading_q"),
-                  content: context.tr("leitner_grading"),
+                  title: context.tr("what_is",
+                      namedArgs: {"reviewMethod": LeitnerSystemModel.name}),
+                  content: context.tr("leitner_what"),
                 ),
                 DetailsContent(
-                  title: context.tr("leitner_new_session_q"),
-                  content: context.tr("leitner_new_session"),
+                  title: context.tr("when_good"),
+                  content: context.tr("leitner_when_good"),
+                ),
+                DetailsContent(
+                  title: context.tr("how_it_works"),
+                  content: context.tr("leitner_how"),
                 ),
               ],
             ),

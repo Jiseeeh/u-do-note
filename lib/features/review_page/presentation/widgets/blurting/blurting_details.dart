@@ -2,7 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../details_content.dart';
+import 'package:u_do_note/features/review_page/data/models/blurting.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/details_content.dart';
 
 class BlurtingDetails extends ConsumerWidget {
   const BlurtingDetails({super.key});
@@ -36,21 +37,21 @@ class BlurtingDetails extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.tr('blurting_desc')),
                 const SizedBox(
                   height: 10,
                 ),
                 DetailsContent(
-                  title: context.tr("review_grading_q"),
-                  content: context.tr("review_grading"),
+                  title: context.tr("what_is",
+                      namedArgs: {"reviewMethod": BlurtingModel.name}),
+                  content: context.tr("blurting_what"),
                 ),
                 DetailsContent(
-                  title: context.tr("review_quiz_q"),
-                  content: context.tr("blurting_quiz"),
+                  title: context.tr("When It’s Good to Use"),
+                  content: context.tr("blurting_when_good"),
                 ),
                 DetailsContent(
-                  title: context.tr("blurting_quiz_later_q"),
-                  content: context.tr("blurting_quiz_later"),
+                  title: context.tr("How it works"),
+                  content: context.tr("blurting_how"),
                 ),
               ],
             ),

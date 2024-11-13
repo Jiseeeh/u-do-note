@@ -2,7 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../details_content.dart';
+import 'package:u_do_note/features/review_page/data/models/acronym.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/details_content.dart';
 
 class AcronymDetails extends ConsumerWidget {
   const AcronymDetails({super.key});
@@ -36,21 +37,21 @@ class AcronymDetails extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.tr('acronym_desc')),
                 const SizedBox(
                   height: 10,
                 ),
                 DetailsContent(
-                  title: context.tr("review_grading_q"),
-                  content: context.tr("review_grading"),
+                  title: context.tr("what_is",
+                      namedArgs: {"reviewMethod": AcronymModel.name}),
+                  content: context.tr("acronym_what"),
                 ),
                 DetailsContent(
-                  title: context.tr("review_quiz_q"),
-                  content: context.tr("acronym_quiz"),
+                  title: context.tr("when_good"),
+                  content: context.tr("acronym_when_good"),
                 ),
                 DetailsContent(
-                  title: context.tr("acronym_new_session_q"),
-                  content: context.tr("acronym_new_session"),
+                  title: context.tr("how_it_works"),
+                  content: context.tr("acronym_how"),
                 ),
               ],
             ),

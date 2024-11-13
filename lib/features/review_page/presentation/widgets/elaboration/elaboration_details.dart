@@ -2,7 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../details_content.dart';
+import 'package:u_do_note/features/review_page/data/models/elaboration.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/details_content.dart';
 
 class ElaborationDetails extends ConsumerWidget {
   const ElaborationDetails({super.key});
@@ -36,21 +37,21 @@ class ElaborationDetails extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.tr('elaboration_desc')),
                 const SizedBox(
                   height: 10,
                 ),
                 DetailsContent(
-                  title: context.tr("review_grading_q"),
-                  content: context.tr("review_grading"),
+                  title: context.tr("what_is",
+                      namedArgs: {"reviewMethod": ElaborationModel.name}),
+                  content: context.tr("elaboration_what"),
                 ),
                 DetailsContent(
-                  title: context.tr("review_quiz_q"),
-                  content: context.tr("elaboration_quiz"),
+                  title: context.tr("when_good"),
+                  content: context.tr("elaboration_when_good"),
                 ),
                 DetailsContent(
-                  title: context.tr("elaboration_new_session_q"),
-                  content: context.tr("elaboration_new_session"),
+                  title: context.tr("how_it_works"),
+                  content: context.tr("elaboration_how"),
                 ),
               ],
             ),

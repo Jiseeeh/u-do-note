@@ -2,7 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../details_content.dart';
+import 'package:u_do_note/features/review_page/data/models/spaced_repetition.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/details_content.dart';
 
 class SpacedRepetitionDetails extends ConsumerWidget {
   const SpacedRepetitionDetails({super.key});
@@ -36,21 +37,21 @@ class SpacedRepetitionDetails extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.tr('spaced_repetition_desc')),
                 const SizedBox(
                   height: 10,
                 ),
                 DetailsContent(
-                  title: context.tr("review_grading_q"),
-                  content: context.tr("spaced_repetition_grading"),
+                  title: context.tr("what_is",
+                      namedArgs: {"reviewMethod": SpacedRepetitionModel.name}),
+                  content: context.tr("spaced_repetition_what"),
                 ),
                 DetailsContent(
-                  title: context.tr("review_quiz_q"),
-                  content: context.tr("spaced_repetition_quiz"),
+                  title: context.tr("When It’s Good to Use"),
+                  content: context.tr("spaced_repetition_when_good"),
                 ),
                 DetailsContent(
-                  title: context.tr("quiz_time_q"),
-                  content: context.tr("quiz_time"),
+                  title: context.tr("how_it_works"),
+                  content: context.tr("spaced_repetition_how"),
                 ),
               ],
             ),

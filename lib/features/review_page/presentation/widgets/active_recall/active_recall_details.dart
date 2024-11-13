@@ -2,7 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../details_content.dart';
+import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/details_content.dart';
 
 class ActiveRecallDetails extends ConsumerWidget {
   const ActiveRecallDetails({super.key});
@@ -36,21 +37,21 @@ class ActiveRecallDetails extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.tr('active_recall_desc')),
                 const SizedBox(
                   height: 10,
                 ),
                 DetailsContent(
-                  title: context.tr("review_grading_q"),
-                  content: context.tr("active_recall_grading"),
+                  title: context.tr("what_is",
+                      namedArgs: {"reviewMethod": ActiveRecallModel.name}),
+                  content: context.tr("active_recall_what"),
                 ),
                 DetailsContent(
-                  title: context.tr("review_quiz_q"),
-                  content: context.tr("active_recall_quiz"),
+                  title: context.tr("when_good"),
+                  content: context.tr("active_recall_when_good"),
                 ),
                 DetailsContent(
-                  title: context.tr("spaced_repetition_quiz_time_q"),
-                  content: context.tr("quiz_time"),
+                  title: context.tr("how_it_works"),
+                  content: context.tr("active_recall_how"),
                 ),
               ],
             ),

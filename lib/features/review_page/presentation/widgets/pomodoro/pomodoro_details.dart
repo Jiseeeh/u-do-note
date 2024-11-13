@@ -2,7 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../details_content.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
+import 'package:u_do_note/features/review_page/presentation/widgets/details_content.dart';
 
 class PomodoroTechniqueDetails extends ConsumerWidget {
   const PomodoroTechniqueDetails({super.key});
@@ -36,21 +37,21 @@ class PomodoroTechniqueDetails extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.tr('pomodoro_desc')),
                 const SizedBox(
                   height: 10,
                 ),
                 DetailsContent(
-                  title: context.tr("pomodoro_timer_desc_q"),
-                  content: context.tr("pomodoro_timer_desc"),
+                  title: context.tr("what_is",
+                      namedArgs: {"reviewMethod": PomodoroModel.name}),
+                  content: context.tr("pomodoro_what"),
                 ),
                 DetailsContent(
-                  title: context.tr("review_grading_q"),
-                  content: context.tr("review_grading"),
+                  title: context.tr("when_good"),
+                  content: context.tr("pomodoro_when_good"),
                 ),
                 DetailsContent(
-                  title: context.tr("review_quiz_q"),
-                  content: context.tr("pomodoro_quiz"),
+                  title: context.tr("how_it_works"),
+                  content: context.tr("pomodoro_how"),
                 ),
               ],
             ),

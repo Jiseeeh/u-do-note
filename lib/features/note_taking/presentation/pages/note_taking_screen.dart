@@ -893,7 +893,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                               if (willContinue) {
                                 _fleatherController!.document.insert(
                                     _fleatherController!.document.length - 1,
-                                    extractedText);
+                                    _textFieldController.text);
 
                                 // ?refresh ui
                                 setState(() {});

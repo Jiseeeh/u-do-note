@@ -4,6 +4,14 @@
 ### Features
 
 * try auto update pubspec file ([c247962](https://github.com/Jiseeeh/u-do-note/commit/c247962ad4371d566ee38a2d7e78597cdb57b3af))
+* try to auto update pubspec file ([c1f6fe2](https://github.com/Jiseeeh/u-do-note/commit/c1f6fe268ab75abed07483c38f6870488d150ffc))
+
+# [3.5.0](https://github.com/Jiseeeh/u-do-note/compare/v3.4.0...v3.5.0) (2024-11-14)
+
+
+### Features
+
+* try auto update pubspec file ([c247962](https://github.com/Jiseeeh/u-do-note/commit/c247962ad4371d566ee38a2d7e78597cdb57b3af))
 
 # [3.4.0](https://github.com/Jiseeeh/u-do-note/compare/v3.3.1...v3.4.0) (2024-11-14)
 

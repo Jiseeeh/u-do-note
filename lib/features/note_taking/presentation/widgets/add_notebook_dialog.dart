@@ -13,7 +13,6 @@ import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 
-// TODO: rename this file to match its functionality
 class AddNotebookDialog extends ConsumerStatefulWidget {
   final NotebookEntity? notebookEntity;
   final List<String> categories;

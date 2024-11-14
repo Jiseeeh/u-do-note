@@ -48,10 +48,9 @@ class BlurtingNotice extends ConsumerWidget {
               title: context.tr("review_quiz_q"),
               content: context.tr("blurting_quiz")),
           buildNoticeContent(context,
-              // TODO: translation
               title: context.tr("blurting_quiz_later_q"),
               content: context.tr("blurting_quiz_later"))
-          ],
+        ],
       ),
     );
   }

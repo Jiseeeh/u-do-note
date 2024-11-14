@@ -19,7 +19,6 @@ import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/domain/entities/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
-import 'package:u_do_note/core/shared/presentation/providers/app_state_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/utility.dart';
@@ -451,9 +450,6 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             IconButton(
               onPressed: () {
-                // TODO: pending for deletion (unused)
-                ref.read(appStateProvider.notifier).setCurrentNoteId(note.id);
-
                 context.router.push(
                     NoteTakingRoute(notebookId: widget.notebookId, note: note));
               },

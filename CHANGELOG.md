@@ -1,3 +1,10 @@
+## [3.5.1](https://github.com/Jiseeeh/u-do-note/compare/v3.5.0...v3.5.1) (2024-11-14)
+
+
+### Bug Fixes
+
+* could not read github username ([b0ab98f](https://github.com/Jiseeeh/u-do-note/commit/b0ab98fc3831f0420e27cc795aff8d25151bd9d9))
+
 # [3.5.0](https://github.com/Jiseeeh/u-do-note/compare/v3.4.0...v3.5.0) (2024-11-14)
 
 

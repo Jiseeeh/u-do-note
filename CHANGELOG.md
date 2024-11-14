@@ -1,3 +1,28 @@
+# [3.4.0](https://github.com/Jiseeeh/u-do-note/compare/v3.3.1...v3.4.0) (2024-11-14)
+
+
+### Bug Fixes
+
+* editing extracted text not being saved ([ba94a43](https://github.com/Jiseeeh/u-do-note/commit/ba94a43ccb38b72edce428497a9e5cf662f5e197))
+* editing note styles only not being saved ([5c65f1d](https://github.com/Jiseeeh/u-do-note/commit/5c65f1db6aa4bbd49902abe538e1c8ca6518943f))
+* focus not being unfocused on tap outside ([a2def21](https://github.com/Jiseeeh/u-do-note/commit/a2def21075daf687adb1531dddda4587b337a2c0))
+* name not updating ([8198f26](https://github.com/Jiseeeh/u-do-note/commit/8198f26a7ff8b16ef11a28306d69ea80b8ebfeca))
+* on going review not showing ([46e8fc9](https://github.com/Jiseeeh/u-do-note/commit/46e8fc93d3ca4e7ebb10a39fe35ea1d63e324975))
+* pages ids getting null ([fd15943](https://github.com/Jiseeeh/u-do-note/commit/fd159435e87c3f7f0de56889860aa89a30e77a44))
+
+
+### Features
+
+* add check if new user on google sign in ([5aed824](https://github.com/Jiseeeh/u-do-note/commit/5aed8249cbd608f80edea982084f9147b4b545b0))
+* add delete account ([d9734cc](https://github.com/Jiseeeh/u-do-note/commit/d9734cc23b4c5ef2cfdce52e0a51255d8adc824d))
+* add delete account tr ([4e3bbfc](https://github.com/Jiseeeh/u-do-note/commit/4e3bbfc0997ca93d3babeeccda13cf522918c366))
+* add feedback url ([e74c94b](https://github.com/Jiseeeh/u-do-note/commit/e74c94bc1946988b56fd70afcf1e8f7abc01f30c))
+* add indicator on which theme is active ([2852c51](https://github.com/Jiseeeh/u-do-note/commit/2852c51a1160f0bc8988e8471ed475b965c3d6ba))
+* add learning methods details ([#115](https://github.com/Jiseeeh/u-do-note/issues/115)) ([ac4f9a9](https://github.com/Jiseeeh/u-do-note/commit/ac4f9a9a25d9188270069628c496692e420f0c3a))
+* add url launcher ([35d65a6](https://github.com/Jiseeeh/u-do-note/commit/35d65a6afdb307ece35617bde15be7939a79ec2c))
+* add user email on create ([5521ad9](https://github.com/Jiseeeh/u-do-note/commit/5521ad93f42e29a70dbe9b29da0e7e1028400ed4))
+* localize method details ([4d88578](https://github.com/Jiseeeh/u-do-note/commit/4d88578edc9d98924938b141938a77cb0fe2eb80))
+
 ## [3.3.1](https://github.com/Jiseeeh/u-do-note/compare/v3.3.0...v3.3.1) (2024-11-10)
 
 

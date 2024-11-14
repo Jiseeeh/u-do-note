@@ -9,7 +9,6 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
-import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/entities/notebook.dart';
@@ -28,25 +27,13 @@ class NotebooksScreen extends ConsumerStatefulWidget {
 }
 
 class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
-  var gridCols = 2;
   List _elements = [], _categories = [];
   var filterCategory = 'All';
 
   @override
   void initState() {
     super.initState();
-    initGridCols();
     getCategories();
-  }
-
-  void initGridCols() async {
-    var prefs = await ref.read(sharedPreferencesProvider.future);
-    var cols = prefs.getInt('nbGridCols');
-    if (cols != null) {
-      setState(() {
-        gridCols = cols;
-      });
-    }
   }
 
   void getCategories() async {
@@ -55,12 +42,15 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
     var notebooks = await ref.read(notebooksProvider.notifier).getNotebooks();
 
     if (failureOrCategories is Failure) {
-      // print('Error is: ' + failureOrCategories.message);
+      EasyLoading.showError(
+          "Something went wrong when getting your categories.");
+      logger.w("Cause: ${failureOrCategories.message}");
       return;
     }
 
     if (notebooks is Failure) {
-      // print('Error is: ' + notebooks.message);
+      EasyLoading.showError("Something went wrong when getting your notebooks");
+      logger.w("Cause: ${notebooks.message}");
       return;
     }
 
@@ -129,32 +119,6 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
                             categories: _categories.cast<String>(),
                           )));
                   _update('All');
-                }),
-            SpeedDialChild(
-                elevation: 0,
-                child: const Icon(Icons.looks_two_rounded),
-                labelWidget: Text(context.tr("two_col")),
-                onTap: () async {
-                  var prefs = await ref.read(sharedPreferencesProvider.future);
-                  prefs.setInt('nbGridCols', 2);
-                  setState(() {
-                    if (gridCols != 2) {
-                      gridCols = 2;
-                    }
-                  });
-                }),
-            SpeedDialChild(
-                elevation: 0,
-                child: const Icon(Icons.looks_3_rounded),
-                labelWidget: Text(context.tr("three_col")),
-                onTap: () async {
-                  var prefs = await ref.read(sharedPreferencesProvider.future);
-                  prefs.setInt('nbGridCols', 3);
-                  setState(() {
-                    if (gridCols != 3) {
-                      gridCols = 3;
-                    }
-                  });
                 }),
           ],
           child: const Icon(Icons.add_rounded),

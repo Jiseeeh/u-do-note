@@ -1,3 +1,10 @@
+## [3.5.3](https://github.com/Jiseeeh/u-do-note/compare/v3.5.2...v3.5.3) (2024-11-15)
+
+
+### Bug Fixes
+
+* long scanned text being formatted crashes ([b27e8ab](https://github.com/Jiseeeh/u-do-note/commit/b27e8ab70b0cf41994abcb5f4faeecf18700858d))
+
 ## [3.5.2](https://github.com/Jiseeeh/u-do-note/compare/v3.5.1...v3.5.2) (2024-11-15)
 
 

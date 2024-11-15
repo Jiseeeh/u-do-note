@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/firestore_filter_enum.dart';
-
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/query_filter.dart';
 import 'package:u_do_note/core/shared/data/models/question.dart';

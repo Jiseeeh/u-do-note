@@ -1,3 +1,10 @@
+## [3.5.2](https://github.com/Jiseeeh/u-do-note/compare/v3.5.1...v3.5.2) (2024-11-15)
+
+
+### Bug Fixes
+
+* version wrong formatting ([895bbdc](https://github.com/Jiseeeh/u-do-note/commit/895bbdc5db928e505a444cb02248426ecc413b04))
+
 ## [3.5.1](https://github.com/Jiseeeh/u-do-note/compare/v3.5.0...v3.5.1) (2024-11-14)
 
 

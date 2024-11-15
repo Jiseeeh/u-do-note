@@ -21,7 +21,7 @@ jobs:
 
       - name: Update Pubspec Version
         run: |
-          NEW_VERSION=$(git describe --tags --abbrev=0)
+          NEW_VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')
           echo "New version: $NEW_VERSION"
 
           sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml

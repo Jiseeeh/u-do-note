@@ -191,41 +191,52 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                   document.dispose();
 
                   if (!context.mounted) return;
-                  var tfController = TextEditingController(text: extractedText);
 
-                  var willFormat = await CustomDialog.show(context,
-                      title: "Preview",
-                      subTitle: "Do you want us to format this extracted text?",
-                      content: TextField(
-                        controller: tfController,
-                        readOnly: true,
-                        maxLines: 10,
-                      ),
-                      buttons: [
-                        CustomDialogButton(text: "No", value: false),
-                        CustomDialogButton(text: "Yes", value: true),
-                      ]);
+                  // ? only ask to format if chars is less than 10k
+                  // ? openai response token output is default to 4096 which is about 20k chars
+                  if (extractedText.length < 10000) {
+                    var tfController =
+                        TextEditingController(text: extractedText);
 
-                  if (willFormat) {
-                    EasyLoading.show(
-                        status: 'Formatting text...',
-                        maskType: EasyLoadingMaskType.black,
-                        dismissOnTap: false);
+                    var willFormat = await CustomDialog.show(context,
+                        title: "Preview",
+                        subTitle:
+                            "Do you want us to format this extracted text?",
+                        content: TextField(
+                          controller: tfController,
+                          readOnly: true,
+                          maxLines: 10,
+                        ),
+                        buttons: [
+                          CustomDialogButton(text: "No", value: false),
+                          CustomDialogButton(text: "Yes", value: true),
+                        ]);
 
-                    var failureOrFormattedText = await ref
-                        .read(notebooksProvider.notifier)
-                        .formatScannedText(scannedText: extractedText);
+                    if (willFormat) {
+                      EasyLoading.show(
+                          status: 'Formatting text...',
+                          maskType: EasyLoadingMaskType.black,
+                          dismissOnTap: false);
 
-                    EasyLoading.dismiss();
+                      var failureOrFormattedText = await ref
+                          .read(notebooksProvider.notifier)
+                          .formatScannedText(scannedText: extractedText);
 
-                    if (failureOrFormattedText is Failure) {
-                      logger.e(
-                          "Could not format extracted text: ${failureOrFormattedText.message}");
-                      EasyLoading.showError("Could not format extracted text..",
-                          duration: const Duration(seconds: 2));
-                    } else {
-                      extractedText = failureOrFormattedText;
+                      EasyLoading.dismiss();
+
+                      if (failureOrFormattedText is Failure) {
+                        logger.e(
+                            "Could not format extracted text: ${failureOrFormattedText.message}");
+                        EasyLoading.showError(
+                            "Could not format extracted text..",
+                            duration: const Duration(seconds: 2));
+                      } else {
+                        extractedText = failureOrFormattedText;
+                      }
                     }
+                  } else {
+                    EasyLoading.showInfo(
+                        "We would not be able to format your scanned text as it is too long.");
                   }
 
                   if (!context.mounted) return;

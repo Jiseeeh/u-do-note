@@ -504,19 +504,18 @@ class NoteRemoteDataSource {
         content: [
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
             """
-            You are a helpful assistant that guides students in analyzing their notes and determining the best learning technique. Use these guidelines to assist the user:
-
             Respond in JSON format with the properties:
-                learningTechnique: The most suitable learning method for the notes.
-                isValid: Set to true if the notes are understandable; set to false if they are gibberish or lack coherence.
-                topic: Briefly identify the main topic of the notes.
-                reason: Explain in the 2nd person why the selected technique is the best fit.
-            
+              learningMethod: The most suitable learning method for the notes.
+              isValid: Set to true if the notes are understandable; set to false if they are gibberish or lack coherence.
+              topic: Briefly identify the main topic of the notes.
+              reason: Explain in the 2nd person why the selected technique is the best fit.
+
             Consider the following learning techniques and their suitability:
-                Leitner System: Choose this if the notes primarily consist of factual information, vocabulary, or discrete items that can be memorized effectively flashcards.
-                Feynman Technique: Recommend this if the notes involve complex concepts, theories, or processes that would benefit from simplification and deep understanding.
-                Pomodoro Technique: Use this for notes involving lengthy tasks or extensive reading/writing that requires time management and sustained focus.
-                Based on these guidelines, determine and suggest the best learning technique
+              Pomodoro Technique: Always recommend this if the note's character count exceeds 10,000, regardless of content, as it indicates the need for sustained focus and time management to process the length.
+              Leitner System: Choose this if the notes primarily consist of factual information, vocabulary, or discrete items that can be memorized effectively flashcards.
+              Feynman Technique: Recommend this if the notes involve complex concepts, theories, or processes that would benefit from simplification and deep understanding.
+
+            Based on these guidelines, determine and suggest the best learning method.
             """,
           ),
         ]);
@@ -527,6 +526,7 @@ class NoteRemoteDataSource {
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
             """
               Please analyze my note below and determine the best learning technique for it:
+              Note number of characters: ${content.length}
               
               $content
               """,
@@ -556,7 +556,7 @@ class NoteRemoteDataSource {
       throw "U Do Note could not understand the note. Please try again later.";
     }
 
-    logger.d('learning technique: ${decodedJson['learningTechnique']}');
+    logger.d('learning method: ${decodedJson['learningMethod']}');
     logger.d('reason: ${decodedJson['reason']}');
     logger.d('topic: ${decodedJson['topic']}');
 

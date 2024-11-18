@@ -384,7 +384,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         }
 
         var decodedJson = json.decode(value);
-        _learningTechniqueAnalyzed = decodedJson['learningTechnique'];
+        _learningTechniqueAnalyzed = decodedJson['learningMethod'];
         _reasonAnalyzed = decodedJson['reason'];
         _topicAnalyzed = decodedJson['topic'];
 

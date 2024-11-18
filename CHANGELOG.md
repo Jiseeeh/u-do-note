@@ -1,3 +1,11 @@
+## [3.5.4](https://github.com/Jiseeeh/u-do-note/compare/v3.5.3...v3.5.4) (2024-11-18)
+
+
+### Bug Fixes
+
+* pomodoro method not being suggested ([f1cd572](https://github.com/Jiseeeh/u-do-note/commit/f1cd572978fe0566d93d096091c27e50d6c7f3fc))
+* use github actor in release yaml ([c429151](https://github.com/Jiseeeh/u-do-note/commit/c429151407a113ca67d84bbf01e340994fccefcd))
+
 ## [3.5.3](https://github.com/Jiseeeh/u-do-note/compare/v3.5.2...v3.5.3) (2024-11-15)
 
 

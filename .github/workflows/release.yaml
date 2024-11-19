@@ -31,3 +31,7 @@ jobs:
           git add pubspec.yaml
           git commit -m "ci: update pubspec version to $NEW_VERSION"
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/Jiseeeh/u-do-note.git HEAD:main
+
+      - name: Build and Publish
+        uses: Dank-del/flutter-build-and-publish-action@v1
+

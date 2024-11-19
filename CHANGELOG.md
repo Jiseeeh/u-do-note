@@ -1,3 +1,10 @@
+## [3.5.9](https://github.com/Jiseeeh/u-do-note/compare/v3.5.8...v3.5.9) (2024-11-19)
+
+
+### Bug Fixes
+
+* i dont want to build apk anymore ([99989a1](https://github.com/Jiseeeh/u-do-note/commit/99989a1557d280301350690348146a34b50dd54f))
+
 ## [3.5.8](https://github.com/Jiseeeh/u-do-note/compare/v3.5.7...v3.5.8) (2024-11-19)
 
 

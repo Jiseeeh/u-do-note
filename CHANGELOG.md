@@ -1,3 +1,10 @@
+## [3.5.7](https://github.com/Jiseeeh/u-do-note/compare/v3.5.6...v3.5.7) (2024-11-19)
+
+
+### Bug Fixes
+
+* env files not found in action ([9c48ea3](https://github.com/Jiseeeh/u-do-note/commit/9c48ea34eab6c934dda853e2c3bc5f9dcf0f11d7))
+
 ## [3.5.6](https://github.com/Jiseeeh/u-do-note/compare/v3.5.5...v3.5.6) (2024-11-19)
 
 

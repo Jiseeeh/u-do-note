@@ -1,3 +1,10 @@
+## [3.5.5](https://github.com/Jiseeeh/u-do-note/compare/v3.5.4...v3.5.5) (2024-11-19)
+
+
+### Bug Fixes
+
+* exact alarms not permitted ([#116](https://github.com/Jiseeeh/u-do-note/issues/116)) ([f4ddfc8](https://github.com/Jiseeeh/u-do-note/commit/f4ddfc83d66bd26737c3fba229d36335343d253a))
+
 ## [3.5.4](https://github.com/Jiseeeh/u-do-note/compare/v3.5.3...v3.5.4) (2024-11-18)
 
 

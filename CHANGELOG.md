@@ -1,3 +1,10 @@
+## [3.5.8](https://github.com/Jiseeeh/u-do-note/compare/v3.5.7...v3.5.8) (2024-11-19)
+
+
+### Bug Fixes
+
+* update not working build runner ([a3b5f3a](https://github.com/Jiseeeh/u-do-note/commit/a3b5f3a834d0b043e47ebe49a980b75f9ef11a4e))
+
 ## [3.5.7](https://github.com/Jiseeeh/u-do-note/compare/v3.5.6...v3.5.7) (2024-11-19)
 
 

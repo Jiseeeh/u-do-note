@@ -48,6 +48,15 @@ jobs:
         run: |
           flutter pub get
 
+      - name: Setup env
+        run: |
+          echo "OPENAI_KEY=${{ secrets.OPENAI_KEY }}" >> .env
+          echo "FEEDBACK_URL=${{ secrets.FEEDBACK_URL }}" >> .env
+
+      - name: Build runner
+        run : |
+          dart run build_runner build
+
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks

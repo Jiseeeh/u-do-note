@@ -1,3 +1,10 @@
+## [3.5.6](https://github.com/Jiseeeh/u-do-note/compare/v3.5.5...v3.5.6) (2024-11-19)
+
+
+### Bug Fixes
+
+* test fix ([a199e7c](https://github.com/Jiseeeh/u-do-note/commit/a199e7c5a806430c86151263e9355ccbf3a5bc48))
+
 ## [3.5.5](https://github.com/Jiseeeh/u-do-note/compare/v3.5.4...v3.5.5) (2024-11-19)
 
 

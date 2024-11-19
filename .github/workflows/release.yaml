@@ -32,6 +32,39 @@ jobs:
           git commit -m "ci: update pubspec version to $NEW_VERSION"
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/Jiseeeh/u-do-note.git HEAD:main
 
-      - name: Build and Publish
-        uses: Dank-del/flutter-build-and-publish-action@v1
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.24.4'
+
+      - name: Install dependencies
+        uses: flutter pub get
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEYSTORE_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=keystore.jks" >> android/key.properties
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Releases
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
 

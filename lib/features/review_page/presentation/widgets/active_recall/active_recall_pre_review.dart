@@ -279,6 +279,9 @@ class _ActiveRecallPreReviewState extends ConsumerState<ActiveRecallPreReview> {
       var updatedActiveRecallModel =
           activeRecallModel.copyWith(id: failureOrDocId);
 
+      await AndroidFlutterLocalNotificationsPlugin()
+          .requestExactAlarmsPermission();
+
       await ref.read(localNotificationProvider).zonedSchedule(
           DateTime.now().millisecondsSinceEpoch % 100000,
           'Active Recall',
@@ -353,6 +356,9 @@ class _ActiveRecallPreReviewState extends ConsumerState<ActiveRecallPreReview> {
           .saveQuizResults(activeRecallModel: activeRecallModel);
 
       var updatedActiveRecallModel = activeRecallModel.copyWith(id: docId);
+
+      await AndroidFlutterLocalNotificationsPlugin()
+          .requestExactAlarmsPermission();
 
       await ref.read(localNotificationProvider).zonedSchedule(
           DateTime.now().millisecondsSinceEpoch % 100000,

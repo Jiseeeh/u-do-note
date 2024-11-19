@@ -269,6 +269,9 @@ class _SpacedRepetitionPreReviewState
 
     var updatedSpacedRepModel = spacedRepetitionModel.copyWith(id: docId);
 
+    await AndroidFlutterLocalNotificationsPlugin()
+        .requestExactAlarmsPermission();
+
     await ref.read(localNotificationProvider).zonedSchedule(
         DateTime.now().millisecondsSinceEpoch % 100000,
         'Spaced Repetition',

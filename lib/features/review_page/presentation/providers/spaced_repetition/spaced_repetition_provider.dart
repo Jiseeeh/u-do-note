@@ -161,6 +161,8 @@ class SpacedRepetition extends _$SpacedRepetition {
     } else {
       logger.d(
           "Next review will be ${DateFormat("EEE, dd MMM yyyy").format(nextReview)}");
+      await AndroidFlutterLocalNotificationsPlugin()
+          .requestExactAlarmsPermission();
       await ref.read(localNotificationProvider).zonedSchedule(
           DateTime.now().millisecondsSinceEpoch % 100000,
           'Spaced Repetition',

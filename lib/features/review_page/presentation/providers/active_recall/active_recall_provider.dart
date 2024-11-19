@@ -185,6 +185,9 @@ class ActiveRecall extends _$ActiveRecall {
           subTitle: feedback,
           buttons: [CustomDialogButton(text: "Okay")]);
 
+      await AndroidFlutterLocalNotificationsPlugin()
+          .requestExactAlarmsPermission();
+
       await ref.read(localNotificationProvider).zonedSchedule(
           DateTime.now().millisecondsSinceEpoch % 100000,
           'Active Recall',

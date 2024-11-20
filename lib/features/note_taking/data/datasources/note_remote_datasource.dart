@@ -13,8 +13,12 @@ import 'package:u_do_note/core/constant.dart' as constant;
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
+import 'package:u_do_note/features/analytics/data/models/remark.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/utils/utils.dart';
+import 'package:u_do_note/features/review_page/data/models/feynman.dart';
+import 'package:u_do_note/features/review_page/data/models/leitner.dart';
+import 'package:u_do_note/features/review_page/data/models/pomodoro.dart';
 
 class NoteRemoteDataSource {
   final FirebaseFirestore _firestore;
@@ -499,6 +503,45 @@ class NoteRemoteDataSource {
   }
 
   Future<String> analyzeNote(String content) async {
+    var userId = _auth.currentUser!.uid;
+
+    var userNotebooks = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .get();
+
+    List<RemarkModel> remarkModels = [];
+
+    for (var nb in userNotebooks.docs) {
+      var remarks = await _firestore
+          .collection(FirestoreCollection.users.name)
+          .doc(userId)
+          .collection(FirestoreCollection.user_notes.name)
+          .doc(nb.id)
+          .collection(FirestoreCollection.remarks.name)
+          .where('remark', isNull: false)
+          .where('review_method', whereIn: [
+        LeitnerSystemModel.name,
+        FeynmanModel.name,
+        PomodoroModel.name
+      ]).get();
+
+      for (var remark in remarks.docs) {
+        var remarkData = remark.data();
+
+        remarkModels.add(RemarkModel(
+            id: remark.id,
+            notebookName: nb.data()['subject'],
+            notebookId: remarkData['notebook_id'],
+            createdAt: remarkData['created_at'],
+            reviewMethod: remarkData['review_method'],
+            score: remarkData['score']));
+      }
+    }
+
+    logger.d("Remarks: $remarkModels");
+
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,
         content: [
@@ -515,7 +558,7 @@ class NoteRemoteDataSource {
               Leitner System: Choose this if the notes primarily consist of factual information, vocabulary, or discrete items that can be memorized effectively flashcards.
               Feynman Technique: Recommend this if the notes involve complex concepts, theories, or processes that would benefit from simplification and deep understanding.
 
-            Based on these guidelines, determine and suggest the best learning method.
+            Based on these guidelines, determine and suggest the best learning method while also taking into account the student's old remarks.
             """,
           ),
         ]);
@@ -528,6 +571,10 @@ class NoteRemoteDataSource {
               Please analyze my note below and determine the best learning technique for it:
               Note number of characters: ${content.length}
               
+              Also, take into account my recent remarks:
+              $remarkModels 
+              
+              content:
               $content
               """,
           ),

@@ -572,6 +572,8 @@ class NoteRemoteDataSource {
 
             1. Your response should be in JSON format with the following keys: "summary","topic", and "isValid".
             2. If the note is gibberish or not understandable, please let the user know and return isValid as false.
+            
+            Take note that the summary should have a minimum of 1 paragraph and a maximum of 2.
             """),
         ]);
 

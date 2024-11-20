@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -439,7 +440,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     });
   }
 
-  void onSave({required bool showLoading, bool forceSave = false}) async {
+  Future<void> onSave(
+      {required bool showLoading, bool forceSave = false}) async {
     if (showLoading) {
       EasyLoading.show(
           status: 'loading...',
@@ -695,7 +697,19 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         if (didPop) return;
 
         if (context.mounted) {
-          onSave(showLoading: false, forceSave: true);
+          if (kDebugMode) {
+            EasyLoading.show(
+                status: "waaaait!",
+                maskType: EasyLoadingMaskType.black,
+                dismissOnTap: false);
+            await onSave(showLoading: false, forceSave: true);
+            EasyLoading.dismiss();
+          } else {
+            // very bad dev exp if not awaited
+            // throws cannot use ref on dispose
+            // but good ux because no need to wait for saving
+            onSave(showLoading: false, forceSave: true);
+          }
 
           var reviewScreenState = ref.read(reviewScreenProvider);
 

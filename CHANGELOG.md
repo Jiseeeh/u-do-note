@@ -1,3 +1,17 @@
+# [3.6.0](https://github.com/Jiseeeh/u-do-note/compare/v3.5.9...v3.6.0) (2024-11-20)
+
+
+### Bug Fixes
+
+* broken back button of summary screen, going back to itself ([2704f13](https://github.com/Jiseeeh/u-do-note/commit/2704f13ff2af7f225992327b22192b9dd2c9f3df))
+* summary being too short ([c0a792e](https://github.com/Jiseeeh/u-do-note/commit/c0a792e1600db963caf0971ab9666817ac951211))
+
+
+### Features
+
+* add old remarks in analyze note ([16ed7ec](https://github.com/Jiseeeh/u-do-note/commit/16ed7ecf54dcd3eb4d29c8f3150d36132f2273a4))
+* improve dev exp ([d073d79](https://github.com/Jiseeeh/u-do-note/commit/d073d791b18e279a6b17e7944f0916ca4bcb32c2))
+
 ## [3.5.9](https://github.com/Jiseeeh/u-do-note/compare/v3.5.8...v3.5.9) (2024-11-19)
 
 

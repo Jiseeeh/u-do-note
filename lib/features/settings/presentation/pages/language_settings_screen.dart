@@ -16,7 +16,6 @@ class LanguageSettingsScreen extends ConsumerStatefulWidget {
 
 class _LanguageSettingsScreen extends ConsumerState<LanguageSettingsScreen> {
   bool isLoading = true;
-  late String theme;
   List<String> items = const [
     'English',
     'Filipino',
@@ -48,7 +47,7 @@ class _LanguageSettingsScreen extends ConsumerState<LanguageSettingsScreen> {
           hoverColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () async {
-            context.back();
+            context.router.back();
           },
           child: Icon(
             Icons.chevron_left_rounded,

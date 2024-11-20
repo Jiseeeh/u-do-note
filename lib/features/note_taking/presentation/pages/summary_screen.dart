@@ -13,40 +13,50 @@ class SummaryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Summary'),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: summary));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
 
-            EasyLoading.showSuccess('Copied to clipboard!');
-          },
-          child: const Icon(Icons.copy),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Column(
-              children: [
-                Text(
-                  topic,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    summary,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
-              ],
-            ),
+        if (context.mounted) {
+          context.router.back();
+        }
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Summary'),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           ),
-        ));
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: summary));
+
+              EasyLoading.showSuccess('Copied to clipboard!');
+            },
+            child: const Icon(Icons.copy),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  Text(
+                    topic,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      summary,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )),
+    );
   }
 }

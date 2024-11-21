@@ -21,4 +21,17 @@ class LandingPageImpl implements LandingPageRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteBrokenBlurtingRemark(
+      String notebookId, String blurtingRemarkId) async {
+    try {
+      var res = await _landingPageRemoteDataSource.deleteBrokenBlurtingRemark(
+          notebookId, blurtingRemarkId);
+
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

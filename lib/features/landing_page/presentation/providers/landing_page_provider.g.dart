@@ -64,7 +64,27 @@ final getOnGoingReviewsProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetOnGoingReviewsRef = AutoDisposeProviderRef<GetOnGoingReviews>;
-String _$landingPageHash() => r'b2f7613db7cfefd36490d9c2d2a012896dd0f9bf';
+String _$deleteBrokenBlurtingRemarkHash() =>
+    r'ec644bb79f17baffdde87994fde747264f9713c3';
+
+/// See also [deleteBrokenBlurtingRemark].
+@ProviderFor(deleteBrokenBlurtingRemark)
+final deleteBrokenBlurtingRemarkProvider =
+    AutoDisposeProvider<DeleteBrokenBlurtingRemark>.internal(
+  deleteBrokenBlurtingRemark,
+  name: r'deleteBrokenBlurtingRemarkProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deleteBrokenBlurtingRemarkHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DeleteBrokenBlurtingRemarkRef
+    = AutoDisposeProviderRef<DeleteBrokenBlurtingRemark>;
+String _$landingPageHash() => r'0888d97b2319928d8d548ace2a7f49152715c452';
 
 /// See also [LandingPage].
 @ProviderFor(LandingPage)

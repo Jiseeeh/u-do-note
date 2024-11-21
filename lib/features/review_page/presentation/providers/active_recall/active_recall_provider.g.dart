@@ -102,7 +102,7 @@ final updateFirestoreModelProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UpdateFirestoreModelRef = AutoDisposeProviderRef<UpdateFirestoreModel>;
-String _$activeRecallHash() => r'15713c9e26b5c082707d6fc935a2be05aa1e57e0';
+String _$activeRecallHash() => r'3996e0b0dd13d847bbeffd45426f7cfa47c6b2a0';
 
 /// See also [ActiveRecall].
 @ProviderFor(ActiveRecall)

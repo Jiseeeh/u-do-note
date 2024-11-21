@@ -6,6 +6,7 @@ import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dar
 import 'package:u_do_note/features/landing_page/data/datasources/landing_page_remote_datasource.dart';
 import 'package:u_do_note/features/landing_page/data/repositories/landing_page_repository_impl.dart';
 import 'package:u_do_note/features/landing_page/domain/repositories/landing_page_repository.dart';
+import 'package:u_do_note/features/landing_page/domain/usecases/delete_broken_blurting_remark.dart';
 import 'package:u_do_note/features/landing_page/domain/usecases/get_on_going_reviews.dart';
 
 part 'landing_page_provider.g.dart';
@@ -33,6 +34,13 @@ GetOnGoingReviews getOnGoingReviews(Ref ref) {
 }
 
 @riverpod
+DeleteBrokenBlurtingRemark deleteBrokenBlurtingRemark(Ref ref) {
+  final repository = ref.read(landingPageRepositoryProvider);
+
+  return DeleteBrokenBlurtingRemark(repository);
+}
+
+@riverpod
 class LandingPage extends _$LandingPage {
   @override
   void build() {
@@ -52,5 +60,17 @@ class LandingPage extends _$LandingPage {
       logger.w("Something went wrong: ${failure.message}");
       return [];
     }, (res) => res);
+  }
+
+  /// Used to delete a blurting remark that has a note that does not exist anymore.
+  Future<dynamic> deleteBrokenBlurtingRemark(
+      String notebookId, String blurtingRemarkId) async {
+    var deleteBrokenBlurtingRemark =
+        ref.read(deleteBrokenBlurtingRemarkProvider);
+
+    var failureOrVoid =
+        await deleteBrokenBlurtingRemark(notebookId, blurtingRemarkId);
+
+    return failureOrVoid.fold((failure) => failure, (res) => res);
   }
 }

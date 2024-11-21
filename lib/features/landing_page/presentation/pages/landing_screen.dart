@@ -215,6 +215,9 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                   maskType: EasyLoadingMaskType.black,
                   dismissOnTap: false);
 
+              var nbId = _onGoingBlurtingReviews[i].notebookId;
+              var blurtingRemarkId = _onGoingBlurtingReviews[i].id!;
+
               var res = await ref.read(notebooksProvider.notifier).getNote(
                   notebookId: _onGoingBlurtingReviews[i].notebookId,
                   noteId: _onGoingBlurtingReviews[i].noteId);
@@ -224,8 +227,18 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
               EasyLoading.dismiss();
 
               if (res is Failure) {
-                logger.d("error: ${res.message}");
-                EasyLoading.showError(context.tr("general_e"));
+                logger.d("error: ${res.message} $blurtingRemarkId");
+
+                // delete remark with that id since used note was deleted.
+                await ref
+                    .read(landingPageProvider.notifier)
+                    .deleteBrokenBlurtingRemark(nbId, blurtingRemarkId);
+
+                logger.d("Deleted ${_onGoingBlurtingReviews[i].sessionName}.");
+
+                if (context.mounted) {
+                  EasyLoading.showInfo("This remark is not available anymore.");
+                }
                 return;
               }
 

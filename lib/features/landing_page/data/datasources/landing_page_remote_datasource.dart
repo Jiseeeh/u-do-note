@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/review_page/data/models/acronym.dart';
 import 'package:u_do_note/features/review_page/data/models/active_recall.dart';
 import 'package:u_do_note/features/review_page/data/models/blurting.dart';
@@ -57,5 +58,21 @@ class LandingPageRemoteDataSource {
     }
 
     return oldModels;
+  }
+
+  Future<void> deleteBrokenBlurtingRemark(
+      String notebookId, String blurtingRemarkId) async {
+    var userId = _auth.currentUser!.uid;
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .collection(FirestoreCollection.remarks.name)
+        .doc(blurtingRemarkId)
+        .delete();
+
+    logger.d("Remark with $blurtingRemarkId deleted.");
   }
 }

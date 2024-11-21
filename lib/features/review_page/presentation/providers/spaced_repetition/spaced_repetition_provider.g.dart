@@ -63,7 +63,7 @@ final saveQuizResultsProvider = AutoDisposeProvider<SaveQuizResults>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SaveQuizResultsRef = AutoDisposeProviderRef<SaveQuizResults>;
-String _$spacedRepetitionHash() => r'8d1ae7a9b3fc1df4c13fd358a7cb9a6bab70f9df';
+String _$spacedRepetitionHash() => r'cf05a2a187d54657c92278e665fa37406fd62dd4';
 
 /// See also [SpacedRepetition].
 @ProviderFor(SpacedRepetition)

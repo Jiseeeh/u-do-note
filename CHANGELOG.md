@@ -1,3 +1,10 @@
+## [3.6.1](https://github.com/Jiseeeh/u-do-note/compare/v3.6.0...v3.6.1) (2024-11-21)
+
+
+### Bug Fixes
+
+* delete blurting remark that has its note deleted ([86f2d9e](https://github.com/Jiseeeh/u-do-note/commit/86f2d9ef483457a5ac6c1d434f2d33b37b2eae7e))
+
 # [3.6.0](https://github.com/Jiseeeh/u-do-note/compare/v3.5.9...v3.6.0) (2024-11-20)
 
 

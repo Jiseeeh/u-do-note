@@ -137,7 +137,7 @@ class SettingsRemoteDataSource {
     for (var note in userNotesSnapshots.docs) {
       var noteCoverFileName = note.data()['cover_file_name'];
 
-      if (noteCoverFileName != null) {
+      if (noteCoverFileName.toString().isNotEmpty) {
         var fileReference =
             _firebaseStorage.ref().child('notebook_covers/$noteCoverFileName');
 

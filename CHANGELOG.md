@@ -1,3 +1,15 @@
+# [3.7.0](https://github.com/Jiseeeh/u-do-note/compare/v3.6.1...v3.7.0) (2024-11-22)
+
+
+### Bug Fixes
+
+* cannot login when user reset password ([63e46d9](https://github.com/Jiseeeh/u-do-note/commit/63e46d98a5c2cc3c534164f306da902d4064a6ab))
+
+
+### Features
+
+* sort grouped remarks for better analysis ([e10eeb0](https://github.com/Jiseeeh/u-do-note/commit/e10eeb02a6676917867a701f28f7924d83827fd6))
+
 ## [3.6.1](https://github.com/Jiseeeh/u-do-note/compare/v3.6.0...v3.6.1) (2024-11-21)
 
 

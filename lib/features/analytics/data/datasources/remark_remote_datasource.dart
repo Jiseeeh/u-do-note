@@ -75,9 +75,14 @@ class RemarkRemoteDataSource {
     var groupedRemarks =
         groupBy(remarkModels, (RemarkModel remark) => remark.notebookId);
 
-    logger.d("Grouped: $groupedRemarks");
+    var sortedGroupedRemarks = groupedRemarks.map((notebookId, remarks) {
+      remarks.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      return MapEntry(notebookId, remarks);
+    });
 
-    return groupedRemarks;
+    logger.d("Sorted Grouped: $sortedGroupedRemarks");
+
+    return sortedGroupedRemarks;
   }
 
   Future<String> getTechniquesUsageInterpretation(

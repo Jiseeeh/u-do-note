@@ -8,6 +8,7 @@ import 'package:google_api_availability/google_api_availability.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
+import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
 import '../widgets/social_icon.dart';
@@ -312,18 +313,28 @@ class _LoginState extends ConsumerState<LoginScreen> {
 
                                       EasyLoading.dismiss();
 
-                                      userOrFailure.fold(
-                                          (failure) => EasyLoading.showError(
-                                              duration:
-                                                  const Duration(seconds: 2),
-                                              'You have entered an invalid username or password.'),
-                                          (userModel) {
-                                        EasyLoading.showSuccess(
-                                            'Login success!');
+                                      if (!context.mounted) return;
+                                      var content = "";
 
+                                      userOrFailure.fold(
+                                          (failure) =>
+                                              content = failure.message,
+                                          (userModel) => content = "");
+
+                                      if (content.isEmpty) {
                                         context.router.replaceAll(
                                             [const HomepageRoute()]);
-                                      });
+                                        return;
+                                      }
+
+                                      await CustomDialog.show(context,
+                                          title: "Notice",
+                                          subTitle: content,
+                                          buttons: [
+                                            CustomDialogButton(
+                                              text: 'Okay',
+                                            )
+                                          ]);
                                     }
                                   },
                                   height: 50,

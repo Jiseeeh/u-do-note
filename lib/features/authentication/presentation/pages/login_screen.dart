@@ -39,22 +39,6 @@ class _LoginState extends ConsumerState<LoginScreen> {
     return null;
   }
 
-  String? passwordValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter some text';
-    }
-
-    if (value.length < 9) {
-      return 'Password must be at least 9 characters long';
-    }
-
-    if (!value.contains(RegExp(r'[A-Z]'))) {
-      return 'Password must contain at least one uppercase letter';
-    }
-
-    return null;
-  }
-
   bool isPasswordObscured = true;
 
   @override
@@ -251,7 +235,9 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                         controller: passwordController,
                                         isObscuredText: isPasswordObscured,
                                         keyboardType: TextInputType.text,
-                                        validator: passwordValidator,
+                                        validator: (String? val) {
+                                          return null;
+                                        },
                                         suffixIcon: GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -330,7 +316,8 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                           (failure) => EasyLoading.showError(
                                               duration:
                                                   const Duration(seconds: 2),
-                                              failure.message), (userModel) {
+                                              'You have entered an invalid username or password.'),
+                                          (userModel) {
                                         EasyLoading.showSuccess(
                                             'Login success!');
 

@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/firestore_collection_enum.dart';
 import 'package:u_do_note/core/logger/logger.dart';
+import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
+import 'package:u_do_note/features/settings/data/models/share_request.dart';
 
 class SettingsRemoteDataSource {
   final FirebaseAuth _auth;
@@ -182,5 +184,77 @@ class SettingsRemoteDataSource {
     logger.d("Deleted user: $userDisplayName");
 
     return true;
+  }
+
+  Future<List<ShareRequest>> getShareRequests(String reqType) async {
+    var userEmail = _auth.currentUser!.email;
+
+    var query = reqType == 'sent' ? 'sender_email' : 'receiver_email';
+
+    var shareRequestSnapshot = await _firestore
+        .collection(FirestoreCollection.share_requests.name)
+        .where(query, isEqualTo: userEmail)
+        .where('is_accepted', isEqualTo: false)
+        .get();
+
+    List<ShareRequest> requests = [];
+
+    for (var shareReq in shareRequestSnapshot.docs) {
+      requests.add(ShareRequest.fromFirestore(shareReq.id, shareReq.data()));
+    }
+
+    return requests;
+  }
+
+  Future<void> sendShareRequest(ShareRequest shareRequest) async {
+    var userEmail = _auth.currentUser!.email;
+
+    if (shareRequest.receiverEmail == userEmail) {
+      throw "You cannot share notes to yourself.";
+    }
+
+    var receiverSnapshot = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .where('email', isEqualTo: shareRequest.receiverEmail)
+        .get();
+
+    if (receiverSnapshot.docs.isEmpty) {
+      throw "The receiver should be a user of U Do Note.";
+    }
+
+    await _firestore
+        .collection(FirestoreCollection.share_requests.name)
+        .add(shareRequest.toFirestore());
+  }
+
+  Future<void> acceptShareRequest(
+      String chosenNotebookId, ShareRequest shareRequest) async {
+    var userId = _auth.currentUser!.uid;
+
+    var notebookSnapshot = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(chosenNotebookId)
+        .get();
+
+    var notebookModel = NotebookModel.fromFirestore(
+        notebookSnapshot.id, notebookSnapshot.data()!);
+
+    notebookModel.notes.addAll(shareRequest.notesToShare);
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(chosenNotebookId)
+        .update(notebookModel.toFirestore());
+
+    await _firestore
+        .collection(FirestoreCollection.share_requests.name)
+        .doc(shareRequest.id)
+        .update({
+      'is_accepted': true,
+    });
   }
 }

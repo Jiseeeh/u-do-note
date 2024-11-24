@@ -97,7 +97,62 @@ final deleteAccountProvider = AutoDisposeProvider<DeleteAccount>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteAccountRef = AutoDisposeProviderRef<DeleteAccount>;
-String _$settingsHash() => r'31181010074cd4a7467aa083ed7404ef3bdf3838';
+String _$sendShareRequestHash() => r'eeefb4fccce3067c350dd850673544db2aed0795';
+
+/// See also [sendShareRequest].
+@ProviderFor(sendShareRequest)
+final sendShareRequestProvider = AutoDisposeProvider<SendShareRequest>.internal(
+  sendShareRequest,
+  name: r'sendShareRequestProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sendShareRequestHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SendShareRequestRef = AutoDisposeProviderRef<SendShareRequest>;
+String _$getSentShareRequestsHash() =>
+    r'21da45576ff2a137db1fd50d4937f22d2f7ca95e';
+
+/// See also [getSentShareRequests].
+@ProviderFor(getSentShareRequests)
+final getSentShareRequestsProvider =
+    AutoDisposeProvider<GetSentShareRequests>.internal(
+  getSentShareRequests,
+  name: r'getSentShareRequestsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getSentShareRequestsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetSentShareRequestsRef = AutoDisposeProviderRef<GetSentShareRequests>;
+String _$acceptShareRequestHash() =>
+    r'9c6d8b2f86bf2bbf2a79fd7646dea129f5875b3c';
+
+/// See also [acceptShareRequest].
+@ProviderFor(acceptShareRequest)
+final acceptShareRequestProvider =
+    AutoDisposeProvider<AcceptShareRequest>.internal(
+  acceptShareRequest,
+  name: r'acceptShareRequestProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$acceptShareRequestHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AcceptShareRequestRef = AutoDisposeProviderRef<AcceptShareRequest>;
+String _$settingsHash() => r'10db53798b4368b1fe6227ed7af4f56d03e8db97';
 
 /// See also [Settings].
 @ProviderFor(Settings)

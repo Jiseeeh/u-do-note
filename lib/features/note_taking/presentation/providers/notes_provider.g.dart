@@ -381,11 +381,11 @@ final notebooksStreamProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'e76d4f90fd2374f624beb7914c8f3cb3c4a751b9';
+String _$notebooksHash() => r'a1c32e4b393f54f959bff9a3c0bd3ad2aeeee7d3';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)
-final notebooksProvider = NotifierProvider<Notebooks, void>.internal(
+final notebooksProvider = AutoDisposeNotifierProvider<Notebooks, void>.internal(
   Notebooks.new,
   name: r'notebooksProvider',
   debugGetCreateSourceHash:
@@ -394,6 +394,6 @@ final notebooksProvider = NotifierProvider<Notebooks, void>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$Notebooks = Notifier<void>;
+typedef _$Notebooks = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

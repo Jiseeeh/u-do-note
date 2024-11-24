@@ -736,6 +736,25 @@ class QuizRouteArgs {
 }
 
 /// generated route for
+/// [ReceivingSettingsScreen]
+class ReceivingSettingsRoute extends PageRouteInfo<void> {
+  const ReceivingSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          ReceivingSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ReceivingSettingsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ReceivingSettingsScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [ReviewScreen]
 class ReviewRoute extends PageRouteInfo<void> {
   const ReviewRoute({List<PageRouteInfo>? children})
@@ -769,6 +788,25 @@ class SettingsRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const SettingsScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [SharingSettingsScreen]
+class SharingSettingsRoute extends PageRouteInfo<void> {
+  const SharingSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          SharingSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SharingSettingsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SharingSettingsScreen();
     },
   );
 }

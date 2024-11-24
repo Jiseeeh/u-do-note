@@ -40,7 +40,9 @@ import 'package:u_do_note/features/settings/presentation/pages/about_settings_sc
 import 'package:u_do_note/features/settings/presentation/pages/language_settings_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/profile_settings_screen.dart';
 import 'package:u_do_note/features/review_page/presentation/pages/sq3r/sq3r_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/receiving_settings_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/settings_screen.dart';
+import 'package:u_do_note/features/settings/presentation/pages/sharing_settings_screen.dart';
 import 'package:u_do_note/features/settings/presentation/pages/theme_settings_screen.dart';
 import 'package:u_do_note/routes/intro_screen_guard.dart';
 
@@ -80,6 +82,9 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: LanguageSettingsRoute.page, path: '/language-settings'),
         AutoRoute(page: AboutSettingsRoute.page, path: '/about-settings'),
         AutoRoute(page: ProfileSettingsRoute.page, path: '/profile-settings'),
+        AutoRoute(page: SharingSettingsRoute.page, path: '/sharing-settings'),
+        AutoRoute(
+            page: ReceivingSettingsRoute.page, path: '/receiving-settings'),
         AutoRoute(
             page: NotebookPagesRoute.page, path: '/notebook/pages/:notebookId'),
         AutoRoute(page: NoteTakingRoute.page, path: '/notebook/page/take-note'),

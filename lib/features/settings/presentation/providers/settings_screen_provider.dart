@@ -5,9 +5,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/features/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:u_do_note/features/settings/data/models/share_request.dart';
 import 'package:u_do_note/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:u_do_note/features/settings/domain/repositories/settings_repository.dart';
+import 'package:u_do_note/features/settings/domain/usecases/accept_share_request.dart';
 import 'package:u_do_note/features/settings/domain/usecases/delete_account.dart';
+import 'package:u_do_note/features/settings/domain/usecases/get_sent_share_requests.dart';
+import 'package:u_do_note/features/settings/domain/usecases/send_share_request.dart';
 import 'package:u_do_note/features/settings/domain/usecases/sign_out.dart';
 import 'package:u_do_note/features/settings/domain/usecases/upload_profile_picture.dart';
 
@@ -50,6 +54,27 @@ DeleteAccount deleteAccount(Ref ref) {
 }
 
 @riverpod
+SendShareRequest sendShareRequest(Ref ref) {
+  var settingsRepository = ref.read(settingsRepositoryProvider);
+
+  return SendShareRequest(settingsRepository);
+}
+
+@riverpod
+GetSentShareRequests getSentShareRequests(Ref ref) {
+  var settingsRepository = ref.read(settingsRepositoryProvider);
+
+  return GetSentShareRequests(settingsRepository);
+}
+
+@riverpod
+AcceptShareRequest acceptShareRequest(Ref ref) {
+  var settingsRepository = ref.read(settingsRepositoryProvider);
+
+  return AcceptShareRequest(settingsRepository);
+}
+
+@riverpod
 class Settings extends _$Settings {
   @override
   void build() {
@@ -82,5 +107,36 @@ class Settings extends _$Settings {
     var failureOrBool = await deleteAccount(password);
 
     return failureOrBool.fold((failure) => failure, (res) => res);
+  }
+
+  Future<dynamic> sendShareRequest({required ShareRequest shareRequest}) async {
+    var sendShareRequest = ref.read(sendShareRequestProvider);
+
+    var failureOrVoid = await sendShareRequest(shareRequest);
+
+    return failureOrVoid.fold((failure) => failure, (res) => res);
+  }
+
+  /// [reqType] could be 'sent' or 'received'
+  ///
+  /// 'sent' to get all sent requests
+  /// 'received' to get all receive requests
+  Future<dynamic> getSentShareRequests({required String reqType}) async {
+    var getSentShareRequests = ref.read(getSentShareRequestsProvider);
+
+    var failureOrRequests = await getSentShareRequests(reqType);
+
+    return failureOrRequests.fold((failure) => failure, (res) => res);
+  }
+
+  Future<dynamic> acceptShareRequest(
+      {required String chosenNotebookId,
+      required ShareRequest shareRequest}) async {
+    var acceptShareRequest = ref.read(acceptShareRequestProvider);
+
+    var failureOrVoid =
+        await acceptShareRequest(chosenNotebookId, shareRequest);
+
+    return failureOrVoid.fold((failure) => failure, (res) => res);
   }
 }

@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
-import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/features/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:u_do_note/features/settings/data/models/share_request.dart';
 import 'package:u_do_note/features/settings/domain/repositories/settings_repository.dart';
 
 class SettingsRepositoryImpl extends SettingsRepository {
@@ -39,7 +39,42 @@ class SettingsRepositoryImpl extends SettingsRepository {
 
       return Right(res);
     } catch (e) {
-      logger.w("error: ${e.toString()}");
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> sendShareRequest(
+      ShareRequest shareRequest) async {
+    try {
+      var res = await _settingsRemoteDataSource.sendShareRequest(shareRequest);
+
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ShareRequest>>> getSentShareRequests(
+      String reqType) async {
+    try {
+      var res = await _settingsRemoteDataSource.getShareRequests(reqType);
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> acceptShareRequest(
+      String chosenNotebookId, ShareRequest shareRequest) async {
+    try {
+      var res = await _settingsRemoteDataSource.acceptShareRequest(
+          chosenNotebookId, shareRequest);
+
+      return Right(res);
+    } catch (e) {
       return Left(GenericFailure(message: e.toString()));
     }
   }

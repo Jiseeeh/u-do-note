@@ -12,7 +12,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:u_do_note/env/env.dart';
 import 'package:u_do_note/core/error/failures.dart';
-import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/utility.dart';
@@ -33,10 +32,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _isLoading = true;
   bool _passwordVisible = false;
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _nameFocusNode = FocusNode();
   final Uri _feedbackUrl = Uri.parse(Env.feedbackUrl);
-  late String _currentName;
   String _version = "app_version";
 
   Future<void> _changePassword(
@@ -156,40 +152,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void initState() {
     super.initState();
     var user = FirebaseAuth.instance.currentUser!;
-    _nameController.text = user.displayName ?? '';
-    _currentName = user.displayName ?? '';
 
     initVersion();
-
-    _nameFocusNode.addListener(() async {
-      if (!_nameFocusNode.hasFocus) {
-        if (_nameController.text.isEmpty) {
-          EasyLoading.showError('Name cannot be empty!');
-          return;
-        }
-
-        if (_nameController.text.length < 3) {
-          EasyLoading.showError('Name must be at least 3 characters long!');
-          return;
-        }
-
-        if (_nameController.text.length > 20) {
-          EasyLoading.showError('Name must be at most 16 characters long!');
-          return;
-        }
-
-        bool hasNet = await InternetConnection().hasInternetAccess;
-
-        if (!hasNet) return;
-
-        if (_nameController.text != _currentName) {
-          logger.w('Updating name');
-          await FirebaseAuth.instance.currentUser!
-              .updateDisplayName(_nameController.text);
-          _currentName = _nameController.text;
-        }
-      }
-    });
 
     _profile = user.photoURL != null
         ? Image.network(user.photoURL!)
@@ -247,7 +211,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: Padding(
             padding: const EdgeInsetsDirectional.symmetric(horizontal: 12),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Profile Avatar and Name
                 Container(
@@ -259,12 +223,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         backgroundImage: _profile!.image,
                       ),
                       // Username field
-                      TextField(
-                        controller: _nameController,
-                        focusNode: _nameFocusNode,
+                      Text(
+                        FirebaseAuth.instance.currentUser!.displayName ?? '',
                         textAlign: TextAlign.center,
-                        decoration:
-                            const InputDecoration.collapsed(hintText: ''),
                         style: Theme.of(context)
                             .textTheme
                             .displayMedium
@@ -281,12 +242,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ),
                 // Settings Section
-                Text(
-                  context.tr('general'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.w500),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    context.tr('general'),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.w500),
+                  ),
                 ),
                 SettingsCard(
                   title: context.tr('change_theme'),
@@ -308,13 +272,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         throw Exception('Could not launch $_feedbackUrl');
                       }
                     }),
+                // Notes Section
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Notes',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.w500),
+                  ),
+                ),
+                SettingsCard(
+                  title: "Share notes",
+                  icon: Icons.share_rounded,
+                  onSettingPressed: () =>
+                      context.router.push(const SharingSettingsRoute()),
+                ),
+                SettingsCard(
+                  title: "Receive notes",
+                  icon: Icons.call_received,
+                  onSettingPressed: () =>
+                      context.router.push(const ReceivingSettingsRoute()),
+                ),
                 // Account Section
-                Text(
-                  'Account',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.w500),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Account',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.w500),
+                  ),
                 ),
                 SettingsCard(
                   title: context.tr('edit_profile'),

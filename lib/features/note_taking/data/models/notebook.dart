@@ -50,9 +50,21 @@ class NotebookModel {
       coverFileName: coverFileName,
       createdAt: createdAt,
       techniquesUsage: techniquesUsage,
-      notes: notes.map((e) => e.toEntity()).toList(), 
+      notes: notes.map((e) => e.toEntity()).toList(),
       category: category,
     );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      'subject': subject,
+      'cover_url': coverUrl,
+      'cover_file_name': coverFileName,
+      'created_at': createdAt,
+      'techniques_usage': techniquesUsage,
+      'notes': notes.map((note) => note.toJson()).toList(),
+      'category': category
+    };
   }
 
   /// from firestore to model
@@ -65,15 +77,14 @@ class NotebookModel {
     };
 
     return NotebookModel(
-      id: id,
-      subject: data['subject'],
-      coverUrl: data['cover_url'],
-      coverFileName: data['cover_file_name'],
-      createdAt: data['created_at'] ?? Timestamp.now(),
-      techniquesUsage: data['techniques_usage'] ?? usageDefault,
-      notes: notes.map((e) => NoteModel.fromFirestore(e)).toList(),
-      category: data['category']
-    );
+        id: id,
+        subject: data['subject'],
+        coverUrl: data['cover_url'],
+        coverFileName: data['cover_file_name'],
+        createdAt: data['created_at'] ?? Timestamp.now(),
+        techniquesUsage: data['techniques_usage'] ?? usageDefault,
+        notes: notes.map((e) => NoteModel.fromFirestore(e)).toList(),
+        category: data['category']);
   }
 
   /// Creates a new instance of the [NotebookModel] with updated values

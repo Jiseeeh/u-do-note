@@ -1,3 +1,12 @@
+## [3.8.1](https://github.com/Jiseeeh/u-do-note/compare/v3.8.0...v3.8.1) (2024-11-24)
+
+
+### Bug Fixes
+
+* add missing withdraw impl ([d7aaa79](https://github.com/Jiseeeh/u-do-note/commit/d7aaa79008a5f416abfe9b1c114a9d9e2c995b98))
+* re add share reqs card below ([57dbf6e](https://github.com/Jiseeeh/u-do-note/commit/57dbf6e6f5b4ad4d900f0a5ff7e636193526da5d))
+* remove adding item debug ([a7b03ce](https://github.com/Jiseeeh/u-do-note/commit/a7b03cecf26088970dac891772b0fda0a5a0dce0))
+
 # [3.8.0](https://github.com/Jiseeeh/u-do-note/compare/v3.7.0...v3.8.0) (2024-11-24)
 
 

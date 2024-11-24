@@ -345,6 +345,30 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                     TextButton(
                       onPressed: () async {
                         Navigator.of(dialogContext).pop();
+
+                        EasyLoading.show(
+                            status: 'Please wait...',
+                            maskType: EasyLoadingMaskType.black,
+                            dismissOnTap: false);
+
+                        var res = await ref
+                            .read(settingsProvider.notifier)
+                            .withdrawShareReq(reqId: sr.id!);
+
+                        if (res is Failure) {
+                          logger.e("Error withdrawing: ${res.message}");
+                          EasyLoading.showError(
+                              'Something went wrong, please try again later.');
+                          return;
+                        }
+
+                        setState(() {
+                          _shareRequests.removeWhere((req) => req.id == sr.id);
+                        });
+
+                        EasyLoading.dismiss();
+
+                        EasyLoading.showSuccess('Share request cancelled!');
                       },
                       style: TextButton.styleFrom(
                           foregroundColor: AppColors.error),

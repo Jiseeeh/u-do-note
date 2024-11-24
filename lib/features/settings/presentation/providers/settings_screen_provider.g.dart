@@ -152,7 +152,24 @@ final acceptShareRequestProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AcceptShareRequestRef = AutoDisposeProviderRef<AcceptShareRequest>;
-String _$settingsHash() => r'10db53798b4368b1fe6227ed7af4f56d03e8db97';
+String _$withdrawShareReqHash() => r'0685dceeec5101ec5f307aff2ad86a4db0ad5735';
+
+/// See also [withdrawShareReq].
+@ProviderFor(withdrawShareReq)
+final withdrawShareReqProvider = AutoDisposeProvider<WithdrawShareReq>.internal(
+  withdrawShareReq,
+  name: r'withdrawShareReqProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$withdrawShareReqHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef WithdrawShareReqRef = AutoDisposeProviderRef<WithdrawShareReq>;
+String _$settingsHash() => r'3a522cddcf09c306ccb99350d4caabf032e3f26f';
 
 /// See also [Settings].
 @ProviderFor(Settings)

@@ -257,4 +257,11 @@ class SettingsRemoteDataSource {
       'is_accepted': true,
     });
   }
+
+  Future<void> withdrawShareReq(String reqId) async {
+    await _firestore
+        .collection(FirestoreCollection.share_requests.name)
+        .doc(reqId)
+        .delete();
+  }
 }

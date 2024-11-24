@@ -14,6 +14,7 @@ import 'package:u_do_note/features/settings/domain/usecases/get_sent_share_reque
 import 'package:u_do_note/features/settings/domain/usecases/send_share_request.dart';
 import 'package:u_do_note/features/settings/domain/usecases/sign_out.dart';
 import 'package:u_do_note/features/settings/domain/usecases/upload_profile_picture.dart';
+import 'package:u_do_note/features/settings/domain/usecases/withdraw_share_req.dart';
 
 part 'settings_screen_provider.g.dart';
 
@@ -72,6 +73,13 @@ AcceptShareRequest acceptShareRequest(Ref ref) {
   var settingsRepository = ref.read(settingsRepositoryProvider);
 
   return AcceptShareRequest(settingsRepository);
+}
+
+@riverpod
+WithdrawShareReq withdrawShareReq(Ref ref) {
+  var settingsRepository = ref.read(settingsRepositoryProvider);
+
+  return WithdrawShareReq(settingsRepository);
 }
 
 @riverpod
@@ -136,6 +144,14 @@ class Settings extends _$Settings {
 
     var failureOrVoid =
         await acceptShareRequest(chosenNotebookId, shareRequest);
+
+    return failureOrVoid.fold((failure) => failure, (res) => res);
+  }
+
+  Future<dynamic> withdrawShareReq({required String reqId}) async {
+    var withdrawShareReq = ref.read(withdrawShareReqProvider);
+
+    var failureOrVoid = await withdrawShareReq(reqId);
 
     return failureOrVoid.fold((failure) => failure, (res) => res);
   }

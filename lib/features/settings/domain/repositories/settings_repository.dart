@@ -18,4 +18,6 @@ abstract class SettingsRepository {
 
   Future<Either<Failure, void>> acceptShareRequest(
       String chosenNotebookId, ShareRequest shareRequest);
+
+  Future<Either<Failure, void>> withdrawShareReq(String reqId);
 }

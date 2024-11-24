@@ -78,4 +78,15 @@ class SettingsRepositoryImpl extends SettingsRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> withdrawShareReq(String reqId) async {
+    try {
+      var res = await _settingsRemoteDataSource.withdrawShareReq(reqId);
+
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

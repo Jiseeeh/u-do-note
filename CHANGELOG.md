@@ -1,3 +1,16 @@
+# [3.8.0](https://github.com/Jiseeeh/u-do-note/compare/v3.7.0...v3.8.0) (2024-11-24)
+
+
+### Bug Fixes
+
+* deleting a reference that does not exist ([5f82e90](https://github.com/Jiseeeh/u-do-note/commit/5f82e906ab21911b0e86199e6ad592704a4eee42))
+* wrong toast message even in verifying email ([9b8abce](https://github.com/Jiseeeh/u-do-note/commit/9b8abce427450ee629924e7c1dc948bf154b3358))
+
+
+### Features
+
+* add note sharing ([#117](https://github.com/Jiseeeh/u-do-note/issues/117)) ([2d1521d](https://github.com/Jiseeeh/u-do-note/commit/2d1521db9f3a97490c7464a048ae80be3a8c7454))
+
 # [3.7.0](https://github.com/Jiseeeh/u-do-note/compare/v3.6.1...v3.7.0) (2024-11-22)
 
 

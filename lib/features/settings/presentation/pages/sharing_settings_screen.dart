@@ -226,10 +226,6 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                                 receiverEmail: _emailController.text,
                                 notesToShare: notesToShare);
 
-                            setState(() {
-                              _shareRequests.add(shareReq);
-                            });
-
                             EasyLoading.show(
                                 status: 'Making a share request...',
                                 maskType: EasyLoadingMaskType.black,

@@ -7,13 +7,12 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
-
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
 import 'package:u_do_note/core/shared/theme/colors.dart';
-import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/settings/data/models/share_request.dart';
@@ -23,18 +22,6 @@ import 'package:u_do_note/features/settings/presentation/widgets/settings_card.d
 @RoutePage()
 class SharingSettingsScreen extends ConsumerStatefulWidget {
   const SharingSettingsScreen({super.key});
-
-  ///
-  /// Get from firestore all sharing docs where it is not accepted and == user's email
-  ///
-  /// Sharing Collection
-  /// id (given)
-  /// createdAt (given)
-  /// senderEmail
-  /// receiverEmail
-  /// isAccepted
-  /// notesToShare
-  ///
 
   @override
   ConsumerState<SharingSettingsScreen> createState() =>

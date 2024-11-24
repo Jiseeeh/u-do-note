@@ -1,17 +1,14 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
-import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
-import 'package:u_do_note/core/shared/theme/colors.dart';
-
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/settings/data/models/share_request.dart';
@@ -33,7 +30,6 @@ class _ReceivingSettingsScreenState
   List<ShareRequest> _shareRequests = [];
   String _selectedNotebookId = "";
   final _formKey = GlobalKey<FormState>();
-  final _notebooksController = MultiSelectController<String>();
 
   @override
   void initState() {

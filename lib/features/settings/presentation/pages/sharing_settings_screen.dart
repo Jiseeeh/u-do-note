@@ -243,6 +243,10 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                               return;
                             }
 
+                            setState(() {
+                              _shareRequests.add(shareReq);
+                            });
+
                             EasyLoading.showSuccess("Request sent!");
                             _emailController.clear();
 

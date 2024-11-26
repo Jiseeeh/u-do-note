@@ -40,9 +40,10 @@ class NotebookPagesScreen extends ConsumerStatefulWidget {
 }
 
 class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
-  var gridCols = 2;
-  var notebookIdsToPasteExtractedContent = [];
-  var sortBy = 'title'; // Default sorting criteria
+  var _gridCols = 2;
+  var _notebookIdsToPasteExtractedContent = [];
+  var _sortBy = 'title';
+  final _maxCharacters = 50000;
 
   @override
   void initState() {
@@ -55,15 +56,15 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
     var cols = prefs.getInt('nbPagesGridCols');
     if (cols != null) {
       setState(() {
-        gridCols = cols;
+        _gridCols = cols;
       });
     }
   }
 
   void sortNotes(List<NoteEntity> notes) {
-    if (sortBy == 'title') {
+    if (_sortBy == 'title') {
       notes.sort((a, b) => a.title.compareTo(b.title));
-    } else if (sortBy == 'date') {
+    } else if (_sortBy == 'date') {
       notes.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     }
   }
@@ -95,7 +96,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
           PopupMenuButton<String>(
             onSelected: (value) {
               setState(() {
-                sortBy = value;
+                _sortBy = value;
               });
             },
             itemBuilder: (context) => [
@@ -192,6 +193,10 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                   if (!context.mounted) return;
 
+                  logger.d('Extracted text len: ${extractedText.length}');
+
+                  extractedText = extractedText.replaceAll("\"", "'");
+
                   // ? only ask to format if chars is less than 10k
                   // ? openai response token output is default to 4096 which is about 20k chars
                   if (extractedText.length < 10000) {
@@ -234,9 +239,15 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                         extractedText = failureOrFormattedText;
                       }
                     }
-                  } else {
-                    EasyLoading.showInfo(
-                        "We would not be able to format your scanned text as it is too long.");
+                  } else if (extractedText.length > _maxCharacters) {
+                    extractedText = extractedText.substring(0, _maxCharacters);
+
+                    var formatter = NumberFormat('#,##,000');
+                    await CustomDialog.show(context,
+                        title: 'Notice',
+                        subTitle:
+                            'We only took ${formatter.format(_maxCharacters)} characters as your document is too long.',
+                        buttons: [CustomDialogButton(text: 'Okay')]);
                   }
 
                   if (!context.mounted) return;
@@ -265,7 +276,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  if (notebookIdsToPasteExtractedContent
+                                  if (_notebookIdsToPasteExtractedContent
                                       .isEmpty) {
                                     EasyLoading.showError(context
                                         .tr("file_extracted_dest_existing"));
@@ -284,7 +295,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                                   var updatedNoteEntities =
                                       notebookPages.map((noteModel) {
-                                    if (!notebookIdsToPasteExtractedContent
+                                    if (!_notebookIdsToPasteExtractedContent
                                         .contains(noteModel.id)) {
                                       return noteModel;
                                     }
@@ -349,7 +360,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                   singleSelect: true,
                                   onSelectionChanged: (items) {
                                     setState(() {
-                                      notebookIdsToPasteExtractedContent =
+                                      _notebookIdsToPasteExtractedContent =
                                           items;
                                     });
                                   },
@@ -383,8 +394,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                 var prefs = await ref.read(sharedPreferencesProvider.future);
                 prefs.setInt('nbPagesGridCols', 2);
                 setState(() {
-                  if (gridCols != 2) {
-                    gridCols = 2;
+                  if (_gridCols != 2) {
+                    _gridCols = 2;
                   }
                 });
               }),
@@ -396,8 +407,8 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                 var prefs = await ref.read(sharedPreferencesProvider.future);
                 prefs.setInt('nbPagesGridCols', 3);
                 setState(() {
-                  if (gridCols != 3) {
-                    gridCols = 3;
+                  if (_gridCols != 3) {
+                    _gridCols = 3;
                   }
                 });
               }),
@@ -420,119 +431,123 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
     sortNotes(notebook.notes);
 
-    return GridView.count(
-      crossAxisCount: gridCols,
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      childAspectRatio: (1 / 1.2),
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
-      children: [
-        for (var note in notebook.notes) _buildNoteCard(context, ref, note)
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: _gridCols,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: (1 / 1.2),
+        ),
+        itemCount: notebook.notes.length,
+        itemBuilder: (context, index) {
+          var note = notebook.notes[index];
+          return _buildNoteCard(context, ref, note);
+        },
+      ),
     );
   }
 
   Widget _buildNoteCard(BuildContext context, WidgetRef ref, NoteEntity note) {
-    ParchmentDocument document =
-        ParchmentDocument.fromJson(jsonDecode(note.content));
-
-    if (note.content.trim().isEmpty) {
-      document = ParchmentDocument.fromJson(
-          jsonDecode(r'[{"insert":"Empty Page\n"}]'));
+    String getTruncatedContent(String content, int maxLength) {
+      return content.length > maxLength
+          ? '${content.substring(0, maxLength)}...'
+          : content;
     }
 
-    var fleatherController = FleatherController(document: document);
+    String previewContent = getTruncatedContent(note.plainTextContent, 200);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.darkHeadlineText,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: [
-          // position icon on the bottom right
-          Expanded(
-            child: FleatherEditor(
-              controller: fleatherController,
-              padding: const EdgeInsets.all(10),
-              readOnly: true,
-            ),
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            IconButton(
-              onPressed: () {
-                context.router.push(
-                    NoteTakingRoute(notebookId: widget.notebookId, note: note));
-              },
-              icon: const Icon(
-                Icons.edit,
-                color: AppColors.primaryBackground,
+    if (note.content.trim().isEmpty) {
+      previewContent = "Empty page.";
+    }
+
+    return GestureDetector(
+      onTap: () {
+        context.router
+            .push(NoteTakingRoute(notebookId: widget.notebookId, note: note));
+      },
+      onLongPress: () async {
+        var userChoice = await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Delete Note'),
+                content: Text(context.tr("delete_note_confirm")),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, false);
+                      },
+                      child: const Text('No')),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, true);
+                      },
+                      child: const Text('Yes')),
+                ],
+              );
+            });
+
+        if (userChoice == null || userChoice == false) {
+          return;
+        }
+
+        EasyLoading.show(
+            status: 'loading...',
+            maskType: EasyLoadingMaskType.black,
+            dismissOnTap: false);
+
+        bool hasNet = await InternetConnection().hasInternetAccess;
+
+        if (!hasNet) {
+          ref
+              .read(notebooksProvider.notifier)
+              .deleteNote(notebookId: widget.notebookId, noteId: note.id);
+
+          EasyLoading.dismiss();
+          return;
+        }
+
+        var res = await ref
+            .read(notebooksProvider.notifier)
+            .deleteNote(notebookId: widget.notebookId, noteId: note.id);
+
+        EasyLoading.dismiss();
+
+        if (res is Failure) {
+          logger.w('Encountered error: ${res.message}');
+          EasyLoading.showError(res.message);
+          return;
+        }
+
+        EasyLoading.showSuccess(res);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.darkHeadlineText,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    previewContent,
+                    style: TextStyle(
+                      color: AppColors.primaryBackground,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               ),
             ),
-            IconButton(
-              onPressed: () async {
-                // show dialog to confirm delete
-                var userChoice = await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Delete Note'),
-                        content: Text(context.tr("delete_note_confirm")),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context, false);
-                              },
-                              child: const Text('No')),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context, true);
-                              },
-                              child: const Text('Yes')),
-                        ],
-                      );
-                    });
-
-                if (userChoice == null || userChoice == false) {
-                  return;
-                }
-
-                EasyLoading.show(
-                    status: 'loading...',
-                    maskType: EasyLoadingMaskType.black,
-                    dismissOnTap: false);
-
-                bool hasNet = await InternetConnection().hasInternetAccess;
-
-                if (!hasNet) {
-                  ref.read(notebooksProvider.notifier).deleteNote(
-                      notebookId: widget.notebookId, noteId: note.id);
-
-                  EasyLoading.dismiss();
-                  return;
-                }
-
-                var res = await ref
-                    .read(notebooksProvider.notifier)
-                    .deleteNote(notebookId: widget.notebookId, noteId: note.id);
-
-                EasyLoading.dismiss();
-
-                if (res is Failure) {
-                  logger.w('Encountered error: ${res.message}');
-                  EasyLoading.showError(res.message);
-                  return;
-                }
-
-                EasyLoading.showSuccess(res);
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: AppColors.primaryBackground,
-              ),
-            ),
-          ]),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -38,6 +38,7 @@ class CustomDialog {
 
                     button.onPressed?.call();
                   },
+                  style: button.buttonStyle,
                   child: Text(context.tr(button.text)),
                 ),
           ],
@@ -52,6 +53,8 @@ class CustomDialogButton<T> {
   final String text;
   final T? value;
   final VoidCallback? onPressed;
+  final ButtonStyle? buttonStyle;
 
-  CustomDialogButton({required this.text, this.value, this.onPressed});
+  CustomDialogButton(
+      {required this.text, this.value, this.onPressed, this.buttonStyle});
 }

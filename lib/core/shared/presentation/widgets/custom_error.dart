@@ -25,8 +25,8 @@ class CustomError extends ConsumerWidget {
                   ? errorDetails.summary.toString()
                   : 'Something went wrong!',
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: kDebugMode ? Colors.red : Colors.black,
+              style: TextStyle(
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 21),
             ),

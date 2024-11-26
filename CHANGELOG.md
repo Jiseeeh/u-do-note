@@ -1,3 +1,17 @@
+# [3.9.0](https://github.com/Jiseeeh/u-do-note/compare/v3.8.1...v3.9.0) (2024-11-26)
+
+
+### Bug Fixes
+
+* add missing button style prop ([95bae91](https://github.com/Jiseeeh/u-do-note/commit/95bae91031f974d2396a270c861d041ff9b87ced))
+* documents not getting added to pages ([126aaac](https://github.com/Jiseeeh/u-do-note/commit/126aaac4a81be5555405c55016ca959950ddf637))
+* text color not adaptive to theme ([4fbb2c2](https://github.com/Jiseeeh/u-do-note/commit/4fbb2c2ccecc8f35a6dab98fa6566465ca879b80))
+
+
+### Features
+
+* add receive request rejection ([c1032da](https://github.com/Jiseeeh/u-do-note/commit/c1032da8bd31608d4f63b31c77908d0b67619714))
+
 ## [3.8.1](https://github.com/Jiseeeh/u-do-note/compare/v3.8.0...v3.8.1) (2024-11-24)
 
 

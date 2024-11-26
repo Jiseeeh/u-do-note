@@ -9,6 +9,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
+import 'package:u_do_note/core/shared/theme/colors.dart';
+import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
 import 'package:u_do_note/features/settings/data/models/share_request.dart';
@@ -107,174 +109,220 @@ class _ReceivingSettingsScreenState
     List<Widget> cards = [];
 
     for (var sr in _shareRequests) {
-      cards.add(SettingsCard(
-          title: sr.senderEmail,
-          icon: Icons.person,
-          onSettingPressed: () async {
-            await showDialog(
-              context: context,
-              builder: (BuildContext dialogContext) {
-                return AlertDialog(
-                  scrollable: true,
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('This user wants to share notes with you.',
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        "Here are the titles of the notes they want to share.",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                  content: SizedBox(
-                    height: 200.0,
-                    child: ListView(
-                      shrinkWrap: true,
+      cards.add(GestureDetector(
+        onLongPress: () async {
+          var willReject = await CustomDialog.show(context,
+              title: 'Notice',
+              subTitle: "Do you want to reject this share request?",
+              buttons: [
+                CustomDialogButton(text: 'No', value: false),
+                CustomDialogButton(
+                    text: 'Yes',
+                    value: true,
+                    buttonStyle: ButtonStyle(
+                      foregroundColor:
+                          WidgetStateProperty.all<Color>(AppColors.error),
+                    )),
+              ]);
+
+          if (willReject) {
+            EasyLoading.show(
+              status: 'Please wait...',
+              maskType: EasyLoadingMaskType.black,
+              dismissOnTap: false,
+            );
+
+            var res = await ref
+                .read(settingsProvider.notifier)
+                .withdrawShareReq(reqId: sr.id!);
+
+            EasyLoading.dismiss();
+
+            if (res is Failure) {
+              logger.w('Could not reject share req: ${res.message}');
+              EasyLoading.showError(
+                  "Something went wrong, please try again later");
+              return;
+            }
+
+            EasyLoading.showSuccess('Receive request rejected!');
+
+            setState(() {
+              _shareRequests.removeWhere((req) => req.id == sr.id);
+            });
+          }
+        },
+        child: SettingsCard(
+            title: sr.senderEmail,
+            icon: Icons.person,
+            onSettingPressed: () async {
+              await showDialog(
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return AlertDialog(
+                    scrollable: true,
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (var req in sr.notesToShare)
-                          ListTile(
-                            leading: Icon(Icons.description,
-                                color: Theme.of(context).highlightColor),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(req.title),
-                                Text(
-                                  "Note created at: ${DateFormat('MMM d, y').format(req.createdAt.toDate())}",
-                                  style: const TextStyle(fontSize: 8),
-                                ),
-                              ],
-                            ),
-                          ),
+                        Text('This user wants to share notes with you.',
+                            style: Theme.of(context).textTheme.titleMedium),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          "Here are the titles of the notes they want to share.",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ],
                     ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                      },
-                      child: const Text('No'),
+                    content: SizedBox(
+                      height: 200.0,
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          for (var req in sr.notesToShare)
+                            ListTile(
+                              leading: Icon(Icons.description,
+                                  color: Theme.of(context).highlightColor),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(req.title),
+                                  Text(
+                                    "Note created at: ${DateFormat('MMM d, y').format(req.createdAt.toDate())}",
+                                    style: const TextStyle(fontSize: 8),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                    TextButton(
-                      onPressed: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (dialogContext) {
-                            return StatefulBuilder(
-                              builder: (context, setDialogState) {
-                                return AlertDialog(
-                                  scrollable: true,
-                                  title: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Choose a notebook to where you want to add the shared notes.',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                        child: const Text('No'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (dialogContext) {
+                              return StatefulBuilder(
+                                builder: (context, setDialogState) {
+                                  return AlertDialog(
+                                    scrollable: true,
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Choose a notebook to where you want to add the shared notes.',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                      ],
+                                    ),
+                                    content: Form(
+                                      key: _formKey,
+                                      child: MultiSelect(
+                                        items: _notebooks
+                                            .map((el) => DropdownItem(
+                                                label: el.subject,
+                                                value: el.id))
+                                            .toList(),
+                                        hintText: "Notebooks",
+                                        title: "Notebooks",
+                                        subTitle: "Choose a notebook to share",
+                                        validationText:
+                                            "Please select a notebook.",
+                                        prefixIcon: Icons.folder,
+                                        singleSelect: true,
+                                        onSelectionChanged: (items) {
+                                          setDialogState(() {
+                                            if (items.isNotEmpty) {
+                                              _selectedNotebookId = items.first;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(dialogContext).pop();
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            logger.d(
+                                                'selected: $_selectedNotebookId');
+
+                                            EasyLoading.show(
+                                                status: 'Receiving notes...',
+                                                maskType:
+                                                    EasyLoadingMaskType.black,
+                                                dismissOnTap: false);
+
+                                            var res = await ref
+                                                .read(settingsProvider.notifier)
+                                                .acceptShareRequest(
+                                                    chosenNotebookId:
+                                                        _selectedNotebookId,
+                                                    shareRequest: sr);
+
+                                            EasyLoading.dismiss();
+
+                                            if (res is Failure) {
+                                              logger.e(
+                                                  "Error receiving: ${res.message}");
+                                              EasyLoading.showError(
+                                                  "Something went wrong when receiving the notes, please try again later.");
+                                              return;
+                                            }
+
+                                            EasyLoading.showSuccess(
+                                                "Receive success!");
+
+                                            setDialogState(() {
+                                              _selectedNotebookId = "";
+                                            });
+
+                                            setState(() {
+                                              _shareRequests.removeWhere(
+                                                  (req) => req.id == sr.id);
+                                            });
+
+                                            if (context.mounted) {
+                                              Navigator.of(dialogContext).pop();
+                                            }
+                                          }
+                                        },
+                                        child: const Text('Confirm'),
                                       ),
                                     ],
-                                  ),
-                                  content: Form(
-                                    key: _formKey,
-                                    child: MultiSelect(
-                                      items: _notebooks
-                                          .map((el) => DropdownItem(
-                                              label: el.subject, value: el.id))
-                                          .toList(),
-                                      hintText: "Notebooks",
-                                      title: "Notebooks",
-                                      subTitle: "Choose a notebook to share",
-                                      validationText:
-                                          "Please select a notebook.",
-                                      prefixIcon: Icons.folder,
-                                      singleSelect: true,
-                                      onSelectionChanged: (items) {
-                                        setDialogState(() {
-                                          if (items.isNotEmpty) {
-                                            _selectedNotebookId = items.first;
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(dialogContext).pop();
-                                      },
-                                      child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          logger.d(
-                                              'selected: $_selectedNotebookId');
+                                  );
+                                },
+                              );
+                            },
+                          );
 
-                                          EasyLoading.show(
-                                              status: 'Receiving notes...',
-                                              maskType:
-                                                  EasyLoadingMaskType.black,
-                                              dismissOnTap: false);
-
-                                          var res = await ref
-                                              .read(settingsProvider.notifier)
-                                              .acceptShareRequest(
-                                                  chosenNotebookId:
-                                                      _selectedNotebookId,
-                                                  shareRequest: sr);
-
-                                          EasyLoading.dismiss();
-
-                                          if (res is Failure) {
-                                            logger.e(
-                                                "Error receiving: ${res.message}");
-                                            EasyLoading.showError(
-                                                "Something went wrong when receiving the notes, please try again later.");
-                                            return;
-                                          }
-
-                                          EasyLoading.showSuccess(
-                                              "Receive success!");
-
-                                          setDialogState(() {
-                                            _selectedNotebookId = "";
-                                          });
-
-                                          setState(() {
-                                            _shareRequests.removeWhere(
-                                                (req) => req.id == sr.id);
-                                          });
-
-                                          if (context.mounted) {
-                                            Navigator.of(dialogContext).pop();
-                                          }
-                                        }
-                                      },
-                                      child: const Text('Confirm'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                        );
-
-                        if (context.mounted) {
-                          Navigator.of(dialogContext).pop();
-                        }
-                      },
-                      child: const Text('Yes'),
-                    ),
-                  ],
-                );
-              },
-            );
-          }));
+                          if (context.mounted) {
+                            Navigator.of(dialogContext).pop();
+                          }
+                        },
+                        child: const Text('Yes'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }),
+      ));
     }
     return Column(
       children: [...cards],

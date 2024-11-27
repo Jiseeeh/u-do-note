@@ -148,6 +148,10 @@ class Settings extends _$Settings {
     return failureOrVoid.fold((failure) => failure, (res) => res);
   }
 
+  /// Used to delete a share request with [reqId]
+  ///
+  /// Can also be used to reject a receive request as it technically
+  /// does the same
   Future<dynamic> withdrawShareReq({required String reqId}) async {
     var withdrawShareReq = ref.read(withdrawShareReqProvider);
 

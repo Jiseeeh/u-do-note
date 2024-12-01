@@ -16,7 +16,6 @@ class UserRemoteDataSource {
       password: password,
     );
 
-    // check if user email is verified
     if (!userCredential.user!.emailVerified) {
       await userCredential.user!.sendEmailVerification();
 

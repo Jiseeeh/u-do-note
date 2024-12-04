@@ -1,3 +1,15 @@
+# [3.10.0](https://github.com/Jiseeeh/u-do-note/compare/v3.9.0...v3.10.0) (2024-12-04)
+
+
+### Bug Fixes
+
+* no loading shows on edit ([2ead711](https://github.com/Jiseeeh/u-do-note/commit/2ead711deb88de12ada3d857a411e1ccf86f99ef))
+
+
+### Features
+
+* add docx reader ([ede11bf](https://github.com/Jiseeeh/u-do-note/commit/ede11bfa8df7d287ebff34a5c32032105cbcda86))
+
 # [3.9.0](https://github.com/Jiseeeh/u-do-note/compare/v3.8.1...v3.9.0) (2024-11-26)
 
 

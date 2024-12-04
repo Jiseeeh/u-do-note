@@ -153,12 +153,20 @@ class AddNotebookDialogState extends ConsumerState<AddNotebookDialog> {
             return;
           }
 
+          EasyLoading.show(
+              status: 'Updating Notebook...',
+              maskType: EasyLoadingMaskType.black,
+              dismissOnTap: false);
+
           var res = await ref
               .read(notebooksProvider.notifier)
               .updateNotebook(coverImg: null, notebook: notebookModel);
 
+          EasyLoading.dismiss();
+
           if (res is Failure) {
             isSuccess = false;
+            logger.e("Error updating: ${res.message}");
             return;
           }
 

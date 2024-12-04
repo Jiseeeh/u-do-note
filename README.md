@@ -12,7 +12,7 @@
 - Generates notes summary
 - Note analysis
 - Scan text from image using OCR
-- Scan PDF files
+- Scan PDF and DOCX files
 - Available in English and Filipino
 - and MORE
 

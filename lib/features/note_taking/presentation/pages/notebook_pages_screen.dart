@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:docx_to_text/docx_to_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fleather/fleather.dart';
@@ -134,9 +135,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
               child: const Icon(Icons.document_scanner_rounded),
               labelWidget: const Text('Scan document'),
               onTap: () async {
-                List<String> extensions = [
-                  'pdf',
-                ];
+                List<String> extensions = ['pdf', 'docx'];
 
                 EasyLoading.show(
                     status: 'Loading file picker...',
@@ -182,14 +181,26 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
 
                   var inputBytes = await File(first.path!).readAsBytes();
 
-                  final PdfDocument document =
-                      PdfDocument(inputBytes: inputBytes);
+                  String extractedText = "";
 
-                  String extractedText =
-                      PdfTextExtractor(document).extractText();
+                  if (first.extension == 'pdf') {
+                    final PdfDocument document =
+                        PdfDocument(inputBytes: inputBytes);
+
+                    extractedText = PdfTextExtractor(document).extractText();
+
+                    document.dispose();
+                  } else if (first.extension == 'docx') {
+                    extractedText = docxToText(inputBytes);
+                  }
+
+                  if (extractedText.trim().isEmpty) {
+                    EasyLoading.showError(
+                        "We could not extract text with that file.");
+                    return;
+                  }
 
                   EasyLoading.dismiss();
-                  document.dispose();
 
                   if (!context.mounted) return;
 

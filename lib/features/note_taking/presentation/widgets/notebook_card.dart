@@ -43,39 +43,118 @@ class NotebookCard extends ConsumerWidget {
           // user wants to delete
           if (isEdit == false && context.mounted) {
             var userChoice = await getUserConfirmation(context, 'Notebook');
+            var textFieldController = TextEditingController();
+            var formKey = GlobalKey<FormState>();
 
             if (userChoice == null || userChoice == false) {
               return;
             }
 
-            if (!context.mounted) return;
+            if (userChoice) {
+              if (!context.mounted) return;
 
-            EasyLoading.show(
-                status: context.tr("delete_notebook_loading"),
-                maskType: EasyLoadingMaskType.black,
-                dismissOnTap: false);
+              await showDialog(
+                  context: context,
+                  builder: (dialogContext) {
+                    return AlertDialog(
+                      scrollable: true,
+                      content: Form(
+                          key: formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                  children: [
+                                    TextSpan(
+                                      text: "To confirm deletion, type ",
+                                    ),
+                                    TextSpan(
+                                        text: "DELETE",
+                                        style: TextStyle(
+                                          color: AppColors.error,
+                                        )),
+                                    TextSpan(
+                                      text: " in the field below.",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              TextFormField(
+                                validator: (String? value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Please input 'DELETE' to confirm.";
+                                  }
+                                  if (textFieldController.text != "DELETE") {
+                                    return "The input must match 'DELETE' exactly, including casing.";
+                                  }
+                                  return null;
+                                },
+                                controller: textFieldController,
+                                decoration: InputDecoration(
+                                  labelText: "Confirmation",
+                                  hintText: "Type DELETE",
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ],
+                          )),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(dialogContext).pop();
+                            },
+                            child: Text('Cancel')),
+                        TextButton(
+                            onPressed: () async {
+                              if (formKey.currentState!.validate()) {
+                                EasyLoading.show(
+                                    status:
+                                        context.tr("delete_notebook_loading"),
+                                    maskType: EasyLoadingMaskType.black,
+                                    dismissOnTap: false);
 
-            if (!hasNet) {
-              ref.read(notebooksProvider.notifier).deleteNotebook(
-                  notebookId: notebook.id, coverFileName: notebook.coverUrl);
+                                if (!hasNet) {
+                                  ref
+                                      .read(notebooksProvider.notifier)
+                                      .deleteNotebook(
+                                          notebookId: notebook.id,
+                                          coverFileName: notebook.coverUrl);
 
-              return;
+                                  return;
+                                }
+
+                                var res = await ref
+                                    .read(notebooksProvider.notifier)
+                                    .deleteNotebook(
+                                        notebookId: notebook.id,
+                                        coverFileName: notebook.coverUrl);
+
+                                EasyLoading.dismiss();
+
+                                if (res is Failure) {
+                                  logger.w(
+                                      'Encountered an error while deleting notebook: ${res.message}');
+
+                                  EasyLoading.showError(res.message);
+                                  return;
+                                }
+
+                                EasyLoading.showSuccess(res);
+
+                                if (dialogContext.mounted) {
+                                  Navigator.pop(dialogContext);
+                                }
+                              }
+                            },
+                            child: Text("Confirm"))
+                      ],
+                    );
+                  });
             }
-
-            var res = await ref.read(notebooksProvider.notifier).deleteNotebook(
-                notebookId: notebook.id, coverFileName: notebook.coverUrl);
-
-            EasyLoading.dismiss();
-
-            if (res is Failure) {
-              logger.w(
-                  'Encountered an error while deleting notebook: ${res.message}');
-
-              EasyLoading.showError(res.message);
-              return;
-            }
-
-            EasyLoading.showSuccess(res);
           }
 
           if (isEdit && context.mounted) {

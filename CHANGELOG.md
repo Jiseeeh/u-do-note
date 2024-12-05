@@ -1,3 +1,15 @@
+# [3.11.0](https://github.com/Jiseeeh/u-do-note/compare/v3.10.0...v3.11.0) (2024-12-05)
+
+
+### Bug Fixes
+
+* duplicate text ([5f918c8](https://github.com/Jiseeeh/u-do-note/commit/5f918c8f35f8f4284d6ca1ac5e9cb3421e08ef4d))
+
+
+### Features
+
+* add input confirmation when deleting notebook ([ab5dd6e](https://github.com/Jiseeeh/u-do-note/commit/ab5dd6ebf7332dd7bec26dfd9dc00cc35903075a))
+
 # [3.10.0](https://github.com/Jiseeeh/u-do-note/compare/v3.9.0...v3.10.0) (2024-12-04)
 
 

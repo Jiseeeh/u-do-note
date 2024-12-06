@@ -1,3 +1,10 @@
+## [3.11.1](https://github.com/Jiseeeh/u-do-note/compare/v3.11.0...v3.11.1) (2024-12-06)
+
+
+### Bug Fixes
+
+* users with google only provider could change pass ([1535baa](https://github.com/Jiseeeh/u-do-note/commit/1535baa0bdd2650bdbe28c718dc860b8936a4927))
+
 # [3.11.0](https://github.com/Jiseeeh/u-do-note/compare/v3.10.0...v3.11.0) (2024-12-05)
 
 

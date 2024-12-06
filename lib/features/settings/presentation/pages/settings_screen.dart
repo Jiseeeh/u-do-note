@@ -58,91 +58,132 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showChangePasswordDialog() {
     String currentPassword = '';
     String newPassword = '';
+    bool isCurrentPasswordVisible = false;
+    bool isNewPasswordVisible = false;
+
+    var user = FirebaseAuth.instance.currentUser!;
+
+    bool hasEmailAuth = user.providerData.any(
+        (provider) => provider.providerId == EmailAuthProvider.PROVIDER_ID);
+
+    if (!hasEmailAuth) {
+      EasyLoading.showError(
+          'Password change is only allowed for users who signed up with email and password.');
+      return;
+    }
 
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Change Password'),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  obscureText: true,
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    currentPassword = value;
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Current password',
-                      border: OutlineInputBorder()),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('Change Password'),
+              content: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      obscureText: !isCurrentPasswordVisible,
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your current password';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        currentPassword = value;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Current Password',
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(isCurrentPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              isCurrentPasswordVisible =
+                                  !isCurrentPasswordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      obscureText: !isNewPasswordVisible,
+                      onChanged: (value) {
+                        newPassword = value;
+                      },
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a new password';
+                        }
+
+                        if (value.length < 9) {
+                          return 'Password must be at least 9 characters long';
+                        }
+
+                        if (!value.contains(RegExp(r'[A-Z]'))) {
+                          return 'Password must contain at least one uppercase letter';
+                        }
+
+                        if (!value.contains(RegExp(r'[0-9]'))) {
+                          return 'Password must contain at least one number';
+                        }
+
+                        if (!value.contains(RegExp(r'[!@#\$&*~]'))) {
+                          return 'Password must contain at least one special character (e.g., !, @, #, \$, &, *, ~)';
+                        }
+
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'New Password',
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(isNewPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              isNewPasswordVisible = !isNewPasswordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 1.h),
-                TextFormField(
-                  obscureText: true,
-                  onChanged: (value) {
-                    newPassword = value;
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      EasyLoading.show(
+                          status: 'Changing password...',
+                          maskType: EasyLoadingMaskType.black,
+                          dismissOnTap: false);
+
+                      await _changePassword(currentPassword, newPassword);
+                      EasyLoading.dismiss();
+
+                      if (!context.mounted) return;
+
+                      Navigator.of(context).pop();
+                    }
                   },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-
-                    if (value.length < 9) {
-                      return 'Password must be at least 9 characters long';
-                    }
-
-                    if (!value.contains(RegExp(r'[A-Z]'))) {
-                      return 'Password must contain at least one uppercase letter';
-                    }
-
-                    if (!value.contains(RegExp(r'[0-9]'))) {
-                      return 'Password must contain at least one number';
-                    }
-
-                    if (!value.contains(RegExp(r'[!@#\$&*~]'))) {
-                      return 'Password must contain at least one special character (e.g., !, @, #, \$, &, *, ~)';
-                    }
-
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'New password', border: OutlineInputBorder()),
+                  child: Text('Change'),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  EasyLoading.show(
-                      status: 'Changing password...',
-                      maskType: EasyLoadingMaskType.black,
-                      dismissOnTap: false);
-
-                  await _changePassword(currentPassword, newPassword);
-                  EasyLoading.dismiss();
-
-                  if (!context.mounted) return;
-
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text('Change'),
-            ),
-          ],
+            );
+          },
         );
       },
     );
@@ -355,11 +396,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     );
 
                     if (willDelete && context.mounted) {
+                      var passwordController = TextEditingController();
                       await showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          var passwordController = TextEditingController();
-
                           return StatefulBuilder(
                             builder:
                                 (BuildContext context, StateSetter setState) {
@@ -405,7 +445,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       ),
                                     ),
                                     SizedBox(height: 16),
-                                    TextField(
+                                    TextFormField(
                                       keyboardType: TextInputType.text,
                                       controller: passwordController,
                                       obscureText: !_passwordVisible,
@@ -466,6 +506,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       EasyLoading.dismiss();
 
                                       if (failureOrBool is Failure) {
+                                        if (failureOrBool.message
+                                            .contains('invalid-credential')) {
+                                          EasyLoading.showError(
+                                              "You have entered an incorrect password.");
+                                          return;
+                                        }
+
                                         EasyLoading.showError(
                                             "Something went wrong while deleting your account, Please try again later.");
                                         return;
@@ -475,7 +522,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                           "Successfully deleted your account!.",
                                           duration: Duration(seconds: 3));
 
-                                      Future.delayed(Duration(seconds: 3), () {
+                                      Future.delayed(Duration(seconds: 1), () {
                                         if (context.mounted) {
                                           context.router
                                               .replaceAll([LoginRoute()]);

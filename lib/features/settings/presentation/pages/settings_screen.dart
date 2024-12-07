@@ -134,7 +134,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           return 'Password must contain at least one number';
                         }
 
-                        if (!value.contains(RegExp(r'[!@#\$&*~]'))) {
+                        if (!value.contains(RegExp(r'[!@#$&*~]'))) {
                           return 'Password must contain at least one special character (e.g., !, @, #, \$, &, *, ~)';
                         }
 

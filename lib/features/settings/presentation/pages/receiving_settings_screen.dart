@@ -168,7 +168,7 @@ class _ReceivingSettingsScreenState
                             style: Theme.of(context).textTheme.titleMedium),
                         const SizedBox(height: 8.0),
                         Text(
-                          "Here are the titles of the notes they want to share.",
+                          "Here are the titles of the notes they want to share. Do you want to accept?",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],

@@ -1,3 +1,11 @@
+## [3.11.2](https://github.com/Jiseeeh/u-do-note/compare/v3.11.1...v3.11.2) (2024-12-07)
+
+
+### Bug Fixes
+
+* receive notice not clear ([2a27e80](https://github.com/Jiseeeh/u-do-note/commit/2a27e80e3422dd9a43a0b078eacbe1de6e70f11f))
+* remove redundant escape ([7b24244](https://github.com/Jiseeeh/u-do-note/commit/7b2424426fd6b746a5f1a682f28fbff9a1565e88))
+
 ## [3.11.1](https://github.com/Jiseeeh/u-do-note/compare/v3.11.0...v3.11.1) (2024-12-06)
 
 

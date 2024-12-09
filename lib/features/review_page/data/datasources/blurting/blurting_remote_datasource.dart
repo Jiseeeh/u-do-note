@@ -23,7 +23,7 @@ class BlurtingRemoteDataSource {
             """
             Your task is to organize the student's note as he/she is using the blurting method.
             Add anything that is related to the topic and organize it by new lines.
-            Return a JSON in which contains the properties "content" as plain text, isValid as boolean, and error if the given note is note valid. 
+            Return a JSON in which contains the properties "content" as plain text, isValid as boolean, and error if the given note is note not valid. 
             """,
           ),
         ]);

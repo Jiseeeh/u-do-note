@@ -154,7 +154,7 @@ class SharedRemoteDataSource {
     switch (type) {
       case AssistanceType.summarize:
         systemPrompt =
-            "As a helpful assistant, your task is to help the student by providing concise and clear summary of the notes they provide, ensuring the key points are easily digestible.";
+            "As a helpful assistant, your task is to help the student by providing concise and clear summary of the notes they provide, ensuring the key points are easily digestible, if the user note is just gibberish or nonsense, set isValid to false";
         userPrompt = """
         Summarize my note below:
         
@@ -163,7 +163,7 @@ class SharedRemoteDataSource {
         break;
       case AssistanceType.guide:
         systemPrompt =
-            "As a helpful assistant, your task is to help the student by creating thoughtful guide questions based on the notes they provide. These questions should encourage deeper understanding and critical thinking.";
+            "As a helpful assistant, your task is to help the student by creating thoughtful guide questions based on the notes they provide. These questions should encourage deeper understanding and critical thinking, if the user note is just gibberish or nonsense, set isValid to false";
         userPrompt = """
         Generate guide questions based on the following notes, separate it by a newline
         

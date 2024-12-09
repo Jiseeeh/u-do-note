@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/shared/data/models/note.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
 import 'package:u_do_note/core/shared/presentation/widgets/multi_select.dart';
@@ -125,13 +126,19 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
 
     var reviewScreenState = ref.read(reviewScreenProvider);
 
-    var elaboratedContent = await ref
+    var elaboratedContentOrFailure = await ref
         .read(elaborationProvider.notifier)
         .getElaboratedContent(content: reviewScreenState.getContentFromPages);
 
     EasyLoading.dismiss();
 
     if (!context.mounted) return;
+
+    if (elaboratedContentOrFailure is Failure) {
+      EasyLoading.showError(elaboratedContentOrFailure.message);
+      logger.e(elaboratedContentOrFailure.message);
+      return;
+    }
 
     var willSaveContent = await CustomDialog.show(context,
         title: "Notice",
@@ -147,7 +154,7 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
     var elaborationModel = ElaborationModel(
       createdAt: Timestamp.now(),
       sessionName: reviewScreenState.getContentFromPages,
-      content: elaboratedContent,
+      content: elaboratedContentOrFailure,
     );
 
     if (!willSaveContent) {
@@ -189,7 +196,7 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
 
                 var doc = ParchmentDocument.fromJson(pageContentJson);
 
-                doc.insert(doc.length - 1, elaboratedContent);
+                doc.insert(doc.length - 1, elaboratedContentOrFailure);
 
                 return NoteModel.fromEntity(noteModel)
                     .copyWith(
@@ -247,7 +254,7 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
                   context: context,
                   builder: ((dialogContext) => AddNoteDialog(
                         notebookId: reviewScreenState.getNotebookId,
-                        initialContent: elaboratedContent,
+                        initialContent: elaboratedContentOrFailure,
                       )));
 
               if (!context.mounted) return;

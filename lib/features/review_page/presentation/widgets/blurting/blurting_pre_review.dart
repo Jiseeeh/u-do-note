@@ -245,7 +245,6 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
               },
               decoration: const InputDecoration(
                 labelText: "Session Title",
-                hintText: "Physics-1",
                 border: OutlineInputBorder(),
               ),
             ),
@@ -296,7 +295,6 @@ class _BlurtingPreReviewState extends ConsumerState<BlurtingPreReview> {
               },
               decoration: const InputDecoration(
                 labelText: "Page Title",
-                hintText: "Physics",
                 border: OutlineInputBorder(),
               ),
             ),

@@ -71,6 +71,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   var _speechEnabled = false;
   var _wordsSpoken = "";
   var _isFromOldBlurtingSession = false;
+  var _hasShownBlurtingDialogOnce = false;
   var _minBlurtingText = 200; // min limit before asking if done
   var _maxBlurtingText = 500; // max limit before asking if done
   var _hasBeenOrganized = false;
@@ -132,7 +133,10 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
       var noteLen = _fleatherController!.document.toPlainText().length;
 
       if (noteLen >= _minBlurtingText || noteLen >= _maxBlurtingText) {
-        _showBlurtingDialog(context);
+        if (!_hasShownBlurtingDialogOnce) {
+          _showBlurtingDialog(context);
+        }
+        _hasShownBlurtingDialogOnce = true;
       }
     });
 
@@ -162,7 +166,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                     Text(
                         "\u2022 If nothing comes to mind, just take a 5-10 minute break and come back.\n"),
                     Text(
-                        "\u2022 We will ask after some time if you are done, or you can also tap the plus button in the bottom right of the screen and choose Done.")
+                        "\u2022 We will ask when you hit 200 characters if you are done, or you can also tap the plus button in the bottom right of the screen and choose Done.")
                   ],
                 ),
                 actions: [
@@ -257,6 +261,13 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
           CustomDialogButton(
               text: "Yes",
               onPressed: () async {
+                var content = _fleatherController!.document.toPlainText();
+
+                if (content.trim().isEmpty) {
+                  EasyLoading.showError("Your note should not be empty.");
+                  return;
+                }
+
                 EasyLoading.show(
                     status: 'Please wait...',
                     maskType: EasyLoadingMaskType.black,
@@ -272,7 +283,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
                 if (!context.mounted) return;
 
                 if (res is Failure) {
-                  EasyLoading.showError(context.tr("general_e"));
+                  EasyLoading.showError(res.message);
                   logger.e(res.message);
                   return;
                 }

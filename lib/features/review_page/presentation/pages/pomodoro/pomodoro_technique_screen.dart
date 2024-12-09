@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:u_do_note/core/error/failures.dart';
 
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
@@ -81,19 +82,38 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
         var contentFromPages = ref.read(reviewScreenProvider).contentFromPages;
 
-        var quizQuestions = await ref
+        var quizQuestionsOrFailure = await ref
             .read(sharedProvider.notifier)
             .generateQuizQuestions(content: contentFromPages!);
 
-        if (quizQuestions.isEmpty) {
-          EasyLoading.showError(
-              "Something went wrong while generating quiz. Please try again later.");
+        EasyLoading.dismiss();
+
+        if (quizQuestionsOrFailure is Failure) {
+          EasyLoading.showError(quizQuestionsOrFailure.message);
+          logger.e(quizQuestionsOrFailure.message);
           return;
         }
 
-        if (!context.mounted) return;
+        if (quizQuestionsOrFailure.isEmpty && context.mounted) {
+          await showDialog(
+              context: context,
+              builder: (dialogContext) {
+                return AlertDialog(
+                  scrollable: true,
+                  content: Text(
+                      "U Do Note could not generate your quiz, your note might be not understandable or something went wrong."),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          context.router.back();
+                        },
+                        child: Text("Okay"))
+                  ],
+                );
+              });
+        }
 
-        EasyLoading.dismiss();
+        if (!context.mounted) return;
 
         var reviewScreenState = ref.read(reviewScreenProvider);
         var pomodoro = ref.read(pomodoroProvider);
@@ -103,7 +123,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
             focusedMinutes: (pomodoro.pomodoroTime ~/ 60) *
                 (pomodoro.pomodoroInSet) *
                 (pomodoro.numberOfSets),
-            questions: quizQuestions,
+            questions: quizQuestionsOrFailure,
             createdAt: Timestamp.now());
 
         context.router.replace(QuizRoute(

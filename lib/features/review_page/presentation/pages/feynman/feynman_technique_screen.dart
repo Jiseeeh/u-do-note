@@ -170,16 +170,34 @@ class _FeynmanTechniqueScreenState
           maskType: EasyLoadingMaskType.black,
           dismissOnTap: false);
 
-      var quizQuestions = await ref
+      var quizQuestionsOrFailure = await ref
           .read(sharedProvider.notifier)
           .generateQuizQuestions(content: widget.contentFromPages);
 
       EasyLoading.dismiss();
 
-      if (quizQuestions.isEmpty) {
-        EasyLoading.showError(
-            "Something went wrong while generating quiz. Please try again later.");
-        return;
+      if (quizQuestionsOrFailure is Failure) {
+        EasyLoading.showError(quizQuestionsOrFailure.message);
+        logger.e(quizQuestionsOrFailure.message);
+      }
+
+      if (quizQuestionsOrFailure.isEmpty && context.mounted) {
+        await showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                scrollable: true,
+                content: Text(
+                    "U Do Note could not generate your quiz, your note might be not understandable or something went wrong."),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        context.router.back();
+                      },
+                      child: Text("Okay"))
+                ],
+              );
+            });
       }
 
       if (!context.mounted) return;
@@ -190,7 +208,7 @@ class _FeynmanTechniqueScreenState
         if (widget.feynmanEntity!.questions!.isEmpty) {
           var feynmanModel = FeynmanModel.fromEntity(widget.feynmanEntity!)
               .copyWith(
-                  questions: quizQuestions,
+                  questions: quizQuestionsOrFailure,
                   recentRobotMessages: recentRobotMessages,
                   recentUserMessages: recentUserMessages,
                   isFromSessionWithoutQuiz: true,
@@ -211,7 +229,7 @@ class _FeynmanTechniqueScreenState
 
         var feynmanModel =
             FeynmanModel.fromEntity(widget.feynmanEntity!).copyWith(
-          questions: quizQuestions,
+          questions: quizQuestionsOrFailure,
           recentRobotMessages: recentRobotMessages,
           recentUserMessages: recentUserMessages,
           newSessionName: newSessionName,
@@ -226,7 +244,7 @@ class _FeynmanTechniqueScreenState
       }
 
       feynmanModel = feynmanModel!
-          .copyWith(questions: quizQuestions, newSessionName: null);
+          .copyWith(questions: quizQuestionsOrFailure, newSessionName: null);
 
       context.router.push(QuizRoute(
           questions: feynmanModel!.questions!,

@@ -23,7 +23,8 @@ class SharedRemoteDataSource {
     var prompt = """
         As a helpful assistant, generate a 10-question quiz based on the content provided by the user. Each question should include four answer choices presented in random order.
 
-        Return the result as an array named questions, where each entry is a JSON object containing:
+        If the content is gibberish or not understandable, return an empty array names questions.
+        otherwise, return the result as an array named questions, where each entry is a JSON object containing:
 
         question (string): the quiz question.
         choices (array of strings): the answer choices in random order.

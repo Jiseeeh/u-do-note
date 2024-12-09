@@ -211,7 +211,7 @@ class _SpacedRepetitionPreReviewState
     EasyLoading.dismiss();
 
     if (resOrContent is Failure) {
-      EasyLoading.showError(context.tr("general_e"));
+      EasyLoading.showError(resOrContent.message);
       logger.d(resOrContent);
       return;
     }

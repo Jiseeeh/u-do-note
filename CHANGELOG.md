@@ -1,3 +1,15 @@
+## [3.11.3](https://github.com/Jiseeeh/u-do-note/compare/v3.11.2...v3.11.3) (2024-12-09)
+
+
+### Bug Fixes
+
+* app generate quiz on non sense note ([ecdf0e6](https://github.com/Jiseeeh/u-do-note/commit/ecdf0e6f115b3de37ccc557b480c3a83dc5f2a42))
+* blurting dialog keeps on showing on 200+ chars ([a31746a](https://github.com/Jiseeeh/u-do-note/commit/a31746a6cb7b07baa2004627ec4efdeec118b34f))
+* no catch of error in elaboration ([70ef138](https://github.com/Jiseeeh/u-do-note/commit/70ef13826446ed5a4bf7a029f5f091dea2c952a4))
+* prompt message ([9ba35a1](https://github.com/Jiseeeh/u-do-note/commit/9ba35a11dd66bb071b38b4116d73949b895bc0f0))
+* remove general error message ([1f9ded5](https://github.com/Jiseeeh/u-do-note/commit/1f9ded55737da44791bda4fb5287cecbdb8844fd))
+* remove unnecessary hint text ([da246e9](https://github.com/Jiseeeh/u-do-note/commit/da246e9eccba98f1624f88aa53f509d3363b9a38))
+
 ## [3.11.2](https://github.com/Jiseeeh/u-do-note/compare/v3.11.1...v3.11.2) (2024-12-07)
 
 

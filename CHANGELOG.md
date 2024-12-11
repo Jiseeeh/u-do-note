@@ -1,3 +1,21 @@
+## [3.11.4](https://github.com/Jiseeeh/u-do-note/compare/v3.11.3...v3.11.4) (2024-12-11)
+
+
+### Bug Fixes
+
+* change model ([92a846d](https://github.com/Jiseeeh/u-do-note/commit/92a846de72cf8849aef5f65296b0f273d73dff46))
+* depend flashcards length on note length ([7edd9e9](https://github.com/Jiseeeh/u-do-note/commit/7edd9e9f859eaf575aeb6c04f88ef0f28a2c823c))
+* depend quiz length on note length ([bbbd0bc](https://github.com/Jiseeeh/u-do-note/commit/bbbd0bc8f21c3cd3f5074a1502437b0390a32e63))
+* guide question text ([44e5301](https://github.com/Jiseeeh/u-do-note/commit/44e530187db5265c9be3db215acb8499c97cb58d))
+* guide question text ([9ca9cea](https://github.com/Jiseeeh/u-do-note/commit/9ca9cea3e9a291d4a9186bfde75539c16a33e2f4))
+* lessen interpretations ([a4bd07a](https://github.com/Jiseeeh/u-do-note/commit/a4bd07a35c03037e19403f60009571f9c6ccb86f))
+* methods usage too clunky ([9ba9916](https://github.com/Jiseeeh/u-do-note/commit/9ba99166eb78b7e4425288c77aee8086fb4e3ce4))
+* no create notebook if user has no notebooks ([61ce992](https://github.com/Jiseeeh/u-do-note/commit/61ce992eba5d8823281e1a85934ec50a34037c86))
+* notebooks not updating after adding one in receiving ([1e092dd](https://github.com/Jiseeeh/u-do-note/commit/1e092dd684c3eb9437a92ed0eaf8bed41611a859))
+* notebooks not updating after adding one in receiving ([6ed021e](https://github.com/Jiseeeh/u-do-note/commit/6ed021e6a4259d336d7710339f8bbc513426742c))
+* time per step and allow skipping of step ([614aeb3](https://github.com/Jiseeeh/u-do-note/commit/614aeb395c9544f56dbe5119ffd7543050930635))
+* too many flashcards and quiz causes timeout ([571a90f](https://github.com/Jiseeeh/u-do-note/commit/571a90f7e8f3545ea3c82d5e2539bac0b4ef9de5))
+
 ## [3.11.3](https://github.com/Jiseeeh/u-do-note/compare/v3.11.2...v3.11.3) (2024-12-09)
 
 

@@ -13,6 +13,7 @@ import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 import 'package:u_do_note/features/note_taking/presentation/providers/notes_provider.dart';
+import 'package:u_do_note/features/note_taking/presentation/widgets/add_notebook_dialog.dart';
 import 'package:u_do_note/features/settings/data/models/share_request.dart';
 import 'package:u_do_note/features/settings/presentation/providers/settings_screen_provider.dart';
 import 'package:u_do_note/features/settings/presentation/widgets/settings_card.dart';
@@ -30,6 +31,10 @@ class _ReceivingSettingsScreenState
     extends ConsumerState<ReceivingSettingsScreen> {
   List<NotebookModel> _notebooks = [];
   List<ShareRequest> _shareRequests = [];
+  List<DropdownItem<String>> _notebooksMultiSelectItems = [];
+  final MultiSelectController<String> _notebooksMultiSelectController =
+      MultiSelectController();
+  List _categories = [];
   String _selectedNotebookId = "";
   final _formKey = GlobalKey<FormState>();
 
@@ -38,11 +43,34 @@ class _ReceivingSettingsScreenState
     super.initState();
 
     initNotebooks();
+    getCategories();
     initShareRequests();
   }
 
-  void initNotebooks() async {
+  void getCategories() async {
+    var failureOrCategories =
+        await ref.read(notebooksProvider.notifier).getCategories();
+
+    if (failureOrCategories is Failure) {
+      EasyLoading.showError(
+          "Something went wrong when getting your categories.");
+      logger.w("Cause: ${failureOrCategories.message}");
+      return;
+    }
+
+    _categories = failureOrCategories;
+  }
+
+  Future<void> initNotebooks() async {
     _notebooks = await ref.read(notebooksProvider.notifier).getNotebooks();
+
+    setState(() {
+      _notebooksMultiSelectItems = _notebooks
+          .map((el) => DropdownItem(label: el.subject, value: el.id))
+          .toList();
+
+      _notebooksMultiSelectController.setItems(_notebooksMultiSelectItems);
+    });
   }
 
   void initShareRequests() async {
@@ -226,26 +254,44 @@ class _ReceivingSettingsScreenState
                                     ),
                                     content: Form(
                                       key: _formKey,
-                                      child: MultiSelect(
-                                        items: _notebooks
-                                            .map((el) => DropdownItem(
-                                                label: el.subject,
-                                                value: el.id))
-                                            .toList(),
-                                        hintText: "Notebooks",
-                                        title: "Notebooks",
-                                        subTitle: "Choose a notebook to share",
-                                        validationText:
-                                            "Please select a notebook.",
-                                        prefixIcon: Icons.folder,
-                                        singleSelect: true,
-                                        onSelectionChanged: (items) {
-                                          setDialogState(() {
-                                            if (items.isNotEmpty) {
-                                              _selectedNotebookId = items.first;
-                                            }
-                                          });
-                                        },
+                                      child: Column(
+                                        children: [
+                                          MultiSelect(
+                                            controller:
+                                                _notebooksMultiSelectController,
+                                            items: _notebooksMultiSelectItems,
+                                            hintText: "Notebooks",
+                                            title: "Notebooks",
+                                            subTitle:
+                                                "Choose a notebook to share",
+                                            validationText:
+                                                "Please select a notebook.",
+                                            prefixIcon: Icons.folder,
+                                            singleSelect: true,
+                                            onSelectionChanged: (items) {
+                                              setDialogState(() {
+                                                if (items.isNotEmpty) {
+                                                  _selectedNotebookId =
+                                                      items.first;
+                                                }
+                                              });
+                                            },
+                                          ),
+                                          TextButton(
+                                              onPressed: () async {
+                                                await showDialog(
+                                                    context: context,
+                                                    builder: ((dialogContext) =>
+                                                        AddNotebookDialog(
+                                                          categories:
+                                                              _categories.cast<
+                                                                  String>(),
+                                                        )));
+
+                                                await initNotebooks();
+                                              },
+                                              child: Text("Create Notebook"))
+                                        ],
                                       ),
                                     ),
                                     actions: [

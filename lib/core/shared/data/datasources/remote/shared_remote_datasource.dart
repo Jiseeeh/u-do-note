@@ -17,11 +17,24 @@ class SharedRemoteDataSource {
 
   SharedRemoteDataSource(this._firestore, this._auth);
 
+  int _calculateQuizQuestions(int noteLength) {
+    const int minQuestions = 10;
+    const int maxQuestions = 30;
+    const int charsPerQuestion = 120;
+
+    int numberOfQuestions = (noteLength / charsPerQuestion).ceil();
+
+    return numberOfQuestions.clamp(minQuestions, maxQuestions);
+  }
+
   Future<List<QuestionModel>> generateQuizQuestions(
       String content, String? customPrompt,
       {bool appendPrompt = false}) async {
+    var quizLength = _calculateQuizQuestions(content.length);
+    logger.d("quiz len: $quizLength, content len: ${content.length}");
+
     var prompt = """
-        As a helpful assistant, generate a 10-question quiz based on the content provided by the user. Each question should include four answer choices presented in random order.
+        As a helpful assistant, generate a $quizLength-question quiz based on the content provided by the user. Each question should include four answer choices presented in random order.
 
         If the content is gibberish or not understandable, return an empty array names questions.
         otherwise, return the result as an array named questions, where each entry is a JSON object containing:
@@ -48,7 +61,7 @@ class SharedRemoteDataSource {
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
-          Given the content: "$content", create a 10 question quiz and the correct answer indices should be in random order.
+          Given the content: "$content", create a $quizLength question quiz and the correct answer indices should be in random order.
           """,
         ),
       ],
@@ -62,11 +75,10 @@ class SharedRemoteDataSource {
 
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,
-      maxTokens: 800,
     );
 
     String? completionContent =

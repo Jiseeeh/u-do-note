@@ -11,6 +11,19 @@ import 'package:u_do_note/core/shared/theme/colors.dart';
 import 'package:u_do_note/features/note_taking/data/models/notebook.dart';
 
 class Helper {
+  static int getTimeStep(int chars) {
+    if (chars < 100) return 10;
+
+    const int charsPerWord = 5;
+    const int wordsPerMinute = 200;
+
+    // ? calculate reading time in seconds
+    int readingTimeInSeconds =
+        (chars / charsPerWord / wordsPerMinute * 60).ceil();
+
+    return readingTimeInSeconds;
+  }
+
   static void updateTechniqueUsage(FirebaseFirestore firestore, String userId,
       String userNotebookId, String techniqueName) async {
     var notebookDoc = await firestore

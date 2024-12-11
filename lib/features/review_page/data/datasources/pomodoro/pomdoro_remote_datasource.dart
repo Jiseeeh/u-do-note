@@ -62,7 +62,7 @@ class PomodoroRemoteDataSource {
 
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-4o-mini",
       responseFormat: {"type": "json_object"},
       messages: requestMessages,
       temperature: 0.2,

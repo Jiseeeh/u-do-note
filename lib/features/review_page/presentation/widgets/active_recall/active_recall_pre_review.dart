@@ -173,7 +173,7 @@ class _ActiveRecallPreReviewState extends ConsumerState<ActiveRecallPreReview> {
               ),
             ),
             ListTile(
-              title: const Text('Guide Questions'),
+              title: const Text('Add Guide Questions'),
               leading: Radio<AssistanceType>(
                 value: AssistanceType.guide,
                 groupValue: _assistType,

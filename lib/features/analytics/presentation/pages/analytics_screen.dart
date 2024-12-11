@@ -158,8 +158,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
     var learningMethodCount = 0;
     for (var entry in firstNotebook.techniquesUsage.entries) {
-      if (entry.value > 0) learningMethodCount++;
-      data.add(ChartData(entry.key, entry.value));
+      if (entry.value > 0) {
+        learningMethodCount++;
+        data.add(ChartData(entry.key, entry.value));
+      }
     }
 
     setState(() {
@@ -543,36 +545,40 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 "Insufficient data to display usage chart",
                               ))
                             : SfCartesianChart(
+                                legend: Legend(
+                                  isVisible: true,
+                                  position: LegendPosition.bottom,
+                                ),
                                 series: <CartesianSeries<ChartData, String>>[
+                                  for (var data
+                                      in _getChartDataSourceByNotebook(
+                                          notebooks.firstWhere(
+                                              (nb) =>
+                                                  nb.subject ==
+                                                  _selectedNotebook,
+                                              orElse: () => notebooks.first)))
                                     ColumnSeries<ChartData, String>(
-                                        name: "Method Usage",
-                                        dataSource:
-                                            _getChartDataSourceByNotebook(
-                                                notebooks.firstWhere(
-                                                    (nb) =>
-                                                        nb.subject ==
-                                                        _selectedNotebook,
-                                                    orElse: () =>
-                                                        notebooks.first)),
-                                        dataLabelSettings:
-                                            const DataLabelSettings(
-                                                isVisible: true,
-                                                labelPosition:
-                                                    ChartDataLabelPosition
-                                                        .outside),
-                                        enableTooltip: true,
-                                        xValueMapper: (ChartData data, _) =>
-                                            data.reviewMethod,
-                                        yValueMapper: (ChartData data, _) =>
-                                            data.usage),
-                                  ],
+                                      name: data.reviewMethod,
+                                      dataSource: [data],
+                                      dataLabelSettings:
+                                          const DataLabelSettings(
+                                              isVisible: true,
+                                              labelPosition:
+                                                  ChartDataLabelPosition
+                                                      .outside),
+                                      enableTooltip: true,
+                                      xValueMapper: (ChartData data, _) => "",
+                                      yValueMapper: (ChartData data, _) =>
+                                          data.usage,
+                                    ),
+                                ],
                                 zoomPanBehavior: _usagePanBehavior,
                                 tooltipBehavior: _usageTooltip,
                                 primaryXAxis: CategoryAxis(
-                                  // title: AxisTitle(text: "Review Method"),
                                   labelRotation: 30,
                                 ),
-                                primaryYAxis: NumericAxis()),
+                                primaryYAxis: NumericAxis(),
+                              ),
                         !_hasSmallUsageData
                             ? Column(
                                 children: [

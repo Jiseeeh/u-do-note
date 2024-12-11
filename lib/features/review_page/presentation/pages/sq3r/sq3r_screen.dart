@@ -11,6 +11,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/helper.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
@@ -18,7 +19,7 @@ import 'package:u_do_note/core/utility.dart';
 import 'package:u_do_note/features/review_page/data/models/sq3r.dart';
 import 'package:u_do_note/routes/app_route.dart';
 
-enum Sq3rStatus { surveyWithQuestion, read, recite, review }
+enum Sq3rStatus { survey, read, recite, review }
 
 @RoutePage()
 class Sq3rScreen extends ConsumerStatefulWidget {
@@ -41,8 +42,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
   bool _isTopReadOnly = false;
   bool _isBottomToolbarVisible = true;
   bool _isBottomReadOnly = false;
-  Sq3rStatus _sq3rStatus = Sq3rStatus.surveyWithQuestion;
-  final int _initialTime = 120;
+  Sq3rStatus _sq3rStatus = Sq3rStatus.survey;
   late int _startTimeSeconds;
   Timer? _timer;
   final _speechToText = SpeechToText();
@@ -59,7 +59,9 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
     _topFleatherController = FleatherController(document: doc1);
     _bottomFleatherController = FleatherController(document: doc2);
 
-    _startTimeSeconds = _initialTime;
+    _startTimeSeconds = Helper.getTimeStep(
+        _topFleatherController!.document.toPlainText().length);
+
     if (!widget.isFromOldSession) {
       Future.delayed(Duration.zero, () {
         if (!mounted) return;
@@ -67,7 +69,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
         CustomDialog.show(context,
             title: "SQ3R -- Survey",
             subTitle:
-                "Survey your note for 2 minutes and try to formulate questions on the go.",
+                "Survey your note and try to formulate questions on the go.",
             buttons: [
               CustomDialogButton(
                   text: "Okay",
@@ -99,7 +101,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
 
   Future<void> _updateStatus(BuildContext context) async {
     switch (_sq3rStatus) {
-      case Sq3rStatus.surveyWithQuestion:
+      case Sq3rStatus.survey:
         var done = await CustomDialog.show(context,
             title: "SQ3R",
             subTitle: "Are you done surveying and formulating questions?",
@@ -111,12 +113,14 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
         if (!context.mounted) return;
 
         if (done) {
-          _sq3rStatus = Sq3rStatus.read;
+          setState(() {
+            _sq3rStatus = Sq3rStatus.read;
+          });
 
           await CustomDialog.show(context,
               title: "SQ3R -- Read",
               subTitle:
-                  "Read your note thoroughly for 2 minutes while trying to answer your formulated questions.",
+                  "Read your note thoroughly while trying to answer your formulated questions.",
               buttons: [CustomDialogButton(text: "Okay")]);
           break;
         }
@@ -153,14 +157,16 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
             break;
           }
 
-          _sq3rStatus = Sq3rStatus.read;
+          setState(() {
+            _sq3rStatus = Sq3rStatus.read;
+          });
 
           if (!context.mounted) return;
 
           await CustomDialog.show(context,
               title: "SQ3R -- Read",
               subTitle:
-                  "Read your note thoroughly for 2 minutes while trying to answer your formulated questions.",
+                  "Read your note thoroughly while trying to answer your formulated questions.",
               buttons: [CustomDialogButton(text: "Okay")]);
 
           _bottomFleatherController!.document.replace(
@@ -183,7 +189,9 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
         if (!context.mounted) return;
 
         if (doneReadingAndAnswering) {
-          _sq3rStatus = Sq3rStatus.recite;
+          setState(() {
+            _sq3rStatus = Sq3rStatus.recite;
+          });
           await CustomDialog.show(context,
               title: "SQ3R -- Recite",
               subTitle:
@@ -235,7 +243,9 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
             break;
           }
 
-          _sq3rStatus = Sq3rStatus.review;
+          setState(() {
+            _sq3rStatus = Sq3rStatus.review;
+          });
 
           var decodedJson = jsonDecode(failureOrJsonContent);
 
@@ -300,7 +310,8 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
         break;
     }
 
-    _startTimeSeconds = _initialTime;
+    _startTimeSeconds = Helper.getTimeStep(
+        _topFleatherController!.document.toPlainText().length);
     _startTimer();
   }
 
@@ -412,12 +423,33 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
                       )
               ], controller: _topFleatherController!, padding: EdgeInsets.zero),
             Expanded(
-              child: FleatherEditor(
-                  editorKey: _topEditorKey,
-                  padding: const EdgeInsets.all(16),
-                  controller: _topFleatherController!),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text(
+                          _topFleatherController?.document
+                                  .toPlainText()
+                                  .length
+                                  .toString() ??
+                              "0",
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                  Expanded(
+                    child: FleatherEditor(
+                        editorKey: _topEditorKey,
+                        padding: const EdgeInsets.all(16),
+                        controller: _topFleatherController!),
+                  ),
+                ],
+              ),
             ),
-            const Divider(height: 2, thickness: 5, color: Colors.grey),
+            const Divider(height: 2, thickness: 2, color: Colors.grey),
             if (_isBottomToolbarVisible)
               FleatherToolbar.basic(
                   trailing: [
@@ -461,6 +493,15 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
                 buttonSize: const Size(50, 50),
                 curve: Curves.bounceIn,
                 children: [
+                  SpeedDialChild(
+                      elevation: 0,
+                      child: const Icon(Icons.skip_next_rounded),
+                      labelWidget: Text('Skip ${_sq3rStatus.name} '),
+                      onTap: () {
+                        setState(() {
+                          _startTimeSeconds = 0;
+                        });
+                      }),
                   SpeedDialChild(
                       elevation: 0,
                       child: const Icon(Icons.vertical_align_bottom),

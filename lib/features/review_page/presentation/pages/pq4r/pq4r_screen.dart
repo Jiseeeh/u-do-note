@@ -12,6 +12,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import 'package:u_do_note/core/enums/assistance_type.dart';
 import 'package:u_do_note/core/error/failures.dart';
+import 'package:u_do_note/core/helper.dart';
 import 'package:u_do_note/core/logger/logger.dart';
 import 'package:u_do_note/core/review_methods.dart';
 import 'package:u_do_note/core/shared/presentation/providers/shared_provider.dart';
@@ -43,7 +44,6 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
   bool _isBottomToolbarVisible = true;
   bool _isBottomReadOnly = false;
   Pq4rStatus _pq4rStatus = Pq4rStatus.preview;
-  final int _initialTime = 120;
   late int _startTimeSeconds;
   Timer? _timer;
   final _speechToText = SpeechToText();
@@ -70,7 +70,9 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
     _topFleatherController = FleatherController(document: doc1);
     _bottomFleatherController = FleatherController(document: doc2);
 
-    _startTimeSeconds = _initialTime - 60;
+    _startTimeSeconds = Helper.getTimeStep(
+        _topFleatherController!.document.toPlainText().length);
+
     if (!widget.isFromOldSession) {
       Future.delayed(Duration.zero, () {
         if (!mounted) return;
@@ -78,7 +80,7 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
         CustomDialog.show(context,
             title: "${Pq4rModel.name} -- Preview",
             subTitle:
-                "Preview your note for 1 minute to get an overview of and structure of it.",
+                "Preview your note to get an overview of and structure of it.",
             buttons: [
               CustomDialogButton(
                   text: "Okay",
@@ -122,7 +124,9 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
         if (!context.mounted) return;
 
         if (done) {
-          _pq4rStatus = Pq4rStatus.questions;
+          setState(() {
+            _pq4rStatus = Pq4rStatus.questions;
+          });
 
           await CustomDialog.show(context,
               title: "${Pq4rModel.name} -- Questions",
@@ -143,12 +147,14 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
         if (!context.mounted) return;
 
         if (doneFormulatingQuestions) {
-          _pq4rStatus = Pq4rStatus.read;
+          setState(() {
+            _pq4rStatus = Pq4rStatus.read;
+          });
 
           await CustomDialog.show(context,
               title: "${Pq4rModel.name} -- Read",
               subTitle:
-                  "Read your note thoroughly for 2 minutes while trying to answer your formulated questions.",
+                  "Read your note thoroughly while trying to answer your formulated questions.",
               buttons: [CustomDialogButton(text: "Okay")]);
           break;
         }
@@ -185,7 +191,9 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
             break;
           }
 
-          _pq4rStatus = Pq4rStatus.read;
+          setState(() {
+            _pq4rStatus = Pq4rStatus.read;
+          });
 
           if (!context.mounted) return;
 
@@ -215,7 +223,9 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
         if (!context.mounted) return;
 
         if (doneReadingAndAnswering) {
-          _pq4rStatus = Pq4rStatus.reflect;
+          setState(() {
+            _pq4rStatus = Pq4rStatus.reflect;
+          });
 
           var q1 = getOneReflectionQuestion();
           var q2 = getOneReflectionQuestion();
@@ -238,7 +248,8 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
               ),
               buttons: [CustomDialogButton(text: "Okay")]);
 
-          _startTimeSeconds = _initialTime + 60;
+          _startTimeSeconds = Helper.getTimeStep(
+              _topFleatherController!.document.toPlainText().length);
           _startTimer();
           return;
         }
@@ -256,7 +267,10 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
         if (!context.mounted) return;
 
         if (doneReflecting) {
-          _pq4rStatus = Pq4rStatus.recite;
+          setState(() {
+            _pq4rStatus = Pq4rStatus.recite;
+          });
+
           await CustomDialog.show(context,
               title: "${Pq4rModel.name} -- Recite",
               subTitle:
@@ -292,7 +306,9 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
 
           EasyLoading.dismiss();
 
-          _pq4rStatus = Pq4rStatus.review;
+          setState(() {
+            _pq4rStatus = Pq4rStatus.review;
+          });
 
           if (failureOrJsonContent is Failure) {
             logger.w(
@@ -364,7 +380,8 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
         }
         break;
     }
-    _startTimeSeconds = _initialTime;
+    _startTimeSeconds = Helper.getTimeStep(
+        _topFleatherController!.document.toPlainText().length);
     _startTimer();
   }
 
@@ -480,10 +497,31 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
                       )
               ], controller: _topFleatherController!, padding: EdgeInsets.zero),
             Expanded(
-              child: FleatherEditor(
-                  editorKey: _topEditorKey,
-                  padding: const EdgeInsets.all(16),
-                  controller: _topFleatherController!),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text(
+                          _topFleatherController?.document
+                                  .toPlainText()
+                                  .length
+                                  .toString() ??
+                              "0",
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                  Expanded(
+                    child: FleatherEditor(
+                        editorKey: _topEditorKey,
+                        padding: const EdgeInsets.all(16),
+                        controller: _topFleatherController!),
+                  ),
+                ],
+              ),
             ),
             const Divider(height: 2, thickness: 5, color: Colors.grey),
             if (_isBottomToolbarVisible)
@@ -529,6 +567,15 @@ class _Pq4rScreenState extends ConsumerState<Pq4rScreen> {
                 buttonSize: const Size(50, 50),
                 curve: Curves.bounceIn,
                 children: [
+                  SpeedDialChild(
+                      elevation: 0,
+                      child: const Icon(Icons.skip_next_rounded),
+                      labelWidget: Text('Skip ${_pq4rStatus.name} '),
+                      onTap: () {
+                        setState(() {
+                          _startTimeSeconds = 0;
+                        });
+                      }),
                   SpeedDialChild(
                       elevation: 0,
                       child: const Icon(Icons.vertical_align_bottom),

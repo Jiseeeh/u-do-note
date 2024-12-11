@@ -14,14 +14,27 @@ class LeitnerRemoteDataSource {
 
   LeitnerRemoteDataSource(this._firestore);
 
+  int _calculateFlashcardsCount(int noteLength) {
+    const int minCards = 5;
+    const int maxCards = 30;
+    const int charsPerCard = 120;
+
+    int numberOfCards = (noteLength / charsPerCard).ceil();
+
+    return numberOfCards.clamp(minCards, maxCards);
+  }
+
   Future<LeitnerSystemModel> generateFlashcards(
       String title, String userNotebookId, String content) async {
+    var flashcardsCount = _calculateFlashcardsCount(content.length);
+    logger.d("flashcard count: $flashcardsCount, len: ${content.length}");
+
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
         role: OpenAIChatMessageRole.system,
         content: [
           OpenAIChatCompletionChoiceMessageContentItemModel.text(
             """
-            Create 5 flashcards about the content to be given by the student with the following guidelines:
+            Create $flashcardsCount flashcards about the content to be given by the student with the following guidelines:
             1. If the content is gibberish or not understandable set isValid to false.
             2. Make the flashcards as concise as possible and limit prose to 1-2 sentences.
             3. The response should be in JSON format containing the properties isValid, and the  flashcards array with each flashcard having the properties question, answer.
@@ -30,7 +43,7 @@ class LeitnerRemoteDataSource {
         ]);
 
     String prompt = """
-                    Make 5 flashcards about the content below:
+                    Make $flashcardsCount flashcards about the content below:
 
                     $content
                     """;
@@ -50,12 +63,11 @@ class LeitnerRemoteDataSource {
 
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-4o",
       responseFormat: {"type": "json_object"},
       // seed: 6,
       messages: requestMessages,
       temperature: 0.2,
-      maxTokens: 600,
     );
 
     String? completionContent =
@@ -79,6 +91,9 @@ class LeitnerRemoteDataSource {
     for (var flashcard in decodedJson['flashcards']) {
       flashcards.add(FlashcardModel.fromJson(flashcard));
     }
+
+    flashcards.shuffle();
+
     var userId = FirebaseAuth.instance.currentUser!.uid;
 
     // TODO: use toFirestore of leitner
@@ -160,7 +175,7 @@ class LeitnerRemoteDataSource {
 
     OpenAIChatCompletionModel chatCompletion =
         await OpenAI.instance.chat.create(
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-4o-mini",
       responseFormat: {"type": "json_object"},
       // seed: 6,
       messages: requestMessages,

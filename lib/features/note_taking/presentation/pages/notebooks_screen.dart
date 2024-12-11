@@ -29,6 +29,7 @@ class NotebooksScreen extends ConsumerStatefulWidget {
 class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
   List _elements = [], _categories = [];
   var filterCategory = 'All';
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -82,9 +83,10 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
           .toList();
     }
 
-    setState(() {});
-
-    _categories = failureOrCategories;
+    setState(() {
+      _categories = failureOrCategories;
+      _isLoading = false;
+    });
   }
 
   void _update(String categoryName) {
@@ -224,12 +226,9 @@ class _NotebooksScreenState extends ConsumerState<NotebooksScreen> {
       );
     }
 
-    if (_elements.isEmpty) {
-      return Center(
-        child: Text(
-          '$filterCategory\n${context.tr("no_notebook")}',
-          textAlign: TextAlign.center,
-        ),
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
       );
     }
 

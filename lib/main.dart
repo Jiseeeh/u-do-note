@@ -59,6 +59,7 @@ Future<void> initDependencies() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   OpenAI.apiKey = Env.openAIKey;
   OpenAI.showLogs = true;
+  OpenAI.requestsTimeOut = Duration(seconds: 60);
 
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);

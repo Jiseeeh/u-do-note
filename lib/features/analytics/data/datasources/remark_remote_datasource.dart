@@ -91,7 +91,7 @@ class RemarkRemoteDataSource {
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
-          You are an analyst. You will be given data representing a column chart, where review methods are on the x-axis and their usage frequency on the y-axis. Your task is to interpret the chart in a concise summary of 3-4 sentences. Highlight the most and least frequently used methods, as well as any notable patterns in the data.
+          You are an analyst. You will be given data representing a column chart, where review methods are on the x-axis and their usage frequency on the y-axis. Your task is to interpret the chart in a concise summary of 1-2 sentences. Highlight the most and least frequently used methods, as well as any notable patterns in the data.
           
           Note that this learning method usage are tied to a single user not the overall usage of all users so use second-person language alongside the interpretation.
           """,
@@ -136,7 +136,7 @@ class RemarkRemoteDataSource {
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
           """
-          You are an analyst. You will be given data representing a line chart, where dates are on the x-axis and their corresponding score is on the y-axis. Your task is to interpret the chart in a concise summary of 3-4 sentences.  
+          You are an analyst. You will be given data representing a line chart, where dates are on the x-axis and their corresponding score is on the y-axis. Your task is to interpret the chart in a concise summary of 1-2 sentences.  
           
           Note that this learning method scores are tied to a single user not the overall usage of all users so use second-person language alongside the interpretation. 
           """,
@@ -263,7 +263,7 @@ class RemarkRemoteDataSource {
           Output Requirements
           Your response should be in JSON format with the following properties:
   
-          "content": A summary of the student’s progress and a prediction or insight into their future performance based on the observed trends. Highlight any methods where the student excels or struggles, use second-person language and make it concise as 3-4 sentences only.
+          "content": A summary of the student’s progress and a prediction or insight into their future performance based on the observed trends. Highlight any methods where the student excels or struggles, use second-person language and make it concise as 1-2 sentences only.
           "state": A single-word evaluation of the student's learning progress
            Choose from:
               "Improving" if there’s a positive trend across scores.

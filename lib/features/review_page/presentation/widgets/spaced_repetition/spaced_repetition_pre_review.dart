@@ -174,7 +174,7 @@ class _SpacedRepetitionPreReviewState
               ),
             ),
             ListTile(
-              title: const Text('Guide Questions'),
+              title: const Text('Add Guide Questions'),
               leading: Radio<AssistanceType>(
                 value: AssistanceType.guide,
                 groupValue: _assistType,

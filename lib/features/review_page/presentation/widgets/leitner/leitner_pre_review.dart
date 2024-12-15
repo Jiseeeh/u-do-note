@@ -115,10 +115,14 @@ class _LeitnerPreReviewState extends ConsumerState<LeitnerPreReview> {
     }
 
     if (_oldLeitnerSessionId.isNotEmpty) {
+      var leitnerModel = oldLeitnerModels.firstWhere(
+          (leitnerModel) => leitnerModel.id == _oldLeitnerSessionId);
+
+      leitnerModel.flashcards.shuffle();
+
       context.router.push(LeitnerSystemRoute(
           notebookId: reviewScreenState.getNotebookId,
-          leitnerSystemModel: oldLeitnerModels.firstWhere(
-              (leitnerModel) => leitnerModel.id == _oldLeitnerSessionId)));
+          leitnerSystemModel: leitnerModel));
     }
   }
 

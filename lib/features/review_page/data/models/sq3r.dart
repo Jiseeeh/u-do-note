@@ -11,7 +11,7 @@ class Sq3rModel extends QuizModel {
   final String topEditorJsonContent;
   final String bottomEditorJsonContent;
   final Timestamp createdAt;
-  static const coverImagePath = "assets/images/sq3r.webp";
+  static const coverImagePath = "assets/images/sq3r.png";
   static const name = "SQ3R";
 
   const Sq3rModel(

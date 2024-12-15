@@ -11,7 +11,7 @@ class Pq4rModel extends QuizModel {
   final String topEditorJsonContent;
   final String bottomEditorJsonContent;
   final Timestamp createdAt;
-  static const coverImagePath = "assets/images/pq4r.webp";
+  static const coverImagePath = "assets/images/pq4r.png";
   static const name = "PQ4R";
 
   const Pq4rModel(

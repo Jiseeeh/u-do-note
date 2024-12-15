@@ -17,7 +17,7 @@ class BlurtingDetails extends ConsumerWidget {
           height: 16,
         ),
         Image.asset(
-          'assets/images/blurting.webp',
+          'assets/images/blurting.png',
           width: MediaQuery.sizeOf(context).width,
           height: 230,
           fit: BoxFit.cover,

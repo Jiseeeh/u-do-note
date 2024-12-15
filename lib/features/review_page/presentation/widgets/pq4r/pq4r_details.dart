@@ -17,7 +17,7 @@ class Pq4rDetails extends ConsumerWidget {
           height: 16,
         ),
         Image.asset(
-          'assets/images/pq4r.webp',
+          'assets/images/pq4r.png',
           width: MediaQuery.sizeOf(context).width,
           height: 230,
           fit: BoxFit.cover,

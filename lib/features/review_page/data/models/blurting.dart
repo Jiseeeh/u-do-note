@@ -10,7 +10,7 @@ class BlurtingModel extends QuizModel {
   final String content;
   final String sessionName;
   final Timestamp createdAt;
-  static const coverImagePath = "assets/images/blurting.webp";
+  static const coverImagePath = "assets/images/blurting.png";
   static const name = "Blurting Method";
 
   const BlurtingModel({

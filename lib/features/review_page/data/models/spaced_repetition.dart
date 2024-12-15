@@ -15,7 +15,7 @@ class SpacedRepetitionModel {
   final String? remark;
   final List<QuestionModel>? questions;
   final List<int>? selectedAnswersIndex;
-  static const coverImagePath = "assets/images/spaced_repetition.webp";
+  static const coverImagePath = "assets/images/spaced_repetition.png";
   static const name = "Spaced Repetition";
 
   const SpacedRepetitionModel({
@@ -144,4 +144,3 @@ class SpacedRepetitionModel {
     );
   }
 }
-

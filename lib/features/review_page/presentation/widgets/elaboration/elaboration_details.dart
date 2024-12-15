@@ -17,7 +17,7 @@ class ElaborationDetails extends ConsumerWidget {
           height: 16,
         ),
         Image.asset(
-          'assets/images/elaboration.webp',
+          'assets/images/elaboration.png',
           width: MediaQuery.sizeOf(context).width,
           height: 230,
           fit: BoxFit.cover,

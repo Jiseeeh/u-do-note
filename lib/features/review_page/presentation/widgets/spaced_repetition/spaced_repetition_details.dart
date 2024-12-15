@@ -17,7 +17,7 @@ class SpacedRepetitionDetails extends ConsumerWidget {
           height: 16,
         ),
         Image.asset(
-          'assets/images/spaced_repetition.webp',
+          'assets/images/spaced_repetition.png',
           width: MediaQuery.sizeOf(context).width,
           height: 230,
           fit: BoxFit.cover,

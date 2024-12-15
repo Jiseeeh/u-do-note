@@ -17,7 +17,7 @@ class Sq3rDetails extends ConsumerWidget {
           height: 16,
         ),
         Image.asset(
-          'assets/images/sq3r.webp',
+          'assets/images/sq3r.png',
           width: MediaQuery.sizeOf(context).width,
           height: 230,
           fit: BoxFit.cover,

@@ -17,7 +17,7 @@ class ActiveRecallModel {
   final String? remark;
   final List<QuestionModel>? questions;
   final String? recalledInformation;
-  static const coverImagePath = "assets/images/active_recall.webp";
+  static const coverImagePath = "assets/images/active_recall.png";
   static const name = "Active Recall";
 
   const ActiveRecallModel({

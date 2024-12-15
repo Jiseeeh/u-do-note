@@ -17,7 +17,7 @@ class AcronymDetails extends ConsumerWidget {
           height: 16,
         ),
         Image.asset(
-          'assets/images/acronym.webp',
+          'assets/images/acronym.png',
           width: MediaQuery.sizeOf(context).width,
           height: 230,
           fit: BoxFit.cover,

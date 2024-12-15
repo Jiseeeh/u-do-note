@@ -270,4 +270,30 @@ class NoteRepositoryImpl implements NoteRepository {
       return Left(GenericFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteMultipleNotes(
+      String notebookId, List<String> notebookIds) async {
+    try {
+      var res = await _noteRemoteDataSource.deleteMultipleNotes(
+          notebookId, notebookIds);
+
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> moveMultipleNotes(
+      String fromNotebookId, String toNotebookId, List<String> noteIds) async {
+    try {
+      var res = await _noteRemoteDataSource.moveMultipleNotes(
+          fromNotebookId, toNotebookId, noteIds);
+
+      return Right(res);
+    } catch (e) {
+      return Left(GenericFailure(message: e.toString()));
+    }
+  }
 }

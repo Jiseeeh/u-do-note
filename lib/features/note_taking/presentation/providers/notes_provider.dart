@@ -22,12 +22,14 @@ import 'package:u_do_note/features/note_taking/domain/usecases/create_category.d
 import 'package:u_do_note/features/note_taking/domain/usecases/create_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/create_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_category.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/delete_multiple_notes.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/delete_notebook.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_categories.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/format_scanned_text.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/get_notebooks.dart';
+import 'package:u_do_note/features/note_taking/domain/usecases/move_multiple_notes.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/summarize_note.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_category.dart';
 import 'package:u_do_note/features/note_taking/domain/usecases/update_multiple_notes.dart';
@@ -93,6 +95,13 @@ DeleteNote deleteNote(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return DeleteNote(repository);
+}
+
+@riverpod
+DeleteMultipleNotes deleteMultipleNotes(Ref ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return DeleteMultipleNotes(repository);
 }
 
 @riverpod
@@ -184,6 +193,13 @@ FormatScannedText formatScannedText(Ref ref) {
   final repository = ref.read(noteRepositoryProvider);
 
   return FormatScannedText(repository);
+}
+
+@riverpod
+MoveMultipleNotes moveMultipleNotes(Ref ref) {
+  final repository = ref.read(noteRepositoryProvider);
+
+  return MoveMultipleNotes(repository);
 }
 
 @riverpod
@@ -350,6 +366,16 @@ class Notebooks extends _$Notebooks {
     return failureOrString.fold((failure) => failure, (res) => res);
   }
 
+  /// Deletes multiple notes from a notebook
+  Future<dynamic> deleteMultipleNotes(
+      {required String notebookId, required List<String> noteIds}) async {
+    var deleteMultipleNotes = ref.read(deleteMultipleNotesProvider);
+
+    var failureOrVoid = await deleteMultipleNotes(notebookId, noteIds);
+
+    return failureOrVoid.fold((failure) => failure, (res) => res);
+  }
+
   Future<dynamic> deleteNotebook(
       {required String notebookId, required String coverFileName}) async {
     var deleteNotebook = ref.read(deleteNotebookProvider);
@@ -435,5 +461,17 @@ class Notebooks extends _$Notebooks {
 
     return failureOrScannedText.fold(
         (failure) => failure, (formattedText) => formattedText);
+  }
+
+  Future<dynamic> moveMultipleNotes(
+      {required String fromNotebookId,
+      required String toNotebookId,
+      required List<String> noteIds}) async {
+    final moveMultipleNotes = ref.read(moveMultipleNotesProvider);
+
+    var failureOrVoid =
+        await moveMultipleNotes(fromNotebookId, toNotebookId, noteIds);
+
+    return failureOrVoid.fold((failure) => failure, (res) => res);
   }
 }

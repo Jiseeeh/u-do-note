@@ -143,6 +143,25 @@ final deleteNoteProvider = AutoDisposeProvider<DeleteNote>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteNoteRef = AutoDisposeProviderRef<DeleteNote>;
+String _$deleteMultipleNotesHash() =>
+    r'fb5bd1bcb42f12e6499f63109ab6a2449e7d7582';
+
+/// See also [deleteMultipleNotes].
+@ProviderFor(deleteMultipleNotes)
+final deleteMultipleNotesProvider =
+    AutoDisposeProvider<DeleteMultipleNotes>.internal(
+  deleteMultipleNotes,
+  name: r'deleteMultipleNotesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deleteMultipleNotesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DeleteMultipleNotesRef = AutoDisposeProviderRef<DeleteMultipleNotes>;
 String _$createNoteHash() => r'fde3909fec85deefb983f7169ad6889acbbefd57';
 
 /// See also [createNote].
@@ -363,6 +382,24 @@ final formatScannedTextProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FormatScannedTextRef = AutoDisposeProviderRef<FormatScannedText>;
+String _$moveMultipleNotesHash() => r'eb7524be1436037ee0a6f69789f847a1339176ae';
+
+/// See also [moveMultipleNotes].
+@ProviderFor(moveMultipleNotes)
+final moveMultipleNotesProvider =
+    AutoDisposeProvider<MoveMultipleNotes>.internal(
+  moveMultipleNotes,
+  name: r'moveMultipleNotesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$moveMultipleNotesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef MoveMultipleNotesRef = AutoDisposeProviderRef<MoveMultipleNotes>;
 String _$notebooksStreamHash() => r'23a4f95267ef958ed6d3759a63f007f55d83ee45';
 
 /// See also [notebooksStream].
@@ -381,7 +418,7 @@ final notebooksStreamProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef NotebooksStreamRef = AutoDisposeStreamProviderRef<List<NotebookEntity>>;
-String _$notebooksHash() => r'a1c32e4b393f54f959bff9a3c0bd3ad2aeeee7d3';
+String _$notebooksHash() => r'abe7cbeee123abd2aed32b607307d88b6555bc04';
 
 /// See also [Notebooks].
 @ProviderFor(Notebooks)

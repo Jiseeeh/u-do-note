@@ -103,7 +103,7 @@ class NoteRemoteDataSource {
       noteModels.add(NoteModel.fromFirestore(note));
     }
 
-    var initialNoteText = title;
+    var initialNoteText = "";
 
     if (initialContent != null && initialContent.isNotEmpty) {
       initialNoteText = Utils.removeControlCharacters(initialContent);
@@ -393,6 +393,122 @@ class NoteRemoteDataSource {
     logger.i(response);
 
     return response;
+  }
+
+  Future<void> deleteMultipleNotes(
+      String notebookId, List<String> notebookIds) async {
+    logger.i('Deleting multiple notes...');
+    var userId = _auth.currentUser!.uid;
+
+    var userNote = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .get();
+
+    var userNoteData = userNote.data();
+
+    var notes = [];
+
+    if (userNoteData != null && userNoteData['notes'] != null) {
+      notes = userNoteData['notes'];
+    }
+
+    List<NoteModel> notesModel = [];
+
+    for (var note in notes) {
+      notesModel.add(NoteModel.fromFirestore(note));
+    }
+
+    notesModel.removeWhere((n) => notebookIds.contains(n.id));
+
+    var updatedNotes =
+        notesModel.map((noteModel) => noteModel.toJson()).toList();
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(notebookId)
+        .update({
+      'notes': updatedNotes,
+      'updated_at': FieldValue.serverTimestamp()
+    });
+  }
+
+  Future<void> moveMultipleNotes(
+      String fromNotebookId, String toNotebookId, List<String> noteIds) async {
+    if (fromNotebookId == toNotebookId) {
+      throw "Cannot move notes to the same notebook.";
+    }
+
+    logger.i('Moving selected notes to new notebook...');
+    var userId = _auth.currentUser!.uid;
+
+    var userNote = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(fromNotebookId)
+        .get();
+
+    var userNoteData = userNote.data();
+    var notes = [];
+
+    if (userNoteData != null && userNoteData['notes'] != null) {
+      notes = userNoteData['notes'];
+    }
+
+    List<NoteModel> notesModel = [];
+
+    for (var note in notes) {
+      notesModel.add(NoteModel.fromFirestore(note));
+    }
+
+    var selectedNotes =
+        notesModel.where((n) => noteIds.contains(n.id)).toList();
+
+    var newNotebook = await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(toNotebookId)
+        .get();
+
+    var newNotebookData = newNotebook.data();
+    var newNotes = [];
+
+    if (newNotebookData != null && newNotebookData['notes'] != null) {
+      newNotes = newNotebookData['notes'];
+    }
+
+    List<NoteModel> newNotesModel = [];
+
+    for (var note in newNotes) {
+      newNotesModel.add(NoteModel.fromFirestore(note));
+    }
+
+    newNotesModel.addAll(selectedNotes);
+
+    var updatedNotes =
+        newNotesModel.map((noteModel) => noteModel.toJson()).toList();
+
+    // FieldValue.arrayRemove does not work, idk
+
+    await _firestore
+        .collection(FirestoreCollection.users.name)
+        .doc(userId)
+        .collection(FirestoreCollection.user_notes.name)
+        .doc(toNotebookId)
+        .update({
+      'notes': updatedNotes,
+      'updated_at': FieldValue.serverTimestamp()
+    });
+
+    await deleteMultipleNotes(fromNotebookId, noteIds);
+
+    logger.i('Selected notes moved to new notebook successfully.');
   }
 
   Future<String> deleteNotebook(String notebookId, String coverFileName) async {

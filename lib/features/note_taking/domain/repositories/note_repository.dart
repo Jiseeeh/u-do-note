@@ -38,6 +38,9 @@ abstract class NoteRepository {
   Future<Either<Failure, String>> deleteNote(
       {required String notebookId, required String noteId});
 
+  Future<Either<Failure, void>> deleteMultipleNotes(
+      String notebookId, List<String> notebookIds);
+
   Future<Either<Failure, String>> analyzeImageText(ImageSource imgSource);
 
   Future<Either<Failure, String>> analyzeNote(String content);
@@ -53,7 +56,10 @@ abstract class NoteRepository {
 
   Future<Either<Failure, String>> updateCategory(
       {required String oldCategoryName, required String newCategoryName});
-  
+
   Future<Either<Failure, String>> formatScannedText(String scannedText);
+
+  Future<Either<Failure, void>> moveMultipleNotes(
+      String fromNotebookId, String toNotebookId, List<String> noteIds);
 }
 // TODO: remove braces from params

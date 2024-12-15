@@ -273,7 +273,7 @@ class _Sq3rScreenState extends ConsumerState<Sq3rScreen> {
 
         if (doneReviewing) {
           EasyLoading.show(
-              status: "Generating quiz...",
+              status: "Generating quiz, this might take a while...",
               maskType: EasyLoadingMaskType.black,
               dismissOnTap: false);
 

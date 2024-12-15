@@ -166,7 +166,7 @@ class _FeynmanTechniqueScreenState
       }
 
       EasyLoading.show(
-          status: 'Generating quiz...',
+          status: 'Generating quiz, this might take a while...',
           maskType: EasyLoadingMaskType.black,
           dismissOnTap: false);
 

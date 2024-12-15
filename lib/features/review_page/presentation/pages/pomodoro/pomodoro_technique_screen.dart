@@ -76,7 +76,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
 
       if (willTakeQuiz) {
         EasyLoading.show(
-            status: 'Generating quiz...',
+            status: 'Generating quiz, this might take a while...',
             maskType: EasyLoadingMaskType.black,
             dismissOnTap: false);
 

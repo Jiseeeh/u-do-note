@@ -84,19 +84,19 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
       return;
     }
 
-    await CustomDialog.show(context,
+    var willReviewOld = await CustomDialog.show(context,
         title: "Old Elaboration Sessions",
         subTitle: "old_session_notice",
         buttons: [
-          CustomDialogButton(text: "Cancel"),
-          CustomDialogButton(text: "Continue")
+          CustomDialogButton(text: "Cancel", value: false),
+          CustomDialogButton(text: "Continue", value: true)
         ],
         content: MultiSelect(
           items: oldElaborationModels
               .map((el) => DropdownItem(label: el.sessionName, value: el.id!))
               .toList(),
-          hintText: "Notice",
-          title: "notice",
+          hintText: "Sessions",
+          title: "Sessions",
           subTitle: "old_session_title",
           validationText: "Please select one or more page.",
           prefixIcon: Icons.arrow_drop_down_circle_outlined,
@@ -105,6 +105,13 @@ class _ElaborationPreReviewState extends ConsumerState<ElaborationPreReview> {
             _oldElaborationSessionId = items.first;
           },
         ));
+
+    if (!willReviewOld && context.mounted) {
+      ref.read(reviewScreenProvider).resetState();
+
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (!context.mounted) return;
 

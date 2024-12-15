@@ -74,7 +74,7 @@ class _FeynmanPreReviewState extends ConsumerState<FeynmanPreReview> {
       return;
     }
 
-    await CustomDialog.show(context,
+    var willReviewOld = await CustomDialog.show(context,
         title: "feynman_old_session_label",
         subTitle: "old_session_notice",
         buttons: [
@@ -85,8 +85,8 @@ class _FeynmanPreReviewState extends ConsumerState<FeynmanPreReview> {
           items: oldFeynmanModels
               .map((el) => DropdownItem(label: el.sessionName, value: el.id!))
               .toList(),
-          hintText: "Notice",
-          title: "Notice",
+          hintText: "Sessions",
+          title: "Sessions",
           validationText: "Please select at least one session",
           prefixIcon: Icons.arrow_drop_down_circle_outlined,
           singleSelect: true,
@@ -96,6 +96,14 @@ class _FeynmanPreReviewState extends ConsumerState<FeynmanPreReview> {
         ));
 
     if (!context.mounted) return;
+
+    if (!willReviewOld && context.mounted) {
+      ref.read(reviewScreenProvider).resetState();
+
+      Navigator.of(context).pop();
+      return;
+    }
+
     if (_oldFeynmanSessionId.isEmpty) return;
 
     context.router.push(FeynmanTechniqueRoute(

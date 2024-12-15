@@ -91,19 +91,19 @@ class _SpacedRepetitionPreReviewState
       return;
     }
 
-    await CustomDialog.show(context,
-        title: "Old Blurting Sessions",
+    var willReviewOld = await CustomDialog.show(context,
+        title: "Old Spaced Repetition Sessions",
         subTitle: "old_session_notice",
         buttons: [
-          CustomDialogButton(text: "Cancel"),
-          CustomDialogButton(text: "Continue")
+          CustomDialogButton(text: "Cancel", value: false),
+          CustomDialogButton(text: "Continue", value: true)
         ],
         content: MultiSelect(
           items: oldSpacedRepModels
               .map((el) => DropdownItem(label: el.sessionName, value: el.id!))
               .toList(),
-          hintText: "Old Sessions",
-          title: "Old Sessions",
+          hintText: "Sessions",
+          title: "Sessions",
           subTitle: "old_session_title",
           validationText: "Please select at least one page.",
           prefixIcon: Icons.arrow_drop_down_circle_outlined,
@@ -114,6 +114,13 @@ class _SpacedRepetitionPreReviewState
         ));
 
     if (!context.mounted) return;
+
+    if (!willReviewOld && context.mounted) {
+      ref.read(reviewScreenProvider).resetState();
+
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (_oldSpacedRepetitionId.isNotEmpty) {
       var spacedRepModel =
@@ -377,7 +384,7 @@ class _SpacedRepetitionPreReviewState
               },
               decoration: const InputDecoration(
                 labelText: "Session Title",
-                hintText: "Enter a title for this session.",
+                hintText: "Earthquakes-Spaced",
                 border: OutlineInputBorder(),
               ),
             ),

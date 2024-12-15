@@ -77,8 +77,9 @@ class _LeitnerPreReviewState extends ConsumerState<LeitnerPreReview> {
       return;
     }
 
-    await CustomDialog.show(context,
+    var willReviewOldSession = await CustomDialog.show(context,
         title: "Flashcards to review",
+        subTitle: "Select the session you want to review",
         content: MultiSelect(
           items: oldLeitnerModels
               .map((note) => DropdownItem(label: note.title, value: note.id!))
@@ -100,16 +101,18 @@ class _LeitnerPreReviewState extends ConsumerState<LeitnerPreReview> {
           },
         ),
         buttons: [
-          CustomDialogButton(
-              text: "Cancel",
-              value: null,
-              onPressed: () {
-                ref.read(reviewScreenProvider).resetState();
-              }),
-          CustomDialogButton(text: "Continue")
+          CustomDialogButton(text: "Cancel", value: false),
+          CustomDialogButton(text: "Continue", value: true)
         ]);
 
     if (!context.mounted) return;
+
+    if (!willReviewOldSession && context.mounted) {
+      ref.read(reviewScreenProvider).resetState();
+
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (_oldLeitnerSessionId.isNotEmpty) {
       context.router.push(LeitnerSystemRoute(

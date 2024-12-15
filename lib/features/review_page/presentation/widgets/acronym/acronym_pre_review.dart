@@ -89,7 +89,7 @@ class _AcronymPreReviewState extends ConsumerState<AcronymPreReview> {
       return;
     }
 
-    await CustomDialog.show(context,
+    var willReviewOld = await CustomDialog.show(context,
         title: "Old Mnemonics Sessions",
         subTitle: "old_session_notice",
         buttons: [
@@ -99,14 +99,15 @@ class _AcronymPreReviewState extends ConsumerState<AcronymPreReview> {
                 setState(() {
                   _oldAcronymSessionId = "";
                 });
-              }),
-          CustomDialogButton(text: "Continue")
+              },
+              value: false),
+          CustomDialogButton(text: "Continue", value: true)
         ],
         content: MultiSelect(
           items: oldAcronymModels
               .map((el) => DropdownItem(label: el.sessionName, value: el.id!))
               .toList(),
-          hintText: "Test",
+          hintText: "Sessions",
           title: "Sessions",
           subTitle: "old_session_title",
           validationText: "Please select at least one session.",
@@ -118,6 +119,13 @@ class _AcronymPreReviewState extends ConsumerState<AcronymPreReview> {
         ));
 
     if (!context.mounted) return;
+
+    if (!willReviewOld && context.mounted) {
+      ref.read(reviewScreenProvider).resetState();
+
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (_oldAcronymSessionId.isNotEmpty) {
       var acronymModel = oldAcronymModels

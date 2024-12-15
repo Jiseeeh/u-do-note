@@ -68,18 +68,19 @@ class _Sq3rPreReviewState extends ConsumerState<Sq3rPreReview> {
       return;
     }
 
-    await CustomDialog.show(context,
+    var willReviewOld = await CustomDialog.show(context,
         title: "Old Sq3r Sessions",
         subTitle: "old_session_notice",
         buttons: [
           CustomDialogButton(
               text: "Cancel",
+              value: false,
               onPressed: () {
                 setState(() {
                   _oldSq3rId = "";
                 });
               }),
-          CustomDialogButton(text: "Continue")
+          CustomDialogButton(text: "Continue", value: true)
         ],
         content: MultiSelect(
           items: oldSq3rModels
@@ -97,6 +98,13 @@ class _Sq3rPreReviewState extends ConsumerState<Sq3rPreReview> {
         ));
 
     if (!context.mounted) return;
+
+    if (!willReviewOld && context.mounted) {
+      ref.read(reviewScreenProvider).resetState();
+
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (_oldSq3rId.isNotEmpty) {
       var sq3rModel =

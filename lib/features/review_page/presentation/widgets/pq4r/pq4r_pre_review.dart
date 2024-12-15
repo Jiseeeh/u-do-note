@@ -68,7 +68,7 @@ class _Pq4rPreReviewState extends ConsumerState<Pq4rPreReview> {
       return;
     }
 
-    await CustomDialog.show(context,
+    var willReviewOld = await CustomDialog.show(context,
         title: "Old Pq4r Sessions",
         subTitle: "old_session_notice",
         buttons: [
@@ -78,8 +78,9 @@ class _Pq4rPreReviewState extends ConsumerState<Pq4rPreReview> {
                 setState(() {
                   _oldPq4rId = "";
                 });
-              }),
-          CustomDialogButton(text: "Continue")
+              },
+              value: false),
+          CustomDialogButton(text: "Continue", value: true)
         ],
         content: MultiSelect(
           items: oldPq4rModels
@@ -97,6 +98,13 @@ class _Pq4rPreReviewState extends ConsumerState<Pq4rPreReview> {
         ));
 
     if (!context.mounted) return;
+
+    if (!willReviewOld && context.mounted) {
+      ref.read(reviewScreenProvider).resetState();
+
+      Navigator.of(context).pop();
+      return;
+    }
 
     if (_oldPq4rId.isNotEmpty) {
       var pq4rModel =

@@ -179,7 +179,6 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           labelText: "Receiver's Email",
-                                          hintText: 'Enter page title',
                                         ),
                                         validator: (String? value) {
                                           if (value == null || value.isEmpty) {

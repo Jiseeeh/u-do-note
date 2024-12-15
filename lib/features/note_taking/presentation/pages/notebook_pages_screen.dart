@@ -889,7 +889,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                 return 'Please enter some text';
                               }
 
-                              if (!EmailValidator.validate(value)) {
+                              if (!EmailValidator.validate(value.trim())) {
                                 return 'Please enter a valid email';
                               }
                               return null;
@@ -920,7 +920,7 @@ class _NotebookPagesScreenState extends ConsumerState<NotebookPagesScreen> {
                                         .read(firebaseAuthProvider)
                                         .currentUser!
                                         .email!,
-                                    receiverEmail: _emailController.text,
+                                    receiverEmail: _emailController.text.trim(),
                                     notesToShare: notesToShare);
 
                                 EasyLoading.show(

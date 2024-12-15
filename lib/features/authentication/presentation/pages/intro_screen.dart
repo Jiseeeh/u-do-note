@@ -34,7 +34,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   Widget build(
     BuildContext context,
   ) {
-    var width = 100.w, imgHeight = 80.h;
+    var width = 100.w, imgHeight = 70.h;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return OnBoardingSlider(

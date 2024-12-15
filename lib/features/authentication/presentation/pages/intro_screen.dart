@@ -102,7 +102,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             description:
                 "Transcribe thoughts on the go – with our app, your voice becomes written gold in seconds!"),
         Onboard(
-            label: "Different Learning Techniques",
+            label: "Different Learning Methods",
             description:
                 "Elevate your learning game with our app – study using your learning style,  notes into knowledge!"),
         Onboard(

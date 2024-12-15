@@ -1,3 +1,11 @@
+## [3.12.1](https://github.com/Jiseeeh/u-do-note/compare/v3.12.0...v3.12.1) (2024-12-15)
+
+
+### Bug Fixes
+
+* height not adaptive ([db73ff1](https://github.com/Jiseeeh/u-do-note/commit/db73ff1c3f7b994d2c67bfbdde946c10e41ebadb))
+* make img height 70% of screen ([b509d55](https://github.com/Jiseeeh/u-do-note/commit/b509d550ec928f46ab87da70f3379aaf44ab88a8))
+
 # [3.12.0](https://github.com/Jiseeeh/u-do-note/compare/v3.11.4...v3.12.0) (2024-12-15)
 
 

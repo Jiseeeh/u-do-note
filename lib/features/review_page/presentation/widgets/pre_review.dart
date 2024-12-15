@@ -196,7 +196,7 @@ class _PreReviewState extends ConsumerState<PreReview> {
               },
               decoration: const InputDecoration(
                 labelText: "Session Title",
-                hintText: "Enter a title for this session.",
+                hintText: "world-war",
                 border: OutlineInputBorder(),
               ),
             ),

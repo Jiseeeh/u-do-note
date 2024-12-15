@@ -62,6 +62,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
   final GlobalKey<EditorState> _editorKey = GlobalKey();
   late FocusNode _focusNode;
   var _lastSavedContent = "";
+  var _noteTitle = "";
   final _speechToText = SpeechToText();
   final _textFieldController = TextEditingController();
   final _noteTitleController = TextEditingController();
@@ -93,6 +94,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
     _checkIfFromBlurting();
 
     _noteTitleController.text = widget.note.title;
+    _noteTitle = widget.note.title;
 
     _noteTitleFocusNode.addListener(() async {
       if (!_noteTitleFocusNode.hasFocus) {
@@ -115,6 +117,12 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
             notebookId: widget.notebookId,
             noteId: widget.note.id,
             newTitle: text);
+
+        // ? on save, the title gets overridden by the old title because on save
+        // ? uses the widget.note, this is just a monkey patch
+        setState(() {
+          _noteTitle = text;
+        });
 
         if (res is Failure) {
           logger.w("Encountered an error: ${res.message}");
@@ -475,7 +483,8 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
         .copyWith(
             content: json,
             plainTextContent: _fleatherController!.document.toPlainText(),
-            updatedAt: Timestamp.now())
+            updatedAt: Timestamp.now(),
+            title: _noteTitle)
         .toEntity();
 
     _lastSavedContent = _fleatherController!.document.toPlainText();
@@ -748,7 +757,7 @@ class _NoteTakingScreenState extends ConsumerState<NoteTakingScreen> {
               body: _buildBody(),
               floatingActionButton: _speechToText.isListening
                   ? FloatingActionButton(
-                      child: const Icon(Icons.mic_off_rounded),
+                      child: const Icon(Icons.mic_rounded),
                       onPressed: () {
                         _stopListening();
                       })

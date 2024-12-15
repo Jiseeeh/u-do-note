@@ -1,3 +1,15 @@
+## [3.12.2](https://github.com/Jiseeeh/u-do-note/compare/v3.12.1...v3.12.2) (2024-12-15)
+
+
+### Bug Fixes
+
+* good email with space gets invalid ([0a913be](https://github.com/Jiseeeh/u-do-note/commit/0a913be31b95f9273c021b9222fdf7462213a94c))
+* loading text not verbose enough ([65aa099](https://github.com/Jiseeeh/u-do-note/commit/65aa09923b6378e3f6ba5dd35e916170c8a32cba))
+* replace "techniques" ([d74c390](https://github.com/Jiseeeh/u-do-note/commit/d74c390ce2733b481507f259cf0edf4fb6828c37))
+* replace hint text with real content ([20411a7](https://github.com/Jiseeeh/u-do-note/commit/20411a7e6e5cc00c0d142ba731e02bb2df63728d))
+* review old sessions dialog remains on cancel ([43117a5](https://github.com/Jiseeeh/u-do-note/commit/43117a59c0890bb708b6d8a5cd7febd658d477b9))
+* update translations ([2cd662a](https://github.com/Jiseeeh/u-do-note/commit/2cd662a5798b8d9217e92e276740ae7a282d1912))
+
 ## [3.12.1](https://github.com/Jiseeeh/u-do-note/compare/v3.12.0...v3.12.1) (2024-12-15)
 
 

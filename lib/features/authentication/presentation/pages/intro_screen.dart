@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:u_do_note/core/shared/presentation/providers/shared_preferences_provider.dart';
 import 'package:u_do_note/features/authentication/presentation/widgets/onboard_container.dart';
@@ -33,9 +34,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   Widget build(
     BuildContext context,
   ) {
-    var size = MediaQuery.of(context).size,
-        width = size.width,
-        imgHeight = width * 1.65;
+    var width = 100.w, imgHeight = width * 1.1;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return OnBoardingSlider(
@@ -60,22 +59,33 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         Image.asset(
           'assets/images/onboard/page-1.png',
           height: imgHeight,
+          width: width,
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.center,
         ),
         Image.asset(
           'assets/images/onboard/page-2.png',
           height: imgHeight,
+          width: width,
+          fit: BoxFit.contain,
         ),
         Image.asset(
           'assets/images/onboard/page-3.png',
           height: imgHeight,
+          width: width,
+          fit: BoxFit.contain,
         ),
         Image.asset(
           'assets/images/onboard/page-4.png',
           height: imgHeight,
+          width: width,
+          fit: BoxFit.contain,
         ),
         Image.asset(
           'assets/images/onboard/page-5.png',
           height: imgHeight,
+          width: width,
+          fit: BoxFit.contain,
         ),
       ],
       speed: 1.8,
@@ -97,9 +107,11 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
             description:
                 "Elevate your learning game with our app – study using your learning style,  notes into knowledge!"),
         Onboard(
-            label: "Generate Reviewers",
-            description:
-                "Boost your exam prep with our app turn your notes into your own personal review expert using AI!"),
+          label: "Generate Reviewers",
+          description:
+              "Boost your exam prep with our app turn your notes into your own personal review expert using AI!",
+          isLast: true,
+        ),
       ],
     );
   }

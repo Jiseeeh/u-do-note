@@ -237,6 +237,8 @@ class NotebookCard extends ConsumerWidget {
                 child: IconButton(
                   icon: const Icon(Icons.chevron_right),
                   onPressed: () {
+                    ref.read(reviewScreenProvider).setNotebookId(notebook.id);
+
                     context.router.pushNamed('/notebook/pages/${notebook.id}');
                   },
                 ),

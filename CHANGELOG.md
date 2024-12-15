@@ -1,3 +1,21 @@
+# [3.12.0](https://github.com/Jiseeeh/u-do-note/compare/v3.11.4...v3.12.0) (2024-12-15)
+
+
+### Bug Fixes
+
+* image paths of learning methods ([d2ac926](https://github.com/Jiseeeh/u-do-note/commit/d2ac926cf27b465e5411fd1e61ea31d0dc8bdbbc))
+* note title not getting updated on unfocus ([52fb2ed](https://github.com/Jiseeeh/u-do-note/commit/52fb2ed9b661ff1313ff144636fc75e997925a32))
+* notebook id not getting set on icon tap ([61895d7](https://github.com/Jiseeeh/u-do-note/commit/61895d7a110164f65069241968d2bf618ddf1d43))
+* remove wrong hint text ([a7b9034](https://github.com/Jiseeeh/u-do-note/commit/a7b903444e77587f9131a196c9dc03a5fcf2a7df))
+* replace onboard images ([d2df8e4](https://github.com/Jiseeeh/u-do-note/commit/d2df8e4893a0b3a6964351ceb045286a6f97ad3f))
+
+
+### Features
+
+* add delete and move multiple notes ([c5ce93d](https://github.com/Jiseeeh/u-do-note/commit/c5ce93d7e83887e838bc29a710885c505e3ba974))
+* add multiple selection of notes ([5eb56da](https://github.com/Jiseeeh/u-do-note/commit/5eb56da8bfa93eb19425ffae2a73a60361d6afbe))
+* replace assets ([9361fde](https://github.com/Jiseeeh/u-do-note/commit/9361fdee4b85bbfcaa33ae12e5755d64d80cce4a))
+
 ## [3.11.4](https://github.com/Jiseeeh/u-do-note/compare/v3.11.3...v3.11.4) (2024-12-11)
 
 

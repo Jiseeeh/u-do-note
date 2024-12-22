@@ -1,3 +1,11 @@
+## [3.12.3](https://github.com/Jiseeeh/u-do-note/compare/v3.12.2...v3.12.3) (2024-12-22)
+
+
+### Bug Fixes
+
+* add key properties ([8fe8361](https://github.com/Jiseeeh/u-do-note/commit/8fe8361ba072d07d8d671007d5a09efea658bd53))
+* shuffle flashcards on review ([8f69088](https://github.com/Jiseeeh/u-do-note/commit/8f6908845f7751bc0b69f59b423d180312f75560))
+
 ## [3.12.2](https://github.com/Jiseeeh/u-do-note/compare/v3.12.1...v3.12.2) (2024-12-15)
 
 

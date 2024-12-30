@@ -1,5 +1,6 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/feynman/feynman_remote_datasource.dart';
@@ -21,9 +22,21 @@ class FeynmanTechniqueImpl implements FeynmanTechniqueRepository {
 
       return Right(res);
     } on RequestFailedException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting chat response(openai exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(
           OpenAIException(message: e.toString(), statusCode: e.statusCode));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting chat response(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -37,6 +50,12 @@ class FeynmanTechniqueImpl implements FeynmanTechniqueRepository {
 
       return Right(documentId);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while saving session: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -53,6 +72,12 @@ class FeynmanTechniqueImpl implements FeynmanTechniqueRepository {
     try {
       return const Right(null);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while saving quiz results: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

@@ -1,5 +1,6 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/elaboration/elaboration_remote_datasource.dart';
@@ -20,6 +21,12 @@ class ElaborationImpl implements ElaborationRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while saving quiz results: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -32,9 +39,21 @@ class ElaborationImpl implements ElaborationRepository {
 
       return Right(res);
     } on RequestFailedException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting elaborated content(openai exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(
           OpenAIException(message: e.toString(), statusCode: e.statusCode));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting elaborated content(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

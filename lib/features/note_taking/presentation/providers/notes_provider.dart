@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -240,6 +241,12 @@ Stream<List<NotebookEntity>> notebooksStream(Ref ref) {
               controller.add(notebooks);
             }
           } catch (e) {
+            FirebaseCrashlytics.instance.recordError(
+                Exception(
+                    'Something went wrong while trying to get notebooks from firestore'),
+                StackTrace.current,
+                reason: 'a non-fatal error',
+                fatal: false);
             controller.addError(e);
           }
         },

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -24,8 +25,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while creating a note(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while creating a note(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -38,8 +51,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting a note(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting a note(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -53,6 +78,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while creating a notebook: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -64,8 +95,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(success);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting notebooks(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting notebooks(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -79,8 +122,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating a note(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating a note(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -94,8 +149,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating a note title(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating a note title(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -109,8 +176,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating multiple notes(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating multiple notes(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -124,8 +203,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting a note(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting a note(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -139,6 +230,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(downloadUrls);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while uploading notebook cover: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -152,8 +249,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting a notebook(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting a notebook(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -166,8 +275,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating a notebook(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating a notebook(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -181,6 +302,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(recognizedText);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while analyzing image text: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -192,6 +319,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(analyzedText);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while analyzing note: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -203,6 +336,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(summarizedText);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while summarizing note: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -214,6 +353,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(categories);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting categories: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -225,6 +370,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while adding a category: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -238,8 +389,20 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting a category(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting a category(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -255,7 +418,21 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating a category(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(message: e.message!, code: e.code));
+    } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating a category(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
+      return Left(GenericFailure(message: e.toString()));
     }
   }
 
@@ -267,6 +444,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(formattedText);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while formatting scanned text: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -280,6 +463,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting multiple notes: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -293,6 +482,12 @@ class NoteRepositoryImpl implements NoteRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while moving multiple notes: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

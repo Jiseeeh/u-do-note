@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/active_recall/active_recall_remote_datasource.dart';
@@ -19,6 +20,12 @@ class ActiveRecallImpl implements ActiveRecallRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while saving quiz results: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -32,6 +39,12 @@ class ActiveRecallImpl implements ActiveRecallRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting active recall feedback: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -45,6 +58,12 @@ class ActiveRecallImpl implements ActiveRecallRepository {
 
       return const Right(null);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while updating firestore model: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

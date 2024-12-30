@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/blurting/blurting_remote_datasource.dart';
@@ -17,6 +18,12 @@ class BlurtingImpl implements BlurtingRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while applying blurting method: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -30,6 +37,12 @@ class BlurtingImpl implements BlurtingRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while saving quiz results: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
@@ -17,6 +18,12 @@ class SettingsRepositoryImpl extends SettingsRepository {
       await _settingsRemoteDataSource.signOut();
       return const Right(null);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while signing out. Error: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -28,6 +35,12 @@ class SettingsRepositoryImpl extends SettingsRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while uploading profile picture. Error: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -39,6 +52,12 @@ class SettingsRepositoryImpl extends SettingsRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting account. Error: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -51,6 +70,12 @@ class SettingsRepositoryImpl extends SettingsRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while sending share request. Error: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -62,6 +87,12 @@ class SettingsRepositoryImpl extends SettingsRepository {
       var res = await _settingsRemoteDataSource.getShareRequests(reqType);
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while getting sent share requests. Error: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -75,6 +106,12 @@ class SettingsRepositoryImpl extends SettingsRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while accepting share request. Error: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -86,6 +123,12 @@ class SettingsRepositoryImpl extends SettingsRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while withdrawing share request. Error: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

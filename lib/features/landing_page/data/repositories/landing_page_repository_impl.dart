@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/landing_page/data/datasources/landing_page_remote_datasource.dart';
@@ -18,6 +19,12 @@ class LandingPageImpl implements LandingPageRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while fetching on going reviews from the remote data source: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -31,6 +38,12 @@ class LandingPageImpl implements LandingPageRepository {
 
       return Right(res);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while deleting broken blurting remark from the remote data source: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

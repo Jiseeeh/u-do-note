@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/authentication/data/datasources/user_remote_datasource.dart';
@@ -22,6 +23,12 @@ class UserRepositoryImpl implements UserRepository {
 
       return Right(userModel);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while signing up with email and password: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(code: e.code, message: e.message!));
     }
   }
@@ -34,8 +41,20 @@ class UserRepositoryImpl implements UserRepository {
           email, password);
       return Right(userModel);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while signing in with email and password(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(code: e.code, message: e.message!));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while signing in with email and password(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -47,8 +66,20 @@ class UserRepositoryImpl implements UserRepository {
 
       return Right(res);
     } on FirebaseAuthException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while resetting password(firebase exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(AuthenticationException(code: e.code, message: e.message!));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while resetting password(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

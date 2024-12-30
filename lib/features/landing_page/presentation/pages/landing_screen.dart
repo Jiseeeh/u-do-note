@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -297,6 +298,13 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
                   }
                 }
               } catch (e) {
+                FirebaseCrashlytics.instance.recordError(
+                    Exception(
+                        'Something went wrong when starting the quiz: ${e.toString()}'),
+                    StackTrace.current,
+                    reason: 'a non-fatal error',
+                    fatal: false);
+
                 EasyLoading.showError(
                     "Something went wrong when starting the quiz.");
                 logger.w(e);

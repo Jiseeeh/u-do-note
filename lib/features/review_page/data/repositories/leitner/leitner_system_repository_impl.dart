@@ -1,5 +1,6 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/review_page/data/datasources/leitner/leitner_remote_datasource.dart';
@@ -20,9 +21,21 @@ class LeitnerSystemImpl implements LeitnerSystemRepository {
 
       return Right(leitnerSystemModel);
     } on RequestFailedException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while generating flashcards(openai exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(
           OpenAIException(message: e.toString(), statusCode: e.statusCode));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while generating flashcards(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -36,9 +49,21 @@ class LeitnerSystemImpl implements LeitnerSystemRepository {
 
       return Right(res);
     } on RequestFailedException catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while analyzing flashcards result(openai exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(
           OpenAIException(message: e.toString(), statusCode: e.statusCode));
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while analyzing flashcards result(generic exception): ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

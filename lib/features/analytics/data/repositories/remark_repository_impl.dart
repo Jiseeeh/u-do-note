@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:u_do_note/core/error/failures.dart';
 import 'package:u_do_note/features/analytics/data/datasources/remark_remote_datasource.dart';
@@ -19,6 +20,12 @@ class RemarkRepositoryImpl implements RemarkRepository {
 
       return Right(remarks);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while fetching remarks from the remote data source: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -30,6 +37,12 @@ class RemarkRepositoryImpl implements RemarkRepository {
 
       return Right(flashcardsToReview);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while fetching flashcards to review from the remote data source: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -41,6 +54,12 @@ class RemarkRepositoryImpl implements RemarkRepository {
 
       return Right(quizzesToReview);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while fetching quizzes to take from the remote data source: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -53,6 +72,12 @@ class RemarkRepositoryImpl implements RemarkRepository {
 
       return Right(analysis);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while fetching analysis from the remote data source: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -66,6 +91,12 @@ class RemarkRepositoryImpl implements RemarkRepository {
 
       return Right(interpretation);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while fetching techniques usage interpretation from the remote data source: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }
@@ -79,6 +110,12 @@ class RemarkRepositoryImpl implements RemarkRepository {
 
       return Right(interpretation);
     } catch (e) {
+      FirebaseCrashlytics.instance.recordError(
+          Exception(
+              'Something went wrong while fetching learning method scores interpretation from the remote data source: ${e.toString()}'),
+          StackTrace.current,
+          reason: 'a non-fatal error',
+          fatal: false);
       return Left(GenericFailure(message: e.toString()));
     }
   }

@@ -130,6 +130,12 @@ class _MainAppState extends ConsumerState<MainApp> {
           await _handlePayload(context, payload);
         }
       } catch (e) {
+        FirebaseCrashlytics.instance.recordError(
+            Exception(
+                'An error occurred while handling the notification payload e:${e.toString()}'),
+            StackTrace.current,
+            reason: 'a non-fatal error',
+            fatal: false);
         EasyLoading.showError("Something went wrong when starting the quiz.");
         logger.w(e);
       } finally {

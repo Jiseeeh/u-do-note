@@ -1,3 +1,16 @@
+# [3.13.0](https://github.com/Jiseeeh/u-do-note/compare/v3.12.3...v3.13.0) (2024-12-30)
+
+
+### Bug Fixes
+
+* normal errors on prod was hard to track ([d69bda0](https://github.com/Jiseeeh/u-do-note/commit/d69bda0a79ddb14f76c87f2dc919a32c2436b3f2))
+* remove unused perms ([8ce62d9](https://github.com/Jiseeeh/u-do-note/commit/8ce62d9f2cc71d625499032f5301439e8327bab7))
+
+
+### Features
+
+* bump target sdk ([a7eeb14](https://github.com/Jiseeeh/u-do-note/commit/a7eeb14001f3af3eb081f38c4b718df445eea83f))
+
 ## [3.12.3](https://github.com/Jiseeeh/u-do-note/compare/v3.12.2...v3.12.3) (2024-12-22)
 
 

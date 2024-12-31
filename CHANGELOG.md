@@ -1,3 +1,10 @@
+## [3.13.1](https://github.com/Jiseeeh/u-do-note/compare/v3.13.0...v3.13.1) (2024-12-31)
+
+
+### Bug Fixes
+
+* rename app id ([cdbb9c4](https://github.com/Jiseeeh/u-do-note/commit/cdbb9c481297477e69c81ec4beb92450b09450d0))
+
 # [3.13.0](https://github.com/Jiseeeh/u-do-note/compare/v3.12.3...v3.13.0) (2024-12-30)
 
 

@@ -180,7 +180,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
                                       }
                                     } catch (e) {
                                       EasyLoading.showToast(
-                                        "Error signing in with Google, please try again later: ${e.toString()}",
+                                        "Error signing in with Google, please try again later.",
                                         duration: const Duration(seconds: 2),
                                         toastPosition:
                                             EasyLoadingToastPosition.bottom,
@@ -188,7 +188,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
 
                                       FirebaseCrashlytics.instance.recordError(
                                           Exception(
-                                              'Something went wrong when signing in with Google'),
+                                              'Something went wrong when signing in with Google: ${e.toString()}'),
                                           StackTrace.current,
                                           reason: 'a non-fatal error',
                                           fatal: false);

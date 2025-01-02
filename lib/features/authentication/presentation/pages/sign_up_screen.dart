@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -179,6 +180,13 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                           duration: const Duration(seconds: 2),
                                           toastPosition:
                                               EasyLoadingToastPosition.bottom);
+
+                                      FirebaseCrashlytics.instance.recordError(
+                                          Exception(
+                                              'Something went wrong when signing in with Google: ${e.toString()}'),
+                                          StackTrace.current,
+                                          reason: 'a non-fatal error',
+                                          fatal: false);
                                     }
                                   },
                                   child: const SocialIcon(

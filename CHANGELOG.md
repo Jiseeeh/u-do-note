@@ -1,3 +1,10 @@
+## [3.13.2](https://github.com/Jiseeeh/u-do-note/compare/v3.13.1...v3.13.2) (2025-01-02)
+
+
+### Bug Fixes
+
+* error code being shown to user ([7997909](https://github.com/Jiseeeh/u-do-note/commit/79979097c672d8cc8fd15ee65e0d3d4f08ed6741))
+
 ## [3.13.1](https://github.com/Jiseeeh/u-do-note/compare/v3.13.0...v3.13.1) (2024-12-31)
 
 

@@ -282,7 +282,8 @@ class _LoginState extends ConsumerState<LoginScreen> {
 
                                       var res = await ref
                                           .read(userNotifierProvider.notifier)
-                                          .resetPassword(emailController.text);
+                                          .resetPassword(
+                                              emailController.text.trim());
 
                                       EasyLoading.dismiss();
 
@@ -316,7 +317,7 @@ class _LoginState extends ConsumerState<LoginScreen> {
 
                                       final userOrFailure =
                                           await userProvider.signInWithEAP(
-                                              emailController.text,
+                                              emailController.text.trim(),
                                               passwordController.text);
 
                                       EasyLoading.dismiss();

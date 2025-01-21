@@ -34,7 +34,7 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
       return 'Please enter some text';
     }
 
-    if (!EmailValidator.validate(value)) {
+    if (!EmailValidator.validate(value.trim())) {
       return 'Please enter a valid email';
     }
     return null;
@@ -316,9 +316,11 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
                                             final userOrFailure =
                                                 await userProvider
                                                     .signUpWithEAP(
-                                                        emailController.text,
+                                                        emailController.text
+                                                            .trim(),
                                                         displayNameController
-                                                            .text,
+                                                            .text
+                                                            .trim(),
                                                         passwordController
                                                             .text);
 

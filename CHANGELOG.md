@@ -1,3 +1,10 @@
+## [3.13.3](https://github.com/Jiseeeh/u-do-note/compare/v3.13.2...v3.13.3) (2025-01-21)
+
+
+### Bug Fixes
+
+* email with space being invalid ([af22828](https://github.com/Jiseeeh/u-do-note/commit/af2282860cd4c1afd26abe32409fff98d13697d5))
+
 ## [3.13.2](https://github.com/Jiseeeh/u-do-note/compare/v3.13.1...v3.13.2) (2025-01-02)
 
 

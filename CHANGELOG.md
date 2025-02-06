@@ -1,3 +1,10 @@
+## [3.13.4](https://github.com/Jiseeeh/u-do-note/compare/v3.13.3...v3.13.4) (2025-02-06)
+
+
+### Bug Fixes
+
+* multiple selection of pages ([9fc5292](https://github.com/Jiseeeh/u-do-note/commit/9fc52922ba9b5efe3230948c377cd8fe6b95d822))
+
 ## [3.13.3](https://github.com/Jiseeeh/u-do-note/compare/v3.13.2...v3.13.3) (2025-01-21)
 
 

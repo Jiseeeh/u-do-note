@@ -142,9 +142,9 @@ class _PreReviewState extends ConsumerState<PreReview> {
                 } else {
                   var newDocumentContent =
                       ParchmentDocument.fromJson(jsonContent);
-                  documentContent!.insert(
-                    documentContent!.length - 1,
+                  documentContent!.compose(
                     newDocumentContent.toDelta(),
+                    ChangeSource.remote,
                   );
                 }
                 contentFromPages += note.plainTextContent;
